@@ -243,36 +243,36 @@ export default function NeoProxyClient() {
         </div>
 
         <h1 className={styles.title}>NEO·PROXY</h1>
-        <p className={styles.subtitle}>experimental system construct</p>
+        <p className={styles.subtitle}>creative operating system</p>
 
         <div className={styles.block}>
-          <div>STATUS: INDETERMINATE</div>
-          <div>LAYER: INTERFACE_SYSTEM</div>
+          <div>STATUS: <span style={{ color: '#5ef0c0' }}>ONLINE</span></div>
+          <div>LAYER: SURFACE_v0.2 // darkproxy</div>
         </div>
 
         <div className={styles.serviceList}>
-          <div className={styles.serviceBlock}>
-            <span className={styles.serviceTitle}>[01] DEVELOPMENT</span>
-            <span className={styles.serviceDesc}>Web Systems · Architecture · React/Next.js</span>
-          </div>
+          <Link href="/npos" className={styles.serviceBlock}>
+            <span className={styles.serviceTitle}>[01] NPos OS</span>
+            <span className={styles.serviceDesc}>Creative Operating System · Generative Lab · Memory</span>
+          </Link>
 
           <Link href="/fabrication" className={styles.serviceBlock}>
             <span className={styles.serviceTitle}>[02] FABRICATION</span>
-            <span className={styles.serviceDesc}>3D Print · Prototyping · Parts</span>
+            <span className={styles.serviceDesc}>Resina UV · PLA · Arduino · Objetos Físicos</span>
           </Link>
 
-          <div className={styles.serviceBlock}>
-            <span className={styles.serviceTitle}>[03] ROBOTICS</span>
-            <span className={styles.serviceDesc}>Hardware Logic · Automation · AR</span>
-          </div>
+          <Link href="/npos/lab" className={styles.serviceBlock}>
+            <span className={styles.serviceTitle}>[03] GENERATIVE LAB</span>
+            <span className={styles.serviceDesc}>Atractores Caóticos · Geometría · STL Export</span>
+          </Link>
         </div>
 
-        <div className={styles.warn}>[ SYSTEM READY FOR INPUT ]</div>
+        <div className={styles.warn}>[ SYSTEM ONLINE — NPOS v0.2 DEPLOYED ]</div>
 
         <nav className={styles.menu}>
-          <button className={styles.ctaButton}>
-            [ INICIAR_PROTOCOLO ]
-          </button>
+          <Link href="/npos" className={styles.ctaButton}>
+            [ ENTER_NPos_OS ]
+          </Link>
         </nav>
       </section>
     </main>
