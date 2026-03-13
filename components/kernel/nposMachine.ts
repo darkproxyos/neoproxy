@@ -1,39 +1,44 @@
 import { createMachine } from 'xstate';
 
 // NeoProxy OS (NPos) Kernel
-// States mapped directly from the Manifesto (Layers 01–05)
+// Mapped directly from the Manifesto Layer 02 (Agent Layer) and Layer 03 (Geometry Layer)
 
 export const nposMachine = createMachine({
   id: 'npos-kernel',
   initial: 'idle',
   context: {
     specimenId: 0,
-    seed: null as number | null,
+    seed: null,
     activeAlgorithm: 'lorenz',
-    parameters: null as Record<string, number> | null,
-    history: [] as string[],
+    parameters: null,
+    history: []
   },
   states: {
     idle: {
-      on: { BOOT: 'active' }
+      on: {
+        BOOT: 'active',
+      }
     },
     active: {
+      // The state of active navigation in the OS (Surface / Memory)
       on: {
         ENTER_LAB: 'resonant',
-        ENTER_FABRICATION: 'portal',
+        ENTER_FABRICATION: 'portal'
       }
     },
     resonant: {
+      // Generative Lab State. High computation, geometry engine active.
       on: {
         LEAVE_LAB: 'active',
         GENERATION_COMPLETE: 'resonant',
-        EXPORT: 'portal',
+        EXPORT: 'portal'
       }
     },
     portal: {
+      // Fabrication State. Data bridging to the physical world.
       on: {
         UPLOAD_COMPLETE: 'active',
-        RETURN: 'active',
+        RETURN: 'active'
       }
     }
   }
