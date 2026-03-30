@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEOPROXY // AUTO_CURATOR v1.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#020205;--surface:#06060e;--border:#0d0d1a;
+  --purple:#b400ff;--green:#00ff9d;--amber:#ffb800;--red:#ff2b2b;
+  --text:#aaaabb;--muted:#2a2a44;--dim:#080812;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+
+/* SCAN LINES */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,0,255,.008) 3px,rgba(180,0,255,.008) 4px);pointer-events:none;z-index:999}
+
+/* ── HEADER ── */
+header{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg);position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.2em;color:var(--purple);text-shadow:0 0 20px rgba(180,0,255,.3)}
+.logo em{color:#333355;font-style:normal;font-size:14px}
+.hstatus{font-size:8px;letter-spacing:.2em;color:var(--muted)}
+.hstatus span{color:var(--green)}
+
+/* ── RUN PANEL ── */
+#run-panel{padding:24px 32px;border-bottom:1px solid var(--border);background:var(--dim);display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.big-btn{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.25em;padding:12px 28px;border:1px solid var(--purple);color:var(--purple);background:transparent;cursor:pointer;transition:all .2s;text-transform:uppercase;position:relative;overflow:hidden}
+.big-btn::before{content:'';position:absolute;inset:0;background:rgba(180,0,255,0);transition:background .2s}
+.big-btn:hover::before{background:rgba(180,0,255,.08)}
+.big-btn:disabled{opacity:.3;cursor:default}
+.run-params{display:flex;gap:20px;flex-wrap:wrap}
+.run-param{display:flex;flex-direction:column;gap:4px}
+.rp-label{font-size:7px;letter-spacing:.2em;color:var(--muted)}
+.rp-val{font-size:14px;color:var(--text);font-family:'Bebas Neue',sans-serif;letter-spacing:.1em}
+
+/* ── PROGRESS ── */
+#progress-section{padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);display:none}
+.prog-header{display:flex;justify-content:space-between;margin-bottom:8px}
+.prog-label{font-size:8px;letter-spacing:.2em;color:var(--muted)}
+.prog-val{font-size:8px;letter-spacing:.1em;color:var(--green)}
+.prog-track{height:2px;background:var(--border);position:relative;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--green));width:0%;transition:width .08s;position:relative}
+.prog-fill::after{content:'';position:absolute;right:0;top:-4px;bottom:-4px;width:1px;background:#fff;box-shadow:0 0 8px var(--green)}
+.phase-log{margin-top:10px;font-size:7px;color:var(--muted);letter-spacing:.1em;height:14px;overflow:hidden}
+
+/* ── RESULTS LAYOUT ── */
+#results{display:none;padding:32px}
+.results-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}
+.results-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:.1em;color:var(--text);line-height:1}
+.results-title em{color:var(--purple);font-style:normal}
+.results-sub{font-size:8px;letter-spacing:.2em;color:var(--muted);margin-top:6px}
+.results-actions{display:flex;gap:10px}
+.act-btn{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;padding:10px 20px;border:1px solid;background:transparent;cursor:pointer;text-transform:uppercase}
+.act-btn-p{border-color:var(--purple);color:var(--purple)}.act-btn-p:hover{background:rgba(180,0,255,.08)}
+.act-btn-g{border-color:var(--green);color:var(--green)}.act-btn-g:hover{background:rgba(0,255,157,.06)}
+
+/* ── STATS ROW ── */
+#stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);margin-bottom:32px;border:1px solid var(--border)}
+.stat-cell{background:var(--surface);padding:16px 20px}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.05em;line-height:1;margin-bottom:4px}
+.stat-label{font-size:7px;letter-spacing:.2em;color:var(--muted)}
+
+/* ── DROP GRID ── */
+#drop-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px}
+.item-card{background:var(--surface);padding:0;overflow:hidden;position:relative;cursor:default}
+.item-canvas-wrap{height:180px;background:var(--dim);position:relative}
+.item-canvas{width:100%;height:100%;display:block}
+.item-rank{position:absolute;top:8px;left:10px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:rgba(180,0,255,.2);line-height:1}
+.item-body{padding:12px 14px}
+.item-id{font-size:11px;letter-spacing:.18em;color:var(--purple);margin-bottom:5px;font-weight:500}
+.item-archetype{font-size:7px;letter-spacing:.2em;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.item-score-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.item-score-bar{flex:1;height:1px;background:var(--border)}
+.item-score-fill{height:100%}
+.item-score-val{font-size:8px;color:var(--purple);min-width:24px;text-align:right;letter-spacing:.05em}
+.item-tags{display:flex;gap:3px;flex-wrap:wrap}
+.itag{font-size:6px;letter-spacing:.12em;padding:2px 5px;border:1px solid}
+.itag-safe{border-color:rgba(0,255,157,.25);color:rgba(0,255,157,.6)}
+.itag-risk{border-color:rgba(255,184,0,.25);color:rgba(255,184,0,.6)}
+.itag-mod{border-color:var(--border);color:var(--muted)}
+
+/* ── NARRATIVE SECTION ── */
+#narrative-section{border:1px solid var(--border);padding:32px;margin-bottom:32px;background:var(--surface)}
+.nar-eyebrow{font-size:7px;letter-spacing:.3em;color:var(--muted);margin-bottom:20px}
+.nar-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:.08em;color:var(--text);line-height:1;margin-bottom:6px}
+.nar-subtitle{font-size:11px;color:rgba(180,0,255,.5);letter-spacing:.15em;margin-bottom:28px;font-style:italic}
+.nar-body{font-size:11px;color:#3a3a5a;line-height:2.2;max-width:640px;margin-bottom:28px}
+.nar-body strong{color:#5a5a7a;font-style:normal}
+.nar-meta{display:flex;gap:32px;border-top:1px solid var(--border);padding-top:20px;flex-wrap:wrap}
+.nar-meta-item{display:flex;flex-direction:column;gap:4px}
+.nar-meta-label{font-size:7px;letter-spacing:.25em;color:var(--muted)}
+.nar-meta-val{font-size:10px;letter-spacing:.1em;color:var(--text)}
+
+/* ── MANIFEST TABLE ── */
+#manifest-section{border:1px solid var(--border);overflow:hidden;margin-bottom:32px}
+.manifest-header{padding:12px 20px;background:var(--dim);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.manifest-title{font-size:8px;letter-spacing:.25em;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:8px}
+th{padding:8px 14px;border-bottom:1px solid var(--border);text-align:left;letter-spacing:.2em;color:var(--muted);font-weight:400;background:var(--surface)}
+td{padding:9px 14px;border-bottom:1px solid rgba(13,13,26,.5);letter-spacing:.05em;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(180,0,255,.02)}
+.td-id{color:var(--purple);letter-spacing:.15em}
+.td-score{color:var(--green)}
+.td-safe{color:rgba(0,255,157,.7)}
+.td-risk{color:rgba(255,184,0,.7)}
+.badge{display:inline-block;padding:2px 6px;border:1px solid;font-size:6px;letter-spacing:.15em}
+
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:var(--purple)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">NEOPROXY <em>// AUTO_CURATOR v1.0</em></div>
+  <div class="hstatus">SISTEMA <span>● LISTO</span></div>
+</header>
+
+<div id="run-panel">
+  <button class="big-btn" id="run-btn" onclick="runAuto()">▶ EJECUTAR CURADURÍA AUTOMÁTICA</button>
+  <div class="run-params">
+    <div class="run-param"><div class="rp-label">UNIVERSO DE SEEDS</div><div class="rp-val">10,000</div></div>
+    <div class="run-param"><div class="rp-label">DROP SIZE</div><div class="rp-val">15 PIEZAS</div></div>
+    <div class="run-param"><div class="rp-label">ALGORITMO</div><div class="rp-val">DIVERSITY-SCORE</div></div>
+    <div class="run-param"><div class="rp-label">SAFETY GATE</div><div class="rp-val">SAFE ONLY</div></div>
+  </div>
+</div>
+
+<div id="progress-section">
+  <div class="prog-header"><span class="prog-label" id="prog-label">INICIALIZANDO</span><span class="prog-val" id="prog-pct">0%</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+  <div class="phase-log" id="phase-log"></div>
+</div>
+
+<div id="results">
+  <div class="results-header">
+    <div>
+      <div class="results-title">DROP <em>01</em></div>
+      <div class="results-sub" id="results-sub">—</div>
+    </div>
+    <div class="results-actions">
+      <button class="act-btn act-btn-g" onclick="exportManifest()">↓ MANIFEST JSON</button>
+      <button class="act-btn act-btn-p" onclick="openCards()">⎙ TARJETAS</button>
+      <button class="act-btn" style="border-color:var(--border);color:var(--muted)" onclick="runAuto()">⟳ RE-GENERAR</button>
+    </div>
+  </div>
+
+  <div id="stats-row">
+    <div class="stat-cell"><div class="stat-val" id="stat-scanned" style="color:var(--muted)">—</div><div class="stat-label">SEEDS ANALIZADOS</div></div>
+    <div class="stat-cell"><div class="stat-val" id="stat-safe" style="color:var(--green)">—</div><div class="stat-label">SAFE ENCONTRADOS</div></div>
+    <div class="stat-cell"><div class="stat-val" id="stat-rate" style="color:var(--text)">—</div><div class="stat-label">TASA DE ÉXITO</div></div>
+    <div class="stat-cell"><div class="stat-val" id="stat-avg" style="color:var(--purple)">—</div><div class="stat-label">SCORE PROMEDIO DROP</div></div>
+    <div class="stat-cell"><div class="stat-val" id="stat-archetypes" style="color:var(--amber)">—</div><div class="stat-label">ARQUETIPOS DISTINTOS</div></div>
+  </div>
+
+  <div id="drop-grid"></div>
+  <div id="narrative-section"></div>
+  <div id="manifest-section"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// CORE SYSTEMS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function mkRand(seed){
+  let s=seed>>>0
+  return ()=>{ s=(Math.imul(1664525,s)+1013904223)>>>0; return s/0xffffffff }
+}
+
+function paramsFromSeed(seed){
+  const r=mkRand(seed)
+  return {
+    diam: 16 + r()*4,
+    width: 5 + r()*6,
+    thick: 1.4 + r()*2,
+    spikes: r() > 0.3,
+    sc: Math.round(6 + r()*20),
+    sh: 0.3 + r()*2.8,
+    waves: r() > 0.25,
+    wf: Math.round(1 + r()*8),
+    wa: 0.1 + r()*1.2,
+    voro: r() > 0.35,
+    vi: r()*1.2,
+    cuts: r() > 0.4,
+    cn: Math.round(1 + r()*14),
+    seed
+  }
+}
+
+const SAFETY_RULES = [
+  { level:'FAIL', check: p => p.thick < 1.2 },
+  { level:'RISK', check: p => p.thick < 1.5 },
+  { level:'RISK', check: p => p.spikes && p.sh > 2.5 },
+  { level:'RISK', check: p => p.spikes && p.sh > 1.8 && p.sc > 20 },
+  { level:'RISK', check: p => p.voro && p.vi > 1.0 },
+  { level:'RISK', check: p => p.cuts && p.cn > 10 },
+  { level:'RISK', check: p => p.cuts && p.cn > 6 && p.thick < 1.8 },
+]
+function checkSafety(p){
+  let status='SAFE'
+  for(const r of SAFETY_RULES){
+    if(r.check(p)){ if(r.level==='FAIL') return {status:'FAIL'}; status='RISK' }
+  }
+  return {status}
+}
+
+// ── AESTHETIC SCORE (weighted, multi-factor) ─────────────────────────────────
+function scoreAesthetic(p){
+  let score = 40
+  const r = mkRand(p.seed + 1337)
+  const mods = [p.spikes, p.waves, p.voro, p.cuts].filter(Boolean).length
+
+  // Complexity (1 mod = boring, 4 = chaotic, sweet spot 2-3)
+  if(mods === 2) score += 16
+  if(mods === 3) score += 20
+  if(mods === 4) score += 10
+  if(mods <= 1)  score -= 5
+
+  // Proportions: width/diam ratio
+  const ratio = p.width / p.diam
+  if(ratio > 0.32 && ratio < 0.55) score += 12
+  else if(ratio < 0.22 || ratio > 0.65) score -= 10
+
+  // Spike quality
+  if(p.spikes){
+    if(p.sc >= 8 && p.sc <= 16)  score += 10
+    if(p.sh >= 0.8 && p.sh <= 1.8) score += 10
+    if(p.sc > 22 || p.sh > 2.2)  score -= 8
+  }
+
+  // Wave resonance
+  if(p.waves){
+    if(p.wf >= 2 && p.wf <= 5)   score += 8
+    if(p.wa > 0.4 && p.wa < 0.9) score += 5
+  }
+
+  // Voronoi quality
+  if(p.voro){
+    if(p.vi > 0.25 && p.vi < 0.75) score += 12
+    if(p.vi > 0.9) score -= 6
+  }
+
+  // Cut drama
+  if(p.cuts){
+    if(p.cn >= 3 && p.cn <= 7) score += 8
+    if(p.cn > 10) score -= 8
+  }
+
+  // Wall quality bonus
+  if(p.thick >= 1.8 && p.thick <= 2.6) score += 8
+
+  // Small entropy
+  score += (r() - 0.5) * 6
+
+  return Math.max(0, Math.min(100, Math.round(score)))
+}
+
+// ── ARCHETYPE CLASSIFICATION ──────────────────────────────────────────────────
+// Each archetype = distinct visual typology for the drop
+const ARCHETYPES = [
+  { id:'THORN',    test: p => p.spikes && p.sh > 1.2 && p.sc >= 10 && !p.voro },
+  { id:'ORGANIC',  test: p => p.voro && p.waves && !p.spikes },
+  { id:'GLITCH',   test: p => p.cuts && p.cn >= 4 && !p.spikes },
+  { id:'BRUTAL',   test: p => p.spikes && p.cuts && p.sc >= 12 },
+  { id:'WAVE',     test: p => p.waves && !p.spikes && !p.cuts && p.wf >= 3 },
+  { id:'NOISE',    test: p => p.voro && !p.waves && p.vi > 0.4 },
+  { id:'HYBRID',   test: p => [p.spikes,p.waves,p.voro,p.cuts].filter(Boolean).length === 4 },
+  { id:'MINIMAL',  test: p => [p.spikes,p.waves,p.voro,p.cuts].filter(Boolean).length <= 1 },
+  { id:'CORE',     test: () => true }, // catch-all
+]
+function getArchetype(p){
+  for(const a of ARCHETYPES) if(a.test(p)) return a.id
+  return 'CORE'
+}
+
+// ── DIVERSITY SELECTOR ────────────────────────────────────────────────────────
+// From a pool of SAFE candidates, select 15 that:
+//   1. Maximize total aesthetic score
+//   2. Enforce archetype diversity (no more than 2 of same type)
+//   3. Enforce parameter space diversity (diam, width spread)
+function selectDrop(candidates, dropSize){
+  // Sort by score descending
+  const sorted = [...candidates].sort((a,b) => b.score - a.score)
+
+  const selected = []
+  const archetypeCount = {}
+  const MAX_PER_ARCHETYPE = 2
+
+  // Pass 1: greedy selection with archetype cap
+  for(const c of sorted){
+    if(selected.length >= dropSize) break
+    const arch = c.archetype
+    const cnt = archetypeCount[arch] || 0
+    if(cnt >= MAX_PER_ARCHETYPE) continue
+    // Check diameter diversity (avoid 3+ rings with very similar diameter)
+    const similarDiam = selected.filter(s => Math.abs(s.p.diam - c.p.diam) < 0.8).length
+    if(similarDiam >= 3) continue
+    selected.push(c)
+    archetypeCount[arch] = cnt + 1
+  }
+
+  // Pass 2: fill remaining slots if not enough (relax constraints)
+  if(selected.length < dropSize){
+    for(const c of sorted){
+      if(selected.length >= dropSize) break
+      if(!selected.find(s => s.seed === c.seed)){
+        selected.push(c)
+      }
+    }
+  }
+
+  return selected
+}
+
+// ── LORE ENGINE ───────────────────────────────────────────────────────────────
+const DROP_NARRATIVE = {
+  title: 'CORE',
+  subtitle: 'Primera instancia física del universo NeoProxy',
+  body: `DROP 01 representa el primer punto de contacto entre el sistema generativo NeoProxy y el mundo físico. Cada instancia fue extraída de un universo de <strong>10,000 seeds posibles</strong>, filtrada por algoritmos de safety estructural, y seleccionada mediante un sistema de scoring que evalúa proporciones, complejidad y diversidad tipológica.\n\nNo son anillos diseñados. Son <strong>instancias certificadas</strong> — objetos que emergieron del ruido paramétrico y sobrevivieron los filtros suficientes para existir en resina.\n\nCada pieza lleva su seed grabado. Ese número es su identidad permanente: reproducible, verificable, única.`,
+}
+
+function generateItemLore(seed, p, archetype){
+  const r = mkRand(seed + 9999)
+  const origins = {
+    THORN:   'geometría de defensa — picos como protocolo de separación',
+    ORGANIC: 'superficie viva — ruido voronoi como tejido sin centro',
+    GLITCH:  'error elevado a forma — incisiones donde la estructura falla',
+    BRUTAL:  'conflicto materializado — picos y cortes sin resolución',
+    WAVE:    'modulación pura — forma que respira en frecuencia constante',
+    NOISE:   'caos estructurado — voronoi sin atenuación',
+    HYBRID:  'instancia máxima — todos los sistemas activos simultáneamente',
+    MINIMAL: 'forma esencial — un solo modificador, sin ruido adicional',
+    CORE:    'instancia base — equilibrio entre todos los parámetros',
+  }
+  return origins[archetype] || 'instancia no clasificada'
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MAIN AUTO-CURATION PIPELINE
+// ══════════════════════════════════════════════════════════════════════════════
+
+let dropResult = null
+
+async function runAuto(){
+  const btn = document.getElementById('run-btn')
+  btn.disabled = true
+  btn.textContent = '⟳ EJECUTANDO...'
+  document.getElementById('results').style.display = 'none'
+  document.getElementById('progress-section').style.display = 'block'
+
+  const TOTAL = 10000
+  const BATCH = 200
+  const DROP_SIZE = 15
+
+  let candidates = []
+  let scanned = 0, safe = 0
+
+  // ─ PHASE 1: SCAN ──────────────────────────────────────────────────────────
+  setProgress(0, 'PHASE 1/3 — ESCANEANDO UNIVERSO DE SEEDS')
+
+  for(let b = 0; b < TOTAL/BATCH; b++){
+    await tick()
+    for(let i = 0; i < BATCH; i++){
+      const seed = Math.floor(Math.random() * 99999)
+      const p = paramsFromSeed(seed)
+      const safety = checkSafety(p)
+      scanned++
+      if(safety.status === 'FAIL') continue
+      if(safety.status === 'RISK') continue  // DROP 01: SAFE only
+      safe++
+      const score = scoreAesthetic(p)
+      const archetype = getArchetype(p)
+      candidates.push({ seed, p, safety, score, archetype })
+    }
+    const pct = ((b+1)/(TOTAL/BATCH)) * 45
+    setProgress(pct, `PHASE 1/3 — ${scanned.toLocaleString()} seeds · ${safe} SAFE encontrados`)
+  }
+
+  // ─ PHASE 2: SELECT ────────────────────────────────────────────────────────
+  setProgress(50, 'PHASE 2/3 — APLICANDO ALGORITMO DE DIVERSIDAD...')
+  await tick()
+
+  const drop = selectDrop(candidates, DROP_SIZE)
+
+  setProgress(70, `PHASE 2/3 — ${DROP_SIZE} INSTANCIAS SELECCIONADAS`)
+  await tick()
+
+  // ─ PHASE 3: RENDER ────────────────────────────────────────────────────────
+  setProgress(75, 'PHASE 3/3 — RENDERIZANDO PREVISUALIZACIONES...')
+  await tick()
+
+  renderResults(drop, candidates, scanned, safe)
+
+  setProgress(100, `COMPLETADO — DROP 01 LISTO`)
+  await new Promise(r => setTimeout(r, 400))
+
+  document.getElementById('progress-section').style.display = 'none'
+  document.getElementById('results').style.display = 'block'
+
+  btn.disabled = false
+  btn.textContent = '⟳ RE-GENERAR DROP'
+  dropResult = drop
+}
+
+function setProgress(pct, label){
+  document.getElementById('prog-fill').style.width = pct + '%'
+  document.getElementById('prog-pct').textContent = Math.round(pct) + '%'
+  document.getElementById('prog-label').textContent = label.split('—')[0]
+  document.getElementById('phase-log').textContent = label
+}
+
+function tick(){ return new Promise(r => setTimeout(r, 0)) }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderResults(drop, allCandidates, scanned, safe){
+  const avgScore = Math.round(drop.reduce((s,d)=>s+d.score,0)/drop.length)
+  const archetypes = new Set(drop.map(d=>d.archetype)).size
+  const safeRate = Math.round((safe/scanned)*100)
+
+  // Stats
+  document.getElementById('stat-scanned').textContent = scanned.toLocaleString()
+  document.getElementById('stat-safe').textContent = safe
+  document.getElementById('stat-rate').textContent = safeRate + '%'
+  document.getElementById('stat-avg').textContent = avgScore
+  document.getElementById('stat-archetypes').textContent = archetypes
+
+  document.getElementById('results-sub').textContent =
+    `${drop.length} INSTANCIAS CERTIFICADAS · SCORE MÍNIMO ${Math.min(...drop.map(d=>d.score))} · MÁXIMO ${Math.max(...drop.map(d=>d.score))}`
+
+  // Grid
+  renderDropGrid(drop)
+
+  // Narrative
+  renderNarrative(drop, avgScore, archetypes)
+
+  // Manifest table
+  renderManifestTable(drop)
+}
+
+function renderDropGrid(drop){
+  const grid = document.getElementById('drop-grid')
+  grid.innerHTML = ''
+
+  drop.forEach((item, idx) => {
+    const {seed, p, safety, score, archetype} = item
+    const padSeed = String(seed).padStart(5,'0')
+    const mods = [p.spikes&&'spikes',p.waves&&'waves',p.voro&&'voro',p.cuts&&'cuts'].filter(Boolean)
+
+    const card = document.createElement('div')
+    card.className = 'item-card'
+    card.innerHTML = `
+      <div class="item-canvas-wrap">
+        <canvas class="item-canvas" width="220" height="180"></canvas>
+        <div class="item-rank">${String(idx+1).padStart(2,'0')}</div>
+      </div>
+      <div class="item-body">
+        <div class="item-id">NP-${padSeed}</div>
+        <div class="item-archetype">${archetype}</div>
+        <div class="item-score-row">
+          <div class="item-score-bar"><div class="item-score-fill" style="width:${score}%;background:linear-gradient(90deg,#4400aa,#b400ff)"></div></div>
+          <div class="item-score-val">${score}</div>
+        </div>
+        <div class="item-tags">
+          <span class="itag itag-safe">SAFE</span>
+          ${mods.map(m=>`<span class="itag itag-mod">${m}</span>`).join('')}
+        </div>
+      </div>
+    `
+
+    const canvas = card.querySelector('.item-canvas')
+    // Stagger renders so browser doesn't freeze
+    setTimeout(() => drawRingPreview(canvas, p), idx * 60)
+
+    // Click opens ring page
+    card.style.cursor = 'pointer'
+    card.title = `Abrir NP-${padSeed}`
+    card.addEventListener('click', () => window.open(`np-ring.html?seed=${seed}`, '_blank'))
+
+    grid.appendChild(card)
+  })
+}
+
+function renderNarrative(drop, avgScore, archetypes){
+  const el = document.getElementById('narrative-section')
+  const archetypeList = [...new Set(drop.map(d=>d.archetype))].join(' · ')
+  const today = new Date().toISOString().split('T')[0]
+
+  el.innerHTML = `
+    <div class="nar-eyebrow">// NARRATIVA DEL DROP</div>
+    <div class="nar-title">DROP 01<br><span style="color:var(--purple)">CORE</span></div>
+    <div class="nar-subtitle">Primera instancia física del universo NeoProxy</div>
+    <div class="nar-body">
+      DROP 01 representa el primer punto de contacto entre el sistema generativo NeoProxy y el mundo físico.
+      Cada instancia fue extraída de un universo de <strong>10,000 seeds posibles</strong>,
+      filtrada por algoritmos de safety estructural, y seleccionada mediante un sistema de scoring
+      que evalúa proporciones, complejidad y diversidad tipológica.<br><br>
+      No son anillos diseñados. Son <strong>instancias certificadas</strong> — objetos que emergieron
+      del ruido paramétrico y sobrevivieron los filtros suficientes para existir en resina.<br><br>
+      Cada pieza lleva su seed como identidad permanente: reproducible, verificable, única.
+      Esto no es edición limitada por decisión de marketing.
+      Es limitada porque <strong>solo estos 15 seeds pasaron todos los filtros</strong>.
+    </div>
+    <div class="nar-meta">
+      <div class="nar-meta-item"><div class="nar-meta-label">FECHA DE GENERACIÓN</div><div class="nar-meta-val">${today}</div></div>
+      <div class="nar-meta-item"><div class="nar-meta-label">PIEZAS EN DROP</div><div class="nar-meta-val">15 / 15</div></div>
+      <div class="nar-meta-item"><div class="nar-meta-label">ARQUETIPOS</div><div class="nar-meta-val">${archetypeList}</div></div>
+      <div class="nar-meta-item"><div class="nar-meta-label">SCORE PROMEDIO</div><div class="nar-meta-val">${avgScore} / 100</div></div>
+      <div class="nar-meta-item"><div class="nar-meta-label">MATERIAL</div><div class="nar-meta-val">Resina ABS-Like</div></div>
+      <div class="nar-meta-item"><div class="nar-meta-label">SISTEMA</div><div class="nar-meta-val">NP CERTIFIED ●</div></div>
+    </div>
+  `
+}
+
+function renderManifestTable(drop){
+  const el = document.getElementById('manifest-section')
+  const rows = drop.map((item, i) => {
+    const {seed, p, score, archetype} = item
+    const padSeed = String(seed).padStart(5,'0')
+    const mods = [p.spikes&&'S',p.waves&&'W',p.voro&&'V',p.cuts&&'C'].filter(Boolean).join('')||'—'
+    return `<tr>
+      <td>${String(i+1).padStart(2,'0')}</td>
+      <td class="td-id">NP-${padSeed}</td>
+      <td>${archetype}</td>
+      <td class="td-score">${score}</td>
+      <td><span class="badge itag-safe">SAFE</span></td>
+      <td>${p.diam.toFixed(1)}</td>
+      <td>${p.width.toFixed(1)}</td>
+      <td>${p.thick.toFixed(1)}</td>
+      <td>${mods}</td>
+      <td style="color:var(--muted);font-size:7px">neoproxy.art?seed=${seed}</td>
+    </tr>`
+  }).join('')
+
+  el.innerHTML = `
+    <div class="manifest-header">
+      <div class="manifest-title">MANIFEST — DROP 01 CORE</div>
+      <div style="font-size:7px;color:var(--muted);letter-spacing:.15em">${drop.length} INSTANCIAS</div>
+    </div>
+    <table>
+      <thead><tr>
+        <th>#</th><th>ID</th><th>ARQUETIPO</th><th>SCORE</th><th>SAFETY</th>
+        <th>Ø mm</th><th>W mm</th><th>T mm</th><th>MODS</th><th>URL</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 2D RING PREVIEW
+// ══════════════════════════════════════════════════════════════════════════════
+function drawRingPreview(canvas, p){
+  const ctx = canvas.getContext('2d')
+  const W = canvas.width, H = canvas.height
+  const cx = W/2, cy = H/2
+  const R = Math.min(W,H) * 0.34
+  const innerR = R * (p.diam / (p.diam + p.thick*2.2))
+  const SEG = 128
+
+  ctx.clearRect(0,0,W,H)
+
+  // BG
+  const bg = ctx.createRadialGradient(cx,cy,0,cx,cy,R*1.5)
+  bg.addColorStop(0,'#080812'); bg.addColorStop(1,'#020205')
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H)
+
+  const rand = mkRand(p.seed)
+  const vpts = []; for(let i=0;i<16;i++) vpts.push([rand()*Math.PI*2,(rand()-.5)*p.width])
+  const cutsList = []
+  const cr = mkRand(p.seed+999)
+  for(let k=0;k<p.cn;k++) cutsList.push({a:cr()*Math.PI*2,aw:.1+cr()*.2})
+
+  // Outer path
+  const outer = []
+  for(let i=0;i<=SEG;i++){
+    const angle = i/SEG*Math.PI*2
+    let r = R
+    if(p.spikes){ const sp=Math.max(0,Math.sin(angle*p.sc)); r+=Math.pow(sp,3)*p.sh*(R/p.diam)*5.5 }
+    if(p.waves) r += Math.sin(angle*p.wf)*p.wa*(R/p.diam)*3.5
+    if(p.voro){
+      let mn=1e9
+      for(const pt of vpts){ const da=angle-pt[0]; mn=Math.min(mn,Math.abs(da)) }
+      r += (.5-Math.min(mn/1.5,1))*p.vi*(R/p.diam)*3
+    }
+    if(p.cuts){
+      for(const c of cutsList){
+        const ad=Math.abs(((angle-c.a+Math.PI*3)%(Math.PI*2))-Math.PI)
+        if(ad<c.aw) r+=(R*.04)*(1-ad/c.aw)*.7
+      }
+    }
+    outer.push([cx+Math.cos(angle)*r, cy+Math.sin(angle)*r])
+  }
+
+  // Draw with glow
+  ctx.shadowBlur=18; ctx.shadowColor='rgba(180,0,255,0.5)'
+  ctx.beginPath()
+  outer.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y))
+  ctx.closePath()
+  ctx.fillStyle='#060610'; ctx.fill()
+
+  // Stroke gradient
+  const grad = ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R)
+  grad.addColorStop(0,'#b400ff'); grad.addColorStop(.5,'#6622aa'); grad.addColorStop(1,'#00ff9d')
+  ctx.strokeStyle=grad; ctx.lineWidth=1.2; ctx.stroke()
+  ctx.shadowBlur=0
+
+  // Inner hole
+  ctx.beginPath(); ctx.arc(cx,cy,innerR,0,Math.PI*2)
+  ctx.fillStyle='#020205'; ctx.fill()
+  ctx.strokeStyle='rgba(180,0,255,0.2)'; ctx.lineWidth=.5; ctx.stroke()
+
+  // Depth rings
+  ctx.globalAlpha=.08; ctx.strokeStyle='#b400ff'; ctx.lineWidth=.5
+  for(let n=1;n<=3;n++){ ctx.beginPath(); ctx.arc(cx,cy,innerR+(R*0.85-innerR)*n/4,0,Math.PI*2); ctx.stroke() }
+  ctx.globalAlpha=1
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════════════════════════════════════════
+function exportManifest(){
+  if(!dropResult) return
+  const today = new Date().toISOString()
+  const manifest = {
+    drop: 'DROP_01',
+    name: 'CORE',
+    generated: today,
+    algorithm: 'diversity-score-v1',
+    universe_size: 10000,
+    count: dropResult.length,
+    items: dropResult.map((item,i)=>({
+      index: i+1,
+      id: `NP-${String(item.seed).padStart(5,'0')}`,
+      seed: item.seed,
+      archetype: item.archetype,
+      aesthetic_score: item.score,
+      status: 'SAFE',
+      lore: generateItemLore(item.seed, item.p, item.archetype),
+      params: {
+        diam_mm: +item.p.diam.toFixed(2),
+        width_mm: +item.p.width.toFixed(2),
+        thick_mm: +item.p.thick.toFixed(2),
+        spikes: item.p.spikes ? { count: item.p.sc, height_mm: +item.p.sh.toFixed(2) } : false,
+        waves: item.p.waves ? { freq: item.p.wf, amp_mm: +item.p.wa.toFixed(3) } : false,
+        voronoi: item.p.voro ? { intensity_mm: +item.p.vi.toFixed(3) } : false,
+        cuts: item.p.cuts ? { count: item.p.cn } : false,
+      },
+      stl_filename: `NP-${String(item.seed).padStart(5,'0')}_d${item.p.diam.toFixed(1)}mm_[CERT].stl`,
+      url: `neoproxy.art?seed=${item.seed}`,
+      ring_url: `np-ring.html?seed=${item.seed}`,
+    }))
+  }
+  const blob = new Blob([JSON.stringify(manifest,null,2)],{type:'application/json'})
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href=url; a.download=`NP_DROP01_CORE_manifest.json`; a.click()
+  URL.revokeObjectURL(url)
+}
+
+function openCards(){
+  if(!dropResult) return
+  const seeds = dropResult.map(d=>d.seed).join(',')
+  window.open(`np-cards.html?seeds=${seeds}`, '_blank')
+}
+</script>
+</body>
+</html>
