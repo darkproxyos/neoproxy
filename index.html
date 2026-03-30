@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEOPROXY // DASHBOARD</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#020205;--surface:#06060e;--border:#0d0d1a;
+  --purple:#b400ff;--green:#00ff9d;--amber:#ffb800;--red:#ff2b2b;
+  --text:#aaaabb;--muted:#2a2a44;--dim:#080812;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+
+/* SCAN LINES */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,0,255,.008) 3px,rgba(180,0,255,.008) 4px);pointer-events:none;z-index:999}
+
+/* ── HEADER ── */
+header{padding:20px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg);position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.2em;color:var(--purple);text-shadow:0 0 20px rgba(180,0,255,.3)}
+.logo em{color:#333355;font-style:normal;font-size:16px}
+.hstatus{font-size:8px;letter-spacing:.2em;color:var(--muted)}
+.hstatus span{color:var(--green)}
+
+/* ── HERO SECTION ── */
+.hero{padding:80px 32px;text-align:center;background:linear-gradient(180deg,var(--bg) 0%,var(--dim) 100%)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:.08em;color:var(--text);line-height:1;margin-bottom:16px}
+.hero-title span{color:var(--purple)}
+.hero-subtitle{font-size:14px;color:rgba(180,0,255,.7);letter-spacing:.15em;margin-bottom:40px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6}
+.hero-cta{display:inline-block;padding:16px 32px;border:2px solid var(--purple);color:var(--purple);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;transition:all .3s;position:relative;overflow:hidden}
+.hero-cta::before{content:'';position:absolute;inset:0;background:rgba(180,0,255,0);transition:background .3s}
+.hero-cta:hover::before{background:rgba(180,0,255,.1)}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(180,0,255,.2)}
+
+/* ── TOOLS GRID ── */
+.tools-section{padding:80px 32px}
+.section-header{text-align:center;margin-bottom:60px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:.08em;color:var(--text);margin-bottom:12px}
+.section-subtitle{font-size:12px;color:var(--muted);letter-spacing:.15em}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:24px;max-width:1200px;margin:0 auto}
+.tool-card{background:var(--surface);border:1px solid var(--border);padding:32px;transition:all .3s;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--green));opacity:0;transition:opacity .3s}
+.tool-card:hover::before{opacity:1}
+.tool-card:hover{transform:translateY(-4px);border-color:var(--purple);box-shadow:0 12px 32px rgba(180,0,255,.1)}
+.tool-icon{font-size:48px;margin-bottom:16px;display:block}
+.tool-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.05em;color:var(--text);margin-bottom:12px}
+.tool-description{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.tool-action{display:inline-block;padding:10px 20px;border:1px solid var(--purple);color:var(--purple);font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:all .2s}
+.tool-action:hover{background:rgba(180,0,255,.08)}
+
+/* ── STATS SECTION ── */
+.stats-section{padding:60px 32px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;max-width:1000px;margin:0 auto;text-align:center}
+.stat-item{padding:20px}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:.05em;color:var(--purple);margin-bottom:8px}
+.stat-label{font-size:10px;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
+
+/* ── FOOTER ── */
+footer{padding:40px 32px;border-top:1px solid var(--border);text-align:center}
+.footer-text{font-size:8px;color:var(--muted);letter-spacing:.2em;margin-bottom:16px}
+.footer-links{display:flex;justify-content:center;gap:24px}
+.footer-link{color:var(--purple);font-size:8px;letter-spacing:.2em;text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--green)}
+
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:var(--purple)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">NEOPROXY <em>// DASHBOARD</em></div>
+  <div class="hstatus">SISTEMA <span>● ONLINE</span></div>
+</header>
+
+<section class="hero">
+  <h1 class="hero-title">CONSCIOUSNESS <span>→</span> MATTER</h1>
+  <p class="hero-subtitle">
+    Sistema operativo creativo que transforma pensamiento en geometría, 
+    geometría en materia, y materia en experiencia. 
+    Bienvenido al centro de control del universo NeoProxy.
+  </p>
+  <a href="#tools" class="hero-cta">▶ EXPLORAR HERRAMIENTAS</a>
+</section>
+
+<section id="tools" class="tools-section">
+  <div class="section-header">
+    <h2 class="section-title">HERRAMIENTAS GENERATIVAS</h2>
+    <p class="section-subtitle">Sistemas autónomos de creación y curaduría</p>
+  </div>
+  
+  <div class="tools-grid">
+    <div class="tool-card">
+      <span class="tool-icon">🎯</span>
+      <h3 class="tool-title">AUTO_CURATOR</h3>
+      <p class="tool-description">
+        Motor de curaduría automática con algoritmo de diversidad forzada. 
+        Analiza 10,000 seeds y selecciona 15 piezas únicas con 9 arquetipos tipológicos. 
+        Sistema de scoring multi-factor con safety rules industriales.
+      </p>
+      <a href="np-autocurator.html" class="tool-action">▶ EJECUTAR CURADURÍA</a>
+    </div>
+    
+    <div class="tool-card">
+      <span class="tool-icon">💍</span>
+      <h3 class="tool-title">RING_GENERATOR</h3>
+      <p class="tool-description">
+        Generador paramétrico de anillos 3D con estética cyberpunk/glitch. 
+        4 modificadores: spikes, ondas, voronoi noise, cortes glitch. 
+        Export STL 1:1 para impresión 3D en resina ABS-Like.
+      </p>
+      <a href="neoproxy-ring-generator.html" class="tool-action">▶ GENERAR ANILLO</a>
+    </div>
+    
+    <div class="tool-card">
+      <span class="tool-icon">🌐</span>
+      <h3 class="tool-title">3D_NETWORK</h3>
+      <p class="tool-description">
+        Interfaz 3D interactiva con nodos clickeables y HUD dinámico. 
+        Constellation navigation con serpent transformation. 
+        Sistema Living Network con energía pulsante.
+      </p>
+      <a href="/Experiments/app/page.tsx" class="tool-action">▶ ABRIR RED 3D</a>
+    </div>
+    
+    <div class="tool-card">
+      <span class="tool-icon">🏭</span>
+      <h3 class="tool-title">FABRICATION</h3>
+      <p class="tool-description">
+        Pipeline de fabricación física integrado. 
+        Conexión directa con impresoras 3D (Ender 3, Photon Mono 2). 
+        Monitoreo IoT y control de calidad automatizado.
+      </p>
+      <a href="#" class="tool-action">▶ PANEL FABRICACIÓN</a>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-value">10,000</div>
+      <div class="stat-label">SEEDS ANALIZADAS</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">15</div>
+      <div class="stat-label">PIEZAS POR DROP</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">9</div>
+      <div class="stat-label">ARQUETIPOS</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">100%</div>
+      <div class="stat-label">CERTIFIED SAFE</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">NEOPROXY OS // CONSCIOUSNESS → MATTER</div>
+  <div class="footer-links">
+    <a href="#" class="footer-link">DOCS</a>
+    <a href="#" class="footer-link">GITHUB</a>
+    <a href="#" class="footer-link">DISCORD</a>
+    <a href="#" class="footer-link">STORE</a>
+  </div>
+</footer>
+
+</body>
+</html>
