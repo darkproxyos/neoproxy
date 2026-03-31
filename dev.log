@@ -1,0 +1,17 @@
+
+> npos-shell@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.116.210:3000
+
+✓ Starting...
+✓ Ready in 890ms
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.116.210:3000
+
+✓ Starting...
+✓ Ready in 799ms
