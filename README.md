@@ -20,6 +20,18 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and fill in values:
+
+```bash
+cp .env.example .env.local
+```
+
+**Required Variables:**
+- `NEOPROXY_API_URL` - API endpoint for wake signals (default: http://localhost:3000)
+- `EVENT_DB_PATH` - Path to SQLite database (default: ./sqlite.db)
+
 ## 🛠️ Herramientas Generativas
 
 ### **Ring Generator** (`/ring-generator`)
