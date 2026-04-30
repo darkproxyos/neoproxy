@@ -412,7 +412,7 @@ export default function Drop01Page() {
                         transition: 'all 0.15s',
                       }}
                     >
-                      {item.physical ? 'RESERVAR' : 'COMPRAR STL'}
+                      ADQUIRIR // ${item.price} USD
                     </button>
                   </div>
                 </div>
@@ -495,13 +495,25 @@ export default function Drop01Page() {
   )
 }
 
-// ── PURCHASE HANDLER (connect to your payment system) ─────────────────────────
-function handleBuy(item: typeof DROP_01_SEEDS[0]) {
-  // TODO: conectar con Stripe / MercadoPago / email
-  // Por ahora: mailto con el ID del objeto
-  const subject = encodeURIComponent(`Reserva DROP 01 — NP-${String(item.seed).padStart(5, '0')}`)
-  const body = encodeURIComponent(
-    `Hola,\n\nQuiero reservar:\n\nID: NP-${String(item.seed).padStart(5, '0')}\nArquetipo: ${item.archetype}\nTipo: ${item.physical ? 'Objeto físico' : 'STL digital'}\nPrecio: $${item.price}\n\nSeed: ${item.seed}\nURL: neoproxy.art/legacy/np-ring.html?seed=${item.seed}`
-  )
-  window.location.href = `mailto:darkproxy@neoproxy.art?subject=${subject}&body=${body}`
+async function handleBuy(item: typeof DROP_01_SEEDS[0]) {
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        productId: `NP-${item.seed}`,
+        productName: `NeoProxy Artefacto: ${item.archetype} NP-${item.seed}`,
+        price: item.price,
+        quantity: 1
+      })
+    })
+    const data = await res.json()
+    if (data.url) {
+      window.location.href = data.url
+    } else {
+      console.error('Checkout error:', data.error)
+    }
+  } catch (err) {
+    console.error('Network error routing to checkout:', err)
+  }
 }
