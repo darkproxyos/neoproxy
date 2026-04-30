@@ -1,0 +1,332 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 50%, #0a0a1a 100%);
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  overflow-x: hidden;
+}
+
+.header {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid #00ffff;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px #00ffff;
+}
+
+.cyber {
+  color: #ff00ff;
+  animation: pulse 2s infinite;
+}
+
+.main {
+  color: #00ffff;
+  margin: 0 1rem;
+}
+
+.quantum {
+  color: #ffff00;
+  animation: pulse 1.5s infinite;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 1rem;
+}
+
+.viewport {
+  height: 500px;
+  position: relative;
+  border: 2px solid #00ffff;
+  margin: 2rem auto;
+  max-width: 800px;
+  background: rgba(0, 20, 40, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.scene {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.activateBtn {
+  background: linear-gradient(45deg, #ff00ff, #00ffff);
+  border: none;
+  color: #000;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+}
+
+.activateBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(0, 255, 255, 0.5);
+}
+
+.activateBtn.active {
+  background: linear-gradient(45deg, #ff0000, #ffaa00);
+  animation: glow 1s infinite;
+}
+
+.workflow {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.workflowTitle {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff;
+}
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.phase {
+  position: relative;
+  z-index: 2;
+  background: rgba(0, 20, 40, 0.8);
+  border: 2px solid #00ffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.phase:hover {
+  transform: translateY(-5px);
+  border-color: #ff00ff;
+  box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
+}
+
+.phase.active {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: #ff00ff;
+  animation: glow 2s infinite;
+}
+
+.phaseIcon {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.phaseInfo {
+  text-align: center;
+}
+
+.phaseName {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #00ffff;
+}
+
+.phaseDesc {
+  font-size: 0.9rem;
+  color: #888;
+  line-height: 1.4;
+}
+
+.specs {
+  padding: 3rem 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  margin: 2rem 0;
+}
+
+.specsTitle {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #00ffff;
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.specCard {
+  background: rgba(0, 40, 80, 0.5);
+  border: 1px solid #00ffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.specCard:hover {
+  transform: translateY(-3px);
+  border-color: #ff00ff;
+  box-shadow: 0 10px 30px rgba(255, 0, 255, 0.2);
+}
+
+.specCard h3 {
+  color: #00ffff;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.specCard ul {
+  list-style: none;
+  padding: 0;
+}
+
+.specCard li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  color: #ccc;
+}
+
+.specCard li:last-child {
+  border-bottom: none;
+}
+
+.cta {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: rgba(255, 0, 255, 0.1);
+  margin: 2rem 0;
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #ff00ff;
+  text-shadow: 0 0 10px #ff00ff;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ctaBtn {
+  background: linear-gradient(45deg, #00ffff, #ff00ff);
+  border: none;
+  color: #000;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.ctaBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 2px solid #00ffff;
+  color: #888;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: #00ffff;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 0, 255, 0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .timeline {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .timeline::before {
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .specsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}

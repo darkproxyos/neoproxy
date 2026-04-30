@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getUnprocessedEvents, markProcessed } from "../../../../lib/core-db/index"
+import { getUnprocessedEvents, markProcessed } from "@/lib/core-db/index"
 
 export async function GET(request: NextRequest) {
   try {

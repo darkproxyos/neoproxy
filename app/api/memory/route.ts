@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createMemory, getMemories } from "../../../../lib/core-db/index"
+import { createMemory, getMemories } from "@/lib/core-db/index"
 
 export async function GET() {
   try {

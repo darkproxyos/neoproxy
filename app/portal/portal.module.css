@@ -1,0 +1,117 @@
+.main {
+    min-height: 100vh;
+    background: black;
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background grid effect */
+.main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(159, 255, 224, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(159, 255, 224, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(159, 255, 224, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #9fffe0;
+    opacity: 0.7;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-bottom: 32px;
+}
+
+.actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.button {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: 1px solid #9fffe0;
+    color: #9fffe0;
+    font-family: inherit;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.button:hover,
+.button:active {
+    background: #9fffe0;
+    color: black;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(159, 255, 224, 0.2);
+}
+
+.primary {
+    background: rgba(159, 255, 224, 0.1);
+    font-weight: bold;
+}
+
+.footer {
+    margin-top: 48px;
+    font-size: 10px;
+    opacity: 0.3;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
 import { NextRequest } from 'next/server'
-import { onWake, offWake, WakeEvent } from '../../../../lib/event-emitter'
+import { onWake, offWake, WakeEvent } from '@/lib/event-emitter'
 
 // Event Bus interface
 interface EventBusEvent {

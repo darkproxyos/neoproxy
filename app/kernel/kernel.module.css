@@ -1,0 +1,353 @@
+/* Kernel Command Center Styles */
+.container {
+  min-height: 100vh;
+  background: #020408;
+  color: #00d4ff;
+  font-family: 'Space Mono', monospace;
+  padding: 20px;
+}
+
+.accessDenied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.accessDenied h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #ff6b6b;
+}
+
+.accessDenied p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.accessDenied button {
+  padding: 12px 24px;
+  background: #00d4ff;
+  color: #020408;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.accessDenied button:hover {
+  background: #00ff9d;
+  transform: translateY(-2px);
+}
+
+.kernelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #00d4ff;
+}
+
+.kernelHeader h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  background: linear-gradient(45deg, #00d4ff, #00ff9d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kernelControls {
+  display: flex;
+  gap: 15px;
+}
+
+.icebergToggle {
+  padding: 10px 20px;
+  background: rgba(0, 212, 255, 0.1);
+  color: #00d4ff;
+  border: 2px solid #00d4ff;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.icebergToggle:hover {
+  background: rgba(0, 212, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.kernelLayout {
+  display: grid;
+  grid-template-columns: 300px 1fr 350px;
+  gap: 20px;
+  min-height: 80vh;
+}
+
+/* Iceberg Panel */
+.icebergPanel {
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.icebergPanel h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #00ff9d;
+}
+
+.layersList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.layerItem {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 6px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.layerItem:hover {
+  background: rgba(0, 212, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.layerItem.active {
+  border-color: #00ff9d;
+  background: rgba(0, 255, 157, 0.1);
+}
+
+.layerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.layerName {
+  font-weight: bold;
+  color: #00d4ff;
+}
+
+.layerDepth {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.layerInfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.layerToggle {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+/* Visualization Panel */
+.visualizationPanel {
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.systemOverview h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #00ff9d;
+  text-align: center;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.overviewCard {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+}
+
+.overviewCard h3 {
+  margin: 0 0 10px 0;
+  color: #00d4ff;
+  font-size: 1rem;
+}
+
+.overviewCard p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #00ff9d;
+}
+
+.icebergCanvas {
+  border-radius: 8px;
+  background: #000;
+}
+
+/* System Panel */
+.systemPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.agentsSection,
+.storageSection {
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.agentsSection h2,
+.storageSection h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #00ff9d;
+}
+
+.agentsList,
+.storageList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agentItem,
+.storageItem {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.agentHeader,
+.storageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.agentName,
+.storageType {
+  font-weight: bold;
+  color: #00d4ff;
+}
+
+.agentStatus,
+.storageStatus {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(0, 255, 157, 0.2);
+  color: #00ff9d;
+}
+
+.agentStatus.offline,
+.storageStatus.offline {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+}
+
+.agentStatus.processing {
+  background: rgba(255, 217, 61, 0.2);
+  color: #ffd93d;
+}
+
+.agentMetrics,
+.storageMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.loadBar,
+.capacityBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.loadFill,
+.capacityFill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #00ff9d);
+  transition: width 0.3s ease;
+}
+
+.lastActivity {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.storageMetrics span {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* Status indicators */
+.layerItem.warning,
+.agentItem.warning,
+.storageItem.warning {
+  border-color: #ffd93d;
+  background: rgba(255, 217, 61, 0.1);
+}
+
+.layerItem.error,
+.agentItem.error,
+.storageItem.error {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .kernelLayout {
+    grid-template-columns: 250px 1fr 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kernelLayout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .kernelHeader {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+}

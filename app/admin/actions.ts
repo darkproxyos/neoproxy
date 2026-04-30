@@ -1,7 +1,7 @@
 'use server'
 
-import { db } from "@/db";
-import { systemState, memoryEvents } from "@/db/schema";
+import { db } from "@/src/db";
+import { systemState, memoryEvents } from "@/src/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
