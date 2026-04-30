@@ -32,18 +32,28 @@ interface StorageNode {
 
 export default function KernelCommandCenter() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [userRole, setUserRole] = useState<'user' | 'admin'>('user')
   const [systemLayers, setSystemLayers] = useState<SystemLayer[]>([])
   const [agents, setAgents] = useState<Agent[]>([])
   const [storageNodes, setStorageNodes] = useState<StorageNode[]>([])
   const [icebergMode, setIcebergMode] = useState(false)
+  const [stats, setStats] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/kernel/stats')
+        if (res.ok) setStats(await res.json())
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    fetchStats()
+    const int = setInterval(fetchStats, 5000)
+    return () => clearInterval(int)
+  }, [])
 
   // Simulación de datos del sistema
   useEffect(() => {
-    // Verificar rol de admin (simple para demo)
-    const isAdmin = localStorage.getItem('neoproxy_role') === 'admin'
-    setUserRole(isAdmin ? 'admin' : 'user')
-
     // Cargar datos del sistema
     loadSystemData()
   }, [])
@@ -156,23 +166,6 @@ export default function KernelCommandCenter() {
     setSystemLayers(newLayers)
   }
 
-  // Si no es admin, mostrar acceso denegado
-  if (userRole !== 'admin') {
-    return (
-      <div className={styles.container}>
-        <div className={styles.accessDenied}>
-          <h1>🔒 Access Denied</h1>
-          <p>This area is restricted to system administrators.</p>
-          <button onClick={() => {
-            localStorage.setItem('neoproxy_role', 'admin')
-            window.location.reload()
-          }}>
-            Enable Admin Mode
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className={styles.container}>
@@ -224,23 +217,35 @@ export default function KernelCommandCenter() {
               style={{ width: '100%', height: '400px' }}
             />
           ) : (
-            <div className={styles.systemOverview}>
-              <h2>🌐 System Overview</h2>
-              <div className={styles.overviewGrid}>
-                <div className={styles.overviewCard}>
-                  <h3>Active Layers</h3>
-                  <p>{systemLayers.filter(l => l.visible).length} / {systemLayers.length}</p>
-                </div>
-                <div className={styles.overviewCard}>
-                  <h3>Total Nodes</h3>
-                  <p>{systemLayers.reduce((sum, l) => sum + l.nodes, 0)}</p>
-                </div>
-                <div className={styles.overviewCard}>
-                  <h3>System Health</h3>
-                  <p>98.5%</p>
+              <div className={styles.systemOverview}>
+                <h2>🌐 Real-Time Core Metrics</h2>
+                <div className={styles.overviewGrid}>
+                  <div className={styles.overviewCard}>
+                    <h3>Registered Users</h3>
+                    <p>{stats?.usersCount ?? '-'}</p>
+                  </div>
+                  <div className={styles.overviewCard}>
+                    <h3>Active Sessions</h3>
+                    <p>{stats?.sessionsCount ?? '-'}</p>
+                  </div>
+                  <div className={styles.overviewCard}>
+                    <h3>Server Uptime</h3>
+                    <p>{stats?.uptime ? Math.floor(stats.uptime) + 's' : '-'}</p>
+                  </div>
+                  <div className={styles.overviewCard}>
+                    <h3>Active Routes</h3>
+                    <p>{stats?.routesCount ?? '-'}</p>
+                  </div>
+                  <div className={styles.overviewCard}>
+                    <h3>Last Login</h3>
+                    <p>{stats?.lastLogin ? new Date(stats.lastLogin).toLocaleTimeString() : 'None'}</p>
+                  </div>
+                  <div className={styles.overviewCard}>
+                    <h3>Current Operator</h3>
+                    <p style={{ color: '#00ff9d' }}>{stats?.currentOperator ?? '-'}</p>
+                  </div>
                 </div>
               </div>
-            </div>
           )}
         </div>
 
