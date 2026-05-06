@@ -7,6 +7,14 @@ export default function Home() {
   const [stats, setStats] = useState({
     nodes: 12847, sessions: 0, coherence: 99.4, latency: 0
   })
+
+  // Core state from real API
+  const [coreState, setCoreState] = useState({
+    integrity: 100, signals: 0, anomalies: 0, memoryCount: 0
+  })
+
+  // Live entity events feed
+  const [entityEvents, setEntityEvents] = useState<any[]>([])
   const [bootText, setBootText] = useState('')
   const [booted, setBooted] = useState(false)
   const [hoveredBtn, setHoveredBtn] = useState<string | null>(null)
@@ -45,6 +53,61 @@ export default function Home() {
     }
     window.addEventListener('kernel-stats', handler)
     return () => window.removeEventListener('kernel-stats', handler)
+  }, [])
+
+  // Connect to real NeoProxy Core API
+  useEffect(() => {
+    const fetchCoreState = async () => {
+      try {
+        const [stateRes, memoryRes] = await Promise.all([
+          fetch('http://localhost:3333/api/state'),
+          fetch('http://localhost:3333/api/memory')
+        ])
+        const state = await stateRes.json()
+        const memory = await memoryRes.json()
+
+        const coreData = {
+          integrity: state.integrity || 100,
+          signals: state.signals || 0,
+          anomalies: state.anomalies || 0,
+          memoryCount: Array.isArray(memory) ? memory.length : 0
+        }
+
+        setCoreState(coreData)
+        window.dispatchEvent(new CustomEvent('core-update', {
+          detail: coreData
+        }))
+      } catch {
+        // core offline — modo degradado
+        const offlineData = { integrity: 0, signals: 0, anomalies: 0, memoryCount: 0 }
+        setCoreState(offlineData)
+        window.dispatchEvent(new CustomEvent('core-update', {
+          detail: offlineData
+        }))
+      }
+    }
+    fetchCoreState()
+    const interval = setInterval(fetchCoreState, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Fetch live entity events from memory
+  useEffect(() => {
+    const fetchMemory = async () => {
+      try {
+        const res = await fetch('http://localhost:3333/api/memory')
+        const memory = await res.json()
+        // Take last 5 events, most recent first
+        const last5 = memory.slice(-5).reverse()
+        setEntityEvents(last5)
+        window.dispatchEvent(new CustomEvent('entity-update', { detail: last5 }))
+      } catch {
+        // Core offline - silent fail
+      }
+    }
+    fetchMemory()
+    const interval = setInterval(fetchMemory, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -106,6 +169,12 @@ export default function Home() {
       coreMat.metallic = 1
       coreMat.roughness = 0.05
       core.material = coreMat
+
+      // Listen for core updates to change sphere color
+      let currentIntegrity = 100
+      window.addEventListener('core-update', (e: any) => {
+        currentIntegrity = e.detail.integrity
+      })
 
       // ANILLOS orbitales alrededor del núcleo
       for (let i = 0; i < 3; i++) {
@@ -205,34 +274,22 @@ export default function Home() {
         }
       }
 
-      // Conectar esfera al API real
-      const fetchStats = async () => {
-        try {
-          const res = await fetch('/api/kernel/stats')
-          const data = await res.json()
-          
-          // Color según salud del sistema
-          const health = Math.min(data.usersCount / 10, 1)
-          coreMat.emissiveColor = new Color3(
-            health < 0.5 ? 1 - health : 0,
-            health * 0.5,
-            0.8
-          )
-          
-          // Tamaño según carga (sessions)
-          const load = (data.sessionsCount || 0) / 10
-          core.scaling.setAll(1 + load * 0.3)
-          
-          // Actualizar HUD
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('kernel-stats', { detail: data }))
-          }
-        } catch (e) {
-          // Silenciar errores de fetch
-        }
-      }
-      fetchStats()
-      statsInterval = setInterval(fetchStats, 5000)
+      // Actualizar esfera según integridad del core
+      scene.registerBeforeRender(() => {
+        const i = currentIntegrity / 100
+        // integrity 100 → cián puro
+        // integrity 50-99 → amarillo
+        // integrity <50 → rojo
+        coreMat.emissiveColor = new Color3(
+          i < 0.5 ? 1 : (i < 1 ? 1 - (i - 0.5) * 2 : 0),  // R: rojo si <50, amarillo si 50-99
+          i * 0.8,                                         // G: siempre presente
+          i < 0.5 ? i * 2 : 1                              // B: cián si >=50
+        )
+        
+        // Pulso según integridad
+        const pulse = Math.sin(Date.now() * 0.002) * 0.3 * i + 1
+        coreLight.intensity = 3 * pulse
+      })
 
       // Pilares reactivos a eventos
       pillarInterval = setInterval(() => {
@@ -292,15 +349,17 @@ export default function Home() {
         pointerEvents: 'none', fontFamily: 'Space Mono, monospace',
         color: '#00d4ff'
       }}>
-        {/* Top left — Real data HUD */}
+        {/* Top left — Core API HUD */}
         <div style={{ position: 'absolute', top: 24, left: 24, fontSize: 11, letterSpacing: 3, opacity: 0.9 }}>
-          <div>NEOPROXY OS // v0.2</div>
-          <div style={{ marginTop: 8, fontSize: 10, color: '#00ff88' }}>NODES: {stats.nodes.toLocaleString()} // LIVE</div>
-          <div style={{ marginTop: 2, fontSize: 10, color: '#00ff88' }}>SESSIONS: {stats.sessions} ACTIVE</div>
-          <div style={{ marginTop: 2, fontSize: 10, color: '#00ff88' }}>COHERENCE: {stats.coherence.toFixed(1)}%</div>
-          <div style={{ marginTop: 2, fontSize: 10, color: stats.latency > 50 ? '#ff4444' : '#00ff88' }}>
-            LATENCY: {stats.latency}ms
+          <div>NEOPROXY CORE // v2.0</div>
+          <div style={{ marginTop: 8, fontSize: 10, color: coreState.integrity > 80 ? '#00ff88' : coreState.integrity > 50 ? '#ffaa00' : '#ff4444' }}>
+            INTEGRITY: {coreState.integrity}%
           </div>
+          <div style={{ marginTop: 2, fontSize: 10, color: '#00ff88' }}>SIGNALS: {coreState.signals}</div>
+          <div style={{ marginTop: 2, fontSize: 10, color: coreState.anomalies > 0 ? '#ff4444' : '#00ff88' }}>
+            ANOMALIES: {coreState.anomalies}
+          </div>
+          <div style={{ marginTop: 2, fontSize: 10, color: '#00ff88' }}>MEMORY: {coreState.memoryCount} NODES</div>
         </div>
 
         {/* Boot sequence / Center title */}
@@ -373,10 +432,24 @@ export default function Home() {
           <div>SECTOR: ROMDO-01</div>
         </div>
 
-        {/* Bottom left — scan line effect */}
-        <div style={{ position: 'absolute', bottom: 24, left: 24, fontSize: 10, letterSpacing: 2, opacity: 0.4 }}>
-          <div>ENTOGENES: ACTIVOS</div>
-          <div>COGITO ERGO SUM</div>
+        {/* Bottom left — Live entity feed */}
+        <div style={{ position: 'absolute', bottom: 24, left: 24, fontSize: 9, letterSpacing: 1, opacity: 0.7, fontFamily: 'Space Mono, monospace' }}>
+          <div style={{ color: '#00ff88', marginBottom: 6, fontSize: 10 }}>ENTIDADES ACTIVAS // LIVE</div>
+          {entityEvents.length === 0 ? (
+            <div style={{ color: '#444' }}>{'> Esperando señales...'}</div>
+          ) : (
+            entityEvents.map((e, i) => (
+              <div key={i} style={{ 
+                color: e.entity === 'SNAKE' ? '#00ff9f' : 
+                       e.entity === 'D' ? '#7a00ff' : 
+                       e.entity === 'METATRON' ? '#ffffff' : '#00d4ff',
+                marginTop: 2,
+                opacity: 1 - i * 0.15
+              }}>
+                {`> ${e.entity || '???'} ${e.decision || '...'} ${e.time ? e.time.slice(11,19) : '--:--:--'}`}
+              </div>
+            ))
+          )}
         </div>
       </div>
 

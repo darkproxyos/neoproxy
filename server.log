@@ -2,7 +2,6 @@
 > npos-shell@0.1.0 dev
 > next dev
 
-⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
 ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
  We detected multiple lockfiles and selected the directory of /home/darkproxy/package-lock.json as the root directory.
  To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
@@ -11,10 +10,18 @@
    * /home/darkproxy/Experiments/package-lock.json
 
 ▲ Next.js 16.1.6 (Turbopack)
-- Local:         http://localhost:3001
-- Network:       http://10.234.168.210:3001
+- Local:         http://localhost:3000
+- Network:       http://10.150.9.210:3000
+- Environments: .env.local
 
 ✓ Starting...
-⨯ Unable to acquire lock at /home/darkproxy/Experiments/.next/dev/lock, is another instance of next dev running?
-  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
-[?25h
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 5.2s
+○ Compiling / ...
+ GET /api/kernel/stats 200 in 3.6s (compile: 3.4s, render: 133ms)
+ GET /api/kernel/stats 200 in 81ms (compile: 18ms, render: 63ms)
+ GET /api/kernel/stats 200 in 79ms (compile: 19ms, render: 59ms)
+ GET /api/kernel/stats 200 in 64ms (compile: 12ms, render: 53ms)
+ GET /api/kernel/stats 200 in 453ms (compile: 75ms, render: 378ms)
+ GET /api/kernel/stats 200 in 293ms (compile: 180ms, render: 113ms)
+ GET /api/kernel/stats 200 in 132ms (compile: 96ms, render: 35ms)
