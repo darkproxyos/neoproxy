@@ -337,6 +337,7 @@ export default function Home() {
     { label: 'MODULES', href: '/artifacts', desc: '4 LOADED' },
     { label: 'CORE', href: '/kernel', desc: 'RESTRICTED' },
     { label: 'SHOP', href: '/shop', desc: 'DROP 01 ACTIVE' },
+    { label: 'WORMHOLE', href: '/games/spaceship', desc: 'DIMENSIONAL DRIVE' },
   ]
 
   return (
