@@ -4,6 +4,8 @@ import { users, sessions } from '@/src/db/schema'
 import { sql } from 'drizzle-orm'
 import { auth } from '@/auth'
 
+export const runtime = 'nodejs'
+
 export async function GET() {
   try {
     const session = await auth()

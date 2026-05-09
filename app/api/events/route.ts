@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getUnprocessedEvents, markProcessed } from "@/lib/core-db/index"
 
+export const runtime = 'nodejs'
+
 export async function GET(request: NextRequest) {
   try {
     // Get all unprocessed events
