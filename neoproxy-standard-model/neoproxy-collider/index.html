@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoProxy Collider Drift</title>
+
+<style>
+
+html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+}
+
+canvas{
+    width:100%;
+    height:100%;
+    display:block;
+    touch-action:none;
+}
+
+#hud{
+    position:fixed;
+    bottom:14px;
+    left:14px;
+    color:rgba(255,255,255,0.18);
+    font-family:monospace;
+    letter-spacing:2px;
+    font-size:12px;
+    pointer-events:none;
+}
+
+</style>
+
+<script type="importmap">
+{
+    "imports": {
+        "@babylonjs/core": "https://cdn.jsdelivr.net/npm/@babylonjs/core@6.25.0/+esm",
+        "@babylonjs/loaders": "https://cdn.jsdelivr.net/npm/@babylonjs/loaders@6.25.0/+esm"
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+<canvas id="renderCanvas"></canvas>
+
+<div id="hud">
+NEOPROXY COLLIDER DRIFT
+</div>
+
+<script type="module">
+
+import * as BABYLON from "@babylonjs/core";
+import "@babylonjs/loaders";
+
+const canvas =
+    document.getElementById("renderCanvas");
+
+const engine =
+    new BABYLON.Engine(
+        canvas,
+        true,
+        {
+            antialias:true,
+            stencil:true
+        }
+    );
+
+const scene =
+    new BABYLON.Scene(engine);
+
+scene.clearColor =
+    new BABYLON.Color4(
+        0,
+        0,
+        0,
+        1
+    );
+
+scene.fogMode =
+    BABYLON.Scene.FOGMODE_EXP;
+
+scene.fogDensity = 0.006;
+
+scene.fogColor =
+    new BABYLON.Color3(
+        0.01,
+        0.01,
+        0.03
+    );
+
+
+
+
+
+// =====================================================
+// CAMERA
+// =====================================================
+
+const camera =
+    new BABYLON.FreeCamera(
+        "camera",
+        new BABYLON.Vector3(
+            0,
+            2,
+            0
+        ),
+        scene
+    );
+
+camera.fov = 1.15;
+
+
+
+
+
+// =====================================================
+// LIGHTS
+// =====================================================
+
+const hemi =
+    new BABYLON.HemisphericLight(
+        "hemi",
+        new BABYLON.Vector3(
+            0,
+            1,
+            0
+        ),
+        scene
+    );
+
+hemi.intensity = 0.45;
+
+hemi.groundColor =
+    new BABYLON.Color3(
+        0.03,
+        0.02,
+        0.08
+    );
+
+const point =
+    new BABYLON.PointLight(
+        "point",
+        new BABYLON.Vector3(
+            0,
+            0,
+            0
+        ),
+        scene
+    );
+
+point.intensity = 1.5;
+
+const glow =
+    new BABYLON.GlowLayer(
+        "glow",
+        scene
+    );
+
+glow.intensity = 0.9;
+
+
+
+
+
+// =====================================================
+// STARFIELD
+// =====================================================
+
+function createStars(
+    count,
+    minR,
+    maxR,
+    minS,
+    maxS,
+    color
+){
+
+    for(let i=0;i<count;i++){
+
+        const star =
+            BABYLON.MeshBuilder.CreateSphere(
+                "star",
+                {
+                    diameter:
+                        minS +
+                        Math.random()*
+                        (maxS-minS)
+                },
+                scene
+            );
+
+        const r =
+            minR +
+            Math.random()*
+            (maxR-minR);
+
+        const theta =
+            Math.random()*
+            Math.PI*2;
+
+        const phi =
+            Math.acos(
+                2*Math.random()-1
+            );
+
+        star.position.x =
+            r*Math.sin(phi)*Math.cos(theta);
+
+        star.position.y =
+            r*Math.sin(phi)*Math.sin(theta);
+
+        star.position.z =
+            r*Math.cos(phi);
+
+        const mat =
+            new BABYLON.StandardMaterial(
+                "mat",
+                scene
+            );
+
+        mat.emissiveColor =
+            color.scale(
+                0.4 +
+                Math.random()*0.8
+            );
+
+        mat.diffuseColor =
+            BABYLON.Color3.Black();
+
+        mat.specularColor =
+            BABYLON.Color3.Black();
+
+        star.material = mat;
+
+    }
+
+}
+
+createStars(
+    2200,
+    260,
+    650,
+    0.04,
+    0.22,
+    new BABYLON.Color3(
+        0.7,
+        0.82,
+        1
+    )
+);
+
+createStars(
+    1400,
+    120,
+    260,
+    0.1,
+    0.32,
+    new BABYLON.Color3(
+        0.55,
+        0.7,
+        1
+    )
+);
+
+createStars(
+    900,
+    45,
+    110,
+    0.16,
+    0.42,
+    new BABYLON.Color3(
+        0.9,
+        0.95,
+        1
+    )
+);
+
+
+
+
+
+// =====================================================
+// COLLIDER RING
+// =====================================================
+
+const collider =
+    BABYLON.MeshBuilder.CreateTorus(
+        "collider",
+        {
+            diameter:78,
+            thickness:1.8,
+            tessellation:280
+        },
+        scene
+    );
+
+collider.rotation.x =
+    Math.PI/2;
+
+const colliderMat =
+    new BABYLON.StandardMaterial(
+        "colliderMat",
+        scene
+    );
+
+colliderMat.wireframe = true;
+
+colliderMat.alpha = 0.22;
+
+colliderMat.emissiveColor =
+    new BABYLON.Color3(
+        0.15,
+        0.55,
+        1
+    );
+
+collider.material =
+    colliderMat;
+
+
+
+
+
+// =====================================================
+// ENERGY RINGS
+// =====================================================
+
+const rings = [];
+
+for(let i=0;i<6;i++){
+
+    const ring =
+        BABYLON.MeshBuilder.CreateTorus(
+            "ring"+i,
+            {
+                diameter:
+                    16 + i*8,
+                thickness:
+                    0.04 + i*0.01,
+                tessellation:220
+            },
+            scene
+        );
+
+    ring.rotation.x =
+        Math.PI/2;
+
+    const mat =
+        new BABYLON.StandardMaterial(
+            "mat"+i,
+            scene
+        );
+
+    mat.wireframe = true;
+
+    mat.emissiveColor =
+        new BABYLON.Color3(
+            0.2 + i*0.08,
+            0.55,
+            1
+        );
+
+    ring.material = mat;
+
+    rings.push(ring);
+
+}
+
+
+
+
+
+// =====================================================
+// LEMNISCATE PATH
+// =====================================================
+
+const baseA = 34;
+const deltaA = 16;
+
+const baseOmega = 0.48;
+const accelFactor = 0.9;
+
+function getPath(t){
+
+    const sinT =
+        Math.sin(t);
+
+    const cosT =
+        Math.cos(t);
+
+    const a =
+        baseA +
+        deltaA*sinT;
+
+    const denom =
+        1 + sinT*sinT;
+
+    const x =
+        a*cosT/denom;
+
+    const z =
+        a*sinT*cosT/denom;
+
+    return new BABYLON.Vector3(
+        x,
+        0,
+        z
+    );
+
+}
+
+
+
+
+
+// =====================================================
+// PATH VISUAL
+// =====================================================
+
+const curvePoints = [];
+
+for(let i=0;i<1400;i++){
+
+    const t =
+        (i/1400)*
+        Math.PI*2;
+
+    curvePoints.push(
+        getPath(t)
+    );
+
+}
+
+const curve =
+    BABYLON.MeshBuilder.CreateLines(
+        "curve",
+        {
+            points:curvePoints
+        },
+        scene
+    );
+
+curve.color =
+    new BABYLON.Color3(
+        0.3,
+        0.7,
+        1
+    );
+
+
+
+
+
+// =====================================================
+// CORE
+// =====================================================
+
+const core =
+    BABYLON.MeshBuilder.CreateSphere(
+        "core",
+        {
+            diameter:2
+        },
+        scene
+    );
+
+const coreMat =
+    new BABYLON.StandardMaterial(
+        "coreMat",
+        scene
+    );
+
+coreMat.emissiveColor =
+    new BABYLON.Color3(
+        1,
+        0.4,
+        0.2
+    );
+
+coreMat.diffuseColor =
+    new BABYLON.Color3(
+        0.1,
+        0.03,
+        0.01
+    );
+
+core.material =
+    coreMat;
+
+
+
+
+
+// =====================================================
+// STANDARD MODEL PARTICLES
+// =====================================================
+
+const colors = [
+
+new BABYLON.Color3(1,0.2,0.2),
+new BABYLON.Color3(0.2,1,0.2),
+new BABYLON.Color3(0.2,0.4,1),
+new BABYLON.Color3(1,0.8,0.2),
+new BABYLON.Color3(1,0.3,0.8),
+new BABYLON.Color3(0.5,1,1),
+new BABYLON.Color3(1,0.5,0.2),
+new BABYLON.Color3(0.8,0.3,1),
+new BABYLON.Color3(0.2,1,0.7),
+new BABYLON.Color3(1,0.9,0.3),
+new BABYLON.Color3(1,1,0.5),
+new BABYLON.Color3(1,0.5,1)
+
+];
+
+const particles = [];
+
+for(let i=0;i<14;i++){
+
+    const sphere =
+        BABYLON.MeshBuilder.CreateSphere(
+            "particle"+i,
+            {
+                diameter:
+                    0.3 +
+                    Math.random()*0.5
+            },
+            scene
+        );
+
+    const mat =
+        new BABYLON.StandardMaterial(
+            "pmat"+i,
+            scene
+        );
+
+    mat.emissiveColor =
+        colors[
+            i % colors.length
+        ];
+
+    mat.diffuseColor =
+        BABYLON.Color3.Black();
+
+    sphere.material =
+        mat;
+
+    particles.push({
+
+        mesh:sphere,
+
+        offset:
+            (i/14)*
+            Math.PI*2,
+
+        speed:
+            1 +
+            Math.random()*0.22
+
+    });
+
+}
+
+
+
+
+
+// =====================================================
+// SPACE SHIP
+// =====================================================
+
+let proxyShip = null;
+
+BABYLON.SceneLoader.ImportMesh(
+    "",
+    "./",
+    "spaceproxyship.glb",
+    scene,
+    function(meshes){
+
+        const root =
+            new BABYLON.TransformNode(
+                "shipRoot",
+                scene
+            );
+
+        meshes.forEach(m=>{
+
+            m.parent = root;
+
+            if(m.material){
+
+                if(m.material.emissiveColor){
+
+                    m.material.emissiveColor =
+                        new BABYLON.Color3(
+                            0.2,
+                            0.5,
+                            1
+                        );
+
+                }
+
+            }
+
+        });
+
+        root.scaling =
+            new BABYLON.Vector3(
+                2,
+                2,
+                2
+            );
+
+        proxyShip = root;
+
+    }
+);
+
+
+
+
+
+// =====================================================
+// ENGINE TRAIL
+// =====================================================
+
+const trail =
+    new BABYLON.ParticleSystem(
+        "trail",
+        700,
+        scene
+    );
+
+trail.particleTexture =
+    new BABYLON.Texture(
+        "https://assets.babylonjs.com/textures/flare.png",
+        scene
+    );
+
+trail.minSize = 0.06;
+trail.maxSize = 0.24;
+
+trail.minLifeTime = 0.15;
+trail.maxLifeTime = 0.65;
+
+trail.emitRate = 380;
+
+trail.color1 =
+    new BABYLON.Color4(
+        0.2,
+        0.7,
+        1,
+        1
+    );
+
+trail.color2 =
+    new BABYLON.Color4(
+        0.8,
+        0.3,
+        1,
+        0.5
+    );
+
+trail.blendMode =
+    BABYLON.ParticleSystem.BLENDMODE_ADD;
+
+trail.direction1 =
+    new BABYLON.Vector3(
+        0,
+        0,
+        -1
+    );
+
+trail.direction2 =
+    new BABYLON.Vector3(
+        0,
+        0,
+        -1
+    );
+
+trail.minEmitPower = 0.4;
+trail.maxEmitPower = 1.6;
+
+trail.updateSpeed = 0.008;
+
+trail.start();
+
+
+
+
+
+// =====================================================
+// ATMOSPHERIC DUST
+// =====================================================
+
+const dust =
+    new BABYLON.ParticleSystem(
+        "dust",
+        1500,
+        scene
+    );
+
+dust.particleTexture =
+    new BABYLON.Texture(
+        "https://assets.babylonjs.com/textures/flare.png",
+        scene
+    );
+
+dust.emitter =
+    new BABYLON.Vector3(
+        0,
+        0,
+        0
+    );
+
+dust.minEmitBox =
+    new BABYLON.Vector3(
+        -50,
+        -10,
+        -50
+    );
+
+dust.maxEmitBox =
+    new BABYLON.Vector3(
+        50,
+        10,
+        50
+    );
+
+dust.color1 =
+    new BABYLON.Color4(
+        0.3,
+        0.5,
+        1,
+        0.18
+    );
+
+dust.color2 =
+    new BABYLON.Color4(
+        0.8,
+        0.4,
+        1,
+        0.12
+    );
+
+dust.minSize = 0.04;
+dust.maxSize = 0.26;
+
+dust.minLifeTime = 3;
+dust.maxLifeTime = 8;
+
+dust.emitRate = 120;
+
+dust.gravity =
+    new BABYLON.Vector3(
+        0,
+        0.01,
+        0
+    );
+
+dust.start();
+
+
+
+
+
+// =====================================================
+// MOTION
+// =====================================================
+
+let t = 0;
+
+let breath = 0;
+
+let last =
+    performance.now()/1000;
+
+scene.onBeforeRenderObservable.add(()=>{
+
+    const now =
+        performance.now()/1000;
+
+    let dt =
+        now-last;
+
+    last = now;
+
+    if(dt > 0.03)
+        dt = 0.03;
+
+
+
+
+
+    // SPEED MODULATION
+
+    const sinT =
+        Math.sin(t);
+
+    const a =
+        baseA +
+        deltaA*sinT;
+
+    const maxA =
+        baseA + deltaA;
+
+    const minA =
+        baseA - deltaA;
+
+    const accel =
+        1 +
+        accelFactor *
+        (
+            1 -
+            (a-minA)/
+            (maxA-minA)
+        );
+
+    const omega =
+        baseOmega *
+        accel;
+
+    t += omega*dt;
+
+
+
+
+
+    // CAMERA
+
+    const pos =
+        getPath(t);
+
+    breath += 0.012;
+
+    const vertical =
+        2.4 +
+        Math.sin(
+            breath*1.8
+        )*0.8 +
+        Math.sin(
+            breath*0.5
+        )*0.25;
+
+    camera.position.x =
+        pos.x;
+
+    camera.position.z =
+        pos.z;
+
+    camera.position.y =
+        vertical;
+
+    const look =
+        getPath(
+            t + 0.18
+        );
+
+    camera.setTarget(
+        new BABYLON.Vector3(
+            look.x,
+            0.8,
+            look.z
+        )
+    );
+
+
+
+
+
+    // SHIP
+
+    if(proxyShip){
+
+        const shipPos =
+            getPath(
+                t - 0.05
+            );
+
+        proxyShip.position.x =
+            shipPos.x;
+
+        proxyShip.position.z =
+            shipPos.z;
+
+        proxyShip.position.y =
+            vertical - 0.6;
+
+        const forward =
+            getPath(
+                t + 0.03
+            );
+
+        proxyShip.lookAt(
+            new BABYLON.Vector3(
+                forward.x,
+                0,
+                forward.z
+            )
+        );
+
+        proxyShip.rotate(
+            BABYLON.Axis.Y,
+            Math.PI,
+            BABYLON.Space.LOCAL
+        );
+
+        proxyShip.rotation.z =
+            Math.sin(
+                now*2
+            )*0.08;
+
+        trail.emitter =
+            proxyShip;
+
+    }
+
+
+
+
+
+    // PARTICLES
+
+    particles.forEach((p,i)=>{
+
+        const pt =
+            t*p.speed +
+            p.offset;
+
+        const pp =
+            getPath(pt);
+
+        p.mesh.position.x =
+            pp.x;
+
+        p.mesh.position.z =
+            pp.z;
+
+        p.mesh.position.y =
+            Math.sin(
+                breath*2 +
+                p.offset*3
+            )*0.5;
+
+        p.mesh.rotation.y +=
+            0.03;
+
+    });
+
+
+
+
+
+    // CORE
+
+    const pulse =
+        1 +
+        Math.sin(
+            now*4
+        )*0.12;
+
+    core.scaling.set(
+        pulse,
+        pulse,
+        pulse
+    );
+
+    coreMat.emissiveIntensity =
+        1.2 +
+        Math.sin(
+            now*3
+        )*0.4;
+
+
+
+
+
+    // RINGS
+
+    rings.forEach((r,i)=>{
+
+        r.rotation.z +=
+            0.0006 +
+            i*0.00012;
+
+        r.rotation.y +=
+            0.0002 +
+            i*0.00006;
+
+    });
+
+
+
+
+
+    // COLLIDER
+
+    collider.rotation.z +=
+        0.0004;
+
+    collider.rotation.y +=
+        0.00012;
+
+
+
+
+
+    // GLOW
+
+    glow.intensity =
+        0.85 +
+        Math.sin(
+            now*1.5
+        )*0.08;
+
+});
+
+
+
+
+
+// =====================================================
+// RENDER
+// =====================================================
+
+engine.runRenderLoop(()=>{
+
+    scene.render();
+
+});
+
+window.addEventListener(
+    "resize",
+    ()=>engine.resize()
+);
+
+console.log(
+    "NeoProxy Collider Drift Online"
+);
+
+</script>
+
+</body>
+</html>

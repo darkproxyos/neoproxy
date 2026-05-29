@@ -47,3 +47,7 @@ next-env.d.ts
 *.db
 events.db
 sqlite.db
+next_dev.log
+multiplayer.log
+nohup.out
+_archive_neoproxy_repo

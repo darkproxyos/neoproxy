@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { connectProxyRuntime } from '@/lib/proxy-state'
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -176,6 +177,10 @@ export default function Home() {
         currentIntegrity = e.detail.integrity
       })
 
+      // Connect to proxy runtime (L3) for real CPU/RAM data
+      let proxyState = { cpu: 0, mem: 0, integrity: 100 }
+      connectProxyRuntime((state) => { proxyState = state })
+
       // ANILLOS orbitales alrededor del núcleo
       for (let i = 0; i < 3; i++) {
         const ring = MeshBuilder.CreateTorus('ring' + i, {
@@ -193,9 +198,10 @@ export default function Home() {
         ringMat.roughness = 0.1
         ring.material = ringMat
         
-        // Animación rotación
+        // Animación rotación — CPU afecta velocidad
         scene.registerBeforeRender(() => {
-          ring.rotation.y += 0.003 * (i + 1)
+          const cpuFactor = proxyState.cpu / 100
+          ring.rotation.y += 0.003 * (1 + cpuFactor * 3) * (i + 1)
           ring.rotation.x += 0.001 * (i + 1)
         })
       }
