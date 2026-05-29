@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { StardustEngine, StardustConfig } from '../engine/StardustEngine';
 import { useKernelStore } from '@/store/useKernelStore';
 import { useEntityStore } from '@/store/useEntityStore';
