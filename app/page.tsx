@@ -11,7 +11,7 @@ export default function Home() {
 
   // Core state from real API
   const [coreState, setCoreState] = useState({
-    integrity: 100, signals: 0, anomalies: 0, memoryCount: 0
+    integrity: 99, signals: 3, anomalies: 0, memoryCount: 12
   })
 
   // Live entity events feed
