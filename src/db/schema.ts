@@ -33,3 +33,13 @@ export const sessions = sqliteTable("sessions", {
   userId: text("user_id").notNull(),
   expiresAt: integer("expires_at").notNull(),
 });
+
+// SIGNAL Economy
+export const signalTransactions = sqliteTable('signal_transactions', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull(),
+  amount: integer('amount').notNull(),
+  reason: text('reason').notNull(), // PURCHASE, HEARTBEAT, REFERRAL, CODEX, etc
+  referenceId: text('reference_id'),
+  createdAt: integer('created_at').notNull().$defaultFn(() => Date.now()),
+})
