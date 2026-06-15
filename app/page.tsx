@@ -32,6 +32,8 @@ export default function Home() {
     const init = async () => {
       const B = await import('@babylonjs/core')
       const engine = new B.Engine(canvasRef.current!, true)
+      const isMobile = window.innerWidth < 768
+      engine.setHardwareScalingLevel(isMobile ? 1.5 : 1)
       const scene = new B.Scene(engine)
       scene.clearColor = new B.Color4(0.01, 0.01, 0.03, 1)
       scene.fogMode = B.Scene.FOGMODE_EXP2
@@ -46,7 +48,7 @@ export default function Home() {
       coreLight.diffuse = new B.Color3(0, 0.8, 1)
       coreLight.intensity = 3
       const glow = new B.GlowLayer('glow', scene)
-      glow.intensity = 0.8
+      glow.intensity = isMobile ? 0.5 : 0.8
       const core = B.MeshBuilder.CreateSphere('core', { diameter: 2.5, segments: 32 }, scene)
       core.position.y = 2
       const coreMat = new B.PBRMaterial('coreMat', scene)
@@ -104,9 +106,9 @@ export default function Home() {
       <div style={{ position:'fixed', top:0, left:0, width:'100vw', height:'100vh', zIndex:0 }}>
         {!booted ? (
           <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center',
-            justifyContent:'center', flexDirection:'column' }}>
-            <div style={{ fontFamily:mono, fontSize:11, color:'#00d4ff',
-              letterSpacing:4, lineHeight:2.5, whiteSpace:'pre' }}>{bootText}</div>
+            justifyContent:'center', flexDirection:'column', padding:'0 16px' }}>
+            <div className="boot-text" style={{ fontFamily:mono, fontSize:11, color:'#00d4ff',
+              letterSpacing:4, lineHeight:2.5, whiteSpace:'pre-wrap', textAlign:'center' }}>{bootText}</div>
             <div style={{ marginTop:32, width:200, height:1, background:'#00d4ff11', overflow:'hidden' }}>
               <div style={{ height:'100%', background:'linear-gradient(to right, #00d4ff, #00ffcc)',
                 animation:'load 2.4s ease forwards' }}/>
@@ -118,7 +120,7 @@ export default function Home() {
       </div>
 
       {booted && (
-        <div style={{ position:'fixed', top:80, left:24, zIndex:10,
+        <div className="info-panel" style={{ position:'fixed', top:80, left:24, zIndex:10,
           fontFamily:mono, fontSize:10, letterSpacing:3, lineHeight:2.5,
           color:'#00d4ff', pointerEvents:'none' }}>
           <div style={{ fontSize:13, color:'#00ffcc', textShadow:'0 0 20px #00ffcc' }}>NEOPROXY OS // v0.2</div>
@@ -131,15 +133,15 @@ export default function Home() {
       {booted && (
         <div style={{ position:'fixed', top:'50%', left:'50%',
           transform:'translate(-50%,-50%)', zIndex:10, textAlign:'center',
-          fontFamily:mono }}>
-          <div style={{ fontSize:42, fontWeight:700, letterSpacing:12, color:'#00d4ff',
+          fontFamily:mono, width:'100%', padding:'0 16px', boxSizing:'border-box' }}>
+          <div className="neo-title" style={{ fontSize:42, fontWeight:700, letterSpacing:12, color:'#00d4ff',
             textShadow:'0 0 40px #00d4ff, 0 0 80px #6644aa', marginBottom:8 }}>
             NEOPROXY
           </div>
-          <div style={{ fontSize:10, letterSpacing:8, color:'#6644aa', marginBottom:40 }}>
+          <div className="neo-subtitle" style={{ fontSize:10, letterSpacing:8, color:'#6644aa', marginBottom:40 }}>
             SISTEMA AUTÓNOMO // REALIDAD ZERO
           </div>
-          <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
+          <div className="nav-buttons" style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
             {[
               { label:'INIT SESSION', href:'/login' },
               { label:'MODULES', href:'/artifacts' },
@@ -148,7 +150,7 @@ export default function Home() {
               { label:'RELICS', href:'/relics' },
               { label:'MANIFESTO', href:'/manifesto' },
             ].map(({ label, href }) => (
-              <a key={href} href={href} style={{
+              <a key={href} href={href} className="nav-btn" style={{
                 border:'1px solid #00d4ff44', padding:'8px 20px',
                 fontSize:10, letterSpacing:4, color:'#00d4ff',
                 textDecoration:'none', background:'#00d4ff08',
@@ -159,25 +161,25 @@ export default function Home() {
       )}
 
       {showMask && (
-        <div style={{
+        <div className="promo-bar" style={{
           position:'fixed', bottom:0, left:0, right:0, zIndex:20,
           background:'linear-gradient(to top, #000205 60%, transparent)',
           padding:'40px 24px 30px',
           display:'flex', alignItems:'center', justifyContent:'center', gap:32,
           flexWrap:'wrap',
         }}>
-          <div style={{ fontFamily:mono, color:'#00d4ff' }}>
+          <div style={{ fontFamily:mono, color:'#00d4ff', maxWidth:'100%' }}>
             <div style={{ fontSize:9, letterSpacing:6, color:'#00ff8844', marginBottom:6 }}>
               ◆ NUEVO ARTEFACTO DISPONIBLE
             </div>
-            <div style={{ fontSize:18, letterSpacing:4, color:'#00ffcc',
+            <div className="promo-title" style={{ fontSize:18, letterSpacing:4, color:'#00ffcc',
               textShadow:'0 0 20px #00ffcc66', marginBottom:4 }}>
               RELIC-001 // PROXY MASK MK-I
             </div>
-            <div style={{ fontSize:10, color:'#ffffff44', marginBottom:16, letterSpacing:2 }}>
+            <div className="promo-desc" style={{ fontSize:10, color:'#ffffff44', marginBottom:16, letterSpacing:2 }}>
               PLA Negro + Resina Verde Transparente · Fabricación artesanal · Santiago, Chile
             </div>
-            <div style={{ display:'flex', gap:12, alignItems:'center' }}>
+            <div style={{ display:'flex', gap:12, alignItems:'center', flexWrap:'wrap' }}>
               <a href="/relics" style={{
                 background:'#00ffcc', color:'#000205',
                 padding:'10px 28px', fontSize:11, letterSpacing:4,
@@ -193,6 +195,34 @@ export default function Home() {
 
       <style>{`
         @keyframes load { from { width:0 } to { width:100% } }
+
+        @media (max-width: 640px) {
+          .neo-title { font-size: 28px !important; letter-spacing: 5px !important; margin-bottom: 6px !important; }
+          .neo-subtitle { font-size: 8px !important; letter-spacing: 3px !important; margin-bottom: 24px !important; }
+          .boot-text { font-size: 9px !important; letter-spacing: 1px !important; }
+          .info-panel { top: 64px !important; left: 12px !important; font-size: 8px !important; letter-spacing: 2px !important; }
+          .info-panel div:first-child { font-size: 10px !important; }
+          .nav-buttons {
+            gap: 8px !important;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding-bottom: 6px !important;
+            scrollbar-width: none !important;
+          }
+          .nav-buttons::-webkit-scrollbar { display: none !important; }
+          .nav-btn {
+            padding: 6px 14px !important;
+            font-size: 9px !important;
+            letter-spacing: 2px !important;
+            flex-shrink: 0 !important;
+            white-space: nowrap !important;
+          }
+          .promo-bar { padding: 24px 16px 20px !important; gap: 16px !important; }
+          .promo-title { font-size: 14px !important; letter-spacing: 2px !important; }
+          .promo-desc { font-size: 9px !important; letter-spacing: 1px !important; }
+        }
       `}</style>
     </div>
   )
