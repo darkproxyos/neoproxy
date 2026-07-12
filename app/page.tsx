@@ -144,11 +144,6 @@ export default function Home() {
           <div className="nav-buttons" style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
             {[
               { label:'INIT SESSION', href:'/login' },
-              { label:'MODULES', href:'/artifacts' },
-              { label:'CORE', href:'/kernel' },
-              { label:'SHOP', href:'/shop' },
-              { label:'RELICS', href:'/relics' },
-              { label:'MANIFESTO', href:'/manifesto' },
             ].map(({ label, href }) => (
               <a key={href} href={href} className="nav-btn" style={{
                 border:'1px solid #00d4ff44', padding:'8px 20px',
