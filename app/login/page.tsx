@@ -20,7 +20,7 @@ export default function LoginPage() {
     if (result?.error) {
       setError('ACCESO DENEGADO // CREDENCIALES INVÁLIDAS')
     } else {
-      router.push('/')
+      router.push('/dashboard')
     }
   }
 
