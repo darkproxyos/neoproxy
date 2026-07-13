@@ -473,7 +473,7 @@ export default function Drop01Page() {
       {/* LINK TO GENERATOR */}
       <div style={{ textAlign: 'center', padding: '0 32px 64px' }}>
         <div style={{ fontSize: 7, letterSpacing: '0.2em', color: '#1a1a2e', marginBottom: 12 }}>
-          ¿Quieres un objeto con tu propio seed?
+          &iquest;Quieres un objeto con tu propio seed?
         </div>
         <a
           href="/lab"
