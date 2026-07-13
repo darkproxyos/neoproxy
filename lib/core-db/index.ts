@@ -1,31 +1,14 @@
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
 import { memory, events } from './schema';
 import { eq } from 'drizzle-orm';
 
-// Mock DB for Vercel build to avoid GLIBC issues with better-sqlite3
-let db: any = null;
+const client = createClient({
+  url: process.env.TURSO_DATABASE_URL!,
+  authToken: process.env.TURSO_AUTH_TOKEN!,
+});
 
-if (typeof window === 'undefined' && process.env.VERCEL) {
-  console.log("⚠️ VERCEL environment detected. Mocking SQLite DB.");
-  db = {
-    select: () => ({ from: () => ({ where: () => ({ get: () => null, all: () => [] }), orderBy: () => [] }) }),
-    insert: () => ({ values: () => ({ returning: () => [null] }) }),
-    update: () => ({ set: () => ({ where: () => ({ returning: () => [null] }) }) }),
-    delete: () => ({ where: () => ({ returning: () => [null] }) }),
-  };
-} else {
-  try {
-    const Database = require('better-sqlite3');
-    const { drizzle } = require('drizzle-orm/better-sqlite3');
-    const sqlite = new Database('./neoproxy.db');
-    db = drizzle(sqlite);
-  } catch (e) {
-    console.error("Failed to load better-sqlite3:", e);
-    // Fallback mock
-    db = {}; 
-  }
-}
-
-export { db };
+export const db = drizzle(client);
 
 // Export schema for use in other modules
 export { memory, events };
@@ -37,7 +20,6 @@ export async function createMemory(title: string, content: string) {
     content,
     createdAt: new Date(),
   }).returning();
-  
   return result[0];
 }
 
@@ -56,7 +38,6 @@ export async function updateMemory(id: number, title: string, content: string) {
     .set({ title, content })
     .where(eq(memory.id, id))
     .returning();
-  
   return result[0] || null;
 }
 
@@ -74,7 +55,6 @@ export async function insertEvent(type: string, priority: string, source: string
     payload: JSON.stringify(payload),
     createdAt: new Date(),
   }).returning();
-  
   return result[0];
 }
 
@@ -92,6 +72,5 @@ export async function markProcessed(id: number) {
     .set({ processed: true })
     .where(eq(events.id, id))
     .returning();
-  
   return result[0] || null;
 }
