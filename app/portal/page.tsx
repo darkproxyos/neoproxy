@@ -12,6 +12,26 @@ export default function Portal() {
         <p className={styles.subtitle}>Systems & Fabrication Architect</p>
 
         <div className={styles.actions}>
+          <Link href="/modules" className={styles.button}>
+            MODULES
+          </Link>
+
+          <Link href="/core" className={styles.button}>
+            CORE
+          </Link>
+
+          <Link href="/shop/drop01" className={styles.button}>
+            SHOP
+          </Link>
+
+          <Link href="/artifacts" className={styles.button}>
+            RELICS
+          </Link>
+
+          <Link href="/manifesto" className={styles.button}>
+            MANIFESTO
+          </Link>
+
           {/* Simulated VCard Download */}
           <a href="/contact.vcf" download className={`${styles.button} ${styles.primary}`}>
             [ SAVE CONTACT ]
