@@ -7,6 +7,7 @@ const pusher = new Pusher({
   secret: process.env.PUSHER_SECRET!,
   cluster: process.env.PUSHER_CLUSTER!,
   useTLS: true,
+  author: 'Your Name'
 })
 
 export async function POST(req: NextRequest) {
