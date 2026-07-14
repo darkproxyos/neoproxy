@@ -5,6 +5,7 @@ export default function Manifesto() {
     <div style={{
       background: '#000205', minHeight: '100vh',
       fontFamily: 'Space Mono, monospace', color: '#00d4ff',
+      overflowY: 'auto'
     }}>
 
       {/* Hero */}
