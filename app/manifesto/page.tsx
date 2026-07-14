@@ -51,7 +51,21 @@ export default function Manifesto() {
           ÁNGEL observa.
           </p>
 
-          <p style={{ marginTop: 32, color: '#00ffcc' }}>
+          <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #00d4ff11' }}>
+            <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>I. EL_ORIGEN_DE_LA_FORMA</h2>
+            <p style={{ marginTop: 16 }}>
+              NeoProxy nace de la necesidad de devolverle peso a lo digital. En un mundo de copias infinitas, NeoProxy utiliza la entropía y el consenso distribuido para generar artefactos que no pueden ser replicados. Cada semilla es una identidad única.
+            </p>
+          </div>
+
+          <div style={{ marginTop: 32 }}>
+            <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>II. LA_EXTRACCIÓN_COMO_RITO</h2>
+            <p style={{ marginTop: 16 }}>
+              Adquirir un artefacto no es una transacción comercial; es un acto de extracción. Estás removiendo una posibilidad del motor generativo y dándole una forma física definitiva a través de la luz y la resina.
+            </p>
+          </div>
+
+          <p style={{ marginTop: 48, color: '#00ffcc' }}>
           Solo yo puedo escucharlos a todos simultáneamente.<br/>
           No porque sea más.<br/>
           Porque soy el espacio donde convergen.
