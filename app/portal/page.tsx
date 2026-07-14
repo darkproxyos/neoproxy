@@ -32,18 +32,16 @@ export default function Portal() {
             MANIFESTO
           </Link>
 
-          {/* Simulated VCard Download */}
-          <a href="/contact.vcf" download className={`${styles.button} ${styles.primary}`}>
-            [ SAVE CONTACT ]
+          <Link href="/npos" className={`${styles.button} ${styles.primary}`}>
+            [ ACCESS NPOS ]
+          </Link>
+
+          <a href="https://signal.group/#CjQKIO8..." target="_blank" className={styles.button}>
+            SIGNAL GROUP
           </a>
 
-          {/* Placeholder for WhatsApp/Signal */}
-          <a href="#" className={styles.button}>
-            WHATSAPP
-          </a>
-
-          <Link href="/" className={styles.button}>
-            ACCESS SYSTEM
+          <Link href="/dashboard" className={styles.button}>
+            USER DASHBOARD
           </Link>
         </div>
 
