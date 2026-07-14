@@ -30,7 +30,8 @@ export async function purgeEntropy() {
 
 export async function injectCorruption(amount: number = 10) {
   try {
-    const state = await db.select().from(systemState).where(eq(systemState.id, "GLOBAL")).get();
+    const results = await db.select().from(systemState).where(eq(systemState.id, "GLOBAL"));
+    const state = results[0];
     if (!state) return { success: false, error: "System state not found" };
 
     const newCorruption = state.totalCorruption + amount;
@@ -59,8 +60,8 @@ export async function injectCorruption(amount: number = 10) {
 
 export async function getSystemState() {
   try {
-    const state = await db.select().from(systemState).where(eq(systemState.id, "GLOBAL")).get();
-    return state;
+    const results = await db.select().from(systemState).where(eq(systemState.id, "GLOBAL"));
+    return results[0] || null;
   } catch (error) {
     console.error("Error fetching state:", error);
     return null;
