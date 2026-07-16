@@ -51,3 +51,5 @@ next_dev.log
 multiplayer.log
 nohup.out
 _archive_neoproxy_repo
+.aider*
+.cline/
