@@ -107,8 +107,17 @@ export async function GET(request: NextRequest) {
 
     // 5. Extraer datos de hub.json si existen
     const agents_active = hub_data?.active_agents ?? null
-    const system_health = hub_data?.system_health ?? null
+    const system_health = hub_data?.system_health ?? hub_data?.kernel?.metatron?.system_health ?? null
     const last_backup = hub_data?.last_backup ?? null
+
+    const metatron = hub_data?.kernel?.metatron ? {
+      status: hub_data.kernel.metatron.status,
+      current_intent: hub_data.kernel.metatron.current_intent,
+      pipeline: hub_data.kernel.metatron.current_pipeline,
+      running_agents: hub_data.kernel.metatron.running_agents,
+      system_health: hub_data.kernel.metatron.system_health,
+      memory_sync_pct: hub_data.kernel.metatron.memory_sync_pct
+    } : null
 
     return NextResponse.json({
       commits_30d,
@@ -119,7 +128,8 @@ export async function GET(request: NextRequest) {
       events_count,
       decisions_count,
       artifacts_count,
-      last_backup
+      last_backup,
+      metatron
     }, { status: 200 })
   } catch (error) {
     console.error('Soul state error:', error)
