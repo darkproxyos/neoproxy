@@ -1,0 +1,57 @@
+[
+  {
+    "id": "NPX-001",
+    "name": "Cyber Oni Mask",
+    "category": "mask",
+    "material": "PLA + Resin",
+    "status": "available",
+    "price": "150000 CLP",
+    "description": "Hand fabricated cybernetic mask inspired by traditional Japanese oni with futuristic aesthetics.",
+    "process_time": "72 hours",
+    "image": "/artifacts/cyber-oni-mask.jpg"
+  },
+  {
+    "id": "NPX-002",
+    "name": "Neural Crown v1",
+    "category": "crown",
+    "material": "Resin UV + LED",
+    "status": "available",
+    "price": "220000 CLP",
+    "description": "Generative crown with embedded LED system. Each pattern unique via algorithm extraction.",
+    "process_time": "96 hours",
+    "image": "/artifacts/neural-crown.jpg"
+  },
+  {
+    "id": "NPX-003",
+    "name": "Fractal Pendant",
+    "category": "jewelry",
+    "material": "Silver PLA + Polish",
+    "status": "limited",
+    "price": "85000 CLP",
+    "description": "Mathematical beauty extracted from fractal algorithms. Wearable geometry.",
+    "process_time": "24 hours",
+    "image": "/artifacts/fractal-pendant.jpg"
+  },
+  {
+    "id": "NPX-004",
+    "name": "Void Ring",
+    "category": "jewelry",
+    "material": "Black Resin",
+    "status": "sold_out",
+    "price": "65000 CLP",
+    "description": "Minimal ring design from void algorithms. First drop artifact.",
+    "process_time": "12 hours",
+    "image": "/artifacts/void-ring.jpg"
+  },
+  {
+    "id": "NPX-005",
+    "name": "Data Crystal",
+    "category": "sculpture",
+    "material": "Transparent Resin",
+    "status": "available",
+    "price": "180000 CLP",
+    "description": "Crystalline structure generated from data patterns. Desktop artifact.",
+    "process_time": "48 hours",
+    "image": "/artifacts/data-crystal.jpg"
+  }
+]
