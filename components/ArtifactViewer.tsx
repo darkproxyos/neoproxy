@@ -31,9 +31,9 @@ export default function ArtifactViewer({ modelPath }: ArtifactViewerProps) {
         // Camera - ArcRotate for orbit controls
         const camera = new B.ArcRotateCamera(
           'camera',
-          Math.PI / 4,
-          Math.PI / 3,
-          3,
+          -Math.PI / 2, // alpha: horizontal angle around Y axis
+          Math.PI / 2.3, // beta: vertical angle
+          3, // radius
           B.Vector3.Zero(),
           scene
         )
@@ -54,7 +54,11 @@ export default function ArtifactViewer({ modelPath }: ArtifactViewerProps) {
         fillLight.intensity = 0.3
 
         // Load model
-        const result = await B.SceneLoader.ImportMeshAsync('', '', modelPath, scene)
+        const pathParts = modelPath.split('/')
+        const filename = pathParts[pathParts.length - 1]
+        const rootUrl = pathParts.slice(0, -1).join('/') + '/'
+        
+        const result = await B.SceneLoader.ImportMeshAsync('', rootUrl, filename, scene)
         
         if (result.meshes.length === 0) {
           throw new Error('No meshes loaded')
