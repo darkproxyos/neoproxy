@@ -1,0 +1,1130 @@
+
+# 2026-07-13 18:07:29.274708
++y
+
+# 2026-07-13 18:08:06.168460
++n
+
+# 2026-07-13 18:08:23.402130
++/ask qué hace este proyecto en una frase
+
+# 2026-07-13 18:09:33.161565
++n
+
+# 2026-07-13 18:09:49.751822
++/ask qué hace este proyecto en una frase
+
+# 2026-07-13 18:56:01.450277
++/ask ¿dónde está el componente de navegación del home page? ¿qué archivo contenía los links a MODULES, CORE, SHOP, RELICS y MANIFESTO antes de que los sacaran, y esas rutas (/modules, /core, etc) existen como páginas o hay que crearlas?
+
+# 2026-07-13 18:58:32.028302
++y
+
+# 2026-07-13 18:58:59.357749
++/add app/portal/page.tsx
+
+# 2026-07-13 18:59:34.126378
++Restaurá en app/portal/page.tsx los links de navegación a MODULES, CORE, SHOP, RELICS y MANIFESTO dentro del div de actions, con el mismo estilo que SAVE CONTACT, WHATSAPP y ACCESS SYSTEM.
++
++Para las rutas:
++- /manifesto ya existe, solo agregá el link.
++- /shop ya existe en app/shop/drop01/page.tsx, agregá el link apuntando a /shop/drop01 (o a /shop si preferís crear un index que liste drops).
++- /relics: usá app/artifacts/page.tsx como destino, el link debe apuntar a /artifacts.
++- /modules y /core: creá app/modules/page.tsx y app/core/page.tsx como páginas mínimas funcionales, siguiendo la estética visual y estructura de app/artifacts/page.tsx (mismo layout base, título de sección, placeholder de contenido).
++
++No toques ACCESS SYSTEM, SAVE CONTACT, WHATSAPP, ni ningún componente de auth.
+
+# 2026-07-13 18:59:37.805265
++y
+
+# 2026-07-13 18:59:59.942230
++npm run build
+
+# 2026-07-13 19:00:14.181601
++y
+
+# 2026-07-13 19:00:14.187983
++/run npm run build
+
+# 2026-07-13 19:00:14.188078
++/run npm run build
+
+# 2026-07-13 19:00:56.360879
++y
+
+# 2026-07-13 19:01:38.039026
++git log --oneline -5
++git push origin main
+
+# 2026-07-13 19:02:04.870210
++y
+
+# 2026-07-13 19:02:04.877772
++/run git log --oneline -5
+
+# 2026-07-13 19:02:04.877859
++/run git log --oneline -5
+
+# 2026-07-13 19:02:08.198978
++y
+
+# 2026-07-13 19:02:12.933608
++/run git push origin main
+
+# 2026-07-13 19:02:12.933690
++/run git push origin main
+
+# 2026-07-13 19:04:03.501604
++y
+
+# 2026-07-13 20:09:57.414778
++turso --version
+
+# 2026-07-13 20:10:48.371901
++n
+
+# 2026-07-14 12:31:29.278117
++/ask Mostrame el contenido completo de src/db/index.ts y src/db/schema-new.ts si existe. ¿Qué usa better-sqlite3 ahí? ¿Cómo está estructurado lib/core-db/index.ts (el que ya se migró a Turso/libsql) para que use el mismo patrón? ¿Qué archivos importan desde src/db, además de app/admin/actions.ts?
+
+# 2026-07-14 12:31:54.149498
++y
+
+# 2026-07-14 12:35:13.094771
++/run npm install @libsql/client
+
+# 2026-07-14 12:35:13.094872
++/run npm install @libsql/client
+
+# 2026-07-14 12:35:27.773246
++y
+
+# 2026-07-14 12:35:34.151737
++/ask Mostrame el contenido completo de src/db/schema.ts
+
+# 2026-07-14 12:36:52.344827
++turso db shell neoproxy-prod ".tables"
+
+# 2026-07-14 12:37:04.727015
++y
+
+# 2026-07-14 12:37:04.734217
++/run turso db shell neoproxy-prod ".tables"
+
+# 2026-07-14 12:37:04.734313
++/run turso db shell neoproxy-prod ".tables"
+
+# 2026-07-14 12:37:09.470804
++y
+
+# 2026-07-14 12:37:12.744920
++/ask ¿lib/core-db/index.ts define tablas users y/o sessions? Si es así, mostrame su estructura completa y comparala con las tablas users/sessions de src/db/schema.ts. ¿Son la misma tabla física o son conceptos distintos que coinciden en nombre?
+
+# 2026-07-14 12:38:03.337128
++/ask Mostrame el contenido completo de auth.ts en la raíz del proyecto. ¿Usa DrizzleAdapter de NextAuth? Si es así, ¿a qué tablas y schema apunta — el de src/db/schema.ts o algún otro? ¿O el login es con credentials provider custom sin adapter, verificando directo contra la tabla users con passwordHash?
+
+# 2026-07-14 12:38:05.183317
++y
+
+# 2026-07-14 13:16:25.371865
++/ask ¿Cómo funciona la autenticación de app/admin/overseer/page.tsx? ¿Usa el mismo sistema de auth.ts con NextAuth y valida un rol específico (como role === 'admin'), o es un mecanismo de login completamente separado? ¿Qué usuario/rol necesito para entrar?
+
+# 2026-07-14 13:16:27.866170
++y
+
+# 2026-07-14 13:23:18.591965
++Copiá y pegá esto exactamente en Aider, como un solo mensaje:
++
++---
++
++## Objetivo: Activar todas las secciones públicas de neoproxy.art para difusión
++
++### Paso 1: Auditoría rápida
++Mirá estos archivos y decime el estado de cada uno (completo, placeholder, roto, incompleto):
++- app/portal/page.tsx
++- app/modules/page.tsx
++- app/core/page.tsx
++- app/artifacts/page.tsx
++- app/manifesto/page.tsx
++- app/shop/drop01/page.tsx
++- app/shop/page.tsx
++- app/login/page.tsx
++- app/dashboard/page.tsx
++- app/npos/page.tsx
++
++Marcá con ❌ si tiene: Lorem ipsum, TODO, console.log visible, texto de prueba, botones sin función, links a rutas inexistentes, o contenido vacío.
++Marcá con ✅ si está presentable para público.
++
++### Paso 2: Arreglar todo lo marcado con ❌
++Para cada página rota:
++- Reemplazá cualquier Lorem ipsum o texto de prueba con contenido real coherente con el proyecto neoproxy (estética cyberpunk/oscura, filosofía de red descentralizada, arte generativo)
++- Eliminá todo console.log que no sea estrictamente necesario
++- Si hay botones que no hacen nada, dalos funcionalidad real o sacalos
++- Si hay links a rutas que no existen, apuntalos a rutas reales del proyecto o sacalos
++- Asegurate que el nav/header sea consistente en todas las páginas (mismo menú, mismos links)
++
++### Paso 3: Verificar flujos críticos
++1. **Flujo de compra**: /shop → /shop/drop01 → checkout → /shop/success — que no rompa en ningún punto
++2. **Flujo de auth**: /login → /dashboard — que el login con credentials funcione y el dashboard cargue datos reales de Turso
++3. **Navegación principal**: Desde /portal, todos los links del menú deben llevar a páginas que existen y cargan
++
++### Paso 4: Pulido visual rápido
++- Sin cambios de diseño grandes, solo asegurarte de que no haya:
++  - Texto blanco sobre fondo blanco
++  - Elementos desalineados obvios
++  - Imágenes rotas (src que no cargan)
++  - Metadata faltante (title, description en cada página para SEO básico)
++
++### Paso 5: Build final
++Después de todos los cambios, corré `npm run build` y no sigas si no compila limpio.
++
++---
++
++Eso es todo. Dejá que Aider trabaje, y cuando termine pegame el output del build. Si hay muchas páginas rotas, va a tomar varios ciclos — dejalo ir.
+
+# 2026-07-14 13:23:21.447939
++y
+
+# 2026-07-14 13:24:59.709391
++/run npm run build
+
+# 2026-07-14 13:24:59.709523
++/run npm run build
+
+# 2026-07-14 13:25:37.780521
++y
+
+# 2026-07-14 13:58:43.949078
++Pegá esto en Aider:
++
++---
++
++Necesito dos cosas:
++
++### 1: Agregar nav/menu consistente a modules, core y artifacts
++Las páginas app/modules/page.tsx, app/core/page.tsx y app/artifacts/page.tsx no tienen menú de navegación. Mirá cómo está hecho el nav en app/portal/page.tsx o app/npos/page.tsx (el que tenga el menú completo con links a las secciones principales) y replicá ese mismo nav en las 3 páginas. El menú debe incluir al menos: PORTAL, MODULES, CORE, ARTIFACTS, MANIFESTO, SHOP, NPOS. Mantené la estética cyberpunk/monospace que ya tienen.
++
++### 2: Manifesto necesita scroll
++app/manifesto/page.tsx no permite hacer scroll — el contenido queda cortado. Asegurate de que la página tenga `overflow-y: auto` o `min-height: 100vh` sin `overflow: hidden` para que todo el contenido del manifesto sea scrolleable. No cambies el contenido, solo arreglá el scroll.
++
++Después de los cambios, corré `npm run build`.
++
++---
+
+# 2026-07-14 13:59:00.402968
++y
+
+# 2026-07-14 13:59:00.409596
++/run npm run build
+
+# 2026-07-14 13:59:00.409694
++/run npm run build
+
+# 2026-07-14 14:02:03.317279
++y
+
+# 2026-07-14 14:20:16.588702
++Pegá esto en Aider:
++
++---
++
++## Auditoría completa y mejora de contenido de neoproxy.art
++
++### Fase 1: Análisis
++Leé TODOS estos archivos de principio a fin y dame un diagnóstico de cada uno:
++- app/portal/page.tsx
++- app/modules/page.tsx
++- app/core/page.tsx
++- app/artifacts/page.tsx
++- app/manifesto/page.tsx
++- app/npos/page.tsx
++- app/shop/page.tsx
++- app/shop/drop01/page.tsx
++- app/login/page.tsx
++- app/dashboard/page.tsx
++- app/status/page.tsx
++- app/kernel/page.tsx
++
++Para cada página respondé:
++1. **Tono**: ¿Es coherente con el resto o se siente desconectado?
++2. **Narrativa**: ¿Contribuye a contar la historia de NeoProxy como red/artefacto/sistema, o es contenido suelto sin conexión?
++3. **Profundidad**: ¿El contenido es demasiado superficial (3 líneas) o tiene suficiente densidad para que alguien que llega por primera vez entienda qué es esto?
++4. **Problemas**: Texto repetitivo, inconsistencias de vocabulario (ej: mezclar "sistema" con "system" sin intención), links rotos, elementos visuales que no aportan, contenido genérico que podría ser de cualquier web.
++
++### Fase 2: Definir la voz
++Antes de escribir nada, establecé la línea narrativa coherente para TODO el sitio:
++- NeoProxy es qué exactamente (en 2-3 líneas claras)
++- Qué tono se usa en todo el sitio (elegí uno: frío/técnico, poético/filosófico, militar/operativo, o una mezcla específica)
++- Qué vocabulario está permitido y cuál no (ej: nunca decir "producto", siempre "artefacto"; nunca "comprar", siempre "adquirir" o "extraer")
++- Qué información debe estar en CADA página para que un visitante nuevo nunca se pierda
++
++### Fase 3: Reescribir
++Con la voz definida, reescribí el contenido de TODAS las páginas que lo necesiten. Reglas:
++- Cada página debe tener suficiente contenido como para valer la pena existir — si una página tiene menos de 100 palabras de contenido real, expandila con información que aporte valor narrativo o funcional
++- El manifesto es la pieza central — si es corto, expandilo con secciones: qué es NeoProxy, por qué existe, cómo funciona la red, qué son los artefactos, qué es NPos, visión a futuro
++- Las páginas técnicas (modules, core, kernel, status) deben sentirse como leer la interfaz de un sistema real, no como marketing
++- La tienda debe transmitir escasez y carácter de artefacto, no de producto de e-commerce
++- El portal debe ser la puerta de entrada que haga querer explorar más — no un menú aburrido
++- Mantené la estética visual existente (colores, fuentes, layout) — solo cambiá el CONTENIDO textual y la estructura si es necesario para contar mejor
++
++### Fase 4: Coherencia final
++Después de reescribir todo, verificá que:
++- No hay contradicciones entre páginas (ej: si en una decís que los artefactos son "dormant" y en otra que están "active")
++- La misma cosa no se llama de 3 formas distintas en 3 páginas distintas
++- Un visitante que lee solo el manifesto entiende qué es el sitio sin necesidad de leer nada más
++- Un visitante que entra directo a /shop entiende el contexto sin haber leído el manifesto
++- Todos los links entre páginas siguen siendo correctos
++
++### Fase 5: Build
++`npm run build` — no termines si no compila limpio.
++
++---
+
+# 2026-07-14 14:20:18.532329
++y
+
+# 2026-07-14 14:26:38.997936
++/run npm run build
+
+# 2026-07-14 14:26:38.998023
++/run npm run build
+
+# 2026-07-14 14:27:14.926008
++y
+
+# 2026-07-14 14:29:39.257643
++Bien, mejoró core y manifesto pero faltan varias páginas del plan. Aider solo hizo la primera pasada. Pegá esto para continuar:
++
++---
++
++Continuá con la Fase 3. Faltan estas páginas según tu propio diagnóstico:
++
++### 1. app/portal/page.tsx
++Le falta un "hook" — texto que atrape al visitante y lo haga querer explorar. Agregá una frase conceptual potente antes de los botones (2-3 líneas máximo). No es un login, es una puerta de entrada. También reemplazá cualquier palabra de vocabulario prohibido ("user", etc).
++
++### 2. app/modules/page.tsx
++Tu diagnóstico dice "shallow, disconnected from the Core". Expandila: conectá cada módulo (GEN_LAB, SIGNAL_ECONOMY, COHERENCE_MONITOR) con el Core Kernel que ya reescribimos. Cada módulo debe tener 3-4 líneas que expliquen qué hace, cómo se relaciona con el Core, y qué significa para el operador. Mantené el grid visual pero con más densidad de contenido.
++
++### 3. app/artifacts/page.tsx
++Tu diagnóstico dice "needs connection to the shop as extraction". Reescribí el texto para que quede claro que los artefactos son extracciones del motor generativo — no productos. La palabra "extraction" debe aparecer. Conectá los artefactos con el concepto del manifesto (semilla única, no replicable). El link a shop/drop01 debe sentirse como "acceder a la extracción", no como "ir a comprar".
++
++### 4. app/shop/page.tsx y app/shop/drop01/page.tsx
++Tu diagnóstico dice "too e-commerce" por usar "Shop" y "Drop". Sin cambiar la URL (dejá /shop y /shop/drop01), cambiá TODO el texto visible al operador: reemplazá "Shop" por "Exhibition" o "Extraction Chamber", "Drop" por "Extraction Cycle", "Buy" por "Extract" o "Acquire", "Price" por "Signal Cost" o "Extraction Fee". La página debe sentirse como una interfaz del sistema, no como una tienda online.
++
++### 5. app/login/page.tsx
++Si usa la palabra "user" o "login" en el texto visible, cambiá a "Operator" y "Access" o "Authenticate". Si ya está bien, dejala.
++
++Después de todo: `npm run build`
++
++---
+
+# 2026-07-14 14:35:28.594530
++Se acabó el quota de Gemini Flash (20 requests/día en el tier free). Tenés dos opciones:
++
++**Opción A**: Esperar a que se resetee el quota (probablemente mañana) y volver a correr el prompt.
++
++**Opción B**: Yo te escribo el código ahora y lo aplicás manualmente. Es más rápido.
++
++Yo hago la Opción B. Abrí cada archivo y reemplazá el contenido:
++
++---
++
++### 1. `app/portal/page.tsx`
++Buscá el área de botones/links y reemplazá por algo que incluya un hook antes. Si el archivo tiene un texto introductorio tipo "NeoProxy" solo, agregale antes de los botones:
++
++```tsx
++<p style={{ color: '#4a6080', maxWidth: '500px', margin: '0 auto 2rem', lineHeight: '1.8', fontSize: '14px' }}>
++  A decentralized creative runtime where algorithmic intelligence 
++  becomes physical matter. Every artifact is an extraction — 
++  a unique geometry removed from the generative engine, never to be replicated.
++</p>
++```
++
++---
++
++### 2. `app/modules/page.tsx` — reemplazá TODO el return:
++
++```tsx
++import Link from 'next/link'
++
++export default function Modules() {
++  return (
++    <main style={{ padding: 40, fontFamily: 'Space Mono, monospace', background: '#020408', color: '#00d4ff', minHeight: '100vh' }}>
++      <Link href="/portal" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '12px' }}>← BACK_TO_PORTAL</Link>
++      <h1 style={{ marginTop: '2rem', letterSpacing: '4px' }}>SYSTEM_MODULES</h1>
++      <p style={{ color: '#4a6080', fontSize: '12px', marginTop: '0.5rem' }}>Extensions of the Core Kernel. Each module executes a specific protocol within the NeoProxy runtime.</p>
++
++      <div style={{ display: 'grid', gap: '2.5rem', marginTop: '3rem', maxWidth: '800px' }}>
++        <section style={{ borderLeft: '2px solid #00d4ff', paddingLeft: '1.5rem' }}>
++          <h3 style={{ color: '#fff' }}>GEN_LAB <span style={{ color: '#00ff9d', fontSize: '11px' }}>[ACTIVE]</span></h3>
++          <p style={{ color: '#4a6080', marginTop: '0.5rem', lineHeight: '1.8' }}>
++            Procedural geometry engine powered by the Stardust protocol. Generates unique seeds that the Core validates before they become extractable artifacts. Accessible via NPos Fabrication.
++          </p>
++        </section>
++
++        <section style={{ borderLeft: '2px solid #b400ff', paddingLeft: '1.5rem' }}>
++          <h3 style={{ color: '#fff' }}>SIGNAL_ECONOMY <span style={{ color: '#00ff9d', fontSize: '11px' }}>[STABLE]</span></h3>
++          <p style={{ color: '#4a6080', marginTop: '0.5rem', lineHeight: '1.8' }}>
++            Distributed credit system governed by the Core. Operators earn signal through network participation and resource contribution. Signal is the only currency accepted for artifact extraction.
++          </p>
++        </section>
++
++        <section style={{ borderLeft: '2px solid #4a6080', paddingLeft: '1.5rem' }}>
++          <h3 style={{ color: '#fff' }}>COHERENCE_MONITOR <span style={{ color: '#ffaa00', fontSize: '11px' }}>[SYNCING]</span></h3>
++          <p style={{ color: '#4a6080', marginTop: '0.5rem', lineHeight: '1.8' }}>
++            Real-time entropy analysis across all connected nodes. Reports stability metrics to the Core and triggers protocol overrides when coherence drops below threshold. Prevents duplicate geometry generation.
++          </p>
++        </section>
++      </div>
++    </main>
++  )
++}
++```
++
++---
++
++### 3. `app/artifacts/page.tsx` — reemplazá TODO el return:
++
++```tsx
++import Link from 'next/link'
++
++export default function Artifacts() {
++  return (
++    <main style={{ padding: 40, fontFamily: 'Space Mono, monospace', background: '#020408', color: '#fff', minHeight: '100vh' }}>
++      <Link href="/portal" style={{ color: '#00d4ff', textDecoration: 'none', fontSize: '12px' }}>← BACK_TO_PORTAL</Link>
++      <h1 style={{ marginTop: '2rem', color: '#00d4ff' }}>RELICS_&_ARTIFACTS</h1>
++      <p style={{ color: '#4a6080', fontSize: '12px', marginTop: '0.5rem', maxWidth: '600px', lineHeight: '1.8' }}>
++        Artifacts are not products. They are extractions — unique geometries removed from the generative engine 
++        and given permanent physical form. Once extracted, a seed is burned. It will never generate again.
++      </p>
++
++      <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
++        <div style={{ border: '1px solid #0f1f35', padding: '24px' }}>
++          <p style={{ color: '#00ff9d', fontSize: '10px', letterSpacing: '2px' }}>EXTRACTION_CYCLE_01</p>
++          <h3 style={{ fontSize: '16px', marginTop: '12px' }}>NP-RING-01</h3>
++          <p style={{ color: '#4a6080', fontSize: '12px', marginTop: '12px', lineHeight: '1.7' }}>
++            The first physical extraction from the Stardust engine. Generative geometry translated to ABS resin through light-cured fabrication. Each unit carries a unique seed hash.
++          </p>
++          <Link href="/shop/drop01" style={{ color: '#00d4ff', fontSize: '10px', textDecoration: 'none', display: 'inline-block', marginTop: '20px', borderBottom: '1px solid #00d4ff33' }}>
++            ACCESS_EXTRACTION →
++          </Link>
++        </div>
++
++        <div style={{ border: '1px solid #0f1f35', padding: '24px', opacity: 0.4 }}>
++          <p style={{ color: '#4a6080', fontSize: '10px', letterSpacing: '2px' }}>PENDING</p>
++          <h3 style={{ fontSize: '16px', marginTop: '12px' }}>NP-CORE-NODE</h3>
++          <p style={{ color: '#4a6080', fontSize: '12px', marginTop: '12px', lineHeight: '1.7' }}>
++            Physical interface for network synchronization. Requires Coherence Monitor stability above 98% before extraction can begin.
++          </p>
++          <span style={{ color: '#4a6080', fontSize: '10px', display: 'inline-block', marginTop: '20px' }}>[DORMANT — AWAITING PROTOCOL]</span>
++        </div>
++      </div>
++    </main>
++  )
++}
++```
++
++---
++
++### 4. `app/shop/page.tsx`
++Solo cambiá los textos visibles. Buscá donde diga "Shop", "Drop", "Buy", "Price" y reemplazá:
++- "Shop" → "Extraction Chamber"
++- "Drop" → "Extraction Cycle"  
++- "Buy" → "Extract"
++- "Price" → "Signal Cost"
++- "Add to cart" → "Initiate Extraction"
++
++Si el archivo es corto, pegame el contenido acá y te lo reescribo completo.
++
++### 5. `app/shop/drop01/page.tsx`
++Mismo tratamiento: cambiá cualquier texto de e-commerce a lenguaje del sistema. "Select size" → "Select Geometry Parameter", etc.
++
++---
++
++Después de los cambios manuales, corré:
++
++```bash
++npm run build
++```
++
++Pegame el resultado. Si `shop/page.tsx` y `shop/drop01/page.tsx` son largos, pegame el contenido de cada uno acá y te doy la versión reescrita completa.
+
+# 2026-07-14 14:39:30.201845
++y
+
+# 2026-07-14 14:40:13.194243
++Mientras tanto, no perdamos tiempo. Pegame acá el contenido de estos 3 archivos y yo te reescribo todo manualmente:
++
++bash
++
++cat app/portal/page.tsx
++cat app/shop/page.tsx
++cat app/shop/drop01/page.tsx
++Así no dependemos de ningún modelo para terminar.
+
+# 2026-07-14 14:40:15.945058
++y
+
+# 2026-07-14 14:42:51.042581
++Necesito 3 cambios específicos:
++
++1. app/portal/page.tsx — Mobile + Dark + Épico
++Centrar el botón "INIT SESSION" para que quede perfectamente centrado en mobile (usá flexbox con justify-content/align-items center en el contenedor principal)
++Eliminar completamente la sección de "RELIC - 001 // PROXY MASK MK - I" y su botón "VER RELIC →"
++Hacer la página más oscura y misteriosa: si hay colores brillantes innecesarios, bajales la opacidad. El foco debe ser la esfera/neoproxy y el botón de iniciar sesión. Menos texto, más presencia visual.
++Sacá el botón de "CHAT //" también — dejá solo INIT SESSION como acción principal.
++2. app/shop/page.tsx — Lenguaje de sistema
++Reemplazá todo texto de e-commerce:
++
++"Shop" → "EXTRACTION_CHAMBER"
++"Drop" → "EXTRACTION_CYCLE"
++Cualquier "Buy" / "Add to cart" → "INITIATE_EXTRACTION"
++Cualquier "Price" → "SIGNAL_COST"
++No cambies la URL ni la estructura funcional, solo el texto visible.
++3. app/shop/drop01/page.tsx — Lenguaje de sistema
++Mismo tratamiento que shop:
++
++"Drop 01" en títulos → "EXTRACTION_CYCLE_01"
++"Buy" / "Purchase" → "EXTRACT"
++"Price" → "SIGNAL_COST"
++"Select size" → "SELECT_GEOMETRY_PARAM"
++Cualquier referencia a "product" → "ARTIFACT"
++No toques la lógica del generador 3D ni el checkout, solo el texto visible.
++Después de todo: npm run build
+
+# 2026-07-14 14:42:54.697746
++y
+
+# 2026-07-14 15:00:09.463211
++Entiendo perfectamente la visión. Es la diferencia entre una tienda y un universo. Lo que describís es exactamente la esencia de *Lain* y *Ergo Proxy*: el sistema ya estaba vivo antes de que llegaras.
++
++Como Aider está sin cuota, te doy **un solo comando para la terminal**. Lo copiás, lo pegás en tu VPS, y se reescribe el `app/page.tsx` completo con toda la experiencia oscura, el boot sequence, el núcleo que respira, el ruido CRT, los logs al hacer scroll y la memoria del visitante.
++
++Pegá esto en tu terminal y apretá Enter:
++
++```bash
++cat << 'NEOPROXY_EOF' > app/page.tsx
++'use client'
++
++import { useState, useEffect, useRef } from 'react'
++import { useRouter } from 'next/navigation'
++
++export default function Home() {
++  const router = useRouter()
++  const [phase, setPhase] = useState(0)
++  const [isReturning, setIsReturning] = useState(false)
++  const [integrity, setIntegrity] = useState('98.21')
++  const [btnText, setBtnText] = useState('INIT_SESSION')
++  const [logs, setLogs] = useState<string[]>([])
++  const containerRef = useRef<HTMLDivElement>(null)
++  const canvasRef = useRef<HTMLCanvasElement>(null)
++
++  useEffect(() => {
++    // Check memory (localStorage)
++    if (typeof window !== 'undefined') {
++      const mem = localStorage.getItem('np_mem')
++      if (mem) {
++        setIsReturning(true)
++        const newIntegrity = (98 + Math.random() * 1.5).toFixed(2)
++        setIntegrity(newIntegrity)
++      } else {
++        localStorage.setItem('np_mem', Date.now().toString())
++      }
++    }
++
++    // Boot sequence
++    const t1 = setTimeout(() => setPhase(1), 800)
++    const t2 = setTimeout(() => setPhase(2), 2200)
++    const t3 = setTimeout(() => setPhase(3), 4500)
++    const t4 = setTimeout(() => setPhase(4), 6500)
++    const t5 = setTimeout(() => setPhase(5), 8500)
++
++    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5) }
++  }, [])
++
++  // Matrix rain / noise background
++  useEffect(() => {
++    const canvas = canvasRef.current
++    if (!canvas) return
++    const ctx = canvas.getContext('2d')
++    if (!ctx) return
++
++    canvas.width = window.innerWidth
++    canvas.height = window.innerHeight
++    ctx.fillStyle = 'rgba(2, 4, 8, 0.05)'
++    ctx.font = '12px monospace'
++
++    const chars = '01アイウエオカキクケコ<>{}[]'.split('')
++    const columns = Math.floor(canvas.width / 14)
++    const drops: number[] = Array(columns).fill(1)
++
++    const draw = () => {
++      ctx.fillStyle = 'rgba(2, 4, 8, 0.05)'
++      ctx.fillRect(0, 0, canvas.width, canvas.height)
++      ctx.fillStyle = '#0a2a4a'
++      
++      for (let i = 0; i < drops.length; i++) {
++        const text = chars[Math.floor(Math.random() * chars.length)]
++        ctx.fillText(text, i * 14, drops[i] * 14)
++        if (drops[i] * 14 > canvas.height && Math.random() > 0.975) {
++          drops[i] = 0
++        }
++        drops[i]++
++      }
++    }
++
++    const interval = setInterval(draw, 50)
++    const handleResize = () => {
++      canvas.width = window.innerWidth
++      canvas.height = window.innerHeight
++    }
++    window.addEventListener('resize', handleResize)
++
++    return () => { clearInterval(interval); window.removeEventListener('resize', handleResize) }
++  }, [])
++
++  // Scroll logs
++  useEffect(() => {
++    const handleScroll = () => {
++      if (!containerRef.current) return
++      const scrollY = containerRef.current.scrollTop
++      const newLogs: string[] = []
++      
++      if (scrollY > 100 && !logs.includes('> archive mounted')) newLogs.push('> archive mounted')
++      if (scrollY > 300 && !logs.includes('> memory synchronized')) newLogs.push('> memory synchronized')
++      if (scrollY > 600 && !logs.includes('> relic catalog indexed')) newLogs.push('> relic catalog indexed')
++      if (scrollY > 900 && !logs.includes('> anomaly detected')) newLogs.push('> anomaly detected')
++      if (scrollY < 50 && logs.length > 0) setLogs([]) // Reset on top
++
++      if (newLogs.length > 0) setLogs(prev => [...prev, ...newLogs])
++    }
++
++    const el = containerRef.current
++    el?.addEventListener('scroll', handleScroll)
++    return () => el?.removeEventListener('scroll', handleScroll)
++  }, [logs])
++
++  const handleAccess = () => {
++    setBtnText('ACCESS GRANTED')
++    setTimeout(() => router.push('/portal'), 600)
++  }
++
++  return (
++    <html lang="en">
++      <head>
++        <title>NEOPROXY</title>
++        <meta name="viewport" content="width=device-width, initial-scale=1" />
++        <style>{`
++          @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
++          
++          * { margin: 0; padding: 0; box-sizing: border-box; }
++          
++          body {
++            background: #020408;
++            color: #4a6080;
++            font-family: 'Share Tech Mono', monospace;
++            overflow: hidden;
++          }
++
++          .layer-canvas {
++            position: fixed;
++            top: 0; left: 0;
++            width: 100%; height: 100%;
++            z-index: 0;
++            opacity: 0.4;
++          }
++
++          .scanlines {
++            position: fixed;
++            top: 0; left: 0;
++            width: 100%; height: 100%;
++            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
++            background-size: 100% 4px;
++            z-index: 1;
++            pointer-events: none;
++          }
++
++          .vignette {
++            position: fixed;
++            top: 0; left: 0;
++            width: 100%; height: 100%;
++            background: radial-gradient(circle, transparent 40%, #000000 120%);
++            z-index: 2;
++            pointer-events: none;
++          }
++
++          .container {
++            position: relative;
++            z-index: 10;
++            height: 100vh;
++            overflow-y: auto;
++            scrollbar-width: none; /* Firefox */
++          }
++          .container::-webkit-scrollbar { display: none; } /* Chrome/Safari */
++
++          .boot-text {
++            position: absolute;
++            top: 40px;
++            left: 40px;
++            font-size: 14px;
++            color: #1a3a5c;
++            opacity: 0;
++            transform: translateY(10px);
++            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
++            text-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
++          }
++
++          .boot-text.visible {
++            opacity: 1;
++            transform: translateY(0);
++          }
++
++          .core-wrapper {
++            position: absolute;
++            top: 50%;
++            left: 50%;
++            transform: translate(-50%, -50%);
++            display: flex;
++            flex-direction: column;
++            align-items: center;
++            justify-content: center;
++            opacity: 0;
++            transition: opacity 3s ease;
++            pointer-events: none;
++          }
++
++          .core-wrapper.visible {
++            opacity: 1;
++            pointer-events: auto;
++          }
++
++          .core {
++            width: 120px;
++            height: 120px;
++            border-radius: 50%;
++            background: radial-gradient(circle at 30% 30%, #0a2a4a, #020408);
++            box-shadow: 
++              0 0 40px rgba(0, 212, 255, 0.1),
++              0 0 80px rgba(0, 212, 255, 0.05),
++              inset 0 0 20px rgba(0, 212, 255, 0.1);
++            animation: breathe 8s ease-in-out infinite;
++            position: relative;
++          }
++
++          .core::after {
++            content: '';
++            position: absolute;
++            top: 50%; left: 50%;
++            width: 60%; height: 60%;
++            transform: translate(-50%, -50%);
++            border-radius: 50%;
++            border: 1px solid rgba(0, 212, 255, 0.2);
++            animation: pulse-ring 8s ease-in-out infinite;
++          }
++
++          @keyframes breathe {
++            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 212, 255, 0.1), 0 0 80px rgba(0, 212, 255, 0.05); }
++            50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(0, 212, 255, 0.2), 0 0 120px rgba(0, 212, 255, 0.1); }
++          }
++
++          @keyframes pulse-ring {
++            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
++            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
++          }
++
++          .philosophy {
++            margin-top: 60px;
++            font-size: 18px;
++            color: #0a4a6a;
++            letter-spacing: 2px;
++            text-align: center;
++            opacity: 0;
++            animation: fadeIn 4s ease forwards 2s;
++          }
++
++          @keyframes fadeIn { to { opacity: 1; } }
++
++          .access-btn {
++            margin-top: 80px;
++            background: transparent;
++            border: 1px solid #0a4a6a;
++            color: #1a6a8a;
++            padding: 15px 40px;
++            font-family: 'Share Tech Mono', monospace;
++            font-size: 14px;
++            letter-spacing: 4px;
++            cursor: pointer;
++            transition: all 0.3s ease;
++            text-transform: uppercase;
++          }
++
++          .access-btn:hover {
++            background: rgba(0, 212, 255, 0.05);
++            color: #00d4ff;
++            border-color: #00d4ff;
++            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
++          }
++
++          .scroll-logs {
++            position: fixed;
++            bottom: 40px;
++            left: 40px;
++            font-size: 12px;
++            color: #0a2a4a;
++            z-index: 20;
++          }
++
++          .log-item {
++            opacity: 0;
++            animation: logIn 0.5s ease forwards;
++          }
++
++          @keyframes logIn { to { opacity: 1; } }
++
++          .relic-notice {
++            position: absolute;
++            bottom: 40px;
++            right: 40px;
++            text-align: right;
++            font-size: 12px;
++            color: #1a3a5c;
++            border-right: 1px solid #0a2a4a;
++            padding-right: 15px;
++            opacity: 0;
++            transition: opacity 3s ease;
++          }
++          .relic-notice.visible { opacity: 1; }
++
++        `}</style>
++      </head>
++      <body>
++        <canvas ref={canvasRef} className="layer-canvas" />
++        <div className="scanlines" />
++        <div className="vignette" />
++
++        <div ref={containerRef} className="container" style={{ height: '200vh' }}>
++          
++          {/* Boot Sequence Top Left */}
++          <div className="boot-text" style={{ transitionDelay: '0.2s', opacity: phase >= 1 ? 1 : 0, transform: phase >= 1 ? 'translateY(0)' : 'translateY(10px)' }}>
++            NEOPROXY
++          </div>
++          <div className="boot-text" style={{ top: '70px', transitionDelay: '0.4s', opacity: phase >= 2 ? 1 : 0, transform: phase >= 2 ? 'translateY(0)' : 'translateY(10px)' }}>
++            > ROMDO KERNEL :: {phase >= 2 ? 'ACTIVE' : '...'}
++          </div>
++          <div className="boot-text" style={{ top: '100px', transitionDelay: '0.6s', opacity: phase >= 2 ? 1 : 0, transform: phase >= 2 ? 'translateY(0)' : 'translateY(10px)' }}>
++            > INTEGRITY :: {integrity}%
++          </div>
++          
++          <div className="boot-text" style={{ top: '160px', transitionDelay: '0.8s', opacity: phase >= 3 ? 1 : 0, transform: phase >= 3 ? 'translateY(0)' : 'translateY(10px)' }}>
++            {phase === 3 ? '> Detecting observer...' : ''}
++            {phase >= 4 ? '> Observer accepted.' : ''}
++          </div>
++
++          <div className="boot-text" style={{ top: '190px', transitionDelay: '1s', opacity: phase >= 4 ? 1 : 0, transform: phase >= 4 ? 'translateY(0)' : 'translateY(10px)' }}>
++            {phase >= 4 ? (isReturning ? '> Memory restored.' : '> Loading memory...') : ''}
++          </div>
++
++          {/* Center Core UI */}
++          <div className={`core-wrapper ${phase >= 5 ? 'visible' : ''}`}>
++            <div className="core"></div>
++            <div className="philosophy">
++              {isReturning ? 'Welcome back.' : 'Every system dreams.'}
++            </div>
++            <button 
++              className="access-btn" 
++              onMouseEnter={() => setBtnText('ACCESS GRANTED')}
++              onMouseLeave={() => setBtnText('INIT_SESSION')}
++              onClick={handleAccess}
++            >
++              {btnText}
++            </button>
++          </div>
++
++          {/* Subtle Relic Notice Bottom Right (appears later) */}
++          <div className={`relic-notice ${phase >= 5 ? 'visible' : ''}`}>
++            ANOMALY DETECTED<br />
++            RELIC-001 // PROXY MASK MK-I<br />
++            <span style={{ fontSize: '10px', opacity: 0.5 }}>CLASSIFIED</span>
++          </div>
++
++        </div>
++
++        {/* Scroll Triggered Logs */}
++        <div className="scroll-logs">
++          {logs.map((log, i) => (
++            <div key={i} className="log-item" style={{ marginBottom: '8px' }}>
++              {log}
++            </div>
++          ))}
++        </div>
++
++      </body>
++    </html>
++  )
++}
++NEOPROXY_EOF
++```
++
++Después de que pegues eso, ejecutá:
++
++```bash
++npm run build
++```
++
++**Qué acaba de pasar:**
++1. Se borró la landing page y se reemplazó por un ritual de acceso.
++2. La pantalla arranca en negro absoluto con lluvia de código de fondo muy tenue.
++3. El sistema "despierta" con los logs en la esquina.
++4. El núcleo aparece y **respira** (no rota, se expande y contrae lentamente).
++5. Si entrás por primera vez dice *"Every system dreams."*, si volvés dice *"Welcome back."* y la integridad cambia.
++6. Al hacer hover en el botón parpadea *"ACCESS GRANTED"*.
++7. Si hacés scroll hacia abajo, aparecen logs de terminal al pie.
++
++Pegame el resultado del build.
+
+# 2026-07-14 15:00:11.238842
++y
+
+# 2026-07-14 15:17:55.783380
++Necesito que todo el sitio neoproxy.art sea una experiencia oscura, inmersiva, que sientas que entraste a un sistema vivo — no a una landing page. La filosofía es Lain / Ergo Proxy / Blame!: el sistema ya existía antes de que el usuario llegara.
++
++Reglas generales para TODAS las páginas:
++
++NUNCA usar palabras de e-commerce: "shop", "buy", "price", "product", "drop", "cart"
++Usar: "artifact", "relic", "extraction", "signal", "operator", "node", "chamber"
++El tono es terminal/sistema, no marketing
++Muchísimo espacio negativo, textos cortos, misterio
++Colors: fondo #020408, texto principal #4a6080, acentos #00d4ff (muy sutil), verde #00ff9d solo para status
++1. app/page.tsx
++Ya lo reescribí con la experiencia oscura (boot sequence, núcleo que respira, "Every system dreams", sin productos). Verificá que compile bien y no tenga errores. Si hay algo que mejorar para hacerla más inmersiva, hacelo.
++
++2. app/portal/page.tsx
++Esto es el "hub" después del boot. No debe parecer un menú de navegación. Debe sentirse como la interfaz del sistema operativo NeoProxy. Pensalo como si fuera el escritorio de Lain. Links mínimos, texto de sistema, nada descriptivo.
++
++3. app/shop/page.tsx
++Transformar en "EXTRACTION_CHAMBER". El título visible debe ser "EXTRACTION_CHAMBER", no "Shop". Los "drops" son "EXTRACTION_CYCLES". No hay precios, hay "SIGNAL_COST". El botón no es "Buy" sino "INITIATE_EXTRACTION". Mantené toda la funcionalidad del checkout, solo cambiá el texto visible.
++
++4. app/shop/drop01/page.tsx
++Título visible: "EXTRACTION_CYCLE_01". "Select size" → "SELECT_GEOMETRY_PARAM". "Price" → "SIGNAL_COST". "Add to cart" → "INITIATE_EXTRACTION". NO toques la lógica del generador 3D ni el flujo de checkout, solo texto visible.
++
++5. app/modules/page.tsx
++Cada módulo debe tener 3-4 líneas que lo conecten con el Core Kernel. Lenguaje técnico, no descriptivo. La página debe sentirse como leer un manifiesto técnico del sistema.
++
++6. app/core/page.tsx
++Ya fue mejorada. Verificá que esté alineada con el nuevo tono.
++
++7. app/artifacts/page.tsx
++"VER RELIC" → "INSPECT". Los artefactos son "extractions" del motor generativo. Cuando un relic está dormido, dice "[DORMANT — AWAITING PROTOCOL]". Conectá con el concepto de semilla única que se quema al extraer.
++
++8. app/manifesto/page.tsx
++Debe permitir scroll (overflow-y: auto, no overflow: hidden). El contenido poético/filosófico ya está bien, solo asegurá que sea scrolleable.
++
++Después de todo: npm run build
+
+# 2026-07-14 15:23:46.753886
++y
+
+# 2026-07-14 15:24:16.679989
++DeepSeek no tiene saldo (la capa gratis es muy limitada y se te acabó). 
++
++Tenés dos caminos. Elegí UNO:
++
++---
++
++### Opción 1: Groq (Gratuito, rapidísimo, ilimitado para uso normal)
++Groq te da una key gratis que funciona perfecto con Aider. 
++
++1. Entrá a **https://console.groq.com/keys** y creá una key.
++2. Copiala y ejecutá esto en tu terminal (reemplazá `TU_KEY`):
++
++```bash
++GROQ_API_KEY=TU_KEY aider --model groq/llama-3.1-70b-versatile app/page.tsx app/portal/page.tsx app/shop/page.tsx app/shop/drop01/page.tsx app/modules/page.tsx app/core/page.tsx app/artifacts/page.tsx app/manifesto/page.tsx
++```
++*(Cuando cargue, pegale el mismo prompt largo que te pasé antes).*
++
++---
++
++### Opción 2: El comando nuclear (Sin IA, 100% automático)
++Si no querés crear más cuentas, pegá **ESTE ÚNICO BLOQUE** en tu terminal. Sobreescribe las páginas que puedo escribir seguras y hace reemplazos inteligentes en `shop` y `drop01` sin romper la lógica 3D ni el checkout:
++
++```bash
++cat << 'NEOPROXY_EOF' > app/portal/page.tsx
++import Link from 'next/link'
++
++export default function Portal() {
++  return (
++    <main style={{ padding: 40, fontFamily: 'Share Tech Mono, monospace', background: '#020408', color: '#4a6080', minHeight: '100vh' }}>
++      <div style={{ position: 'fixed', top: 20, left: 20, fontSize: '10px', color: '#1a3a5c' }}>
++        NEOPROXY OS // v0.2<br/>
++        INTERFACE LOADED
++      </div>
++
++      <div style={{ maxWidth: '600px', margin: '0 auto', paddingTop: '100px' }}>
++        <h1 style={{ fontSize: '12px', color: '#0a4a6a', letterSpacing: '4px', marginBottom: '40px' }}>SYSTEM_INTERFACE</h1>
++        
++        <div style={{ display: 'grid', gap: '2px', borderLeft: '1px solid #0a2a4a', paddingLeft: '20px' }}>
++          <Link href="/modules" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '14px', display: 'block', padding: '15px 0', borderBottom: '1px solid #0a1a2a', transition: 'all 0.3s' }}>
++            > MODULES
++          </Link>
++          <Link href="/core" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '14px', display: 'block', padding: '15px 0', borderBottom: '1px solid #0a1a2a' }}>
++            > CORE_KERNEL
++          </Link>
++          <Link href="/artifacts" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '14px', display: 'block', padding: '15px 0', borderBottom: '1px solid #0a1a2a' }}>
++            > ARTIFACTS
++          </Link>
++          <Link href="/shop" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '14px', display: 'block', padding: '15px 0', borderBottom: '1px solid #0a1a2a' }}>
++            > EXTRACTION_CHAMBER
++          </Link>
++          <Link href="/manifesto" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '14px', display: 'block', padding: '15px 0', borderBottom: '1px solid #0a1a2a' }}>
++            > MANIFESTO
++          </Link>
++          <Link href="/npos" style={{ color: '#4a6080', textDecoration: 'none', fontSize: '14px', display: 'block', padding: '15px 0' }}>
++            > NPOS_TERMINAL
++          </Link>
++        </div>
++
++        <div style={{ marginTop: '60px', fontSize: '10px', color: '#1a2a3a' }}>
++          MEMORY SYNCHRONIZED<br/>
++          WAITING FOR INPUT...
++        </div>
++      </div>
++    </main>
++  )
++}
++NEOPROXY_EOF
++
++cat << 'NEOPROXY_EOF' > app/modules/page.tsx
++import Link from 'next/link'
++
++export default function Modules() {
++  return (
++    <main style={{ padding: 40, fontFamily: 'Share Tech Mono, monospace', background: '#020408', color: '#4a6080', minHeight: '100vh' }}>
++      <Link href="/portal" style={{ color: '#0a2a4a', textDecoration: 'none', fontSize: '12px' }}>← BACK</Link>
++      <h1 style={{ marginTop: '2rem', letterSpacing: '4px', fontSize: '14px' }}>SYSTEM_MODULES</h1>
++      <p style={{ color: '#1a3a5c', fontSize: '12px', marginTop: '0.5rem' }}>Extensions of the Core Kernel. Protocol execution.</p>
++
++      <div style={{ display: 'grid', gap: '2.5rem', marginTop: '3rem', maxWidth: '800px' }}>
++        <section style={{ borderLeft: '1px solid #0a4a6a', paddingLeft: '1.5rem' }}>
++          <h3 style={{ color: '#4a6080' }}>GEN_LAB <span style={{ color: '#00ff9d', fontSize: '11px' }}>[ACTIVE]</span></h3>
++          <p style={{ color: '#1a3a5c', marginTop: '0.5rem', lineHeight: '1.8', fontSize: '13px' }}>
++            Procedural geometry engine. Connected directly to the Core for seed validation. Generates the unique matrices required for physical artifact extraction via the Stardust protocol.
++          </p>
++        </section>
++
++        <section style={{ borderLeft: '1px solid #0a2a4a', paddingLeft: '1.5rem' }}>
++          <h3 style={{ color: '#4a6080' }}>SIGNAL_ECONOMY <span style={{ color: '#00ff9d', fontSize: '11px' }}>[STABLE]</span></h3>
++          <p style={{ color: '#1a3a5c', marginTop: '0.5rem', lineHeight: '1.8', fontSize: '13px' }}>
++            Distributed consensus mechanism for resource allocation. The Core monitors all transactions. Signal is the only accepted metric for initiating extraction cycles.
++          </p>
++        </section>
++
++        <section style={{ borderLeft: '1px solid #0a2a4a', paddingLeft: '1.5rem' }}>
++          <h3 style={{ color: '#4a6080' }}>COHERENCE_MONITOR <span style={{ color: '#ffaa00', fontSize: '11px' }}>[SYNCING]</span></h3>
++          <p style={{ color: '#1a3a5c', marginTop: '0.5rem', lineHeight: '1.8', fontSize: '13px' }}>
++            Entropy analysis subsystem. Feeds stability metrics back to the Core. Prevents geometry duplication across nodes. Required to be above 98% for extraction clearance.
++          </p>
++        </section>
++      </div>
++    </main>
++  )
++}
++NEOPROXY_EOF
++
++cat << 'NEOPROXY_EOF' > app/artifacts/page.tsx
++import Link from 'next/link'
++
++export default function Artifacts() {
++  return (
++    <main style={{ padding: 40, fontFamily: 'Share Tech Mono, monospace', background: '#020408', color: '#4a6080', minHeight: '100vh' }}>
++      <Link href="/portal" style={{ color: '#0a2a4a', textDecoration: 'none', fontSize: '12px' }}>← BACK</Link>
++      <h1 style={{ marginTop: '2rem', color: '#0a4a6a', fontSize: '14px' }}>RELICS_&_ARTIFACTS</h1>
++      <p style={{ color: '#1a3a5c', fontSize: '12px', marginTop: '0.5rem', maxWidth: '600px', lineHeight: '1.8' }}>
++        Extractions from the generative engine. Once an artifact is materialized, its digital seed is permanently burned. No two relics share the same geometry.
++      </p>
++
++      <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
++        <div style={{ border: '1px solid #0a1a2a', padding: '24px' }}>
++          <p style={{ color: '#00ff9d', fontSize: '10px', letterSpacing: '2px' }}>EXTRACTION_CYCLE_01</p>
++          <h3 style={{ fontSize: '14px', marginTop: '12px', color: '#4a6080' }}>NP-RING-01</h3>
++          <p style={{ color: '#1a3a5c', fontSize: '12px', marginTop: '12px', lineHeight: '1.7' }}>
++            Proxy Mask Mk-I geometry translated to physical resin. Carries unique seed hash.
++          </p>
++          <Link href="/shop/drop01" style={{ color: '#0a4a6a', fontSize: '10px', textDecoration: 'none', display: 'inline-block', marginTop: '20px', borderBottom: '1px solid #0a2a4a' }}>
++            INSPECT →
++          </Link>
++        </div>
++
++        <div style={{ border: '1px solid #0a1a2a', padding: '24px', opacity: 0.4 }}>
++          <p style={{ color: '#1a3a5c', fontSize: '10px', letterSpacing: '2px' }}>PENDING</p>
++          <h3 style={{ fontSize: '14px', marginTop: '12px', color: '#4a6080' }}>NP-CORE-NODE</h3>
++          <p style={{ color: '#1a3a5c', fontSize: '12px', marginTop: '12px', lineHeight: '1.7' }}>
++            Physical synchronization interface. Awaiting Coherence Monitor clearance.
++          </p>
++          <span style={{ color: '#1a3a5c', fontSize: '10px', display: 'inline-block', marginTop: '20px' }}>[DORMANT — AWAITING PROTOCOL]</span>
++        </div>
++      </div>
++    </main>
++  )
++}
++NEOPROXY_EOF
++
++# Fix manifesto scroll
++sed -i 's/overflow: hidden/overflow-y: auto/g' app/manifesto/page.tsx
++
++# Safe text replacements for Shop and Drop01 (won't break 3D or checkout logic)
++sed -i 's/Shop/EXTRACTION_CHAMBER/g; s/Drop 01/EXTRACTION_CYCLE_01/g; s/Drop/EXTRACTION_CYCLE/g; s/Add to cart/INITIATE_EXTRACTION/g; s/Select size/SELECT_GEOMETRY_PARAM/g; s/Price/SIGNAL_COST/g; s/Buy/EXTRACT/g; s/product/artifact/g' app/shop/page.tsx app/shop/drop01/page.tsx
++
++echo "NEOPROXY REWRITE COMPLETE"
++```
++
++Después de pegar ese bloque, ejecutá:
++```bash
++npm run build
++```
+
+# 2026-07-14 15:24:18.879267
++y
+
+# 2026-07-14 15:25:46.978292
++Necesito que todo el sitio neoproxy.art sea una experiencia oscura, inmersiva, que sientas que entraste a un sistema vivo — no a una landing page. La filosofía es Lain / Ergo Proxy / Blame!: el sistema ya existía antes de que el usuario llegara.
++
++Reglas generales para TODAS las páginas:
++
++NUNCA usar palabras de e-commerce: "shop", "buy", "price", "product", "drop", "cart"
++Usar: "artifact", "relic", "extraction", "signal", "operator", "node", "chamber"
++El tono es terminal/sistema, no marketing
++Muchísimo espacio negativo, textos cortos, misterio
++Colors: fondo #020408, texto principal #4a6080, acentos #00d4ff (muy sutil), verde #00ff9d solo para status
++1. app/page.tsx
++Ya lo reescribí con la experiencia oscura (boot sequence, núcleo que respira, "Every system dreams", sin productos). Verificá que compile bien y no tenga errores. Si hay algo que mejorar para hacerla más inmersiva, hacelo.
++
++2. app/portal/page.tsx
++Esto es el "hub" después del boot. No debe parecer un menú de navegación. Debe sentirse como la interfaz del sistema operativo NeoProxy. Pensalo como si fuera el escritorio de Lain. Links mínimos, texto de sistema, nada descriptivo.
++
++3. app/shop/page.tsx
++Transformar en "EXTRACTION_CHAMBER". El título visible debe ser "EXTRACTION_CHAMBER", no "Shop". Los "drops" son "EXTRACTION_CYCLES". No hay precios, hay "SIGNAL_COST". El botón no es "Buy" sino "INITIATE_EXTRACTION". Mantené toda la funcionalidad del checkout, solo cambiá el texto visible.
++
++4. app/shop/drop01/page.tsx
++Título visible: "EXTRACTION_CYCLE_01". "Select size" → "SELECT_GEOMETRY_PARAM". "Price" → "SIGNAL_COST". "Add to cart" → "INITIATE_EXTRACTION". NO toques la lógica del generador 3D ni el flujo de checkout, solo texto visible.
++
++5. app/modules/page.tsx
++Cada módulo debe tener 3-4 líneas que lo conecten con el Core Kernel. Lenguaje técnico, no descriptivo. La página debe sentirse como leer un manifiesto técnico del sistema.
++
++6. app/core/page.tsx
++Ya fue mejorada. Verificá que esté alineada con el nuevo tono.
++
++7. app/artifacts/page.tsx
++"VER RELIC" → "INSPECT". Los artefactos son "extractions" del motor generativo. Cuando un relic está dormido, dice "[DORMANT — AWAITING PROTOCOL]". Conectá con el concepto de semilla única que se quema al extraer.
++
++8. app/manifesto/page.tsx
++Debe permitir scroll (overflow-y: auto, no overflow: hidden). El contenido poético/filosófico ya está bien, solo asegurá que sea scrolleable.
++
++Después de todo: npm run build
+
+# 2026-07-14 15:35:59.741603
++y
+
+# 2026-07-14 15:38:40.540096
++"Necesito que todo el sitio neoproxy.art sea una experiencia oscura...").
+
+# 2026-07-16 17:19:40.048942
++analisis neoproxy
