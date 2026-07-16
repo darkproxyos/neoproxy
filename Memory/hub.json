@@ -1,0 +1,32 @@
+{
+  "kernel": {
+    "metatron": {
+      "id": "AGENT-001",
+      "codename": "METATRON",
+      "type": "Kernel Orchestrator",
+      "status": "idle",
+      "current_intent": null,
+      "current_pipeline": [],
+      "running_agents": [],
+      "completed_tasks": [],
+      "pending_tasks": [
+        "crear un nuevo modulo en forms/ con geometria generativa (ruido, fractal, deformacion parametrica), registrarlo en manifest.json",
+        "crear un shader/material en materials/ que sugiera glitch o inestabilidad visual, coherente con paleta 00ff9d/00d4ff/0a0a0a",
+        "crear texto 3D animado en text/ usando una frase corta del manifiesto del sistema",
+        "crear una animacion en animations/ que le de movimiento organico o erratico a un modulo existente",
+        "revisar manifest.json y proponer que modulo deberia desactivarse por bajo impacto o mal rendimiento"
+      ],
+      "system_health": "optimal",
+      "memory_sync_pct": null,
+      "last_updated": null
+    }
+  },
+  "pending_tasks": [
+    "crear un nuevo modulo en forms/ con geometria generativa (ruido, fractal, deformacion parametrica), registrarlo en manifest.json",
+    "crear un shader/material en materials/ que sugiera glitch o inestabilidad visual, coherente con paleta 00ff9d/00d4ff/0a0a0a",
+    "crear texto 3D animado en text/ usando una frase corta del manifiesto del sistema",
+    "crear una animacion en animations/ que le de movimiento organico o erratico a un modulo existente",
+    "revisar manifest.json y proponer que modulo deberia desactivarse por bajo impacto o mal rendimiento"
+  ],
+  "log": []
+}
