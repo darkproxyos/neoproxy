@@ -27,6 +27,9 @@ export default function Portal() {
           <Link href="/artifacts" className={styles.button}>
             RELICS
           </Link>
+          <Link href="/arsenal" className={styles.button}>
+            ARSENAL
+          </Link>
 
           <Link href="/manifesto" className={styles.button}>
             MANIFESTO
