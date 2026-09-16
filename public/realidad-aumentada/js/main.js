@@ -17,6 +17,74 @@ const container = document.getElementById('container');
 const hud = document.getElementById('hud');
 const startBtn = document.getElementById('startBtn');
 const switchBtn = document.getElementById('switchBtn');
+const styleBtn = document.getElementById('styleBtn');
+const styleLabel = document.getElementById('styleLabel');
+
+// ---- 6 estilos NeoProxy — cada uno cambia paleta y comportamiento ----
+const STYLES = [
+  {
+    name: 'NEOPROXY CORE',
+    particleColors: ['0,212,255', '102,68,170', '0,255,204'],
+    ambient1: ['rgba(0,212,255,1)', 'rgba(102,68,170,0.6)', 'rgba(0,255,204,1)'],
+    ambient2: ['rgba(0,255,204,0.35)', 'rgba(102,68,170,0.35)'],
+    streak: ['20,180,255,1', '150,80,255,0.4'],
+    glitch: ['rgba(0,212,255,0.35)', 'rgba(150,80,255,0.35)'],
+    particleMul: 1, glitchMul: 1, phaseSpeed: 0.012, vignette: 0.7
+  },
+  {
+    name: 'MAGENTA CHAOS',
+    particleColors: ['255,20,210', '20,220,255', '210,40,255', '255,120,0'],
+    ambient1: ['rgba(255,0,210,1)', 'rgba(120,0,180,0.6)', 'rgba(0,220,255,1)'],
+    ambient2: ['rgba(255,140,0,0.35)', 'rgba(150,0,255,0.35)'],
+    streak: ['20,150,255,1', '120,60,255,0.4'],
+    glitch: ['rgba(255,0,180,0.35)', 'rgba(0,220,255,0.35)'],
+    particleMul: 1, glitchMul: 1, phaseSpeed: 0.012, vignette: 0.75
+  },
+  {
+    name: 'TOXIC MATRIX',
+    particleColors: ['0,255,90', '150,255,180', '0,180,60'],
+    ambient1: ['rgba(0,255,90,0.9)', 'rgba(0,40,10,0.6)', 'rgba(0,120,40,0.9)'],
+    ambient2: ['rgba(0,255,120,0.25)', 'rgba(0,60,20,0.25)'],
+    streak: ['0,255,100,1', '0,120,40,0.4'],
+    glitch: ['rgba(0,255,90,0.4)', 'rgba(0,80,30,0.4)'],
+    particleMul: 0.6, glitchMul: 1.8, phaseSpeed: 0.02, vignette: 0.85
+  },
+  {
+    name: 'INFERNO',
+    particleColors: ['255,90,0', '255,190,0', '255,30,30'],
+    ambient1: ['rgba(255,60,0,1)', 'rgba(120,10,0,0.6)', 'rgba(255,190,0,1)'],
+    ambient2: ['rgba(255,0,60,0.35)', 'rgba(255,140,0,0.35)'],
+    streak: ['255,140,0,1', '255,30,30,0.4'],
+    glitch: ['rgba(255,90,0,0.4)', 'rgba(255,190,0,0.4)'],
+    particleMul: 1.3, glitchMul: 0.8, phaseSpeed: 0.015, vignette: 0.7
+  },
+  {
+    name: 'VOID MONO',
+    particleColors: ['255,255,255', '180,180,180', '90,90,90'],
+    ambient1: ['rgba(255,255,255,0.5)', 'rgba(0,0,0,0.3)', 'rgba(200,200,200,0.5)'],
+    ambient2: ['rgba(255,255,255,0.15)', 'rgba(0,0,0,0.15)'],
+    streak: ['255,255,255,1', '120,120,120,0.4'],
+    glitch: ['rgba(255,255,255,0.45)', 'rgba(0,0,0,0.45)'],
+    particleMul: 0.4, glitchMul: 2.2, phaseSpeed: 0.008, vignette: 0.9
+  },
+  {
+    name: 'RAINBOW GLITCH',
+    rainbow: true,
+    particleMul: 1.4, glitchMul: 2.5, phaseSpeed: 0.03, vignette: 0.65
+  }
+];
+let styleIndex = 0;
+let STYLE = STYLES[styleIndex];
+
+function applyStyle() {
+  STYLE = STYLES[styleIndex];
+  styleLabel.textContent = `ESTILO: ${STYLE.name}`;
+}
+
+function hueColor(offsetDeg, alpha) {
+  const hue = (ambientPhase * 60 + offsetDeg) % 360;
+  return `hsla(${hue}, 100%, 55%, ${alpha})`;
+}
 
 let faceLandmarker;
 let mpRunning = false;
@@ -26,9 +94,8 @@ let availableFacings = ['user'];
 let lastSeen = 0;
 let lastFaceBox = null; // {x,y,w,h} en px del canvas — para spawnear partículas alrededor
 
-// ---- Sistema de partículas (chispas magenta/cian) ----
+// ---- Sistema de partículas (chispas — color según estilo activo) ----
 const particles = [];
-const PARTICLE_COLORS = ['255,20,210', '20,220,255', '210,40,255', '255,120,0'];
 
 function spawnParticle(box) {
   if (!box) return;
@@ -40,6 +107,10 @@ function spawnParticle(box) {
   else if (edge === 2) { x = box.x + Math.random() * box.w; y = box.y + box.h + pad; }
   else { x = box.x - pad; y = box.y + Math.random() * box.h; }
 
+  const color = STYLE.rainbow
+    ? null
+    : STYLE.particleColors[Math.floor(Math.random() * STYLE.particleColors.length)];
+
   particles.push({
     x, y,
     vx: (Math.random() - 0.5) * 0.6,
@@ -47,7 +118,8 @@ function spawnParticle(box) {
     r: 2.5 + Math.random() * 4,
     life: 1,
     decay: 0.008 + Math.random() * 0.012,
-    color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)]
+    color,
+    hueOffset: Math.random() * 360
   });
 }
 
@@ -59,7 +131,9 @@ function updateAndDrawParticles(ctx) {
     p.y += p.vy;
     p.life -= p.decay;
     if (p.life <= 0) { particles.splice(i, 1); continue; }
-    ctx.fillStyle = `rgba(${p.color}, ${p.life * 0.9})`;
+    ctx.fillStyle = p.color
+      ? `rgba(${p.color}, ${p.life * 0.9})`
+      : hueColor(p.hueOffset, p.life * 0.9);
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
     ctx.fill();
@@ -74,7 +148,8 @@ let glitchUntil = 0;
 function maybeTriggerGlitch(now) {
   if (now > nextGlitchAt && glitchUntil < now) {
     glitchUntil = now + 120 + Math.random() * 160;
-    nextGlitchAt = now + 900 + Math.random() * 1800;
+    const baseGap = 900 + Math.random() * 1800;
+    nextGlitchAt = now + baseGap / STYLE.glitchMul;
   }
 }
 
@@ -82,13 +157,14 @@ function drawGlitch(ctx, now, w, h) {
   if (now > glitchUntil) return;
   ctx.globalCompositeOperation = 'screen';
   const bars = 2 + Math.floor(Math.random() * 3);
+  const [g1, g2] = STYLE.rainbow ? [hueColor(0, 0.4), hueColor(180, 0.4)] : STYLE.glitch;
   for (let i = 0; i < bars; i++) {
     const by = Math.random() * h;
     const bh = 4 + Math.random() * 18;
     const shift = (Math.random() - 0.5) * 30;
-    ctx.fillStyle = 'rgba(255, 0, 180, 0.35)';
+    ctx.fillStyle = g1;
     ctx.fillRect(shift, by, w, bh);
-    ctx.fillStyle = 'rgba(0, 220, 255, 0.35)';
+    ctx.fillStyle = g2;
     ctx.fillRect(-shift, by, w, bh);
   }
   ctx.globalCompositeOperation = 'source-over';
@@ -98,16 +174,22 @@ function drawGlitch(ctx, now, w, h) {
 let ambientPhase = 0;
 
 function drawAmbient(ctx, w, h) {
-  ambientPhase += 0.012;
+  ambientPhase += STYLE.phaseSpeed;
   ctx.clearRect(0, 0, w, h);
 
   const angle = ambientPhase;
   const dx = Math.cos(angle) * w * 0.6;
   const dy = Math.sin(angle) * h * 0.6;
   const grad = ctx.createLinearGradient(w / 2 - dx, h / 2 - dy, w / 2 + dx, h / 2 + dy);
-  grad.addColorStop(0, 'rgba(255, 0, 210, 1)');
-  grad.addColorStop(0.5, 'rgba(120, 0, 180, 0.6)');
-  grad.addColorStop(1, 'rgba(0, 220, 255, 1)');
+  if (STYLE.rainbow) {
+    grad.addColorStop(0, hueColor(0, 1));
+    grad.addColorStop(0.5, hueColor(120, 0.6));
+    grad.addColorStop(1, hueColor(240, 1));
+  } else {
+    grad.addColorStop(0, STYLE.ambient1[0]);
+    grad.addColorStop(0.5, STYLE.ambient1[1]);
+    grad.addColorStop(1, STYLE.ambient1[2]);
+  }
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
@@ -117,15 +199,20 @@ function drawAmbient(ctx, w, h) {
     w / 2 - Math.cos(angle2) * w * 0.5, h / 2 - Math.sin(angle2) * h * 0.5,
     w / 2 + Math.cos(angle2) * w * 0.5, h / 2 + Math.sin(angle2) * h * 0.5
   );
-  grad2.addColorStop(0, 'rgba(255, 140, 0, 0.35)');
-  grad2.addColorStop(1, 'rgba(150, 0, 255, 0.35)');
+  if (STYLE.rainbow) {
+    grad2.addColorStop(0, hueColor(60, 0.35));
+    grad2.addColorStop(1, hueColor(300, 0.35));
+  } else {
+    grad2.addColorStop(0, STYLE.ambient2[0]);
+    grad2.addColorStop(1, STYLE.ambient2[1]);
+  }
   ctx.fillStyle = grad2;
   ctx.fillRect(0, 0, w, h);
 
   // Viñeta oscura en los bordes para más atmósfera
   const vg = ctx.createRadialGradient(w / 2, h / 2, h * 0.28, w / 2, h / 2, h * 0.72);
   vg.addColorStop(0, 'rgba(0,0,0,0)');
-  vg.addColorStop(1, 'rgba(0,0,0,0.75)');
+  vg.addColorStop(1, `rgba(0,0,0,${STYLE.vignette})`);
   ctx.fillStyle = vg;
   ctx.fillRect(0, 0, w, h);
 }
@@ -261,8 +348,13 @@ function drawHairStreaks(ctx, forehead, templeR, templeL, w, h) {
       const midy = sy - streakLen * s.len * 0.5;
 
       const grad = ctx.createLinearGradient(sx, sy, ex, ey);
-      grad.addColorStop(0, 'rgba(20, 150, 255, 1)');
-      grad.addColorStop(1, 'rgba(120, 60, 255, 0.4)');
+      if (STYLE.rainbow) {
+        grad.addColorStop(0, hueColor(90, 1));
+        grad.addColorStop(1, hueColor(270, 0.4));
+      } else {
+        grad.addColorStop(0, `rgba(${STYLE.streak[0]})`);
+        grad.addColorStop(1, `rgba(${STYLE.streak[1]})`);
+      }
       ctx.strokeStyle = grad;
       ctx.lineWidth = s.width;
       ctx.beginPath();
@@ -291,9 +383,9 @@ function drawFrame(landmarks, w, h) {
   drawHairStreaks(ctx, landmarks[IDX.foreheadTop], landmarks[IDX.templeRight], landmarks[IDX.templeLeft], w, h);
 
   maybeTriggerGlitch(now);
-  if (Math.random() < 0.9) spawnParticle(lastFaceBox);
-  if (Math.random() < 0.9) spawnParticle(lastFaceBox);
-  if (Math.random() < 0.5) spawnParticle(lastFaceBox);
+  if (Math.random() < 0.9 * STYLE.particleMul) spawnParticle(lastFaceBox);
+  if (Math.random() < 0.9 * STYLE.particleMul) spawnParticle(lastFaceBox);
+  if (Math.random() < 0.5 * STYLE.particleMul) spawnParticle(lastFaceBox);
   updateAndDrawParticles(ctx);
   drawGlitch(ctx, now, w, h);
 
@@ -399,5 +491,12 @@ startBtn.addEventListener('click', () => {
 });
 
 switchBtn.addEventListener('click', () => switchCamera());
+
+styleBtn.addEventListener('click', () => {
+  styleIndex = (styleIndex + 1) % STYLES.length;
+  applyStyle();
+});
+
+applyStyle();
 
 window.addEventListener('resize', () => fitStage());

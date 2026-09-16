@@ -46,12 +46,26 @@
     border-radius: 50%; font-size: 22px; display: none;
     align-items: center; justify-content: center; cursor: pointer;
   }
+  #styleBtn {
+    position: fixed; bottom: 24px; right: 84px;
+    z-index: 20; background: #0f0f0f; color: #00d4ff;
+    border: 1px solid #00d4ff; padding: 12px 18px; font-family: inherit;
+    font-size: 11px; letter-spacing: 2px; cursor: pointer; border-radius: 4px;
+  }
+  #styleBtn:active { background: #00d4ff; color: #000; }
+  #styleLabel {
+    position: fixed; top: 12px; right: 12px; z-index: 20;
+    color: #00d4ff; font-size: 11px; letter-spacing: 2px;
+    text-shadow: 0 0 6px #00d4ff; pointer-events: none; text-align: right;
+  }
 </style>
 </head>
 <body>
   <div id="hud">LISTO — TOCÁ "ACTIVAR CÁMARA"</div>
+  <div id="styleLabel"></div>
   <button id="startBtn">ACTIVAR CÁMARA</button>
   <button id="switchBtn" title="Cambiar cámara">🔄</button>
+  <button id="styleBtn" title="Cambiar estilo">🎨 ESTILO</button>
   <div id="stage">
     <div id="container">
       <video id="video" autoplay playsinline muted></video>
