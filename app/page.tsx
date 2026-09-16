@@ -217,6 +217,10 @@ export default function Home() {
               Un laboratorio experimental de fabricación. Artefactos reales, diseñados y producidos por sistemas de IA e ingeniería humana.
             </div>
 
+            <div className="fade-in" style={{ fontFamily: mono, fontSize: 14, letterSpacing: 4, color: '#00ffcc', marginBottom: 24, textShadow: '0 0 12px #00ffcc' }}>
+              HOLA MUNDO
+            </div>
+
             <Link href="/npos" className="cyber-btn fade-in" style={{
               display: 'inline-block', fontFamily: mono, fontSize: 10, letterSpacing: 4, color: '#00d4ff', textDecoration: 'none',
               border: '1px solid #00d4ff44', padding: '14px 42px', background: 'rgba(0, 212, 255, 0.05)', cursor: 'pointer', marginBottom: 64
