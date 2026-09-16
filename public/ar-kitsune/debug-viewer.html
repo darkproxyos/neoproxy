@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Visor GLB — kitsune</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #111; overflow: hidden; }
+  #renderCanvas { width: 100%; height: 100%; display: block; touch-action: none; }
+  #hud {
+    position: fixed; top: 10px; left: 10px; z-index: 10;
+    color: #39ff14; font-family: monospace; font-size: 13px;
+    text-shadow: 0 0 6px #39ff14; white-space: pre-line;
+  }
+</style>
+</head>
+<body>
+  <div id="hud">Cargando mask3d.glb...</div>
+  <canvas id="renderCanvas"></canvas>
+
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script>
+    const canvas = document.getElementById('renderCanvas');
+    const hud = document.getElementById('hud');
+    const engine = new BABYLON.Engine(canvas, true);
+    const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color4(0.07, 0.07, 0.07, 1);
+
+    // Cámara orbital: click/touch + arrastrar para girar, rueda/pellizco para zoom
+    const camera = new BABYLON.ArcRotateCamera(
+      'cam', -Math.PI / 2, Math.PI / 2.3, 3, BABYLON.Vector3.Zero(), scene
+    );
+    camera.attachControl(canvas, true);
+    camera.wheelPrecision = 50;
+    camera.lowerRadiusLimit = 0.1;
+
+    new BABYLON.HemisphericLight('h', new BABYLON.Vector3(0, 1, 0), scene).intensity = 1.2;
+    new BABYLON.DirectionalLight('d', new BABYLON.Vector3(0.3, -0.5, 1), scene).intensity = 0.6;
+
+    const t0 = performance.now();
+
+    BABYLON.SceneLoader.ImportMeshAsync('', './', 'mask3d.glb', scene)
+      .then((result) => {
+        const ms = Math.round(performance.now() - t0);
+        hud.textContent =
+          `mask3d.glb OK (${ms} ms)\n` +
+          `meshes: ${result.meshes.length}\n` +
+          `arrastrá para girar / rueda para zoom`;
+
+        // Centrar y encuadrar automáticamente la cámara según el
+        // bounding box real del modelo cargado.
+        let min = null, max = null;
+        result.meshes.forEach((m) => {
+          if (!m.getBoundingInfo) return;
+          const bb = m.getBoundingInfo().boundingBox;
+          const wmin = bb.minimumWorld, wmax = bb.maximumWorld;
+          if (!min) { min = wmin.clone(); max = wmax.clone(); }
+          else {
+            min = BABYLON.Vector3.Minimize(min, wmin);
+            max = BABYLON.Vector3.Maximize(max, wmax);
+          }
+        });
+        if (min && max) {
+          const center = min.add(max).scale(0.5);
+          const size = max.subtract(min).length();
+          camera.setTarget(center);
+          camera.radius = size * 1.4;
+          camera.lowerRadiusLimit = size * 0.1;
+          camera.upperRadiusLimit = size * 5;
+        }
+      })
+      .catch((err) => {
+        hud.textContent = 'ERROR cargando mask3d.glb:\n' + err.message;
+        console.error(err);
+      });
+
+    engine.runRenderLoop(() => scene.render());
+    window.addEventListener('resize', () => engine.resize());
+  </script>
+</body>
+</html>
