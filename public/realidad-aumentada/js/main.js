@@ -19,6 +19,49 @@ const startBtn = document.getElementById('startBtn');
 const switchBtn = document.getElementById('switchBtn');
 const styleBtn = document.getElementById('styleBtn');
 const styleLabel = document.getElementById('styleLabel');
+const modeBtn = document.getElementById('modeBtn');
+const modeLabel = document.getElementById('modeLabel');
+
+// ---- Modos de cámara: filtros reales aplicados al <video> ----
+const MODES = [
+  { name: 'NORMAL', filter: 'none', grain: false, scan: false },
+  {
+    name: 'TÉRMICA',
+    // Aproximación de falso color térmico vía cadena de filtros CSS:
+    // pasamos a gris, "coloreamos" con sepia y giramos el matiz para
+    // que las zonas claras salgan amarillo/blanco y las oscuras
+    // rojo/violeta — no es una cámara térmica real, pero da el look.
+    filter: 'grayscale(1) contrast(2) brightness(1.05) sepia(1) hue-rotate(-50deg) saturate(6)',
+    grain: false, scan: true
+  },
+  {
+    name: 'NOCTURNA',
+    filter: 'grayscale(1) brightness(1.7) contrast(1.3) sepia(1) hue-rotate(70deg) saturate(3.5)',
+    grain: true, scan: false
+  }
+];
+let modeIndex = 0;
+let MODE = MODES[modeIndex];
+
+function applyMode() {
+  MODE = MODES[modeIndex];
+  video.style.filter = MODE.filter;
+  modeLabel.textContent = `MODO: ${MODE.name}`;
+}
+
+// ---- Reactividad al movimiento: cuanto más te movés, más intenso todo ----
+let prevMotionPoint = null;
+let motionEnergy = 0; // suavizado 0..~3
+
+function updateMotionEnergy(landmarks, w, h) {
+  const nose = toPx(landmarks[1], w, h); // punta de la nariz, punto estable y sensible
+  if (prevMotionPoint) {
+    const d = Math.hypot(nose.x - prevMotionPoint.x, nose.y - prevMotionPoint.y);
+    const normalized = Math.min(d / (w * 0.03), 3); // normalizado al ancho del cuadro
+    motionEnergy = motionEnergy * 0.85 + normalized * 0.15;
+  }
+  prevMotionPoint = nose;
+}
 
 // ---- 6 estilos NeoProxy — cada uno cambia paleta y comportamiento ----
 const STYLES = [
@@ -145,11 +188,11 @@ function updateAndDrawParticles(ctx) {
 let nextGlitchAt = performance.now() + 800 + Math.random() * 1200;
 let glitchUntil = 0;
 
-function maybeTriggerGlitch(now) {
+function maybeTriggerGlitch(now, motionMul) {
   if (now > nextGlitchAt && glitchUntil < now) {
     glitchUntil = now + 120 + Math.random() * 160;
     const baseGap = 900 + Math.random() * 1800;
-    nextGlitchAt = now + baseGap / STYLE.glitchMul;
+    nextGlitchAt = now + baseGap / (STYLE.glitchMul * (motionMul || 1));
   }
 }
 
@@ -317,22 +360,24 @@ function drawEyeMakeup(ctx, corner, inner, upper, lower, browPts, w, h, side) {
   ctx.stroke();
 }
 
-function drawHairStreaks(ctx, forehead, templeR, templeL, w, h) {
+function drawHairStreaks(ctx, forehead, templeR, templeL, w, h, motionMul) {
+  const mul = motionMul || 1;
   const f = toPx(forehead, w, h);
   const tr = toPx(templeR, w, h);
   const tl = toPx(templeL, w, h);
   const faceWidth = Math.hypot(tr.x - tl.x, tr.y - tl.y);
-  const streakLen = faceWidth * 1.1;
+  const streakLen = faceWidth * 1.1 * (0.85 + mul * 0.25);
 
   ctx.globalCompositeOperation = 'source-over';
   ctx.lineCap = 'round';
 
   // Mechones que salen de cada sien hacia arriba y afuera (nunca cruzan
   // hacia el otro lado de la cara) — enmarcan en vez de tachar la frente.
+  // El grosor crece un poco con el movimiento, para que se sientan "vivos".
   const streaksPerSide = [
-    { along: -0.05, out: 0.35, width: 7, len: 1.0 },
-    { along: 0.12, out: 0.55, width: 5, len: 0.85 },
-    { along: 0.28, out: 0.25, width: 4, len: 0.7 }
+    { along: -0.05, out: 0.35, width: 7 * (0.8 + mul * 0.2), len: 1.0 },
+    { along: 0.12, out: 0.55, width: 5 * (0.8 + mul * 0.2), len: 0.85 },
+    { along: 0.28, out: 0.25, width: 4 * (0.8 + mul * 0.2), len: 0.7 }
   ];
 
   [
@@ -365,9 +410,49 @@ function drawHairStreaks(ctx, forehead, templeR, templeL, w, h) {
   });
 }
 
+function drawNightGrain(ctx, w, h) {
+  ctx.globalCompositeOperation = 'overlay';
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.fillRect(0, 0, w, h);
+  // Ruido: puntitos random, baratos (no por pixel, por performance)
+  ctx.fillStyle = 'rgba(150,255,180,0.5)';
+  for (let i = 0; i < 60; i++) {
+    const x = Math.random() * w, y = Math.random() * h;
+    ctx.fillRect(x, y, 1.5, 1.5);
+  }
+  // Scanlines horizontales sutiles
+  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+  ctx.lineWidth = 1;
+  for (let y = 0; y < h; y += 3) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+let scanY = 0;
+function drawThermalScan(ctx, w, h) {
+  scanY = (scanY + 3) % h;
+  ctx.globalCompositeOperation = 'screen';
+  const grad = ctx.createLinearGradient(0, scanY - 30, 0, scanY + 30);
+  grad.addColorStop(0, 'rgba(255,220,120,0)');
+  grad.addColorStop(0.5, 'rgba(255,220,120,0.25)');
+  grad.addColorStop(1, 'rgba(255,220,120,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, scanY - 30, w, 60);
+  ctx.globalCompositeOperation = 'source-over';
+}
+
 function drawFrame(landmarks, w, h) {
   const now = performance.now();
   ctx.clearRect(0, 0, w, h);
+
+  updateMotionEnergy(landmarks, w, h);
+  // El movimiento multiplica todo: quieto ≈ factor 1, moviéndote fuerte
+  // puede llegar a factor ~4 — más partículas, más glitch, mechones más largos.
+  const motionMul = 1 + motionEnergy * 1.2;
 
   // Bounding box aproximado de la cara (sienes + frente + mentón) para
   // saber dónde spawnear las partículas alrededor de la cabeza.
@@ -380,14 +465,19 @@ function drawFrame(landmarks, w, h) {
 
   drawAmbient(actx, ambient.width, ambient.height);
 
-  drawHairStreaks(ctx, landmarks[IDX.foreheadTop], landmarks[IDX.templeRight], landmarks[IDX.templeLeft], w, h);
+  drawHairStreaks(ctx, landmarks[IDX.foreheadTop], landmarks[IDX.templeRight], landmarks[IDX.templeLeft], w, h, motionMul);
 
-  maybeTriggerGlitch(now);
-  if (Math.random() < 0.9 * STYLE.particleMul) spawnParticle(lastFaceBox);
-  if (Math.random() < 0.9 * STYLE.particleMul) spawnParticle(lastFaceBox);
-  if (Math.random() < 0.5 * STYLE.particleMul) spawnParticle(lastFaceBox);
+  maybeTriggerGlitch(now, motionMul);
+  const pRate = STYLE.particleMul * motionMul;
+  if (Math.random() < 0.9 * pRate) spawnParticle(lastFaceBox);
+  if (Math.random() < 0.9 * pRate) spawnParticle(lastFaceBox);
+  if (Math.random() < 0.5 * pRate) spawnParticle(lastFaceBox);
+  if (motionMul > 2 && Math.random() < 0.6) spawnParticle(lastFaceBox); // ráfaga extra si te movés fuerte
   updateAndDrawParticles(ctx);
   drawGlitch(ctx, now, w, h);
+
+  if (MODE.grain) drawNightGrain(actx, ambient.width, ambient.height);
+  if (MODE.scan) drawThermalScan(actx, ambient.width, ambient.height);
 
   ctx.globalCompositeOperation = 'source-over';
 }
@@ -497,6 +587,12 @@ styleBtn.addEventListener('click', () => {
   applyStyle();
 });
 
+modeBtn.addEventListener('click', () => {
+  modeIndex = (modeIndex + 1) % MODES.length;
+  applyMode();
+});
+
 applyStyle();
+applyMode();
 
 window.addEventListener('resize', () => fitStage());
