@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/realidad-aumentada',
+        destination: '/realidad-aumentada/index.html',
+      },
+    ];
+  },
   // Configuración para Next.js 16 / Turbopack
   experimental: {
     // Si Turbopack tiene problemas con el root en Next 16
