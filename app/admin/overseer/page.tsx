@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { purgeEntropy, injectCorruption, getSystemState, getSystemHistory } from '../actions';
 
-const styles = {
+const styles: Record<string, CSSProperties> = {
   container: { 
     backgroundColor: '#050505', 
     color: '#CC0000', 
