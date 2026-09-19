@@ -192,6 +192,23 @@ body {
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  .main-nav {
+    flex-wrap: wrap;
+    padding: 14px 16px !important;
+    row-gap: 12px;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 16px !important;
+  }
+  .nav-link {
+    font-size: 10px !important;
+  }
+}
+
 /* Fade in animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }

@@ -58,7 +58,7 @@ export default function NPosPortal() {
       {/* Modules Grid */}
       <div className="modules-grid">
         {modules.map((m) => (
-          <Link key={m.href} href={m.href} className="module-card">
+          <Link key={m.href} href={m.href} className="module-card cyber-btn">
             <span className="module-icon">{m.icon}</span>
             <div className="module-name">{m.name}</div>
             <p className="module-desc">{m.desc}</p>
@@ -66,12 +66,8 @@ export default function NPosPortal() {
         ))}
       </div>
 
-      {/* Footer nav */}
+      {/* Footer status */}
       <div className="portal-footer">
-        <Link href="/" className="footer-home">
-          <span className="footer-neo">Neo</span>Proxy 
-          <span className="footer-subtitle">← main site</span>
-        </Link>
         <div className="footer-status">
           NPos KERNEL: <span className="status-active">IDLE</span>
         </div>
@@ -82,12 +78,11 @@ export default function NPosPortal() {
           position: relative;
           min-height: calc(100vh - 60px);
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 2rem 1rem;
+          padding: 6rem 1rem 2rem;
           z-index: 1;
-          background: #080d14;
-          color: #ffffff;
         }
 
         /* Mobile First - Base Styles (320px+) */
@@ -115,12 +110,13 @@ export default function NPosPortal() {
         }
 
         .portal-title h1 {
-          font-family: 'Syne', sans-serif;
           font-size: clamp(2rem, 8vw, 3rem);
-          font-weight: 800;
-          line-height: 0.9;
-          letter-spacing: -0.03em;
+          font-weight: 700;
+          line-height: 1.1;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
           margin: 0;
+          text-shadow: 0 0 40px rgba(0, 212, 255, 0.5), 0 0 80px rgba(102, 68, 170, 0.4);
         }
 
         .title-neo {
@@ -129,7 +125,7 @@ export default function NPosPortal() {
         }
 
         .title-proxy {
-          color: white;
+          color: #e8f4fb;
           display: block;
         }
 
@@ -162,10 +158,11 @@ export default function NPosPortal() {
 
         .flow-step {
           padding: 0.4rem 0.9rem;
-          border: 1px solid #0f1f35;
-          background: #080d14;
+          border: 1px solid rgba(0, 212, 255, 0.15);
+          background: rgba(0, 212, 255, 0.03);
           color: #00d4ff;
           letter-spacing: 0.1em;
+          text-transform: uppercase;
           border-radius: 4px;
           min-height: 36px;
           display: flex;
@@ -181,18 +178,18 @@ export default function NPosPortal() {
           display: grid;
           grid-template-columns: 1fr;
           gap: 1px;
-          background: #0f1f35;
-          border: 1px solid #0f1f35;
+          background: rgba(0, 212, 255, 0.15);
+          border: 1px solid rgba(0, 212, 255, 0.15);
           max-width: 900px;
           width: 100%;
           margin: 0 auto;
         }
 
         .module-card {
-          background: #080d14;
+          background: rgba(2, 4, 8, 0.8);
+          border: 1px solid transparent;
           padding: 2rem 1.5rem;
           text-decoration: none;
-          display: block;
           transition: all 0.3s ease;
           text-align: center;
           min-height: 120px;
@@ -203,7 +200,8 @@ export default function NPosPortal() {
         }
 
         .module-card:hover {
-          background: #0d1825;
+          border-color: #00d4ff;
+          box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
           transform: translateY(-2px);
         }
 
@@ -214,10 +212,11 @@ export default function NPosPortal() {
         }
 
         .module-name {
-          font-family: 'Syne', sans-serif;
           font-size: clamp(1rem, 3vw, 1.1rem);
           font-weight: 700;
-          color: white;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #e8f4fb;
           margin-bottom: 0.5rem;
         }
 
@@ -231,7 +230,7 @@ export default function NPosPortal() {
         .portal-footer {
           margin-top: 3rem;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           align-items: center;
           flex-wrap: wrap;
           gap: 1rem;
@@ -239,28 +238,6 @@ export default function NPosPortal() {
           width: 100%;
           margin-left: auto;
           margin-right: auto;
-        }
-
-        .footer-home {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: clamp(1rem, 3vw, 1.2rem);
-          color: white;
-          text-decoration: none;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .footer-neo {
-          color: #00d4ff;
-        }
-
-        .footer-subtitle {
-          font-family: 'Space Mono', monospace;
-          color: #4a6080;
-          font-size: 0.65em;
-          font-weight: 400;
         }
 
         .footer-status {
@@ -277,7 +254,7 @@ export default function NPosPortal() {
         /* Small Phones (480px+) */
         @media (min-width: 480px) {
           .npos-portal {
-            padding: 2.5rem 1.5rem;
+            padding: 6.5rem 1.5rem 2.5rem;
           }
 
           .portal-tag {
@@ -323,10 +300,6 @@ export default function NPosPortal() {
             gap: 1.5rem;
           }
 
-          .footer-home {
-            font-size: 1.4rem;
-          }
-
           .footer-status {
             font-size: 0.75rem;
           }
@@ -335,7 +308,7 @@ export default function NPosPortal() {
         /* Tablets (768px+) */
         @media (min-width: 768px) {
           .npos-portal {
-            padding: 4rem 2rem;
+            padding: 7rem 2rem 4rem;
           }
 
           .portal-tag {
@@ -387,10 +360,6 @@ export default function NPosPortal() {
             gap: 2rem;
           }
 
-          .footer-home {
-            font-size: 1.6rem;
-          }
-
           .footer-status {
             font-size: 0.875rem;
           }
@@ -399,7 +368,7 @@ export default function NPosPortal() {
         /* Desktop (1024px+) */
         @media (min-width: 1024px) {
           .npos-portal {
-            padding: 5rem 3rem;
+            padding: 8rem 3rem 5rem;
           }
 
           .portal-tag {
@@ -445,10 +414,6 @@ export default function NPosPortal() {
             gap: 2.5rem;
           }
 
-          .footer-home {
-            font-size: 1.8rem;
-          }
-
           .footer-status {
             font-size: 1rem;
           }
@@ -457,7 +422,7 @@ export default function NPosPortal() {
         /* Large Desktop (1280px+) */
         @media (min-width: 1280px) {
           .npos-portal {
-            padding: 6rem 4rem;
+            padding: 9rem 4rem 6rem;
           }
 
           .portal-title h1 {
@@ -477,7 +442,7 @@ export default function NPosPortal() {
         /* Landscape Orientation for Mobile */
         @media (max-width: 768px) and (orientation: landscape) {
           .npos-portal {
-            padding: 1.5rem 1rem;
+            padding: 5rem 1rem 1.5rem;
             min-height: calc(100vh - 60px);
           }
 
@@ -524,10 +489,6 @@ export default function NPosPortal() {
           .portal-footer {
             margin-top: 2rem;
             gap: 0.75rem;
-          }
-
-          .footer-home {
-            font-size: 0.875rem;
           }
 
           .footer-status {
