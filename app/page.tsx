@@ -218,7 +218,7 @@ export default function Home() {
             </div>
 
             <div className="fade-in" style={{ fontFamily: mono, fontSize: 14, letterSpacing: 4, color: '#00ffcc', marginBottom: 24, textShadow: '0 0 12px #00ffcc' }}>
-              HOLA MUNDO
+              HOLA DARKPROXY
             </div>
 
             <Link href="/npos" className="cyber-btn fade-in" style={{
