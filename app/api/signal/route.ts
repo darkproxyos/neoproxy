@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { getSignalBalance, getSignalHistory, addSignal } from '@/lib/signal/engine'
 
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 export async function GET() {

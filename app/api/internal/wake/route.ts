@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { insertEvent } from "../../../../lib/core-db/index"
 import { emitWake } from "../../../../lib/event-emitter"
 
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {

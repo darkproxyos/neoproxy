@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { addSignal, getSignalHistory } from '@/lib/signal/engine'
 
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 export async function POST() {
