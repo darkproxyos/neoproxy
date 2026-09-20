@@ -179,6 +179,7 @@ export default function GenerativeLab() {
   const isMobile = windowWidth <= 768
   const sceneRef = useRef<BABYLON.Scene | null>(null)
   const engineRef = useRef<BABYLON.Engine | null>(null)
+  const [sceneReady, setSceneReady] = useState(false)
 
   useEffect(() => {
     if (!isClient || !canvasRef.current) return
@@ -186,7 +187,7 @@ export default function GenerativeLab() {
     engineRef.current = engine
     const scene = new BABYLON.Scene(engine)
     sceneRef.current = scene
-    
+
     // Theme fijo (cian/verde de NeoProxy), sin AestheticProvider
     const bgColor = new BABYLON.Color3(0.02, 0.03, 0.045)
     scene.clearColor = new BABYLON.Color4(bgColor.r, bgColor.g, bgColor.b, 1)
@@ -204,14 +205,15 @@ export default function GenerativeLab() {
     engine.runRenderLoop(() => scene.render())
     const resize = () => engine.resize()
     window.addEventListener('resize', resize)
+    setSceneReady(true)
 
-    return () => { engine.dispose(); window.removeEventListener('resize', resize) }
+    return () => { engine.dispose(); sceneRef.current = null; setSceneReady(false); window.removeEventListener('resize', resize) }
   }, [isClient])
 
   // Reaction to algorithm change
   useEffect(() => {
     const scene = sceneRef.current
-    if (!scene) return
+    if (!scene || !sceneReady) return
 
     setIsLoading(true)
 
@@ -273,7 +275,7 @@ export default function GenerativeLab() {
     }, 50)
 
     return () => clearTimeout(timer)
-  }, [selectedAlgo])
+  }, [selectedAlgo, sceneReady])
 
   const handleExportSTL = () => {
     const scene = sceneRef.current;
