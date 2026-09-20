@@ -302,7 +302,7 @@ export default function ConstellationNavigation() {
       'KERNEL': '/kernel',
       'AGENTS': '/agents',
       'MODELS': '/npos/fabrication',
-      'LAB': '/npos/lab',
+      'LAB': '/lab',
       'PORTAL': '/portal'
     }
     

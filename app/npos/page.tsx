@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const modules = [
   {
-    href: '/npos/lab',
+    href: '/lab',
     icon: '⚗️',
     name: 'Generative Lab',
     desc: 'Laboratorio de geometría. Exploración procedural: algoritmos, formas caóticas, esculturas matemáticas.',
