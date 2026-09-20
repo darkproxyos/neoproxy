@@ -16,7 +16,7 @@ const modules = [
     desc: 'Motor de partículas y geometría cuántica. Renderizado PBR de alta fidelidad con consola de comandos neural.',
   },
   {
-    href: '/npos/fabrication',
+    href: '/fabrication',
     icon: '🔧',
     name: 'Fabrication Lab',
     desc: 'La conexión con el taller físico. Arte digital que se convierte en objeto real mediante resina, luz y electrónica.',

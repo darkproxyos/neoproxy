@@ -7,6 +7,11 @@ const nextConfig = {
         destination: '/lab',
         permanent: false,
       },
+      {
+        source: '/npos/fabrication/gallery',
+        destination: '/fabrication/gallery',
+        permanent: false,
+      },
     ];
   },
   async rewrites() {

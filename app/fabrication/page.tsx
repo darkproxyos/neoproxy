@@ -35,17 +35,32 @@ export default function FabricationPage() {
         padding: '24px 40px',
         borderBottom: '1px solid rgba(0, 212, 255, 0.1)'
       }}>
-        <Link 
-          href="/"
-          style={{ 
-            fontSize: 9, 
-            color: '#4a6080',
-            letterSpacing: 3,
-            textDecoration: 'none'
-          }}
-        >
-          ← BACK TO HOME
-        </Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link
+            href="/"
+            style={{
+              fontSize: 9,
+              color: '#4a6080',
+              letterSpacing: 3,
+              textDecoration: 'none'
+            }}
+          >
+            ← BACK TO HOME
+          </Link>
+          <Link
+            href="/fabrication/gallery"
+            style={{
+              fontSize: 9,
+              color: '#00d4ff',
+              letterSpacing: 3,
+              textDecoration: 'none',
+              border: '1px solid #00d4ff44',
+              padding: '6px 14px'
+            }}
+          >
+            CURATED GALLERY →
+          </Link>
+        </div>
       </nav>
 
       {/* Content */}
