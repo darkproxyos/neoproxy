@@ -3,10 +3,23 @@ import { drizzle } from 'drizzle-orm/libsql';
 import { memory, events } from './schema';
 import { eq } from 'drizzle-orm';
 
-const client = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN!,
-});
+// `next build` importa este modulo para inspeccionar las rutas API aunque
+// nunca las ejecute (son force-dynamic). Sin credenciales reales el build
+// falla al construir el cliente. Solo durante la fase de build, y solo si
+// faltan las credenciales, se usa un archivo local de relleno que nunca se
+// consulta de verdad. En runtime, si faltan las credenciales, se sigue
+// fallando igual que antes.
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+const missingCreds = !process.env.TURSO_DATABASE_URL || !process.env.TURSO_AUTH_TOKEN;
+
+const client = createClient(
+  isBuildPhase && missingCreds
+    ? { url: 'file:build-placeholder.db' }
+    : {
+        url: process.env.TURSO_DATABASE_URL!,
+        authToken: process.env.TURSO_AUTH_TOKEN!,
+      }
+);
 
 export const db = drizzle(client);
 

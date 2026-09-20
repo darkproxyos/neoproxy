@@ -44,6 +44,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Placeholder de build para el cliente Turso (ver lib/core-db, src/db)
+build-placeholder.db*
 ```
 .vercel
 .env*
