@@ -41,7 +41,7 @@ export const navConfig: NavEntry[] = [
       { label: 'AR Combat', href: '/ar', live: true },
     ],
   },
-  { label: 'CONOCIMIENTO', href: '/knowledge', live: false },
+  { label: 'CONOCIMIENTO', href: '/knowledge', live: true },
   { label: 'PROXYVERSE', href: '/proxyverse', live: false },
 ]
 
