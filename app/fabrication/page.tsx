@@ -253,10 +253,10 @@ export default function FabricationPage() {
             letterSpacing: 3,
             marginBottom: 32
           }}>
-            INTERESADO EN UN ARTEFACTO?
+            ¿INTERESADO EN UN ARTEFACTO?
           </div>
           <Link
-            href="/store"
+            href="/shop/drop01"
             className="cyber-btn"
             style={{ 
               display: 'inline-block',
