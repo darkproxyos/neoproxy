@@ -78,6 +78,7 @@ export default function SiteNav() {
   const groupActive = (group: NavGroup) => group.items.some((it) => isActive(pathname, it.href))
 
   return (
+    <>
     <nav ref={navRef as any} className="site-nav" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '16px 32px',
       display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
@@ -177,6 +178,7 @@ export default function SiteNav() {
           ☰
         </button>
       </div>
+    </nav>
 
       {mobileOpen && (
         <div className="site-nav-mobile-panel" style={{
@@ -258,6 +260,6 @@ export default function SiteNav() {
           </div>
         </div>
       )}
-    </nav>
+    </>
   )
 }
