@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import ArtifactViewer from '@/components/ArtifactViewer'
 
 export default function Artifacts() {
   return (
@@ -10,7 +9,7 @@ export default function Artifacts() {
         <div style={{ border: '1px solid #0f1f35', padding: '20px' }}>
           <h3 style={{ fontSize: '14px' }}>NP-RING-01</h3>
           <p style={{ color: '#4a6080', fontSize: '12px', marginTop: '10px' }}>The first physical extraction. Generative geometry translated to ABS resin.</p>
-          <Link href="/shop/drop01" style={{ color: '#00d4ff', fontSize: '10px', textDecoration: 'none', display: 'block', marginTop: '20px' }}>VIEW_COLLECTION →</Link>
+          <Link href="/shop/drop01" style={{ color: '#00d4ff', fontSize: '10px', textDecoration: 'none', display: 'block', marginTop: '20px' }}>VER_DROP_ACTUAL →</Link>
         </div>
         <div style={{ border: '1px solid #0f1f35', padding: '20px', opacity: 0.5 }}>
           <h3 style={{ fontSize: '14px' }}>NP-CORE-NODE</h3>

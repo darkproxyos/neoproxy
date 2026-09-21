@@ -44,11 +44,10 @@ export default function Manifesto() {
 
           <p style={{ marginTop: 32 }}>
           METATRON define.<br/>
-          GENNOS construye.<br/>
+          GENOS construye.<br/>
           SNAKE sobrevive.<br/>
-          TRIZKTER rompe.<br/>
-          D muta.<br/>
-          ÁNGEL observa.
+          TRICKSTER rompe.<br/>
+          D muta.
           </p>
 
           <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #00d4ff11' }}>

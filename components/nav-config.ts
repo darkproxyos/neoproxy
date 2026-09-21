@@ -38,6 +38,7 @@ export const navConfig: NavEntry[] = [
       { label: 'Stardust', href: '/npos/stardust', live: true },
       { label: 'Wired', href: '/games/wired', live: true },
       { label: 'Realidad Aumentada', href: '/realidad-aumentada', live: true },
+      { label: 'AR Combat', href: '/ar', live: true },
     ],
   },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: false },
@@ -45,8 +46,8 @@ export const navConfig: NavEntry[] = [
 ]
 
 // Rutas donde el SiteNav global no se monta: herramientas fullscreen con
-// chrome propio (lab, wired) o vistas que no deben mostrar navegacion (login/admin/kernel).
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired']
+// chrome propio (lab, wired, ar) o vistas que no deben mostrar navegacion (login/admin/kernel).
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired', '/ar']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))

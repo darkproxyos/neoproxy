@@ -22,7 +22,6 @@ export default function ShopPage() {
           </Link>
           <h1 className="font-sans text-5xl md:text-7xl font-extrabold leading-none tracking-tight">
             <span className="text-[#00d4ff]">SHOP</span>
-            <span className="text-white"> LAB</span>
             <span className="block text-[0.35em] text-[#4a6080] tracking-[0.3em] uppercase font-normal mt-4">
               Generative Marketplace
             </span>
@@ -93,7 +92,7 @@ export default function ShopPage() {
       <footer className="relative z-10 p-8 border-t border-[#0f1f35] mt-16">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="text-[11px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
-            NEOPROXY OS — SHOP LAB
+            NEOPROXY OS — SHOP
           </div>
           <div className="text-[11px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
             CERTIFIED GENERATIVE ART
