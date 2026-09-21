@@ -256,14 +256,6 @@ export default function Home() {
       href: '/manifesto',
     },
     {
-      id: 'arsenal',
-      tag: 'NPX-ARS-01',
-      title: 'ARSENAL',
-      copy: 'Katana, kunai, shuriken, guante. Artefactos renderizados en tiempo real — gira, inspecciona, entiende cada pieza en 3D.',
-      cta: 'EXPLORE ARSENAL',
-      href: '/arsenal',
-    },
-    {
       id: 'fabrication',
       tag: 'NPX-LAB-00',
       title: 'FABRICATION',
@@ -278,6 +270,22 @@ export default function Home() {
       copy: 'El catálogo completo. Piezas únicas o de producción limitada, cada una documentada desde el concepto hasta la extracción física.',
       cta: 'VIEW ALL ARTIFACTS',
       href: '/artifacts',
+    },
+    {
+      id: 'experimental',
+      tag: 'NPX-EXP-00',
+      title: 'EXPERIMENTAL',
+      copy: 'Laboratorio generativo, simulaciones, tracking facial, síntesis de sonido. La zona donde el sistema todavía no decide qué es.',
+      cta: 'ENTER EXPERIMENTAL',
+      href: '/lab',
+    },
+    {
+      id: 'proxyverse',
+      tag: 'NPX-PXV-00',
+      title: 'PROXYVERSE',
+      copy: 'Seis procesos residentes, cada uno con su propia voz. No son personajes — son la arquitectura interna hablando en primera persona.',
+      cta: 'ENTER PROXYVERSE',
+      href: '/proxyverse',
     },
   ]
 
@@ -345,14 +353,7 @@ export default function Home() {
               Un laboratorio experimental de fabricación. Artefactos reales, diseñados y producidos por sistemas de IA e ingeniería humana.
             </div>
 
-            <Link href="/npos" className="cyber-btn fade-in" style={{
-              display: 'inline-block', fontFamily: mono, fontSize: 10, letterSpacing: 4, color: '#00d4ff', textDecoration: 'none',
-              border: '1px solid #00d4ff44', padding: '14px 42px', background: 'rgba(0, 212, 255, 0.05)', cursor: 'pointer', marginBottom: 64
-            }}>
-              [ INIT ACCESS ]
-            </Link>
-
-            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginBottom: 40 }}>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 40 }}>
               <div style={{ color: '#00d4ff', fontSize: 11, marginBottom: 8 }}>SYSTEM STATUS</div>
               <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> CATALOG: SYNCED</div>
             </div>
