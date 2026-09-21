@@ -7,7 +7,7 @@ export type NavLeaf = {
 export type NavGroup = {
   label: string
   live: boolean
-  items: NavLeaf[]
+  items: NavEntry[]
 }
 
 export type NavEntry = NavLeaf | NavGroup
@@ -37,8 +37,15 @@ export const navConfig: NavEntry[] = [
       { label: 'Laboratorio', href: '/lab', live: true },
       { label: 'Stardust', href: '/npos/stardust', live: true },
       { label: 'Wired', href: '/games/wired', live: true },
-      { label: 'Realidad Aumentada', href: '/realidad-aumentada', live: true },
-      { label: 'AR Combat', href: '/ar', live: true },
+      {
+        label: 'Realidad Aumentada',
+        live: true,
+        items: [
+          { label: 'Máscara Facial', href: '/realidad-aumentada', live: true },
+          { label: 'AR Combat', href: '/ar', live: true },
+          { label: 'Modo Clásico', href: '/realidad-aumentada/index.html', live: true },
+        ],
+      },
       { label: 'Synth', href: '/draw/synth', live: true },
     ],
   },

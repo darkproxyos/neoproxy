@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import * as BABYLON from 'babylonjs'
-import 'babylonjs-loaders'
+import * as BABYLON from '@babylonjs/core'
+import { GLTFFileLoader } from '@babylonjs/loaders/glTF'
 
 const mono = "'Space Mono', monospace"
 
@@ -103,6 +103,8 @@ export default function RealidadAumentadaPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [showDebug, setShowDebug] = useState(false)
   const [debugInfo, setDebugInfo] = useState('')
+  const [maskStatus, setMaskStatus] = useState<'idle' | 'loading' | 'loaded' | 'error'>('idle')
+  const [maskError, setMaskError] = useState('')
 
   useEffect(() => {
     return () => {
@@ -172,14 +174,27 @@ export default function RealidadAumentadaPage() {
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0.3), scene)
     light.intensity = 0.9
 
+    setMaskStatus('loading')
     try {
-      const result = await BABYLON.SceneLoader.ImportMeshAsync('', '', MASK_MODEL_PATH, scene)
+      GLTFFileLoader.IncrementalLoading = false
+      BABYLON.SceneLoader.RegisterPlugin(new GLTFFileLoader())
+
+      const pathParts = MASK_MODEL_PATH.split('/')
+      const filename = pathParts[pathParts.length - 1]
+      const rootUrl = pathParts.slice(0, -1).join('/') + '/'
+
+      const result = await BABYLON.SceneLoader.ImportMeshAsync('', rootUrl, filename, scene)
+      if (result.meshes.length === 0) throw new Error('El archivo cargo pero no tiene mallas (0 meshes)')
+
       const root = result.meshes[0]
       root.rotationQuaternion = BABYLON.Quaternion.Identity()
       maskMeshRef.current = root
       root.setEnabled(false)
-    } catch (err) {
+      setMaskStatus('loaded')
+    } catch (err: any) {
       console.error('No se pudo cargar la mascara:', MASK_MODEL_PATH, err)
+      setMaskStatus('error')
+      setMaskError(err?.message || String(err))
     }
 
     scene.onBeforeRenderObservable.add(() => {
@@ -295,7 +310,27 @@ export default function RealidadAumentadaPage() {
         </div>
       )}
 
-      {status === 'no-face' && (
+      {isActive && maskStatus === 'loading' && (
+        <div style={{
+          position: 'absolute', top: 56, left: '50%', transform: 'translateX(-50%)', zIndex: 15,
+          fontFamily: mono, fontSize: 9, color: '#00d4ff', letterSpacing: 2, background: 'rgba(0,4,10,0.7)',
+          padding: '6px 14px', border: '1px solid rgba(0,212,255,0.3)',
+        }}>
+          CARGANDO MÁSCARA...
+        </div>
+      )}
+
+      {isActive && maskStatus === 'error' && (
+        <div style={{
+          position: 'absolute', top: 56, left: '50%', transform: 'translateX(-50%)', zIndex: 15, maxWidth: 320,
+          fontFamily: mono, fontSize: 9, color: '#ff4444', letterSpacing: 1, background: 'rgba(20,0,0,0.85)',
+          padding: '10px 16px', border: '1px solid rgba(255,68,68,0.4)', textAlign: 'center',
+        }}>
+          MÁSCARA NO CARGÓ: {maskError}
+        </div>
+      )}
+
+      {status === 'no-face' && maskStatus === 'loaded' && (
         <div style={{
           position: 'absolute', bottom: 90, left: '50%', transform: 'translateX(-50%)', zIndex: 15,
           fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 2, background: 'rgba(0,4,10,0.7)',

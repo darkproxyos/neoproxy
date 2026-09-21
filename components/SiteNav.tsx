@@ -3,12 +3,34 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
-import { navConfig, isGroup, isNavHidden, type NavGroup } from './nav-config'
+import { navConfig, isGroup, isNavHidden, type NavGroup, type NavEntry, type NavLeaf } from './nav-config'
 
 const mono = "'Space Mono', monospace"
 
 function isActive(pathname: string, href: string) {
   return pathname === href || (href !== '/' && pathname.startsWith(href + '/'))
+}
+
+function collectLeaves(entry: NavEntry): NavLeaf[] {
+  return isGroup(entry) ? entry.items.flatMap(collectLeaves) : [entry]
+}
+
+function groupActive(pathname: string, group: NavGroup): boolean {
+  return collectLeaves(group).some((leaf) => isActive(pathname, leaf.href))
+}
+
+// Un href .html apunta a un archivo estatico fuera del App Router (ej. el
+// modo clasico de realidad-aumentada) — se navega con <a>, no con <Link>,
+// para no intentar una transicion cliente sobre una ruta que no existe
+// como pagina de Next.
+function NavLink({ item, pathname, onClick, style }: {
+  item: NavLeaf; pathname: string; onClick?: () => void; style: React.CSSProperties
+}) {
+  const color = isActive(pathname, item.href) ? '#00d4ff' : '#8fb8d6'
+  if (item.href.endsWith('.html')) {
+    return <a href={item.href} onClick={onClick} style={{ ...style, color }}>{item.label}</a>
+  }
+  return <Link href={item.href} onClick={onClick} style={{ ...style, color }}>{item.label}</Link>
 }
 
 function SessionBlock({ compact }: { compact?: boolean }) {
@@ -75,8 +97,6 @@ export default function SiteNav() {
 
   if (!pathname || isNavHidden(pathname)) return null
 
-  const groupActive = (group: NavGroup) => group.items.some((it) => isActive(pathname, it.href))
-
   return (
     <>
     <nav ref={navRef as any} className="site-nav" style={{
@@ -91,7 +111,7 @@ export default function SiteNav() {
       <div className="site-nav-links" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
         {navConfig.map((entry) => {
           if (isGroup(entry)) {
-            const active = groupActive(entry)
+            const active = groupActive(pathname, entry)
             const open = openGroup === entry.label
             return (
               <div key={entry.label} style={{ position: 'relative' }}>
@@ -109,23 +129,46 @@ export default function SiteNav() {
                 </button>
                 {open && (
                   <div style={{
-                    position: 'absolute', top: '100%', left: 0, marginTop: 8, minWidth: 200,
+                    position: 'absolute', top: '100%', left: 0, marginTop: 8, minWidth: 220,
                     background: 'rgba(0, 4, 10, 0.96)', border: '1px solid rgba(0, 212, 255, 0.2)',
                     backdropFilter: 'blur(10px)', display: 'flex', flexDirection: 'column', padding: '6px 0',
                   }}>
                     {entry.items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        style={{
-                          fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
-                          padding: '10px 18px', minHeight: 44, display: 'flex', alignItems: 'center',
-                          color: isActive(pathname, item.href) ? '#00d4ff' : '#8fb8d6',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {item.label}
-                      </Link>
+                      isGroup(item) ? (
+                        <div key={item.label} style={{ padding: '6px 0' }}>
+                          <div style={{
+                            fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080',
+                            padding: '6px 18px', whiteSpace: 'nowrap',
+                          }}>
+                            {item.label}
+                          </div>
+                          {item.items.map((sub) => (
+                            isGroup(sub) ? null : (
+                              <NavLink
+                                key={sub.href}
+                                item={sub}
+                                pathname={pathname}
+                                style={{
+                                  fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
+                                  padding: '10px 18px 10px 30px', minHeight: 44, display: 'flex', alignItems: 'center',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              />
+                            )
+                          ))}
+                        </div>
+                      ) : (
+                        <NavLink
+                          key={item.href}
+                          item={item}
+                          pathname={pathname}
+                          style={{
+                            fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
+                            padding: '10px 18px', minHeight: 44, display: 'flex', alignItems: 'center',
+                            whiteSpace: 'nowrap',
+                          }}
+                        />
+                      )
                     ))}
                   </div>
                 )}
@@ -208,18 +251,40 @@ export default function SiteNav() {
                       {entry.label}
                     </div>
                     {entry.items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                        style={{
-                          fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
-                          padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
-                          color: isActive(pathname, item.href) ? '#00d4ff' : '#8fb8d6',
-                        }}
-                      >
-                        {item.label}
-                      </Link>
+                      isGroup(item) ? (
+                        <div key={item.label} style={{ marginBottom: 8 }}>
+                          <div style={{
+                            fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#4a6080', padding: '8px 20px',
+                          }}>
+                            {item.label}
+                          </div>
+                          {item.items.map((sub) => (
+                            isGroup(sub) ? null : (
+                              <NavLink
+                                key={sub.href}
+                                item={sub}
+                                pathname={pathname}
+                                onClick={() => setMobileOpen(false)}
+                                style={{
+                                  fontFamily: mono, fontSize: 13, letterSpacing: 1.5, textDecoration: 'none',
+                                  padding: '12px 20px 12px 36px', minHeight: 44, display: 'flex', alignItems: 'center',
+                                }}
+                              />
+                            )
+                          ))}
+                        </div>
+                      ) : (
+                        <NavLink
+                          key={item.href}
+                          item={item}
+                          pathname={pathname}
+                          onClick={() => setMobileOpen(false)}
+                          style={{
+                            fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
+                            padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
+                          }}
+                        />
+                      )
                     ))}
                   </div>
                 )
