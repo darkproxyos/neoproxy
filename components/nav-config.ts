@@ -42,7 +42,7 @@ export const navConfig: NavEntry[] = [
     ],
   },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: true },
-  { label: 'PROXYVERSE', href: '/proxyverse', live: false },
+  { label: 'PROXYVERSE', href: '/proxyverse', live: true },
 ]
 
 // Rutas donde el SiteNav global no se monta: herramientas fullscreen con
