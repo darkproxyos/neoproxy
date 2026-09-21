@@ -6,7 +6,6 @@ export const metadata: Metadata = {
 }
 
 import { AestheticProvider } from '@/components/npos/AestheticProvider'
-import SiteNav from '@/components/SiteNav'
 
 export default function NPosLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,7 +25,6 @@ export default function NPosLayout({ children }: { children: React.ReactNode }) 
       <div className="npos-root">
         <div className="crt-scanlines" />
         <div className="tech-grid" />
-        <SiteNav />
         {children}
       </div>
     </AestheticProvider>

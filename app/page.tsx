@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import SiteNav from '@/components/SiteNav'
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -165,8 +164,6 @@ export default function Home() {
       {showContent && (
         <>
           <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 1, pointerEvents: 'none' }} />
-
-          <SiteNav />
 
           <section style={{
             position: 'relative', zIndex: 10, minHeight: '100vh', display: 'flex', flexDirection: 'column',
