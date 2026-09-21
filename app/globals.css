@@ -8,6 +8,13 @@
   --neon-green: #00ffcc;
   --deep-purple: #6644aa;
   --grid-color: rgba(0, 212, 255, 0.03);
+
+  /* Usadas por /lab via var(--neo-x, fallback) — antes indefinidas globalmente,
+     asi que siempre resolvian al fallback hardcodeado en cada sitio de uso. */
+  --neo-primary: #00d4ff;
+  --neo-glow: rgba(0, 212, 255, 0.4);
+  --neo-rounding: 0px;
+  --neo-blur: 10px;
 }
 
 @theme inline {
