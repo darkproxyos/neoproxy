@@ -275,7 +275,7 @@ export default function Home() {
       id: 'artifacts',
       tag: 'NPX-REL-00',
       title: 'ARTIFACTS',
-      copy: 'El catálogo completo. Piezas únicas o de producción limitada, cada una con NFC y memoria digital vinculada.',
+      copy: 'El catálogo completo. Piezas únicas o de producción limitada, cada una documentada desde el concepto hasta la extracción física.',
       cta: 'VIEW ALL ARTIFACTS',
       href: '/artifacts',
     },
@@ -358,7 +358,7 @@ export default function Home() {
 
             <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 40 }}>
               <div style={{ color: '#00d4ff', fontSize: 10, marginBottom: 8 }}>SYSTEM STATUS</div>
-              <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> ARTIFACTS: 5 UNITS</div>
+              <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> CATALOG: SYNCED</div>
             </div>
 
             <div className="scroll-cue" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff55' }}>
@@ -400,10 +400,6 @@ export default function Home() {
       )}
 
       <style>{`
-        @keyframes boot-load {
-          from { width: 0; }
-          to { width: 100%; }
-        }
         .scroll-cue {
           animation: pulse-cue 2s ease-in-out infinite;
         }
