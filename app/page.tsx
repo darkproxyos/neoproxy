@@ -2,6 +2,98 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
+type Vec4 = [number, number, number, number]
+type Polytope4D = { name: string; vertices: Vec4[]; edges: [number, number][] }
+
+function normalize(vertices: Vec4[]): Vec4[] {
+  const maxLen = Math.max(...vertices.map(v => Math.hypot(v[0], v[1], v[2], v[3])))
+  return vertices.map(v => v.map(c => c / maxLen) as Vec4)
+}
+
+function tesseract(): Polytope4D {
+  const vertices: Vec4[] = []
+  for (let i = 0; i < 16; i++) {
+    vertices.push([i & 1 ? 1 : -1, i & 2 ? 1 : -1, i & 4 ? 1 : -1, i & 8 ? 1 : -1])
+  }
+  const edges: [number, number][] = []
+  for (let a = 0; a < 16; a++) {
+    for (let b = a + 1; b < 16; b++) {
+      let diff = 0
+      for (let k = 0; k < 4; k++) if (vertices[a][k] !== vertices[b][k]) diff++
+      if (diff === 1) edges.push([a, b])
+    }
+  }
+  return { name: 'tesseract', vertices: normalize(vertices), edges }
+}
+
+function hyperoctahedron(): Polytope4D {
+  const vertices: Vec4[] = []
+  for (let axis = 0; axis < 4; axis++) {
+    for (const s of [1, -1]) {
+      const v: Vec4 = [0, 0, 0, 0]
+      v[axis] = s
+      vertices.push(v)
+    }
+  }
+  const edges: [number, number][] = []
+  for (let a = 0; a < 8; a++) {
+    for (let b = a + 1; b < 8; b++) {
+      if (Math.floor(a / 2) === Math.floor(b / 2)) continue
+      edges.push([a, b])
+    }
+  }
+  return { name: '16-cell', vertices: normalize(vertices), edges }
+}
+
+function icositetrachoron(): Polytope4D {
+  const raw: Vec4[] = []
+  const axes = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]
+  for (const [i, j] of axes) {
+    for (const si of [1, -1]) {
+      for (const sj of [1, -1]) {
+        const v: Vec4 = [0, 0, 0, 0]
+        v[i] = si
+        v[j] = sj
+        raw.push(v)
+      }
+    }
+  }
+  const edges: [number, number][] = []
+  for (let a = 0; a < raw.length; a++) {
+    for (let b = a + 1; b < raw.length; b++) {
+      const d2 = raw[a].reduce((s, c, k) => s + (c - raw[b][k]) ** 2, 0)
+      if (Math.abs(d2 - 2) < 1e-6) edges.push([a, b])
+    }
+  }
+  return { name: '24-cell', vertices: normalize(raw), edges }
+}
+
+function pentachoron(): Polytope4D {
+  const c = (1 + Math.sqrt(5)) / 4
+  const raw: Vec4[] = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [c, c, c, c]]
+  const centroid: Vec4 = [0, 0, 0, 0]
+  for (const v of raw) for (let k = 0; k < 4; k++) centroid[k] += v[k] / 5
+  const centered = raw.map(v => v.map((x, k) => x - centroid[k]) as Vec4)
+  const edges: [number, number][] = []
+  for (let a = 0; a < 5; a++) for (let b = a + 1; b < 5; b++) edges.push([a, b])
+  return { name: '5-cell', vertices: normalize(centered), edges }
+}
+
+function rotate4D(v: Vec4, aXY: number, aZW: number, aXW: number): Vec4 {
+  let [x, y, z, w] = v
+  let cs = Math.cos(aXY), sn = Math.sin(aXY)
+  ;[x, y] = [x * cs - y * sn, x * sn + y * cs]
+  cs = Math.cos(aZW); sn = Math.sin(aZW)
+  ;[z, w] = [z * cs - w * sn, z * sn + w * cs]
+  cs = Math.cos(aXW); sn = Math.sin(aXW)
+  ;[x, w] = [x * cs - w * sn, x * sn + w * cs]
+  return [x, y, z, w]
+}
+
+function easeInOut(t: number) {
+  return t * t * (3 - 2 * t)
+}
+
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [booted, setBooted] = useState(false)
@@ -59,8 +151,16 @@ export default function Home() {
       })
     }
 
-    const animate = () => {
+    const shapes = [tesseract(), icositetrachoron(), hyperoctahedron(), pentachoron()]
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const CYCLE_MS = 19000
+    const FADE_IN = 0.21, HOLD = 0.68, FADE_OUT = 0.89 // cumulative fractions of CYCLE_MS
+    let shapeIndex = 0
+    let shapeStart = performance.now()
+
+    const animate = (t: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.globalCompositeOperation = 'source-over'
       particles.forEach(p => {
         p.x += p.vx
         p.y += p.vy
@@ -71,9 +171,70 @@ export default function Home() {
         ctx.fillStyle = `rgba(0, 212, 255, ${p.alpha})`
         ctx.fill()
       })
+
+      const elapsed = t - shapeStart
+      const p = elapsed / CYCLE_MS
+      let shapeOpacity = 0
+      if (p >= 1) {
+        shapeStart = t
+        shapeIndex = (shapeIndex + 1) % shapes.length
+      } else if (p < FADE_IN) {
+        shapeOpacity = easeInOut(p / FADE_IN)
+      } else if (p < HOLD) {
+        shapeOpacity = 1
+      } else if (p < FADE_OUT) {
+        shapeOpacity = 1 - easeInOut((p - HOLD) / (FADE_OUT - HOLD))
+      }
+
+      if (shapeOpacity > 0.002) {
+        const shape = shapes[shapeIndex]
+        const angleBase = reducedMotion ? shapeIndex * 1.3 : t * 0.00012
+        const aXY = angleBase
+        const aZW = reducedMotion ? shapeIndex * 0.7 : t * 0.00019
+        const aXW = reducedMotion ? shapeIndex * 2.1 : t * 0.00008
+        const rotated = shape.vertices.map(v => rotate4D(v, aXY, aZW, aXW))
+
+        const wDist = 2.4, zDist = 3.6
+        const scale = Math.min(canvas.width, canvas.height) * 0.32
+        const cx = canvas.width / 2, cy = canvas.height / 2
+        const projected = rotated.map(([x, y, z, w]) => {
+          const wFactor = wDist / (wDist - w)
+          const x3 = x * wFactor, y3 = y * wFactor, z3 = z * wFactor
+          const zFactor = zDist / (zDist - z3)
+          return {
+            x: cx + x3 * zFactor * scale,
+            y: cy + y3 * zFactor * scale,
+            depth: wFactor * zFactor,
+            w,
+          }
+        })
+
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+        shape.edges.forEach(([ai, bi]) => {
+          const a = projected[ai], b = projected[bi]
+          const depth = (a.depth + b.depth) / 2
+          const wAvg = (a.w + b.w) / 2
+          const hue = Math.max(0, Math.min(1, (wAvg + 1) / 2))
+          const r = Math.round(102 + (0 - 102) * hue)
+          const g = Math.round(68 + (212 - 68) * hue)
+          const bch = Math.round(170 + (255 - 170) * hue)
+          const alpha = shapeOpacity * Math.max(0.06, Math.min(0.5, depth * 0.28))
+          ctx.strokeStyle = `rgba(${r}, ${g}, ${bch}, ${alpha})`
+          ctx.shadowColor = `rgba(${r}, ${g}, ${bch}, ${alpha})`
+          ctx.shadowBlur = 8
+          ctx.lineWidth = 0.6 + depth * 0.5
+          ctx.beginPath()
+          ctx.moveTo(a.x, a.y)
+          ctx.lineTo(b.x, b.y)
+          ctx.stroke()
+        })
+        ctx.restore()
+      }
+
       requestAnimationFrame(animate)
     }
-    animate()
+    requestAnimationFrame(animate)
 
     const handleResize = () => {
       canvas.width = window.innerWidth
