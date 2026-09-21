@@ -280,6 +280,14 @@ export default function Home() {
       href: '/lab',
     },
     {
+      id: 'knowledge',
+      tag: 'NPX-KNW-00',
+      title: 'CONOCIMIENTO',
+      copy: 'Shannon, Tononi, Turing, Kauffman y catorce más — la red de quienes midieron la información, la mente, el orden espontáneo.',
+      cta: 'ENTER KNOWLEDGE',
+      href: '/knowledge',
+    },
+    {
       id: 'proxyverse',
       tag: 'NPX-PXV-00',
       title: 'PROXYVERSE',
