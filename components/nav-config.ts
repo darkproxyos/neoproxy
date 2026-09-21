@@ -37,6 +37,7 @@ export const navConfig: NavEntry[] = [
       { label: 'Laboratorio', href: '/lab', live: true },
       { label: 'Stardust', href: '/npos/stardust', live: true },
       { label: 'Wired', href: '/games/wired', live: true },
+      { label: 'Realidad Aumentada', href: '/realidad-aumentada', live: true },
     ],
   },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: false },
