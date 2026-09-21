@@ -1,5 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/npos/lab',
+        destination: '/lab',
+        permanent: false,
+      },
+      {
+        source: '/npos/fabrication/gallery',
+        destination: '/fabrication/gallery',
+        permanent: false,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

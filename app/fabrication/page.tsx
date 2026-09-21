@@ -1,9 +1,18 @@
 'use client'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 export default function FabricationPage() {
   const mono = "'Space Mono', monospace"
-  
+  const [hasGallery, setHasGallery] = useState(false)
+
+  useEffect(() => {
+    fetch('/curated_stl_index.json')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setHasGallery(Array.isArray(data) && data.length > 0))
+      .catch(() => setHasGallery(false))
+  }, [])
+
   const steps = [
     { num: '01', title: 'DIGITAL DESIGN', desc: 'Algorithmic generation // Parametric modeling' },
     { num: '02', title: '3D PRINTING', desc: 'FDM deposition // Resin UV curing' },
@@ -35,17 +44,34 @@ export default function FabricationPage() {
         padding: '24px 40px',
         borderBottom: '1px solid rgba(0, 212, 255, 0.1)'
       }}>
-        <Link 
-          href="/"
-          style={{ 
-            fontSize: 9, 
-            color: '#4a6080',
-            letterSpacing: 3,
-            textDecoration: 'none'
-          }}
-        >
-          ← BACK TO HOME
-        </Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link
+            href="/"
+            style={{
+              fontSize: 9,
+              color: '#4a6080',
+              letterSpacing: 3,
+              textDecoration: 'none'
+            }}
+          >
+            ← BACK TO HOME
+          </Link>
+          {hasGallery && (
+            <Link
+              href="/fabrication/gallery"
+              style={{
+                fontSize: 9,
+                color: '#00d4ff',
+                letterSpacing: 3,
+                textDecoration: 'none',
+                border: '1px solid #00d4ff44',
+                padding: '6px 14px'
+              }}
+            >
+              CURATED GALLERY →
+            </Link>
+          )}
+        </div>
       </nav>
 
       {/* Content */}

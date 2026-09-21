@@ -301,8 +301,8 @@ export default function ConstellationNavigation() {
     const routes: Record<string, string> = {
       'KERNEL': '/kernel',
       'AGENTS': '/agents',
-      'MODELS': '/npos/fabrication',
-      'LAB': '/npos/lab',
+      'MODELS': '/fabrication/gallery',
+      'LAB': '/lab',
       'PORTAL': '/portal'
     }
     

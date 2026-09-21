@@ -1,5 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
+import { CoherenceSystem } from '../../../src/systems/CoherenceSystem';
+import { MemoryBridge } from '../../../src/bridge/MemoryBridge';
 
 export default function WiredGame() {
   const ref = useRef<HTMLCanvasElement | null>(null)

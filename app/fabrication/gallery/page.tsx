@@ -62,7 +62,7 @@ export default function FabricationGallery() {
     }}>
       <div className="gallery-header">
         <div>
-          <h1 style={{ fontSize: '18px', margin: 0 }}>NPOS // FABRICATION // CURATED_GALLERY</h1>
+          <h1 style={{ fontSize: '18px', margin: 0 }}>FABRICATION // CURATED_GALLERY</h1>
           <p style={{ fontSize: '10px', color: '#4a6080', margin: '4px 0 0 0' }}>
             PREMIUM_SPECIMENS: {specimens.length} OBJECTS DETECTED
           </p>
@@ -76,8 +76,8 @@ export default function FabricationGallery() {
             onChange={(e) => setSearch(e.target.value)}
             className="search-input"
           />
-          <Link href="/npos" className="back-link">
-            BACK_TO_OS
+          <Link href="/fabrication" className="back-link">
+            BACK_TO_FABRICATION
           </Link>
         </div>
       </div>

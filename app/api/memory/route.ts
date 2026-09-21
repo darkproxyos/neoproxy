@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createMemory, getMemories } from "@/lib/core-db/index"
 
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 export async function GET() {
