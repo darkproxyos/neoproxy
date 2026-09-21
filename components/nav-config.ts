@@ -46,8 +46,9 @@ export const navConfig: NavEntry[] = [
 ]
 
 // Rutas donde el SiteNav global no se monta: herramientas fullscreen con
-// chrome propio (lab, wired, ar) o vistas que no deben mostrar navegacion (login/admin/kernel).
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired', '/ar']
+// chrome propio (lab, wired, ar, realidad-aumentada) o vistas que no deben
+// mostrar navegacion (login/admin/kernel).
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired', '/ar', '/realidad-aumentada']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))
