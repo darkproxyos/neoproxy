@@ -26,8 +26,6 @@ export const navConfig: NavEntry[] = [
       { label: 'Impresión 3D', href: '/fabrication', live: true },
       { label: 'Artefactos', href: '/artifacts', live: true },
       { label: 'Arsenal', href: '/arsenal', live: true },
-      { label: 'Tienda', href: '/shop', live: true },
-      { label: 'Drop 01', href: '/shop/drop01', live: true },
     ],
   },
   {
