@@ -161,7 +161,7 @@ function ARScene({ onKill }: { onKill: () => void }) {
     <group ref={groupRef}>
       <ambientLight intensity={0.3} />
       <pointLight position={[10, 10, 10]} intensity={0.8} />
-      <directionalLight position={5, 5, 5} intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={0.5} />
       
       {enemies.map(enemy => (
         <AREnemy

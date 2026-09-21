@@ -63,7 +63,7 @@
 
 .bottomRight {
   position: absolute;
-  bottom: 20px;
+  bottom: 90px;
   right: 20px;
   background: rgba(0, 0, 0, 0.8);
   color: #cc0000;
