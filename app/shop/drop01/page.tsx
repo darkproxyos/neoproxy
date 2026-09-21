@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
 
 // ── SEED ENGINE (same RNG as generator) ──────────────────────────────────────
 function mkRand(seed: number) {
@@ -183,34 +182,9 @@ export default function Drop01Page() {
       fontFamily: "'DM Mono', monospace",
     }}>
 
-      {/* NAV — match existing site nav */}
-      <nav style={{
-        padding: '14px 32px',
-        borderBottom: '1px solid #0d0d1a',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'sticky',
-        top: 0,
-        background: 'rgba(2,2,5,0.95)',
-        backdropFilter: 'blur(12px)',
-        zIndex: 100,
-      }}>
-        <Link href="/" style={{ fontFamily: 'inherit', fontSize: 13, letterSpacing: '0.2em', color: '#b400ff', textDecoration: 'none' }}>
-          NEOPROXY
-        </Link>
-        <div style={{ display: 'flex', gap: 24, fontSize: 9, letterSpacing: '0.2em' }}>
-          {[['CONCEPT', '/concept'], ['LAB', '/lab'], ['FABRICATION', '/fabrication'], ['SHOP', '/shop']].map(([label, href]) => (
-            <Link key={label} href={href} style={{ color: label === 'SHOP' ? '#b400ff' : '#2a2a44', textDecoration: 'none' }}>
-              {label}
-            </Link>
-          ))}
-        </div>
-      </nav>
-
       {/* HERO */}
       <div style={{
-        padding: '64px 32px 48px',
+        padding: '128px 32px 48px',
         borderBottom: '1px solid #0d0d1a',
         position: 'relative',
         overflow: 'hidden',
