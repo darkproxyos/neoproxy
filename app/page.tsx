@@ -337,16 +337,12 @@ export default function Home() {
               NEO·PROXY
             </div>
 
-            <div className="fade-in hero-tagline" style={{ fontFamily: mono, fontSize: 11, letterSpacing: 8, color: '#6644aa', marginBottom: 24 }}>
+            <div className="fade-in hero-tagline" style={{ fontFamily: mono, fontSize: 13, letterSpacing: 8, color: '#9b7fe0', marginBottom: 24 }}>
               ARTE · SISTEMAS · FABRICACIÓN
             </div>
 
-            <div className="fade-in hero-sub" style={{ fontFamily: mono, fontSize: 10, color: '#00d4ff88', letterSpacing: 2, marginBottom: 48, maxWidth: 480 }}>
+            <div className="fade-in hero-sub" style={{ fontFamily: mono, fontSize: 13, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 1, marginBottom: 48, maxWidth: 480 }}>
               Un laboratorio experimental de fabricación. Artefactos reales, diseñados y producidos por sistemas de IA e ingeniería humana.
-            </div>
-
-            <div className="fade-in" style={{ fontFamily: mono, fontSize: 14, letterSpacing: 4, color: '#00ffcc', marginBottom: 24, textShadow: '0 0 12px #00ffcc' }}>
-              HOLA DARKPROXY
             </div>
 
             <Link href="/npos" className="cyber-btn fade-in" style={{
@@ -356,12 +352,12 @@ export default function Home() {
               [ INIT ACCESS ]
             </Link>
 
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 40 }}>
-              <div style={{ color: '#00d4ff', fontSize: 10, marginBottom: 8 }}>SYSTEM STATUS</div>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginBottom: 40 }}>
+              <div style={{ color: '#00d4ff', fontSize: 11, marginBottom: 8 }}>SYSTEM STATUS</div>
               <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> CATALOG: SYNCED</div>
             </div>
 
-            <div className="scroll-cue" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff55' }}>
+            <div className="scroll-cue" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff99' }}>
               SCROLL TO EXPLORE ↓
             </div>
           </section>
@@ -372,7 +368,7 @@ export default function Home() {
               alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '80px 24px', boxSizing: 'border-box',
               borderTop: '1px solid rgba(0, 212, 255, 0.08)', background: idx % 2 === 1 ? 'rgba(0, 212, 255, 0.02)' : 'transparent'
             }}>
-              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', marginBottom: 12 }}>
+              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#7a9cc0', marginBottom: 12 }}>
                 {s.tag}
               </div>
               <div style={{ fontFamily: mono, fontSize: 32, letterSpacing: 8, color: '#00d4ff', marginBottom: 20, textShadow: '0 0 24px rgba(0,212,255,0.35)' }}>
@@ -413,11 +409,11 @@ export default function Home() {
             letter-spacing: 8px !important;
           }
           .hero-tagline {
-            font-size: 9px !important;
+            font-size: 11px !important;
             letter-spacing: 4px !important;
           }
           .hero-sub {
-            font-size: 9px !important;
+            font-size: 12px !important;
           }
         }
       `}</style>
