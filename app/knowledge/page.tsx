@@ -126,9 +126,23 @@ export default function KnowledgePage() {
                     {selected.formulaLabel}
                   </div>
 
-                  <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0' }}>
+                  <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0', marginBottom: 20 }}>
                     {selected.summary}
                   </p>
+
+                  <div style={{
+                    borderLeft: `2px solid ${clusters[selected.cluster].color}55`, paddingLeft: 14,
+                  }}>
+                    <div style={{
+                      fontFamily: mono, fontSize: 8, letterSpacing: 2, color: clusters[selected.cluster].color,
+                      marginBottom: 8,
+                    }}>
+                      EJEMPLO
+                    </div>
+                    <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.8, color: '#9fc4e0' }}>
+                      {selected.example}
+                    </p>
+                  </div>
                 </>
               ) : (
                 <div style={{ fontFamily: mono, fontSize: 11, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8 }}>
