@@ -4,18 +4,31 @@ import Link from 'next/link'
 
 const mono = "'Space Mono', monospace"
 
-type Instrument = { id: number; name: string; color: string; type: OscillatorType | 'noise' | 'fm'; label: string }
+type Instrument = { id: number; name: string; color: string; type: OscillatorType | 'noise' | 'fm' | 'piano'; label: string }
 
 const INSTRUMENTS: Instrument[] = [
-  { id: 0, name: 'SINE', color: '#00d4ff', type: 'sine', label: 'SINE' },
-  { id: 1, name: 'SAW', color: '#ff2d55', type: 'sawtooth', label: 'SAW' },
-  { id: 2, name: 'SQR', color: '#ffd60a', type: 'square', label: 'SQUARE' },
-  { id: 3, name: 'TRI', color: '#00e5a0', type: 'triangle', label: 'TRI' },
-  { id: 4, name: 'NOISE', color: '#bf5af2', type: 'noise', label: 'NOISE' },
-  { id: 5, name: 'FM', color: '#ff6b2b', type: 'fm', label: 'FM' },
+  { id: 0, name: 'PIANO', color: '#ffd9a0', type: 'piano', label: 'PIANO' },
+  { id: 1, name: 'SINE', color: '#00d4ff', type: 'sine', label: 'SINE' },
+  { id: 2, name: 'SAW', color: '#ff2d55', type: 'sawtooth', label: 'SAW' },
+  { id: 3, name: 'SQR', color: '#ffd60a', type: 'square', label: 'SQUARE' },
+  { id: 4, name: 'TRI', color: '#00e5a0', type: 'triangle', label: 'TRI' },
+  { id: 5, name: 'NOISE', color: '#bf5af2', type: 'noise', label: 'NOISE' },
+  { id: 6, name: 'FM', color: '#ff6b2b', type: 'fm', label: 'FM' },
 ]
 
-type Point = { x: number; y: number }
+// Diametro del trazo por presion (lapiz optico real, o velocidad como proxy
+// de presion en dedo/mouse — mas lento = mas grueso, como un aerografo).
+const MIN_WIDTH = 1.5
+const MAX_WIDTH = 13
+const widthFromPressure = (p: number) => MIN_WIDTH + p * (MAX_WIDTH - MIN_WIDTH)
+
+// Escala pentatonica mayor (semitonos desde la raiz) — cualquier trazo cae
+// en una nota de esta escala, asi que dos alturas cualquiera siempre suenan
+// bien juntas en vez de un barrido continuo tipo sirena.
+const SCALE_ROOT_FREQ = 130.81 // C3
+const SCALE_INTERVALS = [0, 2, 4, 7, 9]
+
+type Point = { x: number; y: number; pressure: number }
 type Stroke = { inst: number; color: string; points: Point[] }
 
 export default function DrawSynthPage() {
@@ -76,23 +89,26 @@ export default function DrawSynthPage() {
 
     const drawStroke = (s: Stroke) => {
       if (s.points.length < 2) return
-      dc.beginPath()
-      dc.moveTo(s.points[0].x, s.points[0].y)
-      for (let i = 1; i < s.points.length; i++) dc.lineTo(s.points[i].x, s.points[i].y)
       dc.strokeStyle = s.color
-      dc.lineWidth = 2.5
       dc.lineCap = 'round'
       dc.lineJoin = 'round'
       dc.shadowColor = s.color
       dc.shadowBlur = 10
-      dc.stroke()
+      for (let i = 1; i < s.points.length; i++) {
+        const a = s.points[i - 1], b = s.points[i]
+        dc.lineWidth = widthFromPressure((a.pressure + b.pressure) / 2)
+        dc.beginPath()
+        dc.moveTo(a.x, a.y)
+        dc.lineTo(b.x, b.y)
+        dc.stroke()
+      }
       dc.shadowBlur = 0
 
       dc.fillStyle = s.color
       s.points.forEach((p, i) => {
         if (i % 4 === 0) {
           dc.beginPath()
-          dc.arc(p.x, p.y, 1.5, 0, Math.PI * 2)
+          dc.arc(p.x, p.y, 1 + widthFromPressure(p.pressure) * 0.2, 0, Math.PI * 2)
           dc.fill()
         }
       })
@@ -117,12 +133,24 @@ export default function DrawSynthPage() {
       audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
     }
 
-    // y (0=top=high, H=bottom=low) -> frecuencia, escala logaritmica 80Hz-2400Hz
+    // y (0=top=high, H=bottom=low) -> frecuencia, escala logaritmica 80Hz-2400Hz,
+    // cuantizada a la pentatonica mayor para que cualquier trazo suene melodico
     const yToFreq = (y: number) => {
       const H = drawCanvas.height
       const t = 1 - y / H
       const minF = 80, maxF = 2400
-      return minF * Math.pow(maxF / minF, t)
+      const rawFreq = minF * Math.pow(maxF / minF, t)
+
+      const semitones = 12 * Math.log2(rawFreq / SCALE_ROOT_FREQ)
+      const octave = Math.floor(semitones / 12)
+      const remainder = semitones - octave * 12
+      let closest = SCALE_INTERVALS[0]
+      let minDiff = Infinity
+      for (const interval of SCALE_INTERVALS) {
+        const diff = Math.abs(remainder - interval)
+        if (diff < minDiff) { minDiff = diff; closest = interval }
+      }
+      return SCALE_ROOT_FREQ * Math.pow(2, (octave * 12 + closest) / 12)
     }
 
     const yToGain = (y: number) => {
@@ -140,7 +168,7 @@ export default function DrawSynthPage() {
       return buf
     }
 
-    const playNote = (instId: number, freq: number, gain: number, startTime: number, duration: number) => {
+    const playNote = (instId: number, freq: number, gain: number, startTime: number, duration: number, velocity = 1) => {
       const ctx = audioCtx!
       const inst = INSTRUMENTS[instId]
       const g = ctx.createGain()
@@ -149,10 +177,36 @@ export default function DrawSynthPage() {
 
       const t = startTime
       const dur = Math.max(0.04, duration)
+      const finalGain = gain * (0.4 + velocity * 0.6)
+
+      if (inst.type === 'piano') {
+        // Sintesis aditiva (fundamental + armonicos con amplitud decreciente,
+        // como las cuerdas de un piano) + envolvente percusiva sin sustain:
+        // ataque rapido, decaimiento natural, nada de "pad" sostenido.
+        const pianoDur = dur * 1.4
+        g.gain.setValueAtTime(0.0001, t)
+        g.gain.linearRampToValueAtTime(finalGain, t + 0.006)
+        g.gain.exponentialRampToValueAtTime(0.0001, t + pianoDur)
+
+        const harmonics = [1, 2, 3, 4, 5, 6]
+        const amps = [1, 0.55, 0.3, 0.18, 0.1, 0.05]
+        harmonics.forEach((h, i) => {
+          const osc = ctx.createOscillator()
+          osc.type = 'sine'
+          osc.frequency.setValueAtTime(freq * h, t)
+          const hg = ctx.createGain()
+          hg.gain.setValueAtTime(amps[i], t)
+          osc.connect(hg)
+          hg.connect(g)
+          osc.start(t)
+          osc.stop(t + pianoDur + 0.05)
+        })
+        return
+      }
 
       g.gain.setValueAtTime(0.001, t)
-      g.gain.linearRampToValueAtTime(gain, t + 0.01)
-      g.gain.setValueAtTime(gain, t + dur * 0.6)
+      g.gain.linearRampToValueAtTime(finalGain, t + 0.01)
+      g.gain.setValueAtTime(finalGain, t + dur * 0.6)
       g.gain.exponentialRampToValueAtTime(0.001, t + dur)
 
       if (inst.type === 'noise') {
@@ -197,7 +251,7 @@ export default function DrawSynthPage() {
 
       sorted.forEach((p, i) => {
         const tOffset = (i / sorted.length) * totalDur
-        playNote(s.inst, yToFreq(p.y), yToGain(p.y), now + tOffset, noteDur * 1.6)
+        playNote(s.inst, yToFreq(p.y), yToGain(p.y), now + tOffset, noteDur * 1.6, p.pressure)
       })
     }
 
@@ -220,7 +274,7 @@ export default function DrawSynthPage() {
         const noteDur = 0.12
         sorted.forEach(p => {
           const tOffset = (p.x / W) * totalDur
-          playNote(s.inst, yToFreq(p.y), yToGain(p.y), startTime + tOffset, noteDur)
+          playNote(s.inst, yToFreq(p.y), yToGain(p.y), startTime + tOffset, noteDur, p.pressure)
         })
       })
 
@@ -240,48 +294,74 @@ export default function DrawSynthPage() {
       requestAnimationFrame(animPlayhead)
     }
 
-    const getPos = (e: MouseEvent | TouchEvent): Point => {
+    const getPos = (e: PointerEvent) => {
       const r = drawCanvas.getBoundingClientRect()
-      if ('touches' in e) return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }
-      return { x: (e as MouseEvent).clientX - r.left, y: (e as MouseEvent).clientY - r.top }
+      return { x: e.clientX - r.left, y: e.clientY - r.top }
     }
 
-    const startDraw = (e: MouseEvent | TouchEvent) => {
+    // Presion real del lapiz optico si esta disponible; para dedo/mouse (que
+    // no reportan presion util) se deriva de la velocidad del trazo: mas
+    // lento = mas presion, como un aerografo digital.
+    let lastMoveTime = 0
+    let lastMoveX = 0
+    let lastMoveY = 0
+    const MAX_SPEED = 1.5 // px/ms de referencia para saturar la presion minima
+
+    const computePressure = (e: PointerEvent, x: number, y: number) => {
+      if (e.pointerType === 'pen' && e.pressure > 0) return e.pressure
+      const now = performance.now()
+      const dt = Math.max(1, now - lastMoveTime)
+      const dist = Math.hypot(x - lastMoveX, y - lastMoveY)
+      const speed = dist / dt
+      lastMoveTime = now
+      lastMoveX = x
+      lastMoveY = y
+      const norm = Math.min(1, speed / MAX_SPEED)
+      return 1 - norm * 0.75
+    }
+
+    const startDraw = (e: PointerEvent) => {
       if (isPlaying) return
       e.preventDefault()
       initAudio()
       isDrawing = true
+      drawCanvas.setPointerCapture(e.pointerId)
       const pos = getPos(e)
+      lastMoveTime = performance.now()
+      lastMoveX = pos.x
+      lastMoveY = pos.y
+      const pressure = e.pointerType === 'pen' && e.pressure > 0 ? e.pressure : 0.5
       const inst = INSTRUMENTS[selectedInstRef.current]
-      currentStroke = { inst: selectedInstRef.current, color: inst.color, points: [pos] }
+      currentStroke = { inst: selectedInstRef.current, color: inst.color, points: [{ ...pos, pressure }] }
       setPbState('drawing')
-      dc.beginPath()
-      dc.moveTo(pos.x, pos.y)
     }
 
-    const moveDraw = (e: MouseEvent | TouchEvent) => {
+    const moveDraw = (e: PointerEvent) => {
       if (!isDrawing || !currentStroke) return
       e.preventDefault()
       const pos = getPos(e)
-      currentStroke.points.push(pos)
+      const pressure = computePressure(e, pos.x, pos.y)
+      const prev = currentStroke.points[currentStroke.points.length - 1]
+      currentStroke.points.push({ ...pos, pressure })
 
-      dc.lineTo(pos.x, pos.y)
       dc.strokeStyle = currentStroke.color
-      dc.lineWidth = 2.5
       dc.lineCap = 'round'
       dc.lineJoin = 'round'
       dc.shadowColor = currentStroke.color
       dc.shadowBlur = 8
-      dc.stroke()
+      dc.lineWidth = widthFromPressure((prev.pressure + pressure) / 2)
       dc.beginPath()
-      dc.moveTo(pos.x, pos.y)
+      dc.moveTo(prev.x, prev.y)
+      dc.lineTo(pos.x, pos.y)
+      dc.stroke()
     }
 
-    const endDraw = (e: MouseEvent | TouchEvent) => {
+    const endDraw = (e: PointerEvent) => {
       if (!isDrawing) return
       e.preventDefault()
       isDrawing = false
       dc.shadowBlur = 0
+      if (drawCanvas.hasPointerCapture(e.pointerId)) drawCanvas.releasePointerCapture(e.pointerId)
 
       if (currentStroke && currentStroke.points.length > 1) {
         const pts = currentStroke.points
@@ -299,12 +379,10 @@ export default function DrawSynthPage() {
       setPbState('ready')
     }
 
-    drawCanvas.addEventListener('mousedown', startDraw)
-    drawCanvas.addEventListener('mousemove', moveDraw)
-    drawCanvas.addEventListener('mouseup', endDraw)
-    drawCanvas.addEventListener('touchstart', startDraw, { passive: false })
-    drawCanvas.addEventListener('touchmove', moveDraw, { passive: false })
-    drawCanvas.addEventListener('touchend', endDraw, { passive: false })
+    drawCanvas.addEventListener('pointerdown', startDraw)
+    drawCanvas.addEventListener('pointermove', moveDraw)
+    drawCanvas.addEventListener('pointerup', endDraw)
+    drawCanvas.addEventListener('pointercancel', endDraw)
     window.addEventListener('resize', resize)
     resize()
 
@@ -317,12 +395,10 @@ export default function DrawSynthPage() {
     ;(drawCanvas as any)._playAll = playAll
 
     return () => {
-      drawCanvas.removeEventListener('mousedown', startDraw)
-      drawCanvas.removeEventListener('mousemove', moveDraw)
-      drawCanvas.removeEventListener('mouseup', endDraw)
-      drawCanvas.removeEventListener('touchstart', startDraw)
-      drawCanvas.removeEventListener('touchmove', moveDraw)
-      drawCanvas.removeEventListener('touchend', endDraw)
+      drawCanvas.removeEventListener('pointerdown', startDraw)
+      drawCanvas.removeEventListener('pointermove', moveDraw)
+      drawCanvas.removeEventListener('pointerup', endDraw)
+      drawCanvas.removeEventListener('pointercancel', endDraw)
       window.removeEventListener('resize', resize)
       audioCtx?.close()
     }
