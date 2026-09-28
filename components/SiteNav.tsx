@@ -203,11 +203,11 @@ export default function SiteNav() {
         }}>
           <SessionBlock compact />
         </div>
-        <Link href="/npos" style={{
+        <Link href="/shop" style={{
           fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 3, textDecoration: 'none',
           border: '1px solid #00d4ff66', padding: '8px 16px', flexShrink: 0
         }}>
-          ACCESS
+          TIENDA
         </Link>
         <button
           className="site-nav-toggle"
