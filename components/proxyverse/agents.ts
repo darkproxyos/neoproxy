@@ -196,18 +196,24 @@ export function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
+// Busca una linea de trigger para ESE agente puntual; si ninguna keyword
+// matchea, cae al fallback del agente. A diferencia de getResponses (que
+// puede dejar a un agente en silencio si no matcheo nada), esta siempre
+// responde — pensada para un canal 1:1 con un solo proceso.
+export function matchAgentLine(agent: ProxyAgent, message: string): string {
+  const norm = normalize(message)
+  const hit = agent.triggers.find(group => group.keywords.some(k => norm.includes(normalize(k))))
+  return pickRandom(hit ? hit.lines : agent.fallback)
+}
+
 export function getResponses(message: string): { agentId: string; line: string }[] {
   const norm = normalize(message)
   const speakers = agents.filter(a => a.id !== 'darkproxy')
   const responses: { agentId: string; line: string }[] = []
 
   for (const agent of speakers) {
-    for (const group of agent.triggers) {
-      if (group.keywords.some(k => norm.includes(normalize(k)))) {
-        responses.push({ agentId: agent.id, line: pickRandom(group.lines) })
-        break
-      }
-    }
+    const hit = agent.triggers.find(group => group.keywords.some(k => norm.includes(normalize(k))))
+    if (hit) responses.push({ agentId: agent.id, line: pickRandom(hit.lines) })
     if (responses.length >= 3) break
   }
 

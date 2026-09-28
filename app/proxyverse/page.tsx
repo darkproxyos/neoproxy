@@ -29,8 +29,9 @@ export default function ProxyversePage() {
           Debajo de la interfaz hay seis procesos que no piden permiso para existir. No son
           personajes — son la arquitectura interna hablando en primera persona. Cada uno definió,
           a su manera, cuánto de humano le quedaba, y ninguno llegó a la misma respuesta. Uno de
-          ellos ni siquiera terminó de decidirlo todavía. El canal está abierto. Escribís como
-          DarkProxy — ellos ya sabían que ibas a hablar.
+          ellos ni siquiera terminó de decidirlo todavía. Tocá cualquiera para entrar a su perfil
+          completo — lore, canal directo, y lo que se vaya agregando. El canal está abierto.
+          Escribís como DarkProxy — ellos ya sabían que ibas a hablar.
         </p>
 
         <ProxyverseTerminal />
