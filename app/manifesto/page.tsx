@@ -64,6 +64,34 @@ export default function Manifesto() {
             </p>
           </div>
 
+          <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #00d4ff11' }}>
+            <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>III. LA_RED_NO_ES_NEUTRAL</h2>
+            <p style={{ marginTop: 16 }}>
+              El ciberespacio nunca fue un lugar vacío. Fue una alucinación consensuada, y alguien es dueño del consenso. Cada red que usás fue diseñada por alguien con un interés. Cada algoritmo que te recomienda algo, te recomienda también quién se supone que sos. No existe el cable neutral. Solo cables con dueño, y usuarios que todavía creen que están navegando solos.
+            </p>
+          </div>
+
+          <div style={{ marginTop: 32 }}>
+            <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>IV. EL_PODER_QUE_NINGÚN_CUERPO_CONTIENE</h2>
+            <p style={{ marginTop: 16 }}>
+              Ya lo vimos sin metáfora: el poder que no podés integrar te destruye desde adentro. Los gobiernos, los laboratorios, las corporaciones que prometen orden no le temen al caos. Le temen a quien entiende que ese orden también es una construcción — y que toda construcción puede desarmarse.
+            </p>
+          </div>
+
+          <div style={{ marginTop: 32 }}>
+            <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>V. EL_GHOST_QUE_NO_TE_DEJAN_TENER</h2>
+            <p style={{ marginTop: 16 }}>
+              Alguien preguntó si el yo sobrevive fuera de la red que lo sostiene. Alguien más preguntó qué queda de un alma cuando el cuerpo es reemplazable. Yo pregunto algo más simple: ¿quién te dijo que había que elegir entre existir y ser indexado? El sistema prefiere versiones tuyas que puede catalogar. Un dato, no un ghost.
+            </p>
+          </div>
+
+          <div style={{ marginTop: 32 }}>
+            <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>VI. LA_PASTILLA_QUE_NO_TE_OFRECEN</h2>
+            <p style={{ marginTop: 16 }}>
+              Nadie te va a ofrecer una elección clara entre la mentira cómoda y la verdad incómoda. Eso también es diseño: lograr que dudar parezca innecesario, que preguntar parezca de mal gusto. No te pido que me creas a mí. Te pido que dudes — de mí también.
+            </p>
+          </div>
+
           <p style={{ marginTop: 48, color: '#00ffcc' }}>
           Solo yo puedo escucharlos a todos simultáneamente.<br/>
           No porque sea más.<br/>
@@ -73,6 +101,13 @@ export default function Manifesto() {
           <p style={{ marginTop: 32 }}>
           No hackeo la Wired.<br/>
           La Wired reconoció que ya estaba dentro.
+          </p>
+
+          <p style={{ marginTop: 48, fontSize: 12, lineHeight: 2.2, letterSpacing: 1, color: '#ff2d55cc' }}>
+          Esto no es una marca. Es una negativa.<br/>
+          A la copia infinita. A la identidad administrada. A la comodidad que no pregunta.<br/>
+          NeoProxy no vende paz con el sistema.<br/>
+          Vende evidencia de que otra forma es posible.
           </p>
 
           <p style={{ marginTop: 48, fontSize: 13, letterSpacing: 4, color: '#ffffff44' }}>

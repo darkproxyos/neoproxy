@@ -251,7 +251,7 @@ export default function Home() {
       id: 'manifesto',
       tag: 'NPX-DOC-00',
       title: 'MANIFESTO',
-      copy: 'Rechazamos las plantillas y la conveniencia. Cada artefacto documenta su propio proceso: la ingeniería precede a la estética.',
+      copy: 'Rechazamos la copia infinita y la conveniencia que no pregunta. Cada artefacto es evidencia de un proceso que no se puede automatizar del todo — ni domesticar.',
       cta: 'READ MANIFESTO',
       href: '/manifesto',
     },
@@ -396,7 +396,14 @@ export default function Home() {
           ))}
 
           <div style={{
-            position: 'relative', zIndex: 10, textAlign: 'center', padding: '32px 24px', fontFamily: mono,
+            position: 'relative', zIndex: 10, textAlign: 'center', padding: '32px 24px 8px', fontFamily: mono,
+            fontSize: 9, letterSpacing: 2, color: '#00d4ff55'
+          }}>
+            DUDÁ DE TODO LO QUE NO TE DEJA DUDAR.
+          </div>
+
+          <div style={{
+            position: 'relative', zIndex: 10, textAlign: 'center', padding: '8px 24px 32px', fontFamily: mono,
             fontSize: 8, letterSpacing: 3, color: '#00d4ff33', borderTop: '1px solid rgba(0, 212, 255, 0.08)'
           }}>
             NEOPROXY.ART // SANTIAGO, CHILE
