@@ -68,6 +68,8 @@ export default function DrawSynthPage() {
     const gc = gridCanvas.getContext('2d')!
 
     let audioCtx: AudioContext | null = null
+    let masterOut: GainNode | null = null
+    let reverbSend: GainNode | null = null
     let strokes: Stroke[] = []
     let currentStroke: Stroke | null = null
     let isDrawing = false
@@ -104,31 +106,50 @@ export default function DrawSynthPage() {
       gc.setLineDash([])
     }
 
+    // Aerografo: nube de particulas semitransparentes de radio y densidad
+    // variable, como una lata de spray, en vez de una linea solida de ancho
+    // fijo — mas presion = nube mas ancha y mas densa.
+    const spatter = (x: number, y: number, pressure: number, sizeMult: number, color: string) => {
+      const radius = widthFromPressure(pressure) * sizeMult
+      const density = 5 + Math.round(pressure * 9)
+      dc.fillStyle = color
+      for (let j = 0; j < density; j++) {
+        const angle = Math.random() * Math.PI * 2
+        const dist = Math.sqrt(Math.random()) * radius
+        const r = 0.5 + Math.random() * 1.6
+        dc.globalAlpha = 0.1 + Math.random() * 0.3
+        dc.beginPath()
+        dc.arc(x + Math.cos(angle) * dist, y + Math.sin(angle) * dist, r, 0, Math.PI * 2)
+        dc.fill()
+      }
+      dc.globalAlpha = 1
+    }
+
+    // Aerografa una pasada continua entre dos puntos (interpolando cada ~4px)
+    // para que el spray no deje huecos aunque el gesto se mueva rapido.
+    const spraySegment = (a: Point, b: Point, color: string, sizeMult: number) => {
+      const dist = Math.hypot(b.x - a.x, b.y - a.y)
+      const steps = Math.max(1, Math.round(dist / 4))
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps
+        spatter(
+          a.x + (b.x - a.x) * t,
+          a.y + (b.y - a.y) * t,
+          a.pressure + (b.pressure - a.pressure) * t,
+          sizeMult,
+          color,
+        )
+      }
+    }
+
     const drawStroke = (s: Stroke) => {
       if (s.points.length < 2) return
-      dc.strokeStyle = s.color
-      dc.lineCap = 'round'
-      dc.lineJoin = 'round'
       dc.shadowColor = s.color
-      dc.shadowBlur = 10
+      dc.shadowBlur = 4
       for (let i = 1; i < s.points.length; i++) {
-        const a = s.points[i - 1], b = s.points[i]
-        dc.lineWidth = widthFromPressure((a.pressure + b.pressure) / 2) * s.sizeMult
-        dc.beginPath()
-        dc.moveTo(a.x, a.y)
-        dc.lineTo(b.x, b.y)
-        dc.stroke()
+        spraySegment(s.points[i - 1], s.points[i], s.color, s.sizeMult)
       }
       dc.shadowBlur = 0
-
-      dc.fillStyle = s.color
-      s.points.forEach((p, i) => {
-        if (i % 4 === 0) {
-          dc.beginPath()
-          dc.arc(p.x, p.y, (1 + widthFromPressure(p.pressure) * 0.2) * s.sizeMult, 0, Math.PI * 2)
-          dc.fill()
-        }
-      })
     }
 
     const redrawAll = () => {
@@ -148,6 +169,31 @@ export default function DrawSynthPage() {
     const initAudio = () => {
       if (audioCtx) return
       audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const ctx = audioCtx
+
+      masterOut = ctx.createGain()
+      masterOut.gain.value = 0.9
+      masterOut.connect(ctx.destination)
+
+      // Reverb sutil con impulso sintetico (sin archivo externo) que le da
+      // calidez y espacio al sonido en vez de la sequedad de ir directo al
+      // destino — la diferencia entre sonar "de laboratorio" o agradable.
+      const convolver = ctx.createConvolver()
+      const irLen = Math.floor(ctx.sampleRate * 1.6)
+      const impulse = ctx.createBuffer(2, irLen, ctx.sampleRate)
+      for (let ch = 0; ch < 2; ch++) {
+        const data = impulse.getChannelData(ch)
+        for (let i = 0; i < irLen; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / irLen, 2.2)
+      }
+      convolver.buffer = impulse
+
+      reverbSend = ctx.createGain()
+      reverbSend.gain.value = 0.3
+      const reverbOut = ctx.createGain()
+      reverbOut.gain.value = 0.45
+      reverbSend.connect(convolver)
+      convolver.connect(reverbOut)
+      reverbOut.connect(masterOut)
     }
 
     // y (0=top=high, H=bottom=low) -> frecuencia, escala logaritmica 80Hz-2400Hz,
@@ -187,12 +233,15 @@ export default function DrawSynthPage() {
       return buf
     }
 
-    const playNote = (instId: number, freq: number, gain: number, startTime: number, duration: number, velocity = 1) => {
+    const playNote = (instId: number, freq: number, gain: number, startTime: number, duration: number, velocity = 1, pan = 0) => {
       const ctx = audioCtx!
       const inst = INSTRUMENTS[instId]
       const g = ctx.createGain()
       const comp = ctx.createDynamicsCompressor()
-      g.connect(comp); comp.connect(ctx.destination)
+      const panner = ctx.createStereoPanner()
+      panner.pan.setValueAtTime(Math.max(-1, Math.min(1, pan)), startTime)
+      g.connect(comp); comp.connect(panner); panner.connect(masterOut!)
+      g.connect(reverbSend!)
 
       const t = startTime
       const dur = Math.max(0.04, duration)
@@ -304,11 +353,17 @@ export default function DrawSynthPage() {
         osc.connect(filter); filter.connect(g)
         osc.start(t); osc.stop(t + dur + 0.01)
       } else {
+        // Pasabajos suave para limar los armonicos altos de saw/square, que
+        // sin filtrar suenan mas a sirena que a nota musical.
         const osc = ctx.createOscillator()
         osc.type = inst.type
         osc.frequency.setValueAtTime(freq, t)
         osc.frequency.linearRampToValueAtTime(freq * 0.98, t + dur)
-        osc.connect(g)
+        const filter = ctx.createBiquadFilter()
+        filter.type = 'lowpass'
+        filter.frequency.setValueAtTime(Math.min(9000, freq * 6), t)
+        filter.Q.value = 0.6
+        osc.connect(filter); filter.connect(g)
         osc.start(t); osc.stop(t + dur + 0.01)
       }
     }
@@ -322,7 +377,8 @@ export default function DrawSynthPage() {
 
       sorted.forEach((p, i) => {
         const tOffset = (i / sorted.length) * totalDur
-        playNote(s.inst, yToFreq(p.y), yToGain(p.y), now + tOffset, noteDur * 1.6, p.pressure)
+        const pan = (p.x / drawCanvas.width) * 2 - 1
+        playNote(s.inst, yToFreq(p.y), yToGain(p.y), now + tOffset, noteDur * 1.6, p.pressure, pan)
       })
     }
 
@@ -345,7 +401,8 @@ export default function DrawSynthPage() {
         const noteDur = 0.12
         sorted.forEach(p => {
           const tOffset = (p.x / W) * totalDur
-          playNote(s.inst, yToFreq(p.y), yToGain(p.y), startTime + tOffset, noteDur, p.pressure)
+          const pan = (p.x / W) * 2 - 1
+          playNote(s.inst, yToFreq(p.y), yToGain(p.y), startTime + tOffset, noteDur, p.pressure, pan)
         })
       })
 
@@ -415,18 +472,13 @@ export default function DrawSynthPage() {
       const pos = getPos(e)
       const pressure = computePressure(e, pos.x, pos.y)
       const prev = currentStroke.points[currentStroke.points.length - 1]
-      currentStroke.points.push({ ...pos, pressure })
+      const point: Point = { ...pos, pressure }
+      currentStroke.points.push(point)
 
-      dc.strokeStyle = currentStroke.color
-      dc.lineCap = 'round'
-      dc.lineJoin = 'round'
       dc.shadowColor = currentStroke.color
-      dc.shadowBlur = 8
-      dc.lineWidth = widthFromPressure((prev.pressure + pressure) / 2) * currentStroke.sizeMult
-      dc.beginPath()
-      dc.moveTo(prev.x, prev.y)
-      dc.lineTo(pos.x, pos.y)
-      dc.stroke()
+      dc.shadowBlur = 4
+      spraySegment(prev, point, currentStroke.color, currentStroke.sizeMult)
+      dc.shadowBlur = 0
     }
 
     const endDraw = (e: PointerEvent) => {
