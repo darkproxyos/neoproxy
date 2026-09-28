@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const mono = "'Space Mono', monospace"
 
-type Instrument = { id: number; name: string; color: string; type: OscillatorType | 'noise' | 'fm' | 'piano'; label: string }
+type Instrument = { id: number; name: string; color: string; type: OscillatorType | 'piano' | 'flute' | 'violin'; label: string }
 
 const INSTRUMENTS: Instrument[] = [
   { id: 0, name: 'PIANO', color: '#ffd9a0', type: 'piano', label: 'PIANO' },
@@ -12,8 +12,8 @@ const INSTRUMENTS: Instrument[] = [
   { id: 2, name: 'SAW', color: '#ff2d55', type: 'sawtooth', label: 'SAW' },
   { id: 3, name: 'SQR', color: '#ffd60a', type: 'square', label: 'SQUARE' },
   { id: 4, name: 'TRI', color: '#00e5a0', type: 'triangle', label: 'TRI' },
-  { id: 5, name: 'NOISE', color: '#bf5af2', type: 'noise', label: 'NOISE' },
-  { id: 6, name: 'FM', color: '#ff6b2b', type: 'fm', label: 'FM' },
+  { id: 5, name: 'FLUTE', color: '#d9f2ff', type: 'flute', label: 'FLAUTA' },
+  { id: 6, name: 'VIOLIN', color: '#c97a3d', type: 'violin', label: 'VIOLÍN' },
 ]
 
 // Diametro del trazo por presion (lapiz optico real, o velocidad como proxy
@@ -207,12 +207,17 @@ export default function DrawSynthPage() {
         g.gain.linearRampToValueAtTime(finalGain, t + 0.006)
         g.gain.exponentialRampToValueAtTime(0.0001, t + pianoDur)
 
+        // Inarmonicidad tipica de una cuerda real (los armonicos se estiran
+        // levemente hacia agudo cuanto mas alto el orden) en vez de multiplos
+        // exactos, que es lo que hace sonar "digital" a una aditiva pura.
+        const B = 0.0004
         const harmonics = [1, 2, 3, 4, 5, 6]
         const amps = [1, 0.55, 0.3, 0.18, 0.1, 0.05]
         harmonics.forEach((h, i) => {
+          const stretched = h * Math.sqrt(1 + B * h * h)
           const osc = ctx.createOscillator()
           osc.type = 'sine'
-          osc.frequency.setValueAtTime(freq * h, t)
+          osc.frequency.setValueAtTime(freq * stretched, t)
           const hg = ctx.createGain()
           hg.gain.setValueAtTime(amps[i], t)
           osc.connect(hg)
@@ -220,37 +225,84 @@ export default function DrawSynthPage() {
           osc.start(t)
           osc.stop(t + pianoDur + 0.05)
         })
+
+        // Golpe del martillo: un chasquido brevisimo de ruido filtrado en
+        // el ataque, que es lo que distingue a una cuerda percutida de un
+        // tono puro.
+        const hammer = ctx.createBufferSource()
+        hammer.buffer = noiseBuffer()
+        const hammerFilter = ctx.createBiquadFilter()
+        hammerFilter.type = 'highpass'
+        hammerFilter.frequency.setValueAtTime(freq * 3, t)
+        const hammerGain = ctx.createGain()
+        hammerGain.gain.setValueAtTime(0.15, t)
+        hammerGain.gain.exponentialRampToValueAtTime(0.001, t + 0.02)
+        hammer.connect(hammerFilter); hammerFilter.connect(hammerGain); hammerGain.connect(g)
+        hammer.start(t); hammer.stop(t + 0.03)
         return
       }
 
+      // Ataque mas lento para flauta/violin (el aire o el arco tardan un
+      // poco en poner la nota en marcha) que para las ondas electronicas.
+      const attackTime = inst.type === 'flute' ? 0.05 : inst.type === 'violin' ? 0.07 : 0.01
       g.gain.setValueAtTime(0.001, t)
-      g.gain.linearRampToValueAtTime(finalGain, t + 0.01)
+      g.gain.linearRampToValueAtTime(finalGain, t + attackTime)
       g.gain.setValueAtTime(finalGain, t + dur * 0.6)
       g.gain.exponentialRampToValueAtTime(0.001, t + dur)
 
-      if (inst.type === 'noise') {
-        const n = ctx.createBufferSource()
-        n.buffer = noiseBuffer()
-        const bp = ctx.createBiquadFilter()
-        bp.type = 'bandpass'
-        bp.frequency.setValueAtTime(freq, t)
-        bp.Q.value = 3
-        n.connect(bp); bp.connect(g)
-        n.start(t); n.stop(t + dur + 0.01)
-      } else if (inst.type === 'fm') {
-        const carrier = ctx.createOscillator()
-        const modulator = ctx.createOscillator()
-        const modGain = ctx.createGain()
-        carrier.type = 'sine'
-        modulator.type = 'sine'
-        carrier.frequency.setValueAtTime(freq, t)
-        modulator.frequency.setValueAtTime(freq * 2.5, t)
-        modGain.gain.setValueAtTime(freq * 1.5, t)
-        modulator.connect(modGain)
-        modGain.connect(carrier.frequency)
-        carrier.connect(g)
-        carrier.start(t); carrier.stop(t + dur + 0.01)
-        modulator.start(t); modulator.stop(t + dur + 0.01)
+      if (inst.type === 'flute') {
+        const osc = ctx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, t)
+
+        // Vibrato sutil, como el temblor natural del aire soplado.
+        const vibrato = ctx.createOscillator()
+        vibrato.type = 'sine'
+        vibrato.frequency.setValueAtTime(5.5, t)
+        const vibratoGain = ctx.createGain()
+        vibratoGain.gain.setValueAtTime(freq * 0.008, t)
+        vibrato.connect(vibratoGain); vibratoGain.connect(osc.frequency)
+        vibrato.start(t); vibrato.stop(t + dur + 0.05)
+
+        // Soplido: ruido filtrado muy suave para dar textura de aire.
+        const breath = ctx.createBufferSource()
+        breath.buffer = noiseBuffer()
+        breath.loop = true
+        const breathFilter = ctx.createBiquadFilter()
+        breathFilter.type = 'bandpass'
+        breathFilter.frequency.setValueAtTime(freq * 2, t)
+        breathFilter.Q.value = 1.2
+        const breathGain = ctx.createGain()
+        breathGain.gain.setValueAtTime(0.05, t)
+        breath.connect(breathFilter); breathFilter.connect(breathGain); breathGain.connect(g)
+        breath.start(t); breath.stop(t + dur + 0.01)
+
+        osc.connect(g)
+        osc.start(t); osc.stop(t + dur + 0.01)
+      } else if (inst.type === 'violin') {
+        const osc = ctx.createOscillator()
+        osc.type = 'sawtooth'
+        osc.frequency.setValueAtTime(freq, t)
+
+        // Vibrato mas marcado que el de la flauta, como el de un arco sobre
+        // la cuerda, y entra un instante despues del ataque del arco.
+        const vibrato = ctx.createOscillator()
+        vibrato.type = 'sine'
+        vibrato.frequency.setValueAtTime(5, t)
+        const vibratoGain = ctx.createGain()
+        vibratoGain.gain.setValueAtTime(freq * 0.012, t)
+        vibrato.connect(vibratoGain); vibratoGain.connect(osc.frequency)
+        vibrato.start(t + 0.06); vibrato.stop(t + dur + 0.05)
+
+        // Filtro que suaviza el aserrado del sawtooth y simula el cuerpo
+        // resonante del instrumento.
+        const filter = ctx.createBiquadFilter()
+        filter.type = 'lowpass'
+        filter.frequency.setValueAtTime(freq * 4, t)
+        filter.Q.value = 1
+
+        osc.connect(filter); filter.connect(g)
+        osc.start(t); osc.stop(t + dur + 0.01)
       } else {
         const osc = ctx.createOscillator()
         osc.type = inst.type
