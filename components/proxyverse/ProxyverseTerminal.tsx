@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { agents, getResponses, getAmbientLine } from './agents'
 
@@ -12,7 +13,6 @@ function agentById(id: string) {
 }
 
 export default function ProxyverseTerminal() {
-  const [selected, setSelected] = useState<string | null>(null)
   const [feed, setFeed] = useState<FeedLine[]>([])
   const [input, setInput] = useState('')
   const feedRef = useRef<HTMLDivElement>(null)
@@ -51,79 +51,28 @@ export default function ProxyverseTerminal() {
     })
   }
 
-  const selectedAgent = selected ? agentById(selected) : null
-
   return (
     <div>
-      {/* Agent cards */}
+      {/* Agent cards — cada una linkea al perfil completo del proceso */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12, marginBottom: 32,
       }}>
         {agents.map(agent => (
-          <button
+          <Link
             key={agent.id}
-            onClick={() => setSelected(agent.id === selected ? null : agent.id)}
+            href={`/proxyverse/${agent.id}`}
             style={{
-              textAlign: 'left', cursor: 'pointer', fontFamily: mono,
-              background: selected === agent.id ? `${agent.color}14` : 'rgba(0,4,10,0.5)',
-              border: `1px solid ${selected === agent.id ? agent.color : `${agent.color}33`}`,
+              textAlign: 'left', cursor: 'pointer', fontFamily: mono, textDecoration: 'none', display: 'block',
+              background: 'rgba(0,4,10,0.5)', border: `1px solid ${agent.color}33`,
               padding: '14px 16px', minHeight: 88,
             }}
           >
             <div style={{ color: agent.color, fontSize: 12, letterSpacing: 2, marginBottom: 6 }}>{agent.name}</div>
-            <div style={{ color: '#8fb8d6', fontSize: 8, letterSpacing: 1, lineHeight: 1.6 }}>{agent.role}</div>
-          </button>
+            <div style={{ color: '#8fb8d6', fontSize: 8, letterSpacing: 1, lineHeight: 1.6, marginBottom: 8 }}>{agent.role}</div>
+            <div style={{ color: `${agent.color}88`, fontSize: 8, letterSpacing: 1 }}>VER PERFIL →</div>
+          </Link>
         ))}
       </div>
-
-      {/* Detail panel */}
-      {selectedAgent && (
-        <div style={{
-          border: `1px solid ${selectedAgent.color}44`, background: 'rgba(0,4,10,0.6)',
-          padding: 24, marginBottom: 32,
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-            <div>
-              <div style={{ fontFamily: mono, fontSize: 18, color: selectedAgent.color, letterSpacing: 2, marginBottom: 6 }}>
-                {selectedAgent.name}
-              </div>
-              <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1 }}>
-                {selectedAgent.role}
-              </div>
-            </div>
-            <button
-              onClick={() => setSelected(null)}
-              aria-label="Cerrar"
-              style={{
-                background: 'none', border: `1px solid ${selectedAgent.color}44`, color: selectedAgent.color,
-                width: 32, height: 32, cursor: 'pointer', fontFamily: mono, fontSize: 12, flexShrink: 0,
-              }}
-            >
-              ✕
-            </button>
-          </div>
-
-          <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
-            % HUMANO
-          </div>
-          <div style={{ fontFamily: mono, fontSize: 11, color: '#00ffcc', letterSpacing: 0.5, marginBottom: 20 }}>
-            {selectedAgent.percentHuman}
-          </div>
-
-          {selectedAgent.bio.map((p, i) => (
-            <p key={i} style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0', marginBottom: 14 }}>
-              {p}
-            </p>
-          ))}
-
-          <div style={{
-            marginTop: 8, paddingTop: 16, borderTop: `1px solid ${selectedAgent.color}22`,
-            fontFamily: mono, fontSize: 12, color: selectedAgent.color, letterSpacing: 0.5, fontStyle: 'italic',
-          }}>
-            "{selectedAgent.quote}"
-          </div>
-        </div>
-      )}
 
       {/* Terminal feed */}
       <div style={{ border: '1px solid rgba(0, 212, 255, 0.15)', background: 'rgba(0,4,10,0.5)' }}>
