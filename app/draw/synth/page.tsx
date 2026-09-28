@@ -173,17 +173,33 @@ export default function DrawSynthPage() {
 
       masterOut = ctx.createGain()
       masterOut.gain.value = 0.9
-      masterOut.connect(ctx.destination)
+
+      // Pasabajos suave en la salida general: sin esto el conjunto suena
+      // demasiado brillante/digital, como si no hubiera aire ni distancia
+      // entre la fuente y el oido (lo que da esa sensacion "extraterrestre").
+      const masterFilter = ctx.createBiquadFilter()
+      masterFilter.type = 'lowpass'
+      masterFilter.frequency.value = 7200
+      masterFilter.Q.value = 0.4
+      masterOut.connect(masterFilter)
+      masterFilter.connect(ctx.destination)
 
       // Reverb sutil con impulso sintetico (sin archivo externo) que le da
       // calidez y espacio al sonido en vez de la sequedad de ir directo al
-      // destino — la diferencia entre sonar "de laboratorio" o agradable.
+      // destino. El ruido blanco puro suena metalico/artificial, asi que se
+      // filtra con un pasabajos con fuga (los agudos se apagan antes que los
+      // graves, como el aire de una sala real absorbiendo altas frecuencias).
       const convolver = ctx.createConvolver()
       const irLen = Math.floor(ctx.sampleRate * 1.6)
       const impulse = ctx.createBuffer(2, irLen, ctx.sampleRate)
       for (let ch = 0; ch < 2; ch++) {
         const data = impulse.getChannelData(ch)
-        for (let i = 0; i < irLen; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / irLen, 2.2)
+        let lp = 0
+        for (let i = 0; i < irLen; i++) {
+          const white = Math.random() * 2 - 1
+          lp += (white - lp) * 0.35
+          data[i] = lp * Math.pow(1 - i / irLen, 2.2)
+        }
       }
       convolver.buffer = impulse
 
@@ -252,27 +268,34 @@ export default function DrawSynthPage() {
         // como las cuerdas de un piano) + envolvente percusiva sin sustain:
         // ataque rapido, decaimiento natural, nada de "pad" sostenido.
         const pianoDur = dur * 1.4
-        g.gain.setValueAtTime(0.0001, t)
-        g.gain.linearRampToValueAtTime(finalGain, t + 0.006)
-        g.gain.exponentialRampToValueAtTime(0.0001, t + pianoDur)
+        g.gain.setValueAtTime(finalGain, t)
 
         // Inarmonicidad tipica de una cuerda real (los armonicos se estiran
         // levemente hacia agudo cuanto mas alto el orden) en vez de multiplos
         // exactos, que es lo que hace sonar "digital" a una aditiva pura.
+        // Ademas cada armonico decae de forma INDEPENDIENTE y mas rapido
+        // cuanto mas alto es — en una cuerda real los agudos se apagan antes
+        // que la fundamental, dandole al timbre un brillo inicial que se
+        // apaga hacia un tono mas calido. Sin esto todos los armonicos caen
+        // juntos y el timbre queda "congelado" durante toda la nota, que es
+        // lo que hace sonar artificial a una aditiva simple.
         const B = 0.0004
-        const harmonics = [1, 2, 3, 4, 5, 6]
-        const amps = [1, 0.55, 0.3, 0.18, 0.1, 0.05]
+        const harmonics = [1, 2, 3, 4, 5, 6, 7, 8]
+        const amps = [1, 0.5, 0.32, 0.2, 0.13, 0.09, 0.06, 0.04]
         harmonics.forEach((h, i) => {
           const stretched = h * Math.sqrt(1 + B * h * h)
           const osc = ctx.createOscillator()
           osc.type = 'sine'
           osc.frequency.setValueAtTime(freq * stretched, t)
           const hg = ctx.createGain()
-          hg.gain.setValueAtTime(amps[i], t)
+          const harmDecay = Math.max(0.08, pianoDur / Math.sqrt(h))
+          hg.gain.setValueAtTime(0.0001, t)
+          hg.gain.linearRampToValueAtTime(amps[i], t + 0.006)
+          hg.gain.exponentialRampToValueAtTime(0.0001, t + harmDecay)
           osc.connect(hg)
           hg.connect(g)
           osc.start(t)
-          osc.stop(t + pianoDur + 0.05)
+          osc.stop(t + harmDecay + 0.05)
         })
 
         // Golpe del martillo: un chasquido brevisimo de ruido filtrado en
@@ -304,13 +327,24 @@ export default function DrawSynthPage() {
         osc.type = 'sine'
         osc.frequency.setValueAtTime(freq, t)
 
+        // Un segundo armonico suave le da cuerpo al tono — una senoidal
+        // pura y sola suena a tono de prueba de laboratorio, no a flauta.
+        const osc2 = ctx.createOscillator()
+        osc2.type = 'sine'
+        osc2.frequency.setValueAtTime(freq * 2, t)
+        const osc2Gain = ctx.createGain()
+        osc2Gain.gain.setValueAtTime(0.18, t)
+        osc2.connect(osc2Gain); osc2Gain.connect(g)
+
         // Vibrato sutil, como el temblor natural del aire soplado.
         const vibrato = ctx.createOscillator()
         vibrato.type = 'sine'
         vibrato.frequency.setValueAtTime(5.5, t)
         const vibratoGain = ctx.createGain()
         vibratoGain.gain.setValueAtTime(freq * 0.008, t)
-        vibrato.connect(vibratoGain); vibratoGain.connect(osc.frequency)
+        vibrato.connect(vibratoGain)
+        vibratoGain.connect(osc.frequency)
+        vibratoGain.connect(osc2.frequency)
         vibrato.start(t); vibrato.stop(t + dur + 0.05)
 
         // Soplido: ruido filtrado muy suave para dar textura de aire.
@@ -328,30 +362,67 @@ export default function DrawSynthPage() {
 
         osc.connect(g)
         osc.start(t); osc.stop(t + dur + 0.01)
+        osc2.start(t); osc2.stop(t + dur + 0.01)
       } else if (inst.type === 'violin') {
-        const osc = ctx.createOscillator()
-        osc.type = 'sawtooth'
-        osc.frequency.setValueAtTime(freq, t)
+        // Dos sierras ligeramente desafinadas entre si (como varias fibras
+        // de la cuerda vibrando juntas) en vez de un oscilador unico y
+        // limpio, que suena a sierra electronica pura.
+        const osc1 = ctx.createOscillator()
+        osc1.type = 'sawtooth'
+        osc1.frequency.setValueAtTime(freq, t)
+        osc1.detune.setValueAtTime(-6, t)
+        const osc2 = ctx.createOscillator()
+        osc2.type = 'sawtooth'
+        osc2.frequency.setValueAtTime(freq, t)
+        osc2.detune.setValueAtTime(6, t)
 
-        // Vibrato mas marcado que el de la flauta, como el de un arco sobre
-        // la cuerda, y entra un instante despues del ataque del arco.
+        // Vibrato con una leve variacion aleatoria de velocidad, para que no
+        // suene a LFO perfectamente controlado por computadora.
         const vibrato = ctx.createOscillator()
         vibrato.type = 'sine'
-        vibrato.frequency.setValueAtTime(5, t)
+        vibrato.frequency.setValueAtTime(5 + Math.random() * 0.6, t)
         const vibratoGain = ctx.createGain()
-        vibratoGain.gain.setValueAtTime(freq * 0.012, t)
-        vibrato.connect(vibratoGain); vibratoGain.connect(osc.frequency)
+        vibratoGain.gain.setValueAtTime(freq * 0.01, t)
+        vibrato.connect(vibratoGain)
+        vibratoGain.connect(osc1.frequency)
+        vibratoGain.connect(osc2.frequency)
         vibrato.start(t + 0.06); vibrato.stop(t + dur + 0.05)
 
-        // Filtro que suaviza el aserrado del sawtooth y simula el cuerpo
-        // resonante del instrumento.
-        const filter = ctx.createBiquadFilter()
-        filter.type = 'lowpass'
-        filter.frequency.setValueAtTime(freq * 4, t)
-        filter.Q.value = 1
+        // Resonancias del cuerpo del violin en frecuencias FIJAS (no atadas
+        // a la nota tocada, como una caja de madera real): sin esto el
+        // filtro se movia con el tono y sonaba a barrido tipo ovni en vez de
+        // a caja de resonancia.
+        const body1 = ctx.createBiquadFilter()
+        body1.type = 'peaking'
+        body1.frequency.value = 290
+        body1.Q.value = 1.2
+        body1.gain.value = 6
+        const body2 = ctx.createBiquadFilter()
+        body2.type = 'peaking'
+        body2.frequency.value = 460
+        body2.Q.value = 1.4
+        body2.gain.value = 4
+        const bright = ctx.createBiquadFilter()
+        bright.type = 'lowpass'
+        bright.frequency.value = 6500
+        bright.Q.value = 0.5
 
-        osc.connect(filter); filter.connect(g)
-        osc.start(t); osc.stop(t + dur + 0.01)
+        // Ruido de arco: textura continua y suave de friccion bajo el tono.
+        const bow = ctx.createBufferSource()
+        bow.buffer = noiseBuffer()
+        bow.loop = true
+        const bowFilter = ctx.createBiquadFilter()
+        bowFilter.type = 'highpass'
+        bowFilter.frequency.value = 2500
+        const bowGain = ctx.createGain()
+        bowGain.gain.setValueAtTime(0.03, t)
+        bow.connect(bowFilter); bowFilter.connect(bowGain); bowGain.connect(g)
+        bow.start(t); bow.stop(t + dur + 0.01)
+
+        osc1.connect(body1); osc2.connect(body1)
+        body1.connect(body2); body2.connect(bright); bright.connect(g)
+        osc1.start(t); osc1.stop(t + dur + 0.01)
+        osc2.start(t); osc2.stop(t + dur + 0.01)
       } else {
         // Pasabajos suave para limar los armonicos altos de saw/square, que
         // sin filtrar suenan mas a sirena que a nota musical.
