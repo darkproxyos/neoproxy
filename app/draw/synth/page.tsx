@@ -439,17 +439,50 @@ export default function DrawSynthPage() {
       }
     }
 
+    // Convierte los puntos crudos de un trazo (uno por cada muestra del
+    // gesto, con el temblor natural de la mano) en una frase melodica
+    // limpia: agrupa por ventanas y fusiona los grupos consecutivos que
+    // caen en la misma nota cuantizada. Sin esto, un trazo con docenas de
+    // puntos disparaba una nota de pocos milisegundos por cada uno —sonaba
+    // a flutter/ruido en vez de a frase tocada.
+    type NoteGroup = { freq: number; gain: number; pressure: number; x: number; n: number }
+    const groupStrokeNotes = (sorted: Point[], groupCount: number): NoteGroup[] => {
+      const groups: NoteGroup[] = []
+      for (let i = 0; i < groupCount; i++) {
+        const from = Math.floor((i / groupCount) * sorted.length)
+        const to = Math.max(from + 1, Math.floor(((i + 1) / groupCount) * sorted.length))
+        const slice = sorted.slice(from, to)
+        if (slice.length === 0) continue
+        const freq = yToFreq(slice[Math.floor(slice.length / 2)].y)
+        const gain = slice.reduce((a, p) => a + yToGain(p.y), 0) / slice.length
+        const pressure = slice.reduce((a, p) => a + p.pressure, 0) / slice.length
+        const x = slice.reduce((a, p) => a + p.x, 0) / slice.length
+        const prev = groups[groups.length - 1]
+        if (prev && Math.abs(prev.freq - freq) < 0.5) {
+          prev.gain = (prev.gain * prev.n + gain) / (prev.n + 1)
+          prev.pressure = (prev.pressure * prev.n + pressure) / (prev.n + 1)
+          prev.x = (prev.x * prev.n + x) / (prev.n + 1)
+          prev.n++
+        } else {
+          groups.push({ freq, gain, pressure, x, n: 1 })
+        }
+      }
+      return groups
+    }
+
     const playStroke = (s: Stroke) => {
       if (!audioCtx || s.points.length < 2) return
       const now = audioCtx.currentTime + 0.05
       const sorted = [...s.points].sort((a, b) => a.x - b.x)
-      const totalDur = Math.min(1.8, Math.max(0.4, sorted.length * 0.025))
-      const noteDur = totalDur / sorted.length
+      const totalDur = Math.min(2.2, Math.max(0.5, sorted.length * 0.03))
+      const groupCount = Math.max(1, Math.round(totalDur * 6)) // ~6 notas por segundo
+      const groups = groupStrokeNotes(sorted, groupCount)
+      const noteDur = totalDur / groups.length
 
-      sorted.forEach((p, i) => {
-        const tOffset = (i / sorted.length) * totalDur
-        const pan = (p.x / drawCanvas.width) * 2 - 1
-        playNote(s.inst, yToFreq(p.y), yToGain(p.y), now + tOffset, noteDur * 1.6, p.pressure, pan)
+      groups.forEach((gr, i) => {
+        const tOffset = (i / groups.length) * totalDur
+        const pan = (gr.x / drawCanvas.width) * 2 - 1
+        playNote(s.inst, gr.freq, gr.gain, now + tOffset, noteDur * 1.5, gr.pressure, pan)
       })
     }
 
@@ -469,11 +502,12 @@ export default function DrawSynthPage() {
       strokes.forEach(s => {
         if (s.points.length < 1) return
         const sorted = [...s.points].sort((a, b) => a.x - b.x)
-        const noteDur = 0.12
-        sorted.forEach(p => {
-          const tOffset = (p.x / W) * totalDur
-          const pan = (p.x / W) * 2 - 1
-          playNote(s.inst, yToFreq(p.y), yToGain(p.y), startTime + tOffset, noteDur, p.pressure, pan)
+        const groupCount = Math.max(1, Math.round(sorted.length / 4))
+        const groups = groupStrokeNotes(sorted, groupCount)
+        groups.forEach(gr => {
+          const tOffset = (gr.x / W) * totalDur
+          const pan = (gr.x / W) * 2 - 1
+          playNote(s.inst, gr.freq, gr.gain, startTime + tOffset, 0.18, gr.pressure, pan)
         })
       })
 
