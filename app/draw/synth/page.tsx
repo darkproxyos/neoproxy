@@ -24,12 +24,14 @@ const widthFromPressure = (p: number) => MIN_WIDTH + p * (MAX_WIDTH - MIN_WIDTH)
 
 // Escala pentatonica mayor (semitonos desde la raiz) — cualquier trazo cae
 // en una nota de esta escala, asi que dos alturas cualquiera siempre suenan
-// bien juntas en vez de un barrido continuo tipo sirena.
-const SCALE_ROOT_FREQ = 130.81 // C3
+// bien juntas en vez de un barrido continuo tipo sirena. El tono elegido por
+// el usuario transpone esta raiz (Do = sin transponer).
+const NOTE_NAMES = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL', 'SOL#', 'LA', 'LA#', 'SI']
+const BASE_ROOT_FREQ = 130.81 // C3
 const SCALE_INTERVALS = [0, 2, 4, 7, 9]
 
 type Point = { x: number; y: number; pressure: number }
-type Stroke = { inst: number; color: string; points: Point[] }
+type Stroke = { inst: number; color: string; sizeMult: number; points: Point[] }
 
 export default function DrawSynthPage() {
   const drawCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -37,12 +39,27 @@ export default function DrawSynthPage() {
   const playheadRef = useRef<HTMLDivElement>(null)
 
   const [selectedInst, setSelectedInst] = useState(0)
+  const [selectedNote, setSelectedNote] = useState(0)
+  const [selectedColor, setSelectedColor] = useState(INSTRUMENTS[0].color)
+  const [brushSize, setBrushSize] = useState(1)
+  const [showTune, setShowTune] = useState(false)
   const [pbState, setPbState] = useState<'ready' | 'drawing' | 'playing'>('ready')
   const [strokeCount, setStrokeCount] = useState(0)
   const [noteCount, setNoteCount] = useState(0)
 
   const selectedInstRef = useRef(0)
+  const selectedNoteRef = useRef(0)
+  const selectedColorRef = useRef(INSTRUMENTS[0].color)
+  const brushSizeRef = useRef(1)
   useEffect(() => { selectedInstRef.current = selectedInst }, [selectedInst])
+  useEffect(() => { selectedNoteRef.current = selectedNote }, [selectedNote])
+  useEffect(() => { selectedColorRef.current = selectedColor }, [selectedColor])
+  useEffect(() => { brushSizeRef.current = brushSize }, [brushSize])
+
+  const selectInstrument = (id: number) => {
+    setSelectedInst(id)
+    setSelectedColor(INSTRUMENTS[id].color)
+  }
 
   useEffect(() => {
     const drawCanvas = drawCanvasRef.current!
@@ -96,7 +113,7 @@ export default function DrawSynthPage() {
       dc.shadowBlur = 10
       for (let i = 1; i < s.points.length; i++) {
         const a = s.points[i - 1], b = s.points[i]
-        dc.lineWidth = widthFromPressure((a.pressure + b.pressure) / 2)
+        dc.lineWidth = widthFromPressure((a.pressure + b.pressure) / 2) * s.sizeMult
         dc.beginPath()
         dc.moveTo(a.x, a.y)
         dc.lineTo(b.x, b.y)
@@ -108,7 +125,7 @@ export default function DrawSynthPage() {
       s.points.forEach((p, i) => {
         if (i % 4 === 0) {
           dc.beginPath()
-          dc.arc(p.x, p.y, 1 + widthFromPressure(p.pressure) * 0.2, 0, Math.PI * 2)
+          dc.arc(p.x, p.y, (1 + widthFromPressure(p.pressure) * 0.2) * s.sizeMult, 0, Math.PI * 2)
           dc.fill()
         }
       })
@@ -134,14 +151,16 @@ export default function DrawSynthPage() {
     }
 
     // y (0=top=high, H=bottom=low) -> frecuencia, escala logaritmica 80Hz-2400Hz,
-    // cuantizada a la pentatonica mayor para que cualquier trazo suene melodico
+    // cuantizada a la pentatonica mayor (transpuesta al tono elegido) para
+    // que cualquier trazo suene melodico
     const yToFreq = (y: number) => {
       const H = drawCanvas.height
       const t = 1 - y / H
       const minF = 80, maxF = 2400
       const rawFreq = minF * Math.pow(maxF / minF, t)
+      const rootFreq = BASE_ROOT_FREQ * Math.pow(2, selectedNoteRef.current / 12)
 
-      const semitones = 12 * Math.log2(rawFreq / SCALE_ROOT_FREQ)
+      const semitones = 12 * Math.log2(rawFreq / rootFreq)
       const octave = Math.floor(semitones / 12)
       const remainder = semitones - octave * 12
       let closest = SCALE_INTERVALS[0]
@@ -150,7 +169,7 @@ export default function DrawSynthPage() {
         const diff = Math.abs(remainder - interval)
         if (diff < minDiff) { minDiff = diff; closest = interval }
       }
-      return SCALE_ROOT_FREQ * Math.pow(2, (octave * 12 + closest) / 12)
+      return rootFreq * Math.pow(2, (octave * 12 + closest) / 12)
     }
 
     const yToGain = (y: number) => {
@@ -331,8 +350,10 @@ export default function DrawSynthPage() {
       lastMoveX = pos.x
       lastMoveY = pos.y
       const pressure = e.pointerType === 'pen' && e.pressure > 0 ? e.pressure : 0.5
-      const inst = INSTRUMENTS[selectedInstRef.current]
-      currentStroke = { inst: selectedInstRef.current, color: inst.color, points: [{ ...pos, pressure }] }
+      currentStroke = {
+        inst: selectedInstRef.current, color: selectedColorRef.current, sizeMult: brushSizeRef.current,
+        points: [{ ...pos, pressure }],
+      }
       setPbState('drawing')
     }
 
@@ -349,7 +370,7 @@ export default function DrawSynthPage() {
       dc.lineJoin = 'round'
       dc.shadowColor = currentStroke.color
       dc.shadowBlur = 8
-      dc.lineWidth = widthFromPressure((prev.pressure + pressure) / 2)
+      dc.lineWidth = widthFromPressure((prev.pressure + pressure) / 2) * currentStroke.sizeMult
       dc.beginPath()
       dc.moveTo(prev.x, prev.y)
       dc.lineTo(pos.x, pos.y)
@@ -449,26 +470,88 @@ export default function DrawSynthPage() {
         ))}
       </div>
 
+      {/* Panel de ajustes: tono, color y diametro de pincel */}
+      {showTune && (
+        <div style={{
+          position: 'fixed', bottom: 132, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
+          display: 'flex', flexDirection: 'column', gap: 12, background: 'rgba(14,14,26,0.95)',
+          border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '14px 18px',
+          backdropFilter: 'blur(12px)', width: 260,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>TONO</span>
+            <select
+              value={selectedNote}
+              onChange={e => setSelectedNote(Number(e.target.value))}
+              style={{
+                flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(0,212,255,0.3)',
+                color: '#00d4ff', fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '6px 8px',
+                borderRadius: 6, minHeight: 32,
+              }}
+            >
+              {NOTE_NAMES.map((n, i) => <option key={n} value={i}>{n}</option>)}
+            </select>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>COLOR</span>
+            <input
+              type="color"
+              value={selectedColor}
+              onChange={e => setSelectedColor(e.target.value)}
+              style={{ width: 44, height: 32, border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
+            />
+            <span style={{ fontFamily: mono, fontSize: 9, color: selectedColor, letterSpacing: 1 }}>{selectedColor.toUpperCase()}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>PINCEL</span>
+            <input
+              type="range" min={0.5} max={2.5} step={0.1} value={brushSize}
+              onChange={e => setBrushSize(Number(e.target.value))}
+              style={{ flex: 1, accentColor: '#00d4ff' }}
+            />
+            <span style={{ fontFamily: mono, fontSize: 9, color: '#00d4ff', width: 28, textAlign: 'right', flexShrink: 0 }}>
+              {brushSize.toFixed(1)}x
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Instrument palette */}
       <div style={{
         position: 'fixed', bottom: 70, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
-        display: 'flex', gap: 10, alignItems: 'center', background: 'rgba(14,14,26,0.92)',
-        border: '1px solid rgba(255,255,255,0.07)', borderRadius: 50, padding: '8px 14px', backdropFilter: 'blur(12px)',
+        display: 'flex', gap: 10, alignItems: 'center',
       }}>
-        {INSTRUMENTS.map(inst => (
-          <button
-            key={inst.id}
-            onClick={() => setSelectedInst(inst.id)}
-            title={inst.label}
-            style={{
-              width: 36, height: 36, borderRadius: '50%', background: inst.color, cursor: 'pointer',
-              border: selectedInst === inst.id ? '2px solid #fff' : '2px solid transparent',
-              transform: selectedInst === inst.id ? 'scale(1.15)' : 'scale(1)',
-              boxShadow: selectedInst === inst.id ? `0 0 12px ${inst.color}` : 'none',
-              transition: 'transform 0.1s, border-color 0.15s', flexShrink: 0,
-            }}
-          />
-        ))}
+        <div style={{
+          display: 'flex', gap: 10, alignItems: 'center', background: 'rgba(14,14,26,0.92)',
+          border: '1px solid rgba(255,255,255,0.07)', borderRadius: 50, padding: '8px 14px', backdropFilter: 'blur(12px)',
+        }}>
+          {INSTRUMENTS.map(inst => (
+            <button
+              key={inst.id}
+              onClick={() => selectInstrument(inst.id)}
+              title={inst.label}
+              style={{
+                width: 36, height: 36, borderRadius: '50%', background: inst.color, cursor: 'pointer',
+                border: selectedInst === inst.id ? '2px solid #fff' : '2px solid transparent',
+                transform: selectedInst === inst.id ? 'scale(1.15)' : 'scale(1)',
+                boxShadow: selectedInst === inst.id ? `0 0 12px ${inst.color}` : 'none',
+                transition: 'transform 0.1s, border-color 0.15s', flexShrink: 0,
+              }}
+            />
+          ))}
+        </div>
+        <button
+          onClick={() => setShowTune(v => !v)}
+          title="Ajustes de tono, color y pincel"
+          style={{
+            width: 36, height: 36, borderRadius: '50%', flexShrink: 0, cursor: 'pointer', fontSize: 15,
+            background: showTune ? 'rgba(0,212,255,0.25)' : 'rgba(14,14,26,0.92)',
+            border: `1px solid ${showTune ? '#00d4ff' : 'rgba(255,255,255,0.15)'}`,
+            color: '#00d4ff', backdropFilter: 'blur(12px)',
+          }}
+        >
+          ⚙
+        </button>
       </div>
 
       {/* Controls (right edge separado del widget de Chat global, ver bottomRight fix en ARCombatSystem) */}
