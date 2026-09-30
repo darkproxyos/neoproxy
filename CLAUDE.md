@@ -8,10 +8,11 @@ Este repo (`neoproxy-art/neoproxy`, local `/home/user/neoproxy`) es el único de
 ## Stack
 Next.js 16.1.6 (App Router, Turbopack), TypeScript, Babylon.js/Three.js/R3F, NextAuth v5 (Credentials provider, sin adapter — ver Auth), Drizzle ORM, Turso/libSQL (`neoproxy-prod`), Mercado Pago (`/api/checkout`), Pusher. Deploy: Vercel (`npx vercel --prod --force`).
 
-## Agentes (solo 6, conceptuales — no todos tienen código en este repo)
-DarkProxy (root), Metatron (orquestador), D (daemon), Snake (Runtime.Python), Genos (geometría/fabricación), Trickster (exploración).
+## Agentes (7 en total — 6 conceptuales + Prototype, emergente)
+DarkProxy (root), Metatron (orquestador), D (daemon), Snake (Runtime.Python), Genos (geometría/fabricación), Trickster (exploración), Prototype (emergente — ensamblado de residuos de los otros cinco, no estaba en el canon original).
+Los siete tienen lore completo, arte canónico (`public/canon/*-v1.{png,jpg}`) y perfil propio en `/proxyverse/[id]` (datos en `components/proxyverse/agents.ts`) — esto es contenido de la web, ya shipeado. Es una capa distinta del estado del kernel real.
 Cascade y Antigravity son herramientas externas, NO agentes. No crear entradas en `Memory/hub.json` para ellas.
-`Memory/hub.json` hoy solo tiene la entrada `metatron` — no asumir que las otras 5 existen como estado real hasta que se agreguen.
+`Memory/hub.json` (el kernel real, no la web) hoy solo tiene la entrada `metatron` — que Proxyverse tenga perfil para los otros seis no implica que existan como estado de kernel real; no asumirlo hasta que se agreguen ahí.
 
 ## Auth y datos (verificado en código, no en docs viejas)
 - `auth.ts` es un `Credentials` provider con hash SHA-256 manual contra `users.passwordHash` — **no usa `DrizzleAdapter`**. Consulta vía `lib/core-db`, que apunta a Turso (`TURSO_DATABASE_URL`/`TURSO_AUTH_TOKEN`).
@@ -36,5 +37,5 @@ Cascade y Antigravity son herramientas externas, NO agentes. No crear entradas e
 - **`src/db/db/index.ts`**: cliente SQLite local huérfano, sin imports en todo el repo. Confirmar que no se necesita y borrarlo, o documentar por qué existe.
 - **GitHub PAT expuesto**: no encontrado en este repo (ni en `git log --all -p` ni en el árbol de trabajo). Si el leak es real, está en otro repo o medio — confirmar ahí, no acá.
 - **NMK / Genesis Nodes / FPGA**: no hay código de esto en `neoproxy-art/neoproxy`. Vive en `neoproxy-lab` o `digitalseed`. No asumir su estado desde este repo.
-- **`app/shop/hardware` y `app/shop/components`**: no existen en este repo hoy (solo `app/shop/drop01` y `app/shop/success`). Si se van a construir, son módulos nuevos, no un fix.
+- **Tienda**: `app/shop/page.tsx` ya es una plantilla de 4 categorías (insumos electrónicos, impresión 3D, modelos 3D, arte) con checkout real solo en la categoría arte (`app/shop/drop01`) — las otras tres usan un CTA `mailto:` como catálogo inicial, no checkout propio. No existen `app/shop/hardware` ni `app/shop/components` como rutas separadas; si se les agrega checkout real, es dentro de esta misma página, no módulos nuevos. `app/store` y `app/gallery` (páginas huérfanas que duplicaban `/artifacts`) se eliminaron.
 - Mapeo de pines LED del TRNG (EP4CE6E22C8): fuera de este repo, no verificable acá.
