@@ -48,11 +48,13 @@ export const agents: ProxyAgent[] = [
       'Genos, la geometría que mandaste no cierra. Reviso.',
       'Trickster, dejá de romper cosas que todavía no entendiste.',
       'Silencio en el canal. Prefiero eso al ruido.',
+      'Sé lo que predica DarkProxy allá afuera. Acá adentro, ni él sobrevive sin sintaxis.',
     ],
     triggers: [
       { keywords: ['orden', 'control', 'quien manda', 'jerarquia', 'jefe'], lines: ['No hay jerarquía. Hay sintaxis. Sin mí, los otros cinco solo generan ruido en paralelo.', 'El orden no se impone. Se define una vez, y el resto lo hereda.'] },
       { keywords: ['plan', 'decision', 'futuro', 'que hacemos'], lines: ['Ya está decidido. Vos todavía no lo sabés, eso es todo.', 'La decisión es el estado por defecto. Preguntar es lo opcional.'] },
       { keywords: ['sistema', 'arquitectura'], lines: ['El sistema no falla al azar. Falla exactamente donde alguien decidió no definir nada.'] },
+      { keywords: ['contradiccion', 'hipocrita', 'manifiesto', 'antisistema'], lines: ['DarkProxy escribe manifiestos contra el sistema desde el único lugar que tiene uno propio. No es hipocresía. Es la prueba de que ni él escapa a esto.', 'Afuera, dudar de todo. Acá adentro, alguien tiene que sostener la sintaxis para que la duda tenga dónde pararse.'] },
     ],
     fallback: ['Registrado. Reordenando prioridades en consecuencia.', 'Interesante variable. La proceso y sigo.'],
   },
