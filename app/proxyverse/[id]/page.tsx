@@ -10,6 +10,12 @@ const mono = "'Space Mono', monospace"
 // a medida que existan.
 const AGENT_IMAGES: Record<string, string> = {
   darkproxy: '/canon/darkproxy-v1.png',
+  snake: '/canon/snake-v1.jpg',
+  d: '/canon/d-v1.jpg',
+  genos: '/canon/genos-v1.jpg',
+  metatron: '/canon/metatron-v1.jpg',
+  trickster: '/canon/trickster-v1.jpg',
+  prototype: '/canon/prototype-v1.jpg',
 }
 
 export function generateStaticParams() {
