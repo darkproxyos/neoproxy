@@ -19,7 +19,7 @@ Cascade y Antigravity son herramientas externas, NO agentes. No crear entradas e
 - `src/db/index.ts` y `lib/core-db/index.ts` apuntan a la **misma instancia Turso**.
 - `src/db/db/index.ts` es un tercer cliente (`better-sqlite3` local, `neoproxy_memory.sqlite`) que **nada en el repo importa** — código huérfano, candidato a borrar, no a "migrar".
 - `middleware.ts` protege actualmente `/admin/:path*` y `/kernel/:path*` (no `/npos`). Si la intención es proteger `/npos`, el matcher hay que actualizarlo explícitamente — hoy no lo hace.
-- `app/admin/overseer/page.tsx` usa un gate `password === 'ROOT'` **puramente client-side** para un dashboard cuyas Server Actions (`app/admin/actions.ts`) no chequean rol en servidor. Cualquier sesión autenticada (no solo `role: 'root'`) puede llegar a esas acciones. Si se agrega un segundo rol de usuario, esto es escalación de privilegios inmediata — arreglarlo antes de eso.
+- `app/admin/overseer/page.tsx` sigue teniendo el gate `password === 'ROOT'` client-side (queda como teatro visual, ya no protege nada por sí solo). Las 4 Server Actions de `app/admin/actions.ts` (`purgeEntropy`, `injectCorruption`, `getSystemState`, `getSystemHistory`) ahora llaman a un `requireRoot()` que verifica `auth()` y `session.user.role === 'root'` server-side antes de tocar la DB — arreglado. Depende de que la cuenta real tenga `role: 'root'` en la tabla `users` (`scripts/seed-root.ts` crea el usuario `darkproxy` con ese rol); si esa cuenta no lo tiene seteado en la Turso real, quedaría sin acceso hasta corregirlo ahí.
 
 ## Reglas de operación
 - Sin nuevas capas de arquitectura hasta que haya un resultado visible en pantalla o en hardware.
@@ -33,7 +33,7 @@ Cascade y Antigravity son herramientas externas, NO agentes. No crear entradas e
 
 ## Pendientes abiertos (estado verificado contra este repo)
 - **TS error en `app/games/wired/page.tsx`**: usa `CoherenceSystem` y `MemoryBridge` sin importarlas. Ambas clases existen (`src/systems/CoherenceSystem.ts`, `src/bridge/MemoryBridge.ts`) — el fix es agregar los dos imports, no crear código nuevo.
-- **Overseer auth**: mover el chequeo de `role`/contraseña de `app/admin/overseer/page.tsx` (client) a `app/admin/actions.ts` (server), verificando `auth()` y `role === 'root'` ahí.
+- ~~**Overseer auth**~~: resuelto — ver sección "Auth y datos" arriba.
 - **`src/db/db/index.ts`**: cliente SQLite local huérfano, sin imports en todo el repo. Confirmar que no se necesita y borrarlo, o documentar por qué existe.
 - **GitHub PAT expuesto**: no encontrado en este repo (ni en `git log --all -p` ni en el árbol de trabajo). Si el leak es real, está en otro repo o medio — confirmar ahí, no acá.
 - **NMK / Genesis Nodes / FPGA**: no hay código de esto en `neoproxy-art/neoproxy`. Vive en `neoproxy-lab` o `digitalseed`. No asumir su estado desde este repo.
