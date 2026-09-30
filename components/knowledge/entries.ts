@@ -13,6 +13,10 @@ export type KnowledgeEntry = {
   formulaKind: FormulaKind
   summary: string
   example: string
+  // Proceso de Proxyverse (components/proxyverse/agents.ts) que encarna esta
+  // idea — no todas las entradas tienen una correspondencia lo bastante
+  // directa como para forzarla.
+  relatedAgent?: string
 }
 
 export const clusters: Record<Cluster, { label: string; color: string }> = {
@@ -78,6 +82,7 @@ export const entries: KnowledgeEntry[] = [
       'No hay información en un objeto aislado — solo en el contraste que un observador puede registrar. El patrón que conecta las cosas es siempre relación, nunca sustancia.',
     example:
       'Un termómetro no informa nada por sí solo. Un solo número, "20 grados", no dice nada — el cambio de 20 a 21, comparado con lo anterior, es lo único que realmente informa algo.',
+    relatedAgent: 'd',
   },
   {
     id: 'turing',
@@ -106,6 +111,7 @@ export const entries: KnowledgeEntry[] = [
       'Propone que la consciencia no es una sustancia sino una cantidad: cuánto más informa el todo que la simple suma de sus partes. Un sistema es consciente en la medida exacta en que no puede romperse sin perder algo irreemplazable.',
     example:
       'En sueño profundo sin sueños, el cerebro sigue casi tan activo como despierto — pero las partes dejan de informarse entre sí. Para Tononi, por eso ahí no hay consciencia integrada, aunque haya actividad de sobra.',
+    relatedAgent: 'darkproxy',
   },
   {
     id: 'hofstadter',
@@ -148,6 +154,7 @@ export const entries: KnowledgeEntry[] = [
       'Sostiene que el orden no siempre se gana por selección — a veces se obtiene gratis. En el borde entre el orden y el caos, sistemas complejos encuentran su propia estabilidad sin que nadie la diseñe.',
     example:
       'Una célula humana tiene unos 20.000 genes, pero solo un puñado de tipos celulares estables — piel, hígado, neurona — muy por debajo de todas las combinaciones posibles. Esos tipos son atractores de la red génica, no un diseño externo.',
+    relatedAgent: 'prototype',
   },
   {
     id: 'prigogine',
@@ -162,6 +169,7 @@ export const entries: KnowledgeEntry[] = [
       'Lejos del equilibrio, la materia no colapsa en desorden — se organiza. Un sistema abierto exporta entropía hacia afuera para poder construir orden adentro. La vida es una de esas estructuras, sostenida por su propio flujo.',
     example:
       'Un huracán se mantiene organizado consumiendo energía térmica del océano sin parar. En el momento en que esa energía deja de fluir, se disuelve — el orden no es un objeto, es un proceso que hay que sostener activamente.',
+    relatedAgent: 'snake',
   },
   {
     id: 'langton',
@@ -176,6 +184,7 @@ export const entries: KnowledgeEntry[] = [
       'Midió dónde ocurre el cómputo interesante: ni en el orden congelado ni en el ruido puro, sino en una franja delgada entre ambos. Ahí, y solo ahí, un sistema puede sorprenderse a sí mismo.',
     example:
       'En el Juego de la Vida de Conway, reglas mal ajustadas matan todo el tablero en pocas generaciones o lo saturan de ruido. Solo con las reglas exactas, justo en ese borde, aparecen planeadores que viajan y persisten.',
+    relatedAgent: 'trickster',
   },
   {
     id: 'perbak',
@@ -218,6 +227,7 @@ export const entries: KnowledgeEntry[] = [
       'Solo la variedad puede absorber variedad: un regulador necesita al menos tantos estados posibles como el sistema que intenta controlar. Ninguna regla simple puede dominar una complejidad mayor que la suya propia.',
     example:
       'Un termostato de un solo nivel (prender/apagar) no puede regular una habitación con corrientes de aire distintas en cada rincón. Necesita tantos ajustes posibles como variaciones tenga el problema, o directamente no alcanza.',
+    relatedAgent: 'metatron',
   },
   {
     id: 'vonneumann',
@@ -232,6 +242,7 @@ export const entries: KnowledgeEntry[] = [
       'Diseñó, sobre el papel, una máquina capaz de construir una copia de sí misma a partir de una descripción de sí misma. Antes de que se supiera cómo lo hacía una célula, ya existía la lógica que lo permitía.',
     example:
       'Una impresora 3D que imprimiera todas sus propias piezas, se ensamblara sola, y además imprimiera el manual para volver a hacerlo — eso es, en esencia, su constructor universal, pensado décadas antes de que se supiera cómo lo hacía el ADN.',
+    relatedAgent: 'genos',
   },
   {
     id: 'bertalanffy',

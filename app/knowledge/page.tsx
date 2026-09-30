@@ -1,8 +1,10 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import KnowledgeScene, { type KnowledgeSceneHandle } from '@/components/knowledge/KnowledgeScene'
 import { entries, clusters, type Cluster } from '@/components/knowledge/entries'
+import { agents } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
 
@@ -32,6 +34,14 @@ export default function KnowledgePage() {
     if (id) sceneRef.current?.focusOn(id)
     else sceneRef.current?.resetView()
   }
+
+  // Deep-link desde un perfil de Proxyverse (/knowledge?entry=vonneumann):
+  // selecciona esa entrada apenas la escena carga.
+  useEffect(() => {
+    const entryId = new URLSearchParams(window.location.search).get('entry')
+    if (entryId && entries.some(e => e.id === entryId)) handleSelect(entryId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', position: 'relative' }}>
@@ -143,6 +153,24 @@ export default function KnowledgePage() {
                       {selected.example}
                     </p>
                   </div>
+
+                  {selected.relatedAgent && (() => {
+                    const agent = agents.find(a => a.id === selected.relatedAgent)
+                    if (!agent) return null
+                    return (
+                      <Link href={`/proxyverse/${agent.id}`} style={{
+                        display: 'block', marginTop: 20, paddingTop: 16,
+                        borderTop: `1px solid ${agent.color}33`, textDecoration: 'none',
+                      }}>
+                        <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>
+                          ESTO YA VIVE EN PROXYVERSE
+                        </div>
+                        <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5 }}>
+                          {agent.name} — {agent.role} →
+                        </div>
+                      </Link>
+                    )
+                  })()}
                 </>
               ) : (
                 <div style={{ fontFamily: mono, fontSize: 11, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8 }}>

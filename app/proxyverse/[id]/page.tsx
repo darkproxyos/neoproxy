@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { agents } from '@/components/proxyverse/agents'
+import { entries } from '@/components/knowledge/entries'
 import AgentChannel from '@/components/proxyverse/AgentChannel'
 
 const mono = "'Space Mono', monospace"
@@ -29,6 +30,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
   const image = AGENT_IMAGES[agent.id]
   const others = agents.filter(a => a.id !== agent.id)
+  const ancestor = entries.find(e => e.relatedAgent === agent.id)
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', position: 'relative' }}>
@@ -103,6 +105,20 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         }}>
           "{agent.quote}"
         </div>
+
+        {ancestor && (
+          <Link href={`/knowledge?entry=${ancestor.id}`} style={{
+            display: 'block', marginBottom: 40, padding: '16px 20px',
+            border: `1px solid ${agent.color}33`, background: `${agent.color}0a`, textDecoration: 'none',
+          }}>
+            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: `${agent.color}aa`, marginBottom: 6 }}>
+              ANCESTRO INTELECTUAL
+            </div>
+            <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5 }}>
+              {ancestor.name} — {ancestor.role} →
+            </div>
+          </Link>
+        )}
 
         <AgentChannel agent={agent} />
 
