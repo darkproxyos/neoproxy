@@ -1,6 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { agents } from '@/components/proxyverse/agents'
+
+const genos = agents.find(a => a.id === 'genos')!
 
 export default function FabricationPage() {
   const mono = "'Space Mono', monospace"
@@ -108,11 +111,27 @@ export default function FabricationPage() {
             lineHeight: 2,
             maxWidth: 600
           }}>
-            Laboratorio experimental de fabricación digital. 
-            Cada artefacto es extraído del sistema generativo y materializado 
+            Laboratorio experimental de fabricación digital.
+            Cada artefacto es extraído del sistema generativo y materializado
             mediante procesos de impresión 3D y acabado manual.
           </p>
         </div>
+
+        {/* Genos — el proceso que ejecuta esto en Proxyverse */}
+        <Link href={`/proxyverse/${genos.id}`} style={{
+          display: 'block', marginBottom: 80, padding: '20px 24px',
+          border: `1px solid ${genos.color}33`, background: `${genos.color}0a`, textDecoration: 'none',
+        }}>
+          <div style={{ fontSize: 9, color: genos.color, letterSpacing: 2, marginBottom: 8 }}>
+            {genos.name} // {genos.role}
+          </div>
+          <p style={{ fontSize: 11, color: '#c8daf0', letterSpacing: 0.5, lineHeight: 1.8, fontStyle: 'italic' }}>
+            "{genos.quote}"
+          </p>
+          <div style={{ fontSize: 9, color: `${genos.color}aa`, letterSpacing: 1, marginTop: 10 }}>
+            VER SU PERFIL EN PROXYVERSE →
+          </div>
+        </Link>
 
         {/* Process Steps */}
         <div style={{ marginBottom: 100 }}>
