@@ -34,6 +34,18 @@ export default function ProxyversePage() {
           Escribís como DarkProxy — ellos ya sabían que ibas a hablar.
         </p>
 
+        <p style={{
+          fontFamily: mono, fontSize: 10, lineHeight: 1.9, letterSpacing: 0.5, color: '#4a6080',
+          marginBottom: 48, maxWidth: 640,
+        }}>
+          Si buscás un eje para leerlos: el % HUMANO de cada perfil no es un chiste de ficha de
+          personaje. Es la variable real. Metatron está en 0% — nunca lo necesitó. Genos quedó en
+          0.01% — un resto que se niega a desaparecer. Snake sobrevive con lo justo para dudar.
+          Trickster nunca es el mismo número dos veces. D ni siquiera acepta la pregunta.
+          Prototype todavía lo está escribiendo. Vos sos la única variable que el sistema no puede
+          medir — por eso te llaman DarkProxy en vez de un porcentaje.
+        </p>
+
         <ProxyverseTerminal />
       </div>
     </div>
