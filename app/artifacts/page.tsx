@@ -60,13 +60,26 @@ export default function Artifacts() {
                 {catPieces.map(piece => (
                   <div key={piece.id} style={{ border: `1px solid ${cat.color}22`, background: `${cat.color}08` }}>
                     <div style={{ position: 'relative', width: '100%', aspectRatio: '4 / 3', borderBottom: `1px solid ${cat.color}22` }}>
-                      <Image
-                        src={piece.src}
-                        alt={piece.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 25vw"
-                        style={{ objectFit: 'cover' }}
-                      />
+                      {piece.media.type === 'image' ? (
+                        <Image
+                          src={piece.media.src}
+                          alt={piece.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 25vw"
+                          style={{ objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <video
+                          src={piece.media.src}
+                          poster={piece.media.poster}
+                          controls
+                          muted
+                          loop
+                          playsInline
+                          preload="none"
+                          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      )}
                     </div>
                     <div style={{ padding: '14px 16px' }}>
                       <h4 style={{ fontSize: 10, letterSpacing: 1, color: cat.color, margin: 0 }}>{piece.title}</h4>
