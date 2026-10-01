@@ -1,4 +1,4 @@
-import { CoherenceSystem } from "@/systems/CoherenceSystem";
+import { CoherenceSystem } from "@/src/systems/CoherenceSystem";
 
 type MemoryEvent = { type: string; [key: string]: any };
 

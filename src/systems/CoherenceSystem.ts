@@ -4,14 +4,24 @@ export class CoherenceSystem {
   private coherence = 100;
   private maxCoherence = 100;
   private state: CoherenceState = 'STABLE';
+  private decayTimer: ReturnType<typeof setInterval>;
 
   constructor() {
-    setInterval(() => {
+    this.decayTimer = setInterval(() => {
       if (this.coherence > 0) {
         this.coherence = Math.max(0, this.coherence - 2);
         this.updateState();
       }
     }, 1000);
+  }
+
+  public reset(): void {
+    this.coherence = this.maxCoherence;
+    this.updateState();
+  }
+
+  public dispose(): void {
+    clearInterval(this.decayTimer);
   }
 
   private updateState(): void {
