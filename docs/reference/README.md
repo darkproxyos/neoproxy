@@ -8,7 +8,7 @@ board, sin aplicar ningún cambio al código ni al canon actual.
   (Gennos en vez de Genos, Trizkter en vez de Trickster, Daemon en vez
   de D) y agregan un personaje nuevo, "Ángel", que no existe en el sitio.
 - `darkproxy-zaphkiel-alt.png`: retrato de DarkProxy — composición muy
-  similar al canon ya usado en `/manifesto` (`public/canon/darkproxy-v1.png`),
+  similar al canon ya usado en `/manifesto` (`public/canon/darkproxy-v1.jpg`),
   posible versión alternativa/actualizada de esa misma pieza.
 - `manifesto-wallpaper-sistema-ilusion.jpg`: pieza atmosférica con la
   frase "El sistema es ilusión. Solo tu consciencia decide."
