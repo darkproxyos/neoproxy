@@ -10,7 +10,7 @@ const mono = "'Space Mono', monospace"
 // Arte canonico por agente. Todavia no todos tienen — se van agregando acá
 // a medida que existan.
 const AGENT_IMAGES: Record<string, string> = {
-  darkproxy: '/canon/darkproxy-v1.jpg',
+  darkproxy: '/canon/darkproxy-v1.png',
   snake: '/canon/snake-v1.jpg',
   d: '/canon/d-v1.jpg',
   genos: '/canon/genos-v1.jpg',

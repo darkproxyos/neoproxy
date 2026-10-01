@@ -11,10 +11,10 @@ export default function Manifesto() {
       {/* Hero */}
       <div style={{ position: 'relative', width: '100%', maxWidth: 800, margin: '0 auto' }}>
         <Image
-          src="/canon/darkproxy-v1.jpg"
+          src="/canon/darkproxy-v1.png"
           alt="DARKPROXY // ZAPHKIEL — THE INTERPRETER"
           width={800}
-          height={800}
+          height={450}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
       </div>
