@@ -158,7 +158,39 @@ export default function Home() {
     let shapeIndex = 0
     let shapeStart = performance.now()
 
+    // Scroll + pointer/touch drive the polytope's rotation and depth — scrolling moves it
+    // through the 4th axis (W), pointer/touch tilt it toward the cursor/finger.
+    let scrollNorm = 0
+    const pointerTarget = { x: 0, y: 0 }
+    const pointerCurrent = { x: 0, y: 0 }
+
+    const updateScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      scrollNorm = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
+    }
+    const updatePointer = (clientX: number, clientY: number) => {
+      pointerTarget.x = (clientX / window.innerWidth) * 2 - 1
+      pointerTarget.y = (clientY / window.innerHeight) * 2 - 1
+    }
+    const handlePointerMove = (e: PointerEvent) => updatePointer(e.clientX, e.clientY)
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0]
+      if (touch) updatePointer(touch.clientX, touch.clientY)
+    }
+
+    updateScroll()
+    if (!reducedMotion) {
+      window.addEventListener('scroll', updateScroll, { passive: true })
+      window.addEventListener('pointermove', handlePointerMove, { passive: true })
+      window.addEventListener('touchmove', handleTouchMove, { passive: true })
+    }
+
     const animate = (t: number) => {
+      pointerCurrent.x += (pointerTarget.x - pointerCurrent.x) * 0.06
+      pointerCurrent.y += (pointerTarget.y - pointerCurrent.y) * 0.06
+      const parallaxX = pointerCurrent.x * 14
+      const parallaxY = pointerCurrent.y * 14
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.globalCompositeOperation = 'source-over'
       particles.forEach(p => {
@@ -167,7 +199,7 @@ export default function Home() {
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+        ctx.arc(p.x + parallaxX, p.y + parallaxY, p.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(0, 212, 255, ${p.alpha})`
         ctx.fill()
       })
@@ -189,14 +221,15 @@ export default function Home() {
       if (shapeOpacity > 0.002) {
         const shape = shapes[shapeIndex]
         const angleBase = reducedMotion ? shapeIndex * 1.3 : t * 0.00012
-        const aXY = angleBase
-        const aZW = reducedMotion ? shapeIndex * 0.7 : t * 0.00019
-        const aXW = reducedMotion ? shapeIndex * 2.1 : t * 0.00008
+        const aXY = angleBase + pointerCurrent.x * 0.5
+        const aZW = (reducedMotion ? shapeIndex * 0.7 : t * 0.00019) + scrollNorm * Math.PI * 1.5
+        const aXW = (reducedMotion ? shapeIndex * 2.1 : t * 0.00008) + pointerCurrent.y * 0.5
         const rotated = shape.vertices.map(v => rotate4D(v, aXY, aZW, aXW))
 
-        const wDist = 2.4, zDist = 3.6
+        // scrolling pulls the shape through the 4th axis — the projection warps as you descend the page
+        const wDist = 2.4 - scrollNorm * 0.9, zDist = 3.6
         const scale = Math.min(canvas.width, canvas.height) * 0.32
-        const cx = canvas.width / 2, cy = canvas.height / 2
+        const cx = canvas.width / 2 + parallaxX, cy = canvas.height / 2 + parallaxY
         const projected = rotated.map(([x, y, z, w]) => {
           const wFactor = wDist / (wDist - w)
           const x3 = x * wFactor, y3 = y * wFactor, z3 = z * wFactor
@@ -232,16 +265,22 @@ export default function Home() {
         ctx.restore()
       }
 
-      requestAnimationFrame(animate)
+      rafId = requestAnimationFrame(animate)
     }
-    requestAnimationFrame(animate)
+    let rafId = requestAnimationFrame(animate)
 
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
     }
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    return () => {
+      cancelAnimationFrame(rafId)
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', updateScroll)
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('touchmove', handleTouchMove)
+    }
   }, [showContent])
 
   const mono = "'Space Mono', monospace"
