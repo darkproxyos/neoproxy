@@ -17,7 +17,7 @@ export default function FabricationPage() {
   }, [])
 
   const steps = [
-    { num: '01', title: 'DIGITAL DESIGN', desc: 'Algorithmic generation // Parametric modeling' },
+    { num: '01', title: 'DIGITAL DESIGN', desc: 'Parametric & generative modeling // AI-assisted design' },
     { num: '02', title: '3D PRINTING', desc: 'FDM deposition // Resin UV curing' },
     { num: '03', title: 'POST PROCESS', desc: 'Support removal // Surface treatment' },
     { num: '04', title: 'HAND FINISH', desc: 'Sanding // Polishing // Assembly' },
@@ -104,17 +104,80 @@ export default function FabricationPage() {
           }}>
             FABRICATION
           </h1>
-          <p style={{ 
-            fontSize: 11, 
+          <p style={{
+            fontSize: 11,
             color: '#4a6080',
             letterSpacing: 2,
             lineHeight: 2,
             maxWidth: 600
           }}>
-            Laboratorio experimental de fabricación digital.
-            Cada artefacto es extraído del sistema generativo y materializado
-            mediante procesos de impresión 3D y acabado manual.
+            Laboratorio de fabricación digital. Cada pieza se diseña, se imprime
+            y se termina a mano — propia o a pedido.
           </p>
+        </div>
+
+        {/* SERVICIO — sección comercial, primero que se lee, pensada para generar pedidos */}
+        <div style={{
+          marginBottom: 80,
+          border: '1px solid #00d4ff44',
+          background: 'linear-gradient(180deg, rgba(0,212,255,0.06), rgba(180,0,255,0.03))',
+          padding: '36px 28px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00ff9d', boxShadow: '0 0 10px #00ff9d' }} />
+            <span style={{ fontSize: 9, color: '#00ff9d', letterSpacing: 4 }}>SERVICIO ACTIVO // ACEPTANDO PEDIDOS</span>
+          </div>
+
+          <h2 style={{ fontSize: 24, color: '#fff', letterSpacing: 1, lineHeight: 1.5, marginBottom: 18, maxWidth: 620 }}>
+            Impresión 3D en <span style={{ color: '#00d4ff' }}>PLA</span> y <span style={{ color: '#b400ff' }}>resina</span>, a pedido.
+          </h2>
+
+          <p style={{ fontSize: 12, color: '#c8daf0', letterSpacing: 0.3, lineHeight: 1.9, maxWidth: 620, marginBottom: 28 }}>
+            Modelado 3D avanzado — paramétrico, generativo y asistido por IA — desde tu referencia,
+            tu boceto o una idea sin forma todavía. Imprimo en FDM (PLA) y en SLA (resina UV),
+            con acabado y post-proceso a mano. Pieza única, prototipo o serie corta.
+          </p>
+
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '12px 20px', marginBottom: 32, maxWidth: 680,
+          }}>
+            {[
+              'Modelado desde cero o tu STL',
+              'Diseño asistido por IA',
+              'FDM — filamento PLA',
+              'SLA — resina UV',
+              'Acabado y pintado a mano',
+              'Pieza única o serie corta',
+            ].map(item => (
+              <div key={item} style={{
+                fontSize: 10, color: '#c8daf0', letterSpacing: 0.3, lineHeight: 1.6,
+                borderLeft: '2px solid #00d4ff55', paddingLeft: 10,
+              }}>
+                {item}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+            <a
+              href="mailto:contact@neoproxy.art?subject=Pedido%20de%20impresi%C3%B3n%203D&body=Hola%2C%20quiero%20cotizar%20una%20pieza.%0A%0ADescripci%C3%B3n%3A%0AMaterial%20(PLA%20%2F%20resina)%3A%0AReferencia%20o%20STL%20(si%20tengo)%3A"
+              className="cyber-btn"
+              style={{
+                display: 'inline-block', fontSize: 11, color: '#00d4ff', letterSpacing: 3,
+                textDecoration: 'none', border: '1px solid #00d4ff', padding: '14px 32px',
+                background: '#00d4ff0f',
+              }}
+            >
+              [ PEDIR COTIZACIÓN ]
+            </a>
+            <Link
+              href="/artifacts"
+              style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1.5, textDecoration: 'none' }}
+            >
+              VER TRABAJOS REALIZADOS →
+            </Link>
+          </div>
         </div>
 
         {/* Genos — el proceso que ejecuta esto en Proxyverse */}
@@ -266,29 +329,45 @@ export default function FabricationPage() {
           padding: '60px 24px',
           borderTop: '1px solid rgba(0, 212, 255, 0.1)'
         }}>
-          <div style={{ 
-            fontSize: 10, 
+          <div style={{
+            fontSize: 10,
             color: '#4a6080',
             letterSpacing: 3,
             marginBottom: 32
           }}>
-            ¿INTERESADO EN UN ARTEFACTO?
+            ¿TENÉS UNA PIEZA EN MENTE?
           </div>
-          <Link
-            href="/shop/drop01"
-            className="cyber-btn"
-            style={{ 
-              display: 'inline-block',
-              fontSize: 10, 
-              color: '#00d4ff',
-              letterSpacing: 4,
-              textDecoration: 'none',
-              border: '1px solid #00d4ff44',
-              padding: '14px 42px'
-            }}
-          >
-            [ VIEW DROPS ]
-          </Link>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <a
+              href="mailto:contact@neoproxy.art?subject=Pedido%20de%20impresi%C3%B3n%203D"
+              className="cyber-btn"
+              style={{
+                display: 'inline-block',
+                fontSize: 10,
+                color: '#00d4ff',
+                letterSpacing: 4,
+                textDecoration: 'none',
+                border: '1px solid #00d4ff44',
+                padding: '14px 42px'
+              }}
+            >
+              [ PEDIR COTIZACIÓN ]
+            </a>
+            <Link
+              href="/shop/drop01"
+              style={{
+                display: 'inline-block',
+                fontSize: 10,
+                color: '#4a6080',
+                letterSpacing: 4,
+                textDecoration: 'none',
+                border: '1px solid #0f1f35',
+                padding: '14px 42px'
+              }}
+            >
+              VER DROP ACTUAL
+            </Link>
+          </div>
         </div>
 
         {/* Footer */}
