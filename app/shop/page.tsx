@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import { Esp32Icon, ArduinoNanoIcon } from '@/components/shop/BoardIcons';
 
 type Category = {
   id: string;
@@ -17,7 +18,7 @@ const categories: Category[] = [
     label: 'INSUMOS ELECTRÓNICOS',
     color: '#00ff9d',
     desc: 'Componentes para tus propios builds: microcontroladores, sensores y actuadores.',
-    items: ['ESP32 DevKit', 'Arduino Uno R3', 'Sensores (PIR, ultrasónico, temperatura)', 'Servos SG90 / MG996R'],
+    items: ['ESP32 DevKit', 'Arduino Nano', 'Arduino Uno R3', 'Sensores (PIR, ultrasónico, temperatura)', 'Servos SG90 / MG996R'],
     cta: { label: 'CONSULTAR DISPONIBILIDAD', href: 'mailto:contact@neoproxy.art?subject=Insumos%20electr%C3%B3nicos' },
   },
   {
@@ -94,6 +95,23 @@ export default function ShopPage() {
                   {cat.label}
                 </div>
                 <p className="text-sm text-[#8fb8d6] mb-5">{cat.desc}</p>
+
+                {cat.id === 'insumos' && (
+                  <div className="flex gap-6 items-end mb-6 pb-6 border-b border-[#0f1f35]">
+                    <div className="text-center">
+                      <Esp32Icon color={cat.color} />
+                      <div className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2" style={{ color: cat.color }}>
+                        ESP32
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <ArduinoNanoIcon color={cat.color} />
+                      <div className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2" style={{ color: cat.color }}>
+                        ARDUINO NANO
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <ul className="mb-6 space-y-2">
                   {cat.items.map((item) => (
