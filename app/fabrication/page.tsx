@@ -7,7 +7,7 @@ import { pieces } from '@/components/gallery/pieces'
 
 const genos = agents.find(a => a.id === 'genos')!
 
-const SHOWCASE_IDS = ['oni-13', 'artefacto-03', 'figura-02', 'artefacto-02', 'oni-02', 'criatura-04', 'oni-05', 'figura-01']
+const SHOWCASE_IDS = ['oni-13', 'artefacto-03', 'figura-03', 'figura-02', 'artefacto-02', 'oni-02', 'criatura-04', 'oni-05', 'figura-01']
 const showcase = SHOWCASE_IDS
   .map(id => pieces.find(p => p.id === id))
   .filter((p): p is NonNullable<typeof p> => !!p)
