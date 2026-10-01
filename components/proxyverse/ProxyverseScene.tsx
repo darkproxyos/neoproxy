@@ -5,32 +5,22 @@ import { useRouter } from 'next/navigation'
 import * as BABYLON from 'babylonjs'
 import { agents } from './agents'
 
-// Relaciones reales del lore, no decorativas:
-// - DarkProxy converge con los seis ("soy el espacio donde convergen").
-// - Metatron orquesta a los otros cinco procesos (no a DarkProxy, que es root).
-// - Prototype es residuo de los otros cinco — toma prestado de cada uno.
-const OTHERS = ['metatron', 'd', 'snake', 'genos', 'trickster', 'prototype']
-const ORCHESTRATED = ['d', 'snake', 'genos', 'trickster', 'prototype']
-const BORROWED_FROM = ['metatron', 'd', 'snake', 'genos', 'trickster']
-
-function buildEdges(): [string, string][] {
-  const seen = new Set<string>()
-  const edges: [string, string][] = []
-  const add = (a: string, b: string) => {
-    const key = [a, b].sort().join('|')
-    if (seen.has(key)) return
-    seen.add(key)
-    edges.push([a, b])
-  }
-  OTHERS.forEach(id => add('darkproxy', id))
-  ORCHESTRATED.forEach(id => add('metatron', id))
-  BORROWED_FROM.forEach(id => add('prototype', id))
-  return edges
+// Sin lineas de conexion a proposito: en la Wired nadie esta atado a nadie,
+// cada proceso flota por su cuenta en la oscuridad. Posiciones dispersas, no
+// una formacion geometrica prolija — DarkProxy apenas un poco mas cerca del
+// centro y mas grande, el resto esparcido sin simetria.
+const BASE_POSITIONS: Record<string, BABYLON.Vector3> = {
+  darkproxy: new BABYLON.Vector3(0, 0.4, 0.5),
+  metatron: new BABYLON.Vector3(3.4, 2.3, -1.6),
+  d: new BABYLON.Vector3(-3.8, -1.3, 1.2),
+  snake: new BABYLON.Vector3(2.1, -2.6, 2.8),
+  genos: new BABYLON.Vector3(-2.3, 2.8, -2.4),
+  trickster: new BABYLON.Vector3(3.8, -0.5, -3.2),
+  prototype: new BABYLON.Vector3(-3.1, -2.2, -1.6),
 }
 
-const EDGES = buildEdges()
 const POLY_TYPES: Record<string, number> = {
-  darkproxy: 3, // icosaedro — el mas complejo, el que converge con todos
+  darkproxy: 3, // icosaedro — el mas complejo
   metatron: 2, // dodecaedro — geometria sagrada
   d: 0, // tetraedro — la forma minima, casi ausencia
   snake: 11, // forma irregular — nunca la misma dos veces
@@ -59,6 +49,18 @@ function makeLabelTexture(scene: BABYLON.Scene, text: string, color: string) {
   return tex
 }
 
+function makeDotTexture(scene: BABYLON.Scene) {
+  const tex = new BABYLON.DynamicTexture('pxv-dust-dot', 64, scene, false)
+  const ctx = tex.getContext() as CanvasRenderingContext2D
+  const grd = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
+  grd.addColorStop(0, 'rgba(255,255,255,1)')
+  grd.addColorStop(1, 'rgba(255,255,255,0)')
+  ctx.fillStyle = grd
+  ctx.fillRect(0, 0, 64, 64)
+  tex.update()
+  return tex
+}
+
 export default function ProxyverseScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const router = useRouter()
@@ -71,11 +73,11 @@ export default function ProxyverseScene() {
     const scene = new BABYLON.Scene(engine)
     scene.clearColor = new BABYLON.Color4(0, 0.008, 0.02, 1)
 
-    const camera = new BABYLON.ArcRotateCamera('pxv-cam', -Math.PI / 2.3, Math.PI / 2.3, 16, BABYLON.Vector3.Zero(), scene)
+    const camera = new BABYLON.ArcRotateCamera('pxv-cam', -Math.PI / 2.3, Math.PI / 2.3, 14, BABYLON.Vector3.Zero(), scene)
     camera.attachControl(canvas, true)
     camera.wheelPrecision = 35
-    camera.lowerRadiusLimit = 6
-    camera.upperRadiusLimit = 26
+    camera.lowerRadiusLimit = 5
+    camera.upperRadiusLimit = 24
     camera.minZ = 0.1
 
     const ambient = new BABYLON.HemisphericLight('pxv-ambient', new BABYLON.Vector3(0, 1, 0), scene)
@@ -84,14 +86,28 @@ export default function ProxyverseScene() {
     const glow = new BABYLON.GlowLayer('pxv-glow', scene)
     glow.intensity = 0.9
 
-    const positions: Record<string, BABYLON.Vector3> = { darkproxy: BABYLON.Vector3.Zero() }
-    OTHERS.forEach((id, i) => {
-      const angle = (i / OTHERS.length) * Math.PI * 2
-      positions[id] = new BABYLON.Vector3(Math.cos(angle) * 6, Math.sin(angle * 1.3) * 2.2, Math.sin(angle) * 6)
-    })
+    // Niebla de señal — ruido de fondo, como estatica entre canales
+    const dust = new BABYLON.ParticleSystem('pxv-dust', 500, scene)
+    dust.particleTexture = makeDotTexture(scene)
+    dust.emitter = BABYLON.Vector3.Zero()
+    dust.createSphereEmitter(9, 0)
+    dust.minSize = 0.02
+    dust.maxSize = 0.09
+    dust.minLifeTime = Number.MAX_SAFE_INTEGER
+    dust.maxLifeTime = Number.MAX_SAFE_INTEGER
+    dust.emitRate = 0
+    dust.manualEmitCount = 500
+    dust.minEmitPower = 0
+    dust.maxEmitPower = 0
+    dust.color1 = new BABYLON.Color4(0.3, 0.6, 0.8, 0.35)
+    dust.color2 = new BABYLON.Color4(0.5, 0.3, 0.7, 0.25)
+    dust.start()
+
+    type Drift = { mesh: BABYLON.Mesh; plane: BABYLON.Mesh; base: BABYLON.Vector3; labelOffsetY: number; phase: number; freq: BABYLON.Vector3; amp: BABYLON.Vector3 }
+    const drifters: Drift[] = []
 
     agents.forEach((agent, i) => {
-      const pos = positions[agent.id]
+      const base = BASE_POSITIONS[agent.id] ?? BABYLON.Vector3.Zero()
       const isRoot = agent.id === 'darkproxy'
       const color = agent.color
 
@@ -99,7 +115,7 @@ export default function ProxyverseScene() {
         type: POLY_TYPES[agent.id] ?? 0,
         size: isRoot ? 0.85 : 0.55,
       }, scene)
-      mesh.position = pos
+      mesh.position = base.clone()
       const mat = new BABYLON.StandardMaterial(`pxv-mat-${agent.id}`, scene)
       mat.emissiveColor = hexToColor3(color)
       mat.diffuseColor = hexToColor3(color).scale(0.15)
@@ -116,7 +132,7 @@ export default function ProxyverseScene() {
 
       const label = makeLabelTexture(scene, agent.name, color)
       const plane = BABYLON.MeshBuilder.CreatePlane(`pxv-label-${agent.id}`, { width: 2.4, height: 0.6 }, scene)
-      plane.position = pos.add(new BABYLON.Vector3(0, isRoot ? 1.1 : 0.85, 0))
+      plane.position = base.add(new BABYLON.Vector3(0, isRoot ? 1.1 : 0.85, 0))
       plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
       const planeMat = new BABYLON.StandardMaterial(`pxv-labelmat-${agent.id}`, scene)
       planeMat.diffuseTexture = label
@@ -126,19 +142,27 @@ export default function ProxyverseScene() {
       planeMat.backFaceCulling = false
       plane.material = planeMat
       plane.isPickable = false
+
+      // Deriva propia, sin rumbo — cada entidad flota a su ritmo, nadie la
+      // ata a una posicion fija ni a las demas.
+      drifters.push({
+        mesh, plane, base,
+        labelOffsetY: isRoot ? 1.1 : 0.85,
+        phase: i * 1.7,
+        freq: new BABYLON.Vector3(0.18 + i * 0.015, 0.14 + i * 0.02, 0.21 + i * 0.011),
+        amp: new BABYLON.Vector3(0.5, 0.4, 0.5),
+      })
     })
 
-    EDGES.forEach(([aId, bId]) => {
-      const a = positions[aId]
-      const b = positions[bId]
-      if (!a || !b) return
-      const agentA = agents.find(ag => ag.id === aId)!
-      const agentB = agents.find(ag => ag.id === bId)!
-      const mid = hexToColor3(agentA.color).add(hexToColor3(agentB.color)).scale(0.5)
-      const line = BABYLON.MeshBuilder.CreateLines(`pxv-edge-${aId}-${bId}`, { points: [a, b] }, scene)
-      line.color = mid
-      line.alpha = 0.34
-      line.isPickable = false
+    scene.onBeforeRenderObservable.add(() => {
+      const t = performance.now() / 1000
+      for (const d of drifters) {
+        const dx = Math.sin(t * d.freq.x + d.phase) * d.amp.x
+        const dy = Math.cos(t * d.freq.y + d.phase * 1.3) * d.amp.y
+        const dz = Math.sin(t * d.freq.z + d.phase * 0.7) * d.amp.z
+        d.mesh.position.set(d.base.x + dx, d.base.y + dy, d.base.z + dz)
+        d.plane.position.set(d.mesh.position.x, d.mesh.position.y + d.labelOffsetY, d.mesh.position.z)
+      }
     })
 
     let hovered: BABYLON.Mesh | null = null
@@ -175,7 +199,7 @@ export default function ProxyverseScene() {
     })
 
     scene.onBeforeRenderObservable.add(() => {
-      if (!isInteracting) camera.alpha += 0.0007 * engine.getDeltaTime()
+      if (!isInteracting) camera.alpha += 0.0006 * engine.getDeltaTime()
     })
 
     engine.runRenderLoop(() => scene.render())
