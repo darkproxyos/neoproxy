@@ -32,7 +32,7 @@ Cascade y Antigravity son herramientas externas, NO agentes. No crear entradas e
 - FPGA (repo aparte): `openFPGALoader`, no `quartus_pgm` (clones USB-Blaster incompatibles). `.sof` → `.rbf` con `quartus_cpf -c`, luego `sudo openFPGALoader --cable usb-blaster --file-type rbf archivo.rbf`. `-f` escribe a flash, cuidado.
 
 ## Pendientes abiertos (estado verificado contra este repo)
-- **TS error en `app/games/wired/page.tsx`**: usa `CoherenceSystem` y `MemoryBridge` sin importarlas. Ambas clases existen (`src/systems/CoherenceSystem.ts`, `src/bridge/MemoryBridge.ts`) — el fix es agregar los dos imports, no crear código nuevo.
+- ~~**TS error en `app/games/wired/page.tsx`**~~: resuelto — la página se reescribió completa (migró del hack de `<script>` CDN de Three.js r128 a `import * as THREE from 'three'`, ya instalado). `MemoryBridge.ts` tenía además un import roto (`@/systems/...` en vez de `@/src/systems/...`) que nunca se había notado porque nada tipaba el archivo que lo usaba — corregido ahí mismo. `CoherenceSystem` ganó `dispose()`/`reset()` (antes su `setInterval` nunca se limpiaba al desmontar la página).
 - ~~**Overseer auth**~~: resuelto — ver sección "Auth y datos" arriba.
 - **`src/db/db/index.ts`**: cliente SQLite local huérfano, sin imports en todo el repo. Confirmar que no se necesita y borrarlo, o documentar por qué existe.
 - **GitHub PAT expuesto**: no encontrado en este repo (ni en `git log --all -p` ni en el árbol de trabajo). Si el leak es real, está en otro repo o medio — confirmar ahí, no acá.
