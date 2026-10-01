@@ -1,9 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { agents } from '@/components/proxyverse/agents'
+import { pieces } from '@/components/gallery/pieces'
 
 const genos = agents.find(a => a.id === 'genos')!
+
+const SHOWCASE_IDS = ['oni-02', 'criatura-04', 'figura-02', 'artefacto-02', 'oni-05', 'figura-01']
+const showcase = SHOWCASE_IDS
+  .map(id => pieces.find(p => p.id === id))
+  .filter((p): p is NonNullable<typeof p> => !!p && p.media.type === 'image')
 
 export default function FabricationPage() {
   const mono = "'Space Mono', monospace"
@@ -177,6 +184,39 @@ export default function FabricationPage() {
             >
               VER TRABAJOS REALIZADOS →
             </Link>
+          </div>
+        </div>
+
+        {/* MUESTRA DE TRABAJO — prueba visual inmediata, piezas reales ya hechas */}
+        <div style={{ marginBottom: 80 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 12, marginBottom: 22 }}>
+            <div style={{ fontSize: 10, color: '#00ffcc', letterSpacing: 4 }}>TRABAJOS_DESTACADOS</div>
+            <Link href="/artifacts" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1.5, textDecoration: 'none' }}>
+              VER GALERÍA COMPLETA →
+            </Link>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
+            {showcase.map(piece => (
+              <Link
+                key={piece.id}
+                href="/artifacts"
+                className="showcase-thumb"
+                style={{
+                  position: 'relative', display: 'block', aspectRatio: '1 / 1',
+                  overflow: 'hidden', border: '1px solid #00d4ff22',
+                }}
+              >
+                <Image
+                  src={piece.media.type === 'image' ? piece.media.src : ''}
+                  alt={piece.title}
+                  fill
+                  sizes="(max-width: 768px) 33vw, 150px"
+                  style={{ objectFit: 'cover' }}
+                />
+                <div className="showcase-scanlines" />
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -385,6 +425,23 @@ export default function FabricationPage() {
       <style>{`
         @media (max-width: 768px) {
           h1 { font-size: 28px !important; }
+        }
+        .showcase-thumb img {
+          filter: saturate(1.1) contrast(1.05) brightness(0.95);
+          transition: filter 0.35s ease, transform 0.5s ease;
+        }
+        .showcase-thumb:hover img {
+          filter: saturate(1.3) contrast(1.15) brightness(1.05);
+          transform: scale(1.08);
+        }
+        .showcase-scanlines {
+          position: absolute; inset: 0; pointer-events: none;
+          background: repeating-linear-gradient(
+            to bottom,
+            rgba(0,0,0,0) 0px, rgba(0,0,0,0) 1px,
+            rgba(0,255,157,0.07) 2px, rgba(0,0,0,0) 3px
+          );
+          mix-blend-mode: overlay;
         }
       `}</style>
     </div>
