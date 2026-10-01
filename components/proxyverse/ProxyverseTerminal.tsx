@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import ProxyverseScene from './ProxyverseScene'
 import { agents, getResponses, getAmbientLine } from './agents'
 
 const mono = "'Space Mono', monospace"
@@ -53,24 +53,38 @@ export default function ProxyverseTerminal() {
 
   return (
     <div>
-      {/* Agent cards — cada una linkea al perfil completo del proceso */}
+      {/* Red de procesos: DarkProxy converge con los seis, Metatron orquesta
+          a cinco, Prototype toma prestado de esos mismos cinco — las lineas
+          son relaciones reales del lore, no decoracion. Click en un nodo
+          navega a su perfil completo. */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12, marginBottom: 32,
+        height: '55vh', minHeight: 360, marginBottom: 12,
+        border: '1px solid rgba(0, 212, 255, 0.15)', background: 'rgba(0,4,10,0.4)',
+        position: 'relative', overflow: 'hidden',
+      }}>
+        <ProxyverseScene />
+        <div style={{
+          position: 'absolute', bottom: 12, left: 12, fontFamily: mono, fontSize: 8,
+          letterSpacing: 2, color: '#00d4ff55', pointerEvents: 'none',
+        }}>
+          ARRASTRAR: ORBITAR // SCROLL: ZOOM // CLICK: ENTRAR AL PERFIL
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8, marginBottom: 32,
       }}>
         {agents.map(agent => (
-          <Link
-            key={agent.id}
-            href={`/proxyverse/${agent.id}`}
-            style={{
-              textAlign: 'left', cursor: 'pointer', fontFamily: mono, textDecoration: 'none', display: 'block',
-              background: 'rgba(0,4,10,0.5)', border: `1px solid ${agent.color}33`,
-              padding: '14px 16px', minHeight: 88,
-            }}
-          >
-            <div style={{ color: agent.color, fontSize: 12, letterSpacing: 2, marginBottom: 6 }}>{agent.name}</div>
-            <div style={{ color: '#8fb8d6', fontSize: 8, letterSpacing: 1, lineHeight: 1.6, marginBottom: 8 }}>{agent.role}</div>
-            <div style={{ color: `${agent.color}88`, fontSize: 8, letterSpacing: 1 }}>VER PERFIL →</div>
-          </Link>
+          <div key={agent.id} style={{
+            display: 'flex', alignItems: 'center', gap: 6, fontFamily: mono, fontSize: 8,
+            letterSpacing: 1, color: `${agent.color}aa`,
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: '50%', background: agent.color,
+              boxShadow: `0 0 6px ${agent.color}`, flexShrink: 0,
+            }} />
+            {agent.name}
+          </div>
         ))}
       </div>
 
