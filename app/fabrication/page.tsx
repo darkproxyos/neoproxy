@@ -7,10 +7,10 @@ import { pieces } from '@/components/gallery/pieces'
 
 const genos = agents.find(a => a.id === 'genos')!
 
-const SHOWCASE_IDS = ['oni-02', 'criatura-04', 'figura-02', 'artefacto-02', 'oni-05', 'figura-01']
+const SHOWCASE_IDS = ['oni-02', 'criatura-04', 'figura-02', 'artefacto-02', 'oni-13', 'artefacto-03', 'oni-05', 'figura-01']
 const showcase = SHOWCASE_IDS
   .map(id => pieces.find(p => p.id === id))
-  .filter((p): p is NonNullable<typeof p> => !!p && p.media.type === 'image')
+  .filter((p): p is NonNullable<typeof p> => !!p)
 
 export default function FabricationPage() {
   const mono = "'Space Mono', monospace"
@@ -207,13 +207,26 @@ export default function FabricationPage() {
                   overflow: 'hidden', border: '1px solid #00d4ff22',
                 }}
               >
-                <Image
-                  src={piece.media.type === 'image' ? piece.media.src : ''}
-                  alt={piece.title}
-                  fill
-                  sizes="(max-width: 768px) 33vw, 150px"
-                  style={{ objectFit: 'cover' }}
-                />
+                {piece.media.type === 'image' ? (
+                  <Image
+                    src={piece.media.src}
+                    alt={piece.title}
+                    fill
+                    sizes="(max-width: 768px) 33vw, 150px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                ) : (
+                  <video
+                    src={piece.media.src}
+                    poster={piece.media.poster}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
                 <div className="showcase-scanlines" />
               </Link>
             ))}
