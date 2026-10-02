@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { agents, pickRandom, type ProxyAgent } from '@/components/proxyverse/agents'
 
 type Vec4 = [number, number, number, number]
 type Polytope4D = { name: string; vertices: Vec4[]; edges: [number, number][] }
@@ -94,12 +95,35 @@ function easeInOut(t: number) {
   return t * t * (3 - 2 * t)
 }
 
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace('#', '')
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
+}
+
+// Cada visita reordena los 7 agentes al azar: el primero posee el hero y el
+// polytope de fondo, los otros seis quedan uno por sección — el sitio se
+// siente distinto cada vez que alguien entra, sin dejar de ser un solo sistema.
+function shuffleSession(): { agent: ProxyAgent; line: string }[] {
+  const shuffled = [...agents]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled.map(agent => ({
+    agent,
+    line: agent.ambient.length > 0 ? pickRandom(agent.ambient) : agent.quote,
+  }))
+}
+
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [booted, setBooted] = useState(false)
   const [bootText, setBootText] = useState('')
   const [showContent, setShowContent] = useState(false)
   const [currentScreen, setCurrentScreen] = useState<'boot' | 'init' | 'content'>('boot')
+  const [session] = useState(shuffleSession)
+  const heroAgent = session[0].agent
+  const heroLine = session[0].line
 
   useEffect(() => {
     const lines = [
@@ -138,6 +162,8 @@ export default function Home() {
 
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
+
+    const [heroR, heroG, heroB] = hexToRgb(heroAgent.color)
 
     const particles: Array<{ x: number; y: number; vx: number; vy: number; size: number; alpha: number }> = []
     for (let i = 0; i < 50; i++) {
@@ -200,7 +226,7 @@ export default function Home() {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
         ctx.beginPath()
         ctx.arc(p.x + parallaxX, p.y + parallaxY, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(0, 212, 255, ${p.alpha})`
+        ctx.fillStyle = `rgba(${heroR}, ${heroG}, ${heroB}, ${p.alpha})`
         ctx.fill()
       })
 
@@ -249,9 +275,9 @@ export default function Home() {
           const depth = (a.depth + b.depth) / 2
           const wAvg = (a.w + b.w) / 2
           const hue = Math.max(0, Math.min(1, (wAvg + 1) / 2))
-          const r = Math.round(102 + (0 - 102) * hue)
-          const g = Math.round(68 + (212 - 68) * hue)
-          const bch = Math.round(170 + (255 - 170) * hue)
+          const r = Math.round(20 + (heroR - 20) * hue)
+          const g = Math.round(20 + (heroG - 20) * hue)
+          const bch = Math.round(30 + (heroB - 30) * hue)
           const alpha = shapeOpacity * Math.max(0.06, Math.min(0.5, depth * 0.28))
           ctx.strokeStyle = `rgba(${r}, ${g}, ${bch}, ${alpha})`
           ctx.shadowColor = `rgba(${r}, ${g}, ${bch}, ${alpha})`
@@ -386,8 +412,8 @@ export default function Home() {
             alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '100px 24px 60px', boxSizing: 'border-box'
           }}>
             <div className="fade-in hero-title" style={{
-              fontFamily: mono, fontSize: 56, fontWeight: 700, letterSpacing: 16, color: '#00d4ff',
-              textShadow: '0 0 40px #00d4ff, 0 0 80px #6644aa', marginBottom: 16, lineHeight: 1
+              fontFamily: mono, fontSize: 56, fontWeight: 700, letterSpacing: 16, color: heroAgent.color,
+              textShadow: `0 0 40px ${heroAgent.color}, 0 0 80px ${heroAgent.color}66`, marginBottom: 16, lineHeight: 1
             }}>
               NEO·PROXY
             </div>
@@ -400,9 +426,16 @@ export default function Home() {
               Un laboratorio experimental de fabricación. Artefactos reales, diseñados y producidos por sistemas de IA e ingeniería humana.
             </div>
 
-            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 40 }}>
-              <div style={{ color: '#00d4ff', fontSize: 11, marginBottom: 8 }}>SYSTEM STATUS</div>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 24 }}>
+              <div style={{ color: heroAgent.color, fontSize: 11, marginBottom: 8 }}>SYSTEM STATUS</div>
               <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> CATALOG: SYNCED</div>
+            </div>
+
+            <div className="fade-in" style={{
+              fontFamily: mono, fontSize: 9, letterSpacing: 1, color: heroAgent.color, opacity: 0.8,
+              fontStyle: 'italic', marginBottom: 32, maxWidth: 460
+            }}>
+              {heroAgent.name} // "{heroLine}"
             </div>
 
             <div className="scroll-cue" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff99' }}>
@@ -410,29 +443,38 @@ export default function Home() {
             </div>
           </section>
 
-          {sections.map((s, idx) => (
-            <section key={s.id} style={{
-              position: 'relative', zIndex: 10, minHeight: '60vh', display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '80px 24px', boxSizing: 'border-box',
-              borderTop: '1px solid rgba(0, 212, 255, 0.08)', background: idx % 2 === 1 ? 'rgba(0, 212, 255, 0.02)' : 'transparent'
-            }}>
-              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#7a9cc0', marginBottom: 12 }}>
-                {s.tag}
-              </div>
-              <div style={{ fontFamily: mono, fontSize: 32, letterSpacing: 8, color: '#00d4ff', marginBottom: 20, textShadow: '0 0 24px rgba(0,212,255,0.35)' }}>
-                {s.title}
-              </div>
-              <div style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.8, letterSpacing: 0.5, color: '#9fc4e0', maxWidth: 520, marginBottom: 36 }}>
-                {s.copy}
-              </div>
-              <Link href={s.href} className="cyber-btn" style={{
-                display: 'inline-block', fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#00d4ff', textDecoration: 'none',
-                border: '1px solid #00d4ff44', padding: '12px 32px', background: 'rgba(0, 212, 255, 0.05)', cursor: 'pointer'
+          {sections.map((s, idx) => {
+            const { agent, line } = session[idx + 1]
+            return (
+              <section key={s.id} style={{
+                position: 'relative', zIndex: 10, minHeight: '60vh', display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '80px 24px', boxSizing: 'border-box',
+                borderTop: `1px solid ${agent.color}22`, background: idx % 2 === 1 ? `${agent.color}08` : 'transparent'
               }}>
-                [ {s.cta} ]
-              </Link>
-            </section>
-          ))}
+                <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#7a9cc0', marginBottom: 6 }}>
+                  {s.tag}
+                </div>
+                <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, opacity: 0.75, marginBottom: 18 }}>
+                  PROCESO RESIDENTE // {agent.name}
+                </div>
+                <div style={{ fontFamily: mono, fontSize: 32, letterSpacing: 8, color: agent.color, marginBottom: 20, textShadow: `0 0 24px ${agent.color}59` }}>
+                  {s.title}
+                </div>
+                <div style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.8, letterSpacing: 0.5, color: '#9fc4e0', maxWidth: 520, marginBottom: 20 }}>
+                  {s.copy}
+                </div>
+                <div style={{ fontFamily: mono, fontSize: 10, lineHeight: 1.7, letterSpacing: 0.3, color: agent.color, opacity: 0.75, fontStyle: 'italic', maxWidth: 440, marginBottom: 36 }}>
+                  "{line}"
+                </div>
+                <Link href={s.href} className="cyber-btn" style={{
+                  display: 'inline-block', fontFamily: mono, fontSize: 10, letterSpacing: 3, color: agent.color, textDecoration: 'none',
+                  border: `1px solid ${agent.color}44`, padding: '12px 32px', background: `${agent.color}0d`, cursor: 'pointer'
+                }}>
+                  [ {s.cta} ]
+                </Link>
+              </section>
+            )
+          })}
 
           <div style={{
             position: 'relative', zIndex: 10, textAlign: 'center', padding: '32px 24px 8px', fontFamily: mono,
