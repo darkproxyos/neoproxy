@@ -10,6 +10,8 @@ import Sparkline from '@/components/trickster/Sparkline'
 import SlotMachine from '@/components/trickster/SlotMachine'
 import CardHighLow from '@/components/trickster/CardHighLow'
 import Roulette from '@/components/trickster/Roulette'
+import Dice from '@/components/trickster/Dice'
+import Mines from '@/components/trickster/Mines'
 
 const mono = "'Space Mono', monospace"
 const COLOR = '#b400ff'
@@ -72,7 +74,7 @@ export default function TricksterCasinoPage() {
           PROXYCOINS es el residuo de entropía que el sistema descarta cuando los agentes procesan algo.
           Encontré cómo filtrarlo antes de que se pierda. No vale nada afuera de acá — no se compra,
           no se cobra, no se canjea. Pero adentro, PROXYBILIDAD decide cuánto de ese residuo te dejan usar,
-          y tres juegos lo ponen a prueba.
+          y cinco juegos lo ponen a prueba.
         </p>
 
         <div style={{
@@ -180,6 +182,8 @@ export default function TricksterCasinoPage() {
             <SlotMachine balance={balance} setBalance={setBalance} getOddsBias={getOddsBias} onRound={handleRound} />
             <CardHighLow balance={balance} setBalance={setBalance} getOddsBias={getOddsBias} onRound={handleRound} />
             <Roulette balance={balance} setBalance={setBalance} getOddsBias={getOddsBias} onRound={handleRound} />
+            <Dice balance={balance} setBalance={setBalance} getOddsBias={getOddsBias} onRound={handleRound} />
+            <Mines balance={balance} setBalance={setBalance} getOddsBias={getOddsBias} onRound={handleRound} />
           </div>
         )}
 
