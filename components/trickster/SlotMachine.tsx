@@ -40,7 +40,7 @@ export default function SlotMachine({
   balance: number
   setBalance: (updater: number | ((prev: number) => number)) => void
   getOddsBias: () => number
-  onRound: (won: boolean) => void
+  onRound: (result: { won: boolean; wagered: number; payout: number }) => void
 }) {
   const [reels, setReels] = useState<string[]>(['♠', '♥', '♦'])
   const [bet, setBet] = useState(25)
@@ -79,7 +79,7 @@ export default function SlotMachine({
           } else {
             setMessage('SIN COINCIDENCIA')
           }
-          onRound(win > 0)
+          onRound({ won: win > 0, wagered: bet, payout: win })
           setSpinning(false)
         }
       }, delay)
