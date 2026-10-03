@@ -6,6 +6,7 @@ import { PROXYBILIDAD_START, clampIndex, effectiveOddsBias, effectiveProfile, ne
 
 const AGENT_KEY = 'np-market-agent'
 const INDEX_KEY = 'np-proxybilidad'
+const HISTORY_LENGTH = 24
 
 function pickAgentId(): string {
   const ids = agents.map(a => a.id)
@@ -14,13 +15,14 @@ function pickAgentId(): string {
 
 // Un agente "posee" el mercado por toda la duración de esta pestaña — se
 // sortea una vez (sessionStorage, no localStorage) y mueve el índice de
-// PROXYBILIDAD con cada ronda jugada en cualquiera de los dos juegos.
+// PROXYBILIDAD con cada ronda jugada en cualquiera de los juegos.
 // getOddsBias() se recalcula en el momento exacto de cada ronda (no queda
 // fijo entre renders) — así Prototype pide prestado un perfil distinto
 // cada vez que de verdad se juega, no solo cuando el componente redibuja.
 export function useSessionMarket() {
   const [agentId, setAgentId] = useState<string | null>(null)
   const [index, setIndexState] = useState<number | null>(null)
+  const [history, setHistory] = useState<number[]>([])
   const indexRef = useRef(PROXYBILIDAD_START)
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export function useSessionMarket() {
     const startIndex = Number.isFinite(storedIndex) && storedIndex > 0 ? clampIndex(storedIndex) : PROXYBILIDAD_START
     indexRef.current = startIndex
     setIndexState(startIndex)
+    setHistory([startIndex])
   }, [])
 
   const getOddsBias = useCallback(() => {
@@ -49,9 +52,10 @@ export function useSessionMarket() {
     indexRef.current = next
     window.sessionStorage.setItem(INDEX_KEY, String(next))
     setIndexState(next)
+    setHistory(prev => [...prev, next].slice(-HISTORY_LENGTH))
   }, [agentId])
 
   const agent = agents.find(a => a.id === agentId) ?? null
 
-  return { agent, index, getOddsBias, registerRound }
+  return { agent, index, history, getOddsBias, registerRound }
 }

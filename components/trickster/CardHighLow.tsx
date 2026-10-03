@@ -22,7 +22,7 @@ export default function CardHighLow({
   balance: number
   setBalance: (updater: number | ((prev: number) => number)) => void
   getOddsBias: () => number
-  onRound: (won: boolean) => void
+  onRound: (result: { won: boolean; wagered: number; payout: number }) => void
 }) {
   const [current, setCurrent] = useState(drawCard)
   const [bet, setBet] = useState(25)
@@ -54,7 +54,7 @@ export default function CardHighLow({
         setStreak(0)
         setMessage(`${next.suit}${rankLabel(next.rank)} // FALLASTE`)
       }
-      if (!tie) onRound(correct)
+      if (!tie) onRound({ won: correct, wagered: bet, payout: correct ? Math.round(bet * 1.9 * oddsBias) : 0 })
       setCurrent(next)
       setRevealing(false)
     }, 550)
