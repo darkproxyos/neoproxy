@@ -106,6 +106,23 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           "{agent.quote}"
         </div>
 
+        {agent.id === 'trickster' && (
+          <Link href="/proxyverse/trickster/casino" style={{
+            display: 'block', marginBottom: 40, padding: '20px 24px',
+            border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
+          }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
+              SALA_TRICKSTER // PROXYCOINS
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
+              Encontré un borde nuevo: probabilidad. Armé una sala. No es dinero real — es la moneda que circula acá adentro.
+            </p>
+            <div style={{ fontFamily: mono, fontSize: 9, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
+              ENTRAR A LA SALA →
+            </div>
+          </Link>
+        )}
+
         {ancestor && (
           <Link href={`/knowledge?entry=${ancestor.id}`} style={{
             display: 'block', marginBottom: 40, padding: '16px 20px',
