@@ -17,10 +17,12 @@ function drawCard() {
 }
 
 export default function CardHighLow({
-  balance, setBalance,
+  balance, setBalance, getOddsBias, onRound,
 }: {
   balance: number
   setBalance: (updater: number | ((prev: number) => number)) => void
+  getOddsBias: () => number
+  onRound: (won: boolean) => void
 }) {
   const [current, setCurrent] = useState(drawCard)
   const [bet, setBet] = useState(25)
@@ -30,6 +32,7 @@ export default function CardHighLow({
 
   const guess = (direction: 'alta' | 'baja') => {
     if (revealing || balance < bet) return
+    const oddsBias = getOddsBias()
     setRevealing(true)
     setMessage(null)
     setBalance(prev => prev - bet)
@@ -43,7 +46,7 @@ export default function CardHighLow({
         setBalance(prev => prev + bet)
         setMessage(`EMPATE // ${next.suit}${rankLabel(next.rank)} — se devuelve la apuesta`)
       } else if (correct) {
-        const win = Math.round(bet * 1.9)
+        const win = Math.round(bet * 1.9 * oddsBias)
         setBalance(prev => prev + win)
         setStreak(s => s + 1)
         setMessage(`${next.suit}${rankLabel(next.rank)} // ACERTASTE +${win}`)
@@ -51,6 +54,7 @@ export default function CardHighLow({
         setStreak(0)
         setMessage(`${next.suit}${rankLabel(next.rank)} // FALLASTE`)
       }
+      if (!tie) onRound(correct)
       setCurrent(next)
       setRevealing(false)
     }, 550)
