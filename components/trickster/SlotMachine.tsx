@@ -11,6 +11,22 @@ function randomSymbol() {
   return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
 }
 
+// oddsBias empuja la chance de que un tambor repita uno anterior en vez de
+// salir puramente al azar — así PROXYBILIDAD afecta la probabilidad real
+// de un match, no solo el número que se muestra en pantalla.
+function drawReels(oddsBias: number): string[] {
+  const reels: string[] = [randomSymbol()]
+  for (let i = 1; i < 3; i++) {
+    const copyChance = 0.15 * oddsBias
+    if (Math.random() < copyChance) {
+      reels.push(reels[Math.floor(Math.random() * reels.length)])
+    } else {
+      reels.push(randomSymbol())
+    }
+  }
+  return reels
+}
+
 function payout(reels: string[], bet: number): number {
   const [a, b, c] = reels
   if (a === b && b === c) return a === '⚡' ? bet * 20 : bet * 8
@@ -19,10 +35,12 @@ function payout(reels: string[], bet: number): number {
 }
 
 export default function SlotMachine({
-  balance, setBalance,
+  balance, setBalance, getOddsBias, onRound,
 }: {
   balance: number
   setBalance: (updater: number | ((prev: number) => number)) => void
+  getOddsBias: () => number
+  onRound: (won: boolean) => void
 }) {
   const [reels, setReels] = useState<string[]>(['♠', '♥', '♦'])
   const [bet, setBet] = useState(25)
@@ -38,7 +56,7 @@ export default function SlotMachine({
     setSpinning(true)
     setBalance(prev => prev - bet)
 
-    const final = [randomSymbol(), randomSymbol(), randomSymbol()]
+    const final = drawReels(getOddsBias())
     const stopDelays = [700, 1000, 1350]
 
     const intervalId = setInterval(() => {
@@ -61,6 +79,7 @@ export default function SlotMachine({
           } else {
             setMessage('SIN COINCIDENCIA')
           }
+          onRound(win > 0)
           setSpinning(false)
         }
       }, delay)
