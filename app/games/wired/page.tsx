@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { CoherenceSystem } from '@/src/systems/CoherenceSystem'
 import { MemoryBridge } from '@/src/bridge/MemoryBridge'
 import { getAmbientLine } from '@/components/proxyverse/agents'
+import { TouchDPad, TouchActionButton, useIsTouchDevice } from '@/components/games/TouchControls'
 
 const mono = "'Space Mono', monospace"
 
@@ -29,6 +30,8 @@ function coherenceColor(coherence: number): THREE.Color {
 export default function WiredGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [started, setStarted] = useState(false)
+  const keysRef = useRef<Record<string, boolean>>({})
+  const isTouch = useIsTouchDevice()
 
   useEffect(() => {
     if (!started) return
@@ -137,7 +140,8 @@ export default function WiredGame() {
     const rot = new THREE.Euler(0, 0, 0, 'YXZ')
     let speed = 0
     const FRICTION = 0.96, THRUST = 0.08, MAX_SPEED = 2.0, TURN_SPEED = 0.04
-    const keys: Record<string, boolean> = {}
+    keysRef.current = {}
+    const keys = keysRef.current
     const onKeyDown = (e: KeyboardEvent) => { keys[e.code] = true }
     const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
     window.addEventListener('keydown', onKeyDown)
@@ -391,7 +395,9 @@ export default function WiredGame() {
           <div style={{
             fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#4a6080', lineHeight: 2.2, marginBottom: 40,
           }}>
-            WASD / FLECHAS — ORIENTAR &nbsp;·&nbsp; ESPACIO — IMPULSO &nbsp;·&nbsp; SHIFT — FRENO
+            {isTouch
+              ? 'D-PAD — ORIENTAR · · · IMPULSO — FRENO'
+              : 'WASD / FLECHAS — ORIENTAR · · · ESPACIO — IMPULSO · · · SHIFT — FRENO'}
           </div>
           <button
             onClick={() => setStarted(true)}
@@ -407,6 +413,23 @@ export default function WiredGame() {
             ← VOLVER
           </Link>
         </div>
+      )}
+
+      {started && isTouch && (
+        <>
+          {/* bottom:100 -- el HUD propio del juego (COHERENCIA/VELOCIDAD) se dibuja
+              vía canvas justo en la esquina inf. izquierda, bottom:36 a bottom:85 */}
+          <TouchDPad keysRef={keysRef} bottom={100} />
+          {/* Bien arriba de la esquina inf. derecha: ahí vive el botón de Chat global (bottom:24,right:24) */}
+          <TouchActionButton
+            keysRef={keysRef} code="Space" label="IMPULSO"
+            style={{ bottom: 150, right: 12, width: 84, height: 84, borderRadius: '50%' }}
+          />
+          <TouchActionButton
+            keysRef={keysRef} code="ShiftLeft" label="FRENO"
+            style={{ bottom: 90, right: 20, width: 64, height: 48 }}
+          />
+        </>
       )}
     </div>
   )
