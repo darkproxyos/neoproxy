@@ -34,6 +34,7 @@ export const navConfig: NavEntry[] = [
     live: true,
     items: [
       { label: 'Laboratorio', href: '/lab', live: true },
+      { label: 'Proxygenesis', href: '/lab/proxygenesis', live: true },
       { label: 'Stardust', href: '/npos/stardust', live: true },
       { label: 'Etéreo', href: '/etereo', live: true },
       {
