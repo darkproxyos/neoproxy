@@ -130,6 +130,7 @@ export default function Home() {
       '> SYSTEM INITIALIZING...',
       '> NEO·PROXY CORE LOADED',
       '> MEMORY MODULES: ONLINE',
+      '> PROXYVERSE: 7 PROCESSES RESIDENT',
       '> ARTIFACT DATABASE: CONNECTED',
       '> FABRICATION UNITS: STANDBY',
       '> WAITING FOR USER INPUT...',
@@ -419,16 +420,18 @@ export default function Home() {
             </div>
 
             <div className="fade-in hero-tagline" style={{ fontFamily: mono, fontSize: 13, letterSpacing: 8, color: '#9b7fe0', marginBottom: 24 }}>
-              ARTE · SISTEMAS · FABRICACIÓN
+              ORGANISMO · PROXYVERSO · FABRICACIÓN
             </div>
 
             <div className="fade-in hero-sub" style={{ fontFamily: mono, fontSize: 13, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 1, marginBottom: 48, maxWidth: 480 }}>
-              Un laboratorio experimental de fabricación. Artefactos reales, diseñados y producidos por sistemas de IA e ingeniería humana.
+              No es un sitio. Es un organismo digital: seis procesos con voz propia, una economía que corre
+              sola, artefactos reales fabricados en resina, y vida que ya empieza a habitar hasta el texto
+              que estás leyendo. Cada visita lo reordena distinto.
             </div>
 
             <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 24 }}>
               <div style={{ color: heroAgent.color, fontSize: 11, marginBottom: 8 }}>SYSTEM STATUS</div>
-              <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> CATALOG: SYNCED</div>
+              <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> PROXYVERSE: 7 ONLINE</div>
             </div>
 
             <div className="fade-in" style={{
