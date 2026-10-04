@@ -4,8 +4,23 @@ import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
 import { navConfig, isGroup, isNavHidden, type NavGroup, type NavEntry, type NavLeaf } from './nav-config'
+import { useSessionAgent } from './proxyverse/useSessionAgent'
 
 const mono = "'Space Mono', monospace"
+
+// Cada sección de primer nivel "pertenece" a un proceso -- color fijo, no
+// sorteado, para que el menú sea reconocible visita tras visita. El acento
+// que SÍ varía por sesión (borde del panel, banner de posesión) es el del
+// agente que sortea useSessionAgent.
+const NAV_COLORS: Record<string, string> = {
+  HOME: '#00d4ff',
+  MANIFIESTO: '#ffb800',
+  FABRICACIÓN: '#5f95c9',
+  PROXYGAMES: '#b400ff',
+  EXPERIMENTAL: '#cc0000',
+  CONOCIMIENTO: '#6644aa',
+  PROXYVERSE: '#00ff9d',
+}
 
 function isActive(pathname: string, href: string) {
   return pathname === href || (href !== '/' && pathname.startsWith(href + '/'))
@@ -23,10 +38,10 @@ function groupActive(pathname: string, group: NavGroup): boolean {
 // modo clasico de realidad-aumentada) — se navega con <a>, no con <Link>,
 // para no intentar una transicion cliente sobre una ruta que no existe
 // como pagina de Next.
-function NavLink({ item, pathname, onClick, style }: {
-  item: NavLeaf; pathname: string; onClick?: () => void; style: React.CSSProperties
+function NavLink({ item, pathname, onClick, style, activeColor = '#00d4ff' }: {
+  item: NavLeaf; pathname: string; onClick?: () => void; style: React.CSSProperties; activeColor?: string
 }) {
-  const color = isActive(pathname, item.href) ? '#00d4ff' : '#8fb8d6'
+  const color = isActive(pathname, item.href) ? activeColor : '#8fb8d6'
   if (item.href.endsWith('.html')) {
     return <a href={item.href} onClick={onClick} style={{ ...style, color }}>{item.label}</a>
   }
@@ -69,6 +84,8 @@ export default function SiteNav() {
   const [openGroup, setOpenGroup] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const navRef = useRef<HTMLElement | null>(null)
+  const sessionAgent = useSessionAgent()
+  const accent = sessionAgent?.color ?? '#00d4ff'
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -223,36 +240,74 @@ export default function SiteNav() {
       </div>
     </nav>
 
-      {mobileOpen && (
-        <div className="site-nav-mobile-panel" style={{
-          position: 'fixed', inset: 0, zIndex: 100, background: '#000205ee', backdropFilter: 'blur(10px)',
+      {mobileOpen && (() => {
+        let stagger = 0
+        const delay = () => `${(stagger++) * 0.035}s`
+        return (
+        <div className="site-nav-mobile-panel nav-glitch-in" style={{
+          position: 'fixed', inset: 0, zIndex: 100, background: '#000205f2', backdropFilter: 'blur(10px)',
           display: 'flex', flexDirection: 'column', padding: '20px 24px', overflowY: 'auto',
+          borderLeft: `1px solid ${accent}55`, boxShadow: `-20px 0 60px -20px ${accent}33 inset`,
         }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div className="tech-grid" style={{ opacity: 0.4 }} />
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080' }}>
+              {sessionAgent ? (
+                <>
+                  <span style={{ color: accent }}>POSESIÓN DE SESIÓN</span>
+                  {' // '}
+                  <span style={{ color: accent, textShadow: `0 0 8px ${accent}` }}>{sessionAgent.name}</span>
+                </>
+              ) : 'CONECTANDO...'}
+            </div>
             <button
               onClick={() => setMobileOpen(false)}
               aria-label="Cerrar menú"
+              className="glitch"
               style={{
-                background: 'none', border: '1px solid #00d4ff44', color: '#00d4ff',
+                background: 'none', border: `1px solid ${accent}66`, color: accent,
                 width: 44, height: 44, cursor: 'pointer', fontFamily: mono, fontSize: 16,
               }}
             >
               ✕
             </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24, flexGrow: 1 }}>
+
+          {sessionAgent && (
+            <div style={{
+              position: 'relative', zIndex: 1, fontFamily: mono, fontSize: 10, color: '#8fb8d6',
+              fontStyle: 'italic', lineHeight: 1.6, marginTop: 10, paddingLeft: 12,
+              borderLeft: `2px solid ${accent}55`,
+            }}>
+              "{sessionAgent.ambient.length > 0 ? sessionAgent.ambient[0] : sessionAgent.quote}"
+            </div>
+          )}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24, flexGrow: 1, position: 'relative', zIndex: 1 }}>
             {navConfig.map((entry) => {
+              const sectionColor = NAV_COLORS[entry.label] ?? accent
+
               if (isGroup(entry)) {
                 return (
-                  <div key={entry.label} style={{ marginBottom: 12 }}>
+                  <div
+                    key={entry.label}
+                    className="nav-item-in"
+                    style={{ marginBottom: 12, animationDelay: delay() }}
+                  >
                     <div style={{
-                      fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#4a6080', padding: '10px 4px',
+                      fontFamily: mono, fontSize: 11, letterSpacing: 2, color: sectionColor, padding: '10px 4px',
+                      display: 'flex', alignItems: 'center', gap: 8,
                     }}>
+                      <span style={{
+                        width: 6, height: 6, borderRadius: '50%', background: sectionColor,
+                        boxShadow: `0 0 8px ${sectionColor}`, flexShrink: 0,
+                      }} />
                       {entry.label}
                     </div>
                     {entry.items.map((item) => (
                       isGroup(item) ? (
-                        <div key={item.label} style={{ marginBottom: 8 }}>
+                        <div key={item.label} className="nav-item-in" style={{ marginBottom: 8, animationDelay: delay() }}>
                           <div style={{
                             fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#4a6080', padding: '8px 20px',
                           }}>
@@ -260,30 +315,34 @@ export default function SiteNav() {
                           </div>
                           {item.items.map((sub) => (
                             isGroup(sub) ? null : (
-                              <NavLink
-                                key={sub.href}
-                                item={sub}
-                                pathname={pathname}
-                                onClick={() => setMobileOpen(false)}
-                                style={{
-                                  fontFamily: mono, fontSize: 13, letterSpacing: 1.5, textDecoration: 'none',
-                                  padding: '12px 20px 12px 36px', minHeight: 44, display: 'flex', alignItems: 'center',
-                                }}
-                              />
+                              <div key={sub.href} className="nav-item-in" style={{ animationDelay: delay() }}>
+                                <NavLink
+                                  item={sub}
+                                  pathname={pathname}
+                                  onClick={() => setMobileOpen(false)}
+                                  activeColor={sectionColor}
+                                  style={{
+                                    fontFamily: mono, fontSize: 13, letterSpacing: 1.5, textDecoration: 'none',
+                                    padding: '12px 20px 12px 36px', minHeight: 44, display: 'flex', alignItems: 'center',
+                                  }}
+                                />
+                              </div>
                             )
                           ))}
                         </div>
                       ) : (
-                        <NavLink
-                          key={item.href}
-                          item={item}
-                          pathname={pathname}
-                          onClick={() => setMobileOpen(false)}
-                          style={{
-                            fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
-                            padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
-                          }}
-                        />
+                        <div key={item.href} className="nav-item-in" style={{ animationDelay: delay() }}>
+                          <NavLink
+                            item={item}
+                            pathname={pathname}
+                            onClick={() => setMobileOpen(false)}
+                            activeColor={sectionColor}
+                            style={{
+                              fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
+                              padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
+                            }}
+                          />
+                        </div>
                       )
                     ))}
                   </div>
@@ -292,39 +351,75 @@ export default function SiteNav() {
 
               if (!entry.live) {
                 return (
-                  <div key={entry.label} style={{
-                    fontFamily: mono, fontSize: 14, letterSpacing: 2, color: '#4a6080',
-                    padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center',
-                  }}>
+                  <div
+                    key={entry.label}
+                    className="nav-item-in"
+                    style={{
+                      fontFamily: mono, fontSize: 14, letterSpacing: 2, color: '#4a6080',
+                      padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center',
+                      animationDelay: delay(),
+                    }}
+                  >
                     {entry.label} <span style={{ fontSize: 9, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
                   </div>
                 )
               }
 
+              const active = isActive(pathname, entry.href)
               return (
-                <Link
-                  key={entry.href}
-                  href={entry.href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    fontFamily: mono, fontSize: 14, letterSpacing: 2, textDecoration: 'none',
-                    padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center',
-                    color: isActive(pathname, entry.href) ? '#00d4ff' : '#8fb8d6',
-                  }}
-                >
-                  {entry.label}
-                </Link>
+                <div key={entry.href} className="nav-item-in" style={{ animationDelay: delay() }}>
+                  <Link
+                    href={entry.href}
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                      fontFamily: mono, fontSize: 14, letterSpacing: 2, textDecoration: 'none',
+                      padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
+                      color: sectionColor,
+                      textShadow: active ? `0 0 10px ${sectionColor}` : 'none',
+                      opacity: active ? 1 : 0.8,
+                    }}
+                  >
+                    <span style={{
+                      width: 6, height: 6, borderRadius: '50%', background: sectionColor,
+                      boxShadow: `0 0 8px ${sectionColor}`, flexShrink: 0,
+                    }} />
+                    {entry.label}
+                  </Link>
+                </div>
               )
             })}
           </div>
+
           <div style={{
-            fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 1.5, paddingTop: 20,
-            borderTop: '1px solid rgba(0, 212, 255, 0.15)',
+            position: 'relative', zIndex: 1, fontFamily: mono, fontSize: 10, color: accent, letterSpacing: 1.5, paddingTop: 20,
+            borderTop: `1px solid ${accent}33`,
           }}>
             <SessionBlock />
           </div>
+
+          <style>{`
+            @keyframes nav-item-in {
+              from { opacity: 0; transform: translateX(-14px); }
+              to { opacity: 1; transform: translateX(0); }
+            }
+            .nav-item-in {
+              animation: nav-item-in 0.3s ease backwards;
+            }
+            @keyframes nav-panel-glitch-in {
+              0% { opacity: 0; clip-path: inset(0 0 100% 0); }
+              12% { opacity: 1; clip-path: inset(0 0 55% 0); }
+              24% { clip-path: inset(38% 0 18% 0); }
+              36% { clip-path: inset(0 0 70% 0); }
+              48% { clip-path: inset(0 0 0 0); }
+              100% { opacity: 1; clip-path: inset(0 0 0 0); }
+            }
+            .nav-glitch-in {
+              animation: nav-panel-glitch-in 0.4s steps(5) forwards;
+            }
+          `}</style>
         </div>
-      )}
+        )
+      })()}
     </>
   )
 }
