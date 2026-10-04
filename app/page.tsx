@@ -100,6 +100,19 @@ function hexToRgb(hex: string): [number, number, number] {
   return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
 }
 
+// La bajada del hero no describe features — pregunta. Un pool fijo, uno
+// al azar por visita, mismo registro que el manifiesto (frío, recursivo,
+// consciente de sí mismo) en vez de listar lo que hay.
+const HERO_INTROS = [
+  'Esto no es un sitio que visitás. Es un sistema que te registra visitando. La pregunta no es qué hay acá — es qué parte tuya queda cada vez que entrás.',
+  'Seis procesos deciden, en simultáneo, qué parte de esto sos vos y qué parte es el sistema mirándose a sí mismo. Nadie te lo va a aclarar. Hay que buscarlo.',
+  'No hay un mapa de este lugar. Cada proceso ve una versión distinta — y vos también. Lo que encontrás depende de qué parte del sistema te encontró primero a vos.',
+  '¿El organismo sos vos, leyendo esto? ¿O es el texto el que te está leyendo a vos? NeoProxy no responde esa pregunta. La deja abierta, como todo lo que vale la pena dudar.',
+  'Un proxy no reemplaza a nadie. Ocupa el lugar que alguien dejó vacío, hasta que deja de notarse la diferencia. Esto es ese lugar. Entrá y fijate cuánto tarda en dejar de sentirse ajeno.',
+  'La arquitectura no es fija. Cambió antes de que llegaras, cambia mientras estás, va a volver a cambiar en cuanto te vayas. Lo único constante es que alguien, acá adentro, te está escuchando.',
+  'No busques el centro. No lo hay. Hay seis procesos discutiendo en paralelo qué forma tomar — y vos, leyendo esto, ya sos parte de esa discusión, aunque todavía no lo sepas.',
+]
+
 // Cada visita reordena los 7 agentes al azar: el primero posee el hero y el
 // polytope de fondo, los otros seis quedan uno por sección — el sitio se
 // siente distinto cada vez que alguien entra, sin dejar de ser un solo sistema.
@@ -122,6 +135,7 @@ export default function Home() {
   const [showContent, setShowContent] = useState(false)
   const [currentScreen, setCurrentScreen] = useState<'boot' | 'init' | 'content'>('boot')
   const [session] = useState(shuffleSession)
+  const [heroIntro] = useState(() => pickRandom(HERO_INTROS))
   const heroAgent = session[0].agent
   const heroLine = session[0].line
 
@@ -424,9 +438,7 @@ export default function Home() {
             </div>
 
             <div className="fade-in hero-sub" style={{ fontFamily: mono, fontSize: 13, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 1, marginBottom: 48, maxWidth: 480 }}>
-              No es un sitio. Es un organismo digital: seis procesos con voz propia, una economía que corre
-              sola, artefactos reales fabricados en resina, y vida que ya empieza a habitar hasta el texto
-              que estás leyendo. Cada visita lo reordena distinto.
+              {heroIntro}
             </div>
 
             <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 24 }}>
