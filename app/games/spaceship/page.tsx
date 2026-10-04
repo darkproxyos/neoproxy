@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import { TouchDPad, useIsTouchDevice } from '@/components/games/TouchControls'
 
 export default function SpaceshipGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -8,6 +9,8 @@ export default function SpaceshipGame() {
   const [shield, setShield] = useState(100)
   const [score, setScore] = useState(0)
   const [freq, setFreq] = useState('3Hz')
+  const keysRef = useRef<Record<string, boolean>>({})
+  const isTouch = useIsTouchDevice()
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -100,8 +103,9 @@ export default function SpaceshipGame() {
         obstacles.push(mesh)
       }
 
-      // Input
-      const keys: Record<string, boolean> = {}
+      // Input -- keysRef también lo escribe el D-pad táctil en mobile
+      keysRef.current = {}
+      const keys = keysRef.current
       window.addEventListener('keydown', e => { keys[e.key] = true; e.preventDefault() })
       window.addEventListener('keyup', e => keys[e.key] = false)
 
@@ -202,7 +206,9 @@ export default function SpaceshipGame() {
         <div>VELOCITY: {velocity} AU/s</div>
         <div style={{color: shieldColor}}>SHIELD: {shield}%</div>
         <div style={{color:'#ffdd00'}}>SCORE: {score}</div>
-        <div style={{color:'#ffffff22', fontSize:9, marginTop:8}}>WASD / ↑↓←→ DODGE</div>
+        <div style={{color:'#ffffff22', fontSize:9, marginTop:8}}>
+          {isTouch ? 'D-PAD DODGE' : 'WASD / ↑↓←→ DODGE'}
+        </div>
       </div>
 
       {/* Espectro visual barra derecha */}
@@ -243,11 +249,19 @@ export default function SpaceshipGame() {
         </div>
       )}
 
-      <a href="/" style={{
+      <a href="/" style={isTouch ? {
+        // bottom:90 -- arriba del botón de Chat global (bottom:24,right:24);
+        // top:20,right:20 ya lo ocupa la lista de bandas del espectro
+        position:'absolute', bottom:90, right:20,
+        fontFamily:'monospace', color:'#00d4ff44',
+        fontSize:10, letterSpacing:3, textDecoration:'none'
+      } : {
         position:'absolute', bottom:20, left:20,
         fontFamily:'monospace', color:'#00d4ff22',
         fontSize:10, letterSpacing:3, textDecoration:'none'
       }}>← EXIT</a>
+
+      {isTouch && <TouchDPad keysRef={keysRef} />}
     </div>
   )
 }
