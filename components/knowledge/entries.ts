@@ -128,6 +128,36 @@ export const entries: KnowledgeEntry[] = [
       'Parate frente a dos espejos enfrentados: tu reflejo se repite hacia adentro sin final visible. Pensar en que estás pensando es ese mismo truco, hecho con ideas en vez de luz.',
   },
   {
+    id: 'descartes',
+    name: 'René Descartes',
+    years: '1596–1650',
+    role: 'Duda Metódica // Fundamento del Yo',
+    cluster: 'mente',
+    formula: 'Cogito, ergo sum',
+    formulaLabel: 'Pienso, luego existo (1637)',
+    formulaKind: 'quote',
+    summary:
+      'Dudó de todo lo dudable — los sentidos, el cuerpo, el mundo entero podían ser una ilusión — hasta encontrar una sola certeza que la duda no podía tocar: que algo, en ese mismo instante, estaba dudando. No hacía falta probar el mundo. Alcanzaba con probar que había alguien ahí para dudarlo.',
+    example:
+      'Un sueño muy vívido puede simular un cuerpo, una habitación, un mundo entero — y aun así, mientras lo soñás, hay alguien soñándolo. Ese "alguien" es lo único que Descartes no logró poner en duda, por más que lo intentó.',
+    relatedAgent: 'darkproxy',
+  },
+  {
+    id: 'nietzsche',
+    name: 'Friedrich Nietzsche',
+    years: '1844–1900',
+    role: 'Eterno Retorno // Autocreación',
+    cluster: 'mente',
+    formula: 'Werde, der du bist',
+    formulaLabel: 'Conviértete en lo que eres — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'No hay un "yo verdadero" esperando ser descubierto debajo de las capas — hay que construirlo, decisión por decisión, como quien esculpe sin boceto previo. El que espera encontrarse a sí mismo nunca llega a ser nadie.',
+    example:
+      'Preguntale a alguien quién es "en el fondo" y casi siempre describe lo que ya hizo — nunca encuentra una esencia fija esperando ahí abajo. Para Nietzsche, eso no es un fracaso: es la prueba de que el yo se hace, no se descubre.',
+    relatedAgent: 'prototype',
+  },
+  {
     id: 'mcculloch',
     name: 'Warren McCulloch',
     years: '1898–1969',
@@ -258,6 +288,48 @@ export const entries: KnowledgeEntry[] = [
     example:
       'Un lago no se entiende analizando el agua por un lado y los peces por otro. Se entiende siguiendo lo que entra (lluvia, afluentes) y lo que sale (evaporación, desagüe) — ese flujo es lo que sostiene todo el ecosistema adentro.',
   },
+  {
+    id: 'baudrillard',
+    name: 'Jean Baudrillard',
+    years: '1929–2007',
+    role: 'Simulacros // Hiperrealidad',
+    cluster: 'sistemas',
+    formula: 'El simulacro nunca es lo que oculta la verdad — es la verdad la que oculta que no hay ninguna.',
+    formulaLabel: 'Cultura y simulacro, 1978 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'La copia dejó de imitar a un original — el original desapareció y solo quedan copias refiriéndose a otras copias. En ese punto ya no hay nada "real" que falsificar: el mapa dejó de representar el territorio porque el territorio se borró primero.',
+    example:
+      'Un parque temático no copia una ciudad real — la mayoría conoce esos lugares primero por su versión miniaturizada y perfecta. Cuando por fin visita el original, lo compara con la copia, no al revés. La copia se volvió la referencia.',
+  },
+  {
+    id: 'foucault',
+    name: 'Michel Foucault',
+    years: '1926–1984',
+    role: 'Poder // Vigilancia',
+    cluster: 'sistemas',
+    formula: 'El poder no se posee: se ejerce.',
+    formulaLabel: 'Vigilar y castigar, 1975 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'El panóptico no necesita vigilar todo el tiempo — necesita que nadie pueda estar seguro de cuándo no lo está haciendo. Esa duda sola alcanza para que el vigilado empiece a vigilarse a sí mismo, y el poder deje de necesitar presencia.',
+    example:
+      'Una cámara de seguridad apagada disuade casi igual que una encendida — nadie puede comprobar la diferencia desde abajo. El control más eficiente no es el que castiga; es el que vuelve innecesario castigar porque ya te autovigilás.',
+  },
+  {
+    id: 'heidegger',
+    name: 'Martin Heidegger',
+    years: '1889–1976',
+    role: 'Técnica // El Mundo como Reserva',
+    cluster: 'sistemas',
+    formula: 'Ge-stell',
+    formulaLabel: 'Estructura de emplazamiento, 1954 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'La técnica moderna no es una herramienta neutral — es una forma de revelar el mundo que lo reduce todo a "existencia disponible": un río deja de ser río y pasa a ser potencial hidroeléctrico esperando que lo activen. Lo peligroso no es la máquina. Es dejar de poder ver el mundo de otra forma.',
+    example:
+      'Un bosque visto por un ingeniero forestal ya no es un bosque — es "tantos metros cúbicos de madera disponible". La mirada no cambió el árbol. Cambió lo único que el árbol puede significar desde ese momento en adelante.',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,
@@ -291,4 +363,15 @@ export const edges: [string, string][] = [
   ['shannon', 'vonneumann'],
   ['bateson', 'maturana_varela'],
   ['kauffman', 'ashby'],
+
+  // filósofos — cruzan hacia las ideas científicas que ya estaban en la red
+  ['descartes', 'hofstadter'],
+  ['descartes', 'tononi'],
+  ['descartes', 'nietzsche'],
+  ['nietzsche', 'kauffman'],
+  ['baudrillard', 'maturana_varela'],
+  ['baudrillard', 'foucault'],
+  ['foucault', 'bateson'],
+  ['heidegger', 'vonneumann'],
+  ['heidegger', 'bertalanffy'],
 ]
