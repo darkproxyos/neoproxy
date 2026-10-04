@@ -6,6 +6,7 @@ import Chat from '@/components/Chat'
 import ConsoleEasterEgg from '@/components/ConsoleEasterEgg'
 import PresenceCounter from '@/components/PresenceCounter'
 import AgentWatcher from '@/components/proxyverse/AgentWatcher'
+import ProxyBiodiversity from '@/components/biodiversity/ProxyBiodiversity'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
           <ConsoleEasterEgg />
           <PresenceCounter />
           <AgentWatcher />
+          <ProxyBiodiversity />
         </Providers>
       </body>
     </html>
