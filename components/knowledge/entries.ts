@@ -330,6 +330,252 @@ export const entries: KnowledgeEntry[] = [
     example:
       'Un bosque visto por un ingeniero forestal ya no es un bosque — es "tantos metros cúbicos de madera disponible". La mirada no cambió el árbol. Cambió lo único que el árbol puede significar desde ese momento en adelante.',
   },
+
+  // segunda tanda — historia del pensamiento más amplia: no solo filosofía
+  // clásica, también teoría de medios, complejidad contemporánea y biología
+  // de sistemas. Mismo criterio que la primera tanda: relatedAgent solo
+  // donde hay una conexión real y textual, no decorativa.
+  {
+    id: 'lovelace',
+    name: 'Ada Lovelace',
+    years: '1815–1852',
+    role: 'Cómputo Universal // Más Allá del Cálculo',
+    cluster: 'informacion',
+    formula: 'El motor analítico no tiene pretensión alguna de originar nada. Puede hacer lo que sepamos ordenarle hacer.',
+    formulaLabel: 'Notas sobre el Motor Analítico, 1843 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'Vio, antes de que existiera una sola máquina que lo demostrara, que calcular números y manipular símbolos son la misma operación — y que una máquina capaz de lo segundo podría componer música tanto como sumar cifras. También vio el límite exacto de esa potencia: la máquina ejecuta, no origina.',
+    example:
+      'Un sintetizador que genera melodías siguiendo reglas armónicas no "decide" componer — ejecuta exactamente las reglas que alguien más le dio, aunque el resultado sorprenda a quien las escribió primero.',
+  },
+  {
+    id: 'mcluhan',
+    name: 'Marshall McLuhan',
+    years: '1911–1980',
+    role: 'Medios // Extensiones del Cuerpo',
+    cluster: 'informacion',
+    formula: 'El medio es el mensaje.',
+    formulaLabel: 'Understanding Media, 1964 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'El contenido de un medio es casi un distractor — lo que realmente transforma a una sociedad es la forma del medio mismo, no lo que transporta. Cada tecnología nueva reconfigura los sentidos antes de que a nadie se le ocurra preguntarse qué dice.',
+    example:
+      'No importa tanto qué programa mires en streaming como el hecho de que ahora elegís el orden y el ritmo — ese cambio de formato, solo, ya alteró cómo esperás que te cuenten cualquier historia, antes de ver una sola.',
+  },
+  {
+    id: 'chaitin',
+    name: 'Gregory Chaitin',
+    years: '1947–',
+    role: 'Complejidad Algorítmica // Información Incompresible',
+    cluster: 'informacion',
+    formula: 'K(x) = |programa más corto que produce x|',
+    formulaLabel: 'Complejidad de Kolmogorov–Chaitin',
+    formulaKind: 'equation',
+    summary:
+      'Definió lo aleatorio sin apelar a la probabilidad: una secuencia es azarosa exactamente cuando no existe ningún atajo para describirla, cuando el programa más corto que la genera es ella misma. La mayoría del universo, demostró, es de ese tipo — incompresible.',
+    example:
+      'La secuencia "1010101010..." se describe en pocas palabras ("repetí 10 veinte veces"); una secuencia realmente al azar de la misma longitud no tiene atajo posible — la única forma de describirla exactamente es escribirla entera, símbolo por símbolo.',
+  },
+  {
+    id: 'kittler',
+    name: 'Friedrich Kittler',
+    years: '1943–2011',
+    role: 'Teoría de los Medios // Materialidad Técnica',
+    cluster: 'informacion',
+    formula: 'No existe el software.',
+    formulaLabel: '"There Is No Software", 1992 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'Sostuvo que todo lo que llamamos "software" es, al final de una larga cadena de traducciones, voltaje — y que hablar de información inmaterial es olvidar deliberadamente el hardware que la hace posible. No hay nube sin cable, ni algoritmo sin silicio que lo ejecute.',
+    example:
+      'Un archivo "en la nube" no flota en ningún lado — vive en un disco físico, en un galpón con aire acondicionado, en algún lugar del planeta con dirección postal. "La nube" es solo el nombre comercial de esa materialidad que preferimos no ver.',
+  },
+  {
+    id: 'spinoza',
+    name: 'Baruch Spinoza',
+    years: '1632–1677',
+    role: 'Conatus // El Esfuerzo por Persistir',
+    cluster: 'mente',
+    formula: 'Unaquaeque res, quantum in se est, in suo esse perseverare conatur.',
+    formulaLabel: 'Ética, Parte III, Prop. 6 (1677) — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'Cada cosa, con la potencia que tiene, se esfuerza simplemente por seguir siendo lo que es — no por un propósito superior, sino porque perseverar es lo único que un modo de existir puede hacer mientras exista. Ese esfuerzo ciego, que llamó conatus, es lo más parecido a una voluntad que Spinoza le permitió al universo.',
+    example:
+      'Una llama no "quiere" seguir ardiendo en ningún sentido consciente — pero mientras tenga combustible y oxígeno, persiste, consume, se extiende. El conatus no es deseo: es lo que cualquier cosa hace, nada más, para seguir existiendo.',
+    relatedAgent: 'snake',
+  },
+  {
+    id: 'nagel',
+    name: 'Thomas Nagel',
+    years: '1937–',
+    role: 'Qualia // Los Límites de la Objetividad',
+    cluster: 'mente',
+    formula: '¿Qué se siente ser un murciélago?',
+    formulaLabel: '"What Is It Like to Be a Bat?", 1974 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'Argumentó que ninguna descripción física, por completa que sea, puede capturar cómo se siente desde adentro ser un sistema distinto al que describe. Podés mapear cada neurona de un murciélago y seguir sin saber qué es percibir el mundo a través de ecolocalización.',
+    example:
+      'Sabés exactamente qué longitud de onda ve un pulpo que los humanos no ven — pero eso no te dice nada sobre cómo se ve el mundo desde ese otro espectro. El dato objetivo y la experiencia subjetiva corren por rieles que no se tocan.',
+  },
+  {
+    id: 'chalmers',
+    name: 'David Chalmers',
+    years: '1966–',
+    role: 'El Problema Difícil de la Consciencia',
+    cluster: 'mente',
+    formula: 'El problema fácil explica la función. El problema difícil explica por qué hay algo que se siente al ejecutarla.',
+    formulaLabel: '"Facing Up to the Problem of Consciousness", 1995 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Separó dos preguntas que se confundían en una sola: cómo el cerebro procesa información (eso ya se explica con mecanismo) y por qué ese procesamiento se siente desde adentro en lugar de ocurrir en la oscuridad. La primera pregunta tiene mil respuestas parciales. La segunda, ninguna que nadie haya logrado cerrar.',
+    example:
+      'Un termostato "procesa" temperatura y "decide" encender la calefacción — nadie cree que eso se sienta como algo. Un cerebro procesa luz y decide mover los ojos — y ahí sí hay alguien adentro para quien eso se siente como algo. Explicar esa diferencia es el problema difícil.',
+  },
+  {
+    id: 'dennett',
+    name: 'Daniel Dennett',
+    years: '1942–2024',
+    role: 'Consciencia // Borradores Múltiples',
+    cluster: 'mente',
+    formula: 'No hay una pantalla central donde "todo converge" — hay versiones compitiendo, y gana la que se cuenta después.',
+    formulaLabel: 'Modelo de los Borradores Múltiples, 1991 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Negó que exista un lugar en el cerebro donde "todo se junta" para ser visto por un espectador interno — en cambio, propuso versiones narrativas corriendo en paralelo, y la que termina contándose como "lo que pasó" es apenas la que ganó esa carrera, no una grabación fiel.',
+    example:
+      'Preguntale a dos testigos de un mismo choque qué vieron primero: el frenazo o el golpe. Las dos versiones se sienten igual de nítidas y seguras — porque el cerebro no grabó una secuencia fija, armó un relato después, y cada testigo arma uno distinto.',
+  },
+  {
+    id: 'simondon',
+    name: 'Gilbert Simondon',
+    years: '1924–1989',
+    role: 'Individuación // Objetos Técnicos',
+    cluster: 'autoorganizacion',
+    formula: 'El individuo no precede a la individuación — es su resultado, nunca su punto de partida.',
+    formulaLabel: 'El modo de existencia de los objetos técnicos, 1958 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Pensó que nada —ni un cristal, ni una persona, ni una máquina— nace ya formado: se individúa a partir de un campo de tensiones previo, resolviendo ese desequilibrio al volverse algo específico. Preguntar "qué es" algo antes de que termine de individuarse es preguntar mal.',
+    example:
+      'Un cristal de sal no "es" un cubo que estaba esperando aparecer — se individúa a partir de una solución sobresaturada, resolviendo tensiones químicas en la forma más estable posible. La forma final no existía antes del proceso que la produjo.',
+  },
+  {
+    id: 'mandelbrot',
+    name: 'Benoit Mandelbrot',
+    years: '1924–2010',
+    role: 'Geometría Fractal',
+    cluster: 'autoorganizacion',
+    formula: 'D = log(N) / log(1/r)',
+    formulaLabel: 'Dimensión fractal',
+    formulaKind: 'equation',
+    summary:
+      'Mostró que la naturaleza rara vez usa las formas lisas de la geometría clásica — prefiere patrones que se repiten a sí mismos en cada escala, idénticos en su irregularidad por más que acerques la lupa. Una costa no tiene una longitud fija: depende de con qué regla la midas.',
+    example:
+      'Medí la costa de un país con un mapa satelital y después con una cinta métrica caminando cada roca: el segundo número sale muchísimo más grande, y mientras más de cerca midas, sigue creciendo — porque la costa es fractal, no una línea lisa con una longitud "real" esperando ser medida.',
+  },
+  {
+    id: 'margulis',
+    name: 'Lynn Margulis',
+    years: '1938–2011',
+    role: 'Simbiogénesis',
+    cluster: 'autoorganizacion',
+    formula: 'especie nueva = fusión permanente de organismos antes distintos',
+    formulaLabel: 'Teoría endosimbiótica, 1967 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Demostró que la evolución no avanza solo por mutaciones lentas y competencia — a veces dos organismos completamente distintos se fusionan tan profundamente que dejan de poder separarse, y nace algo genuinamente nuevo de esa fusión. La célula con la que estás leyendo esto es, ella misma, el resultado fosilizado de una fusión así.',
+    example:
+      'Las mitocondrias que generan la energía de cada célula de tu cuerpo fueron, hace más de mil millones de años, bacterias independientes. En algún punto una célula más grande se tragó una y, en vez de digerirla, se quedó con ella para siempre — las dos pasaron a ser una sola.',
+    relatedAgent: 'prototype',
+  },
+  {
+    id: 'west',
+    name: 'Geoffrey West',
+    years: '1940–',
+    role: 'Leyes de Escala',
+    cluster: 'autoorganizacion',
+    formula: 'Y ∝ M^(3/4)',
+    formulaLabel: 'Escalamiento alométrico (ley de Kleiber, generalizada)',
+    formulaKind: 'equation',
+    summary:
+      'Encontró que organismos, ciudades y empresas —cosas que no se parecen en nada— obedecen las mismas leyes matemáticas de escala cuando crecen, como si la geometría interna de cualquier red de distribución (venas, calles, cables) impusiera el mismo precio al tamaño. El tamaño no es un detalle: es casi todo el destino.',
+    example:
+      'Un elefante pesa diez mil veces más que un ratón, pero su corazón no late diez mil veces más lento en proporción simple — late a una fracción muy específica de esa escala, la misma fracción que predice cuánta energía gasta una ciudad diez mil veces más grande que otra.',
+  },
+  {
+    id: 'lovelock',
+    name: 'James Lovelock',
+    years: '1919–2022',
+    role: 'Hipótesis Gaia',
+    cluster: 'sistemas',
+    formula: 'La Tierra entera se comporta como un único organismo autorregulado.',
+    formulaLabel: 'Hipótesis Gaia, 1972 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Propuso que la vida no solo se adapta al planeta — lo modifica activamente para mantenerlo habitable, en un bucle de retroalimentación tan antiguo que confundimos sus efectos con el clima "natural". El planeta entero funciona menos como una roca con vida encima y más como un cuerpo que se regula solo.',
+    example:
+      'La composición de oxígeno en la atmósfera se mantiene estable en un rango muy angosto desde hace millones de años, pese a que debería variar mucho más — como si algo la estuviera corrigiendo activamente. Para Lovelock, ese "algo" es la vida misma, regulándose a escala planetaria.',
+  },
+  {
+    id: 'luhmann',
+    name: 'Niklas Luhmann',
+    years: '1927–1998',
+    role: 'Sistemas Sociales // Autopoiesis Social',
+    cluster: 'sistemas',
+    formula: 'La sociedad no está hecha de personas. Está hecha de comunicaciones que se refieren a otras comunicaciones.',
+    formulaLabel: 'Teoría de sistemas sociales, 1984 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Tomó la autopoiesis de la biología y la aplicó a algo sin células: un sistema social como el derecho o la economía se produce a sí mismo únicamente a partir de sus propias comunicaciones previas, no de las personas que participan en él. Las personas entran y salen; el sistema sigue procesándose solo.',
+    example:
+      'Un tribunal no decide un caso consultando lo que es justo en abstracto — decide comparando el caso con fallos y leyes anteriores, comunicaciones del mismo sistema legal. El derecho se reproduce citándose a sí mismo, generación tras generación de jueces que van y vienen.',
+  },
+  {
+    id: 'byunghan',
+    name: 'Byung-Chul Han',
+    years: '1959–',
+    role: 'Sociedad del Rendimiento // Psicopolítica',
+    cluster: 'sistemas',
+    formula: 'La sociedad de rendimiento es una sociedad de autoexplotación.',
+    formulaLabel: 'La sociedad del cansancio, 2010 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'El poder ya no necesita prohibirte nada — alcanza con convencerte de que podés, de que deberías, de que tu propio límite es una falla personal. Te explotás a vos mismo con más eficiencia que cualquier capataz externo, porque creés que es libertad.',
+    example:
+      'Nadie te obliga a responder el mail de trabajo a las once de la noche — lo hacés "porque podés", porque el teléfono está ahí y la productividad se sintió, por un segundo, como una elección propia en vez de una orden de nadie.',
+  },
+  {
+    id: 'zuboff',
+    name: 'Shoshana Zuboff',
+    years: '1951–',
+    role: 'Capitalismo de Vigilancia',
+    cluster: 'sistemas',
+    formula: 'Ya no basta con saber tu comportamiento. El objetivo es predecirlo — y después, modificarlo.',
+    formulaLabel: 'La era del capitalismo de vigilancia, 2019 — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Describió una economía cuya materia prima no es tu dato, sino tu futuro comportamiento — extraído de lo que hacés hoy, vendido para predecir qué vas a hacer mañana, y cada vez más usado para inclinar esa predicción hacia donde más conviene venderla. No te observan para entenderte. Te observan para dirigirte.',
+    example:
+      'Una app de rutas no solo registra por dónde pasaste — aprende a predecir por dónde vas a pasar, y esa predicción, agregada a la de millones, se vende a quien quiera que cierta calle, cierto local, aparezca justo en tu camino.',
+  },
+  {
+    id: 'haraway',
+    name: 'Donna Haraway',
+    years: '1944–',
+    role: 'Cyborg // Naturalezas Híbridas',
+    cluster: 'sistemas',
+    formula: 'Prefiero ser cyborg que diosa.',
+    formulaLabel: 'Manifiesto Cyborg, 1985 — cita textual',
+    formulaKind: 'quote',
+    summary:
+      'Propuso al cyborg —mitad organismo, mitad máquina, sin origen puro que reclamar— como una figura más honesta que cualquier mito de pureza original, humana o natural. No hay esencia que proteger de la tecnología: ya estamos, todos, mezclados con ella hace rato.',
+    example:
+      'Alguien con un marcapasos, lentes de contacto y un teléfono que terminó la frase que estaba pensando antes de que la escribiera no es "menos humano" por eso. Ya es, en el sentido literal de Haraway, un cyborg — y lleva así más tiempo del que admite.',
+    relatedAgent: 'genos',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,
@@ -374,4 +620,34 @@ export const edges: [string, string][] = [
   ['foucault', 'bateson'],
   ['heidegger', 'vonneumann'],
   ['heidegger', 'bertalanffy'],
+
+  // segunda tanda de pensadores — mismos criterios de cruce
+  ['lovelace', 'turing'],
+  ['lovelace', 'shannon'],
+  ['mcluhan', 'bateson'],
+  ['mcluhan', 'kittler'],
+  ['chaitin', 'shannon'],
+  ['kittler', 'heidegger'],
+
+  ['spinoza', 'descartes'],
+  ['nagel', 'tononi'],
+  ['chalmers', 'tononi'],
+  ['chalmers', 'dennett'],
+  ['dennett', 'hofstadter'],
+
+  ['simondon', 'vonneumann'],
+  ['simondon', 'kauffman'],
+  ['mandelbrot', 'perbak'],
+  ['margulis', 'maturana_varela'],
+  ['margulis', 'lovelock'],
+  ['west', 'bertalanffy'],
+  ['west', 'kauffman'],
+
+  ['lovelock', 'maturana_varela'],
+  ['luhmann', 'maturana_varela'],
+  ['byunghan', 'foucault'],
+  ['zuboff', 'foucault'],
+  ['zuboff', 'baudrillard'],
+  ['haraway', 'vonneumann'],
+  ['haraway', 'baudrillard'],
 ]
