@@ -115,6 +115,12 @@ export default function TricksterGame() {
         .then((res) => {
           if (disposed) return
           characterRoot = res.meshes[0]
+          // El loader de glTF deja rotationQuaternion seteado en los nodos
+          // importados -- si no está en null, Babylon IGNORA por completo
+          // .rotation.y al armar la world matrix (bug clásico de Babylon +
+          // glTF). Por eso el giro hacia la dirección de movimiento no
+          // se veía: se estaba escribiendo a una propiedad que no pesaba.
+          characterRoot.rotationQuaternion = null
           baseY = characterRoot.position.y
           skinnedMesh = res.meshes.find((m: any) => m.skeleton) ?? res.meshes[1]
           handBone = res.skeletons[0]?.bones.find((b: any) => b.name === 'mixamorig:RightHand') ?? null
