@@ -1,0 +1,14 @@
+{
+  "source": "Hemibrain v1.2.1 (Scheffer et al. 2020, eLife) \u2014 Lee Lab compiled release",
+  "bucket": "gs://lee-lab_brain-and-nerve-cord-fly-connectome/compiled_data/hemibrain_121/",
+  "circuit": "mushroom body (learning & memory)",
+  "totalHemibrainNeurons": 25397,
+  "totalMushroomBodyNeurons": 2437,
+  "includedNeurons": 670,
+  "includedNonKenyon": 496,
+  "includedKenyonSample": 174,
+  "totalKenyonCellsInHemibrain": 1938,
+  "edgesShown": 7074,
+  "edgeThresholdSynapses": 15,
+  "note": "Skeletons simplified (RDP + branch-length pruning) for the browser; the real connectome has far more points and neurons than shown here."
+}
