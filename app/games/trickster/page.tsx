@@ -184,6 +184,27 @@ export default function TricksterGame() {
         })
         .catch(() => { /* el arma es opcional — si falla, el personaje sigue jugable sin ella */ })
 
+      // Gennos (versión enemigo) — malla estática sin esqueleto ni
+      // animaciones todavía, parado en otro cuadrante del mapa para
+      // encontrarlo explorando. El bounding box nativo mide ~1.15 de
+      // alto (no viene a escala 1:1 con Trickster, que ronda 1.8), así
+      // que se reescala a mano. Luz de acento roja para distinguirlo del
+      // violeta del resto de la escena — "corrupción" en este proyecto
+      // es rojo (ver /status), no un tono nuevo inventado acá.
+      const GENNOS_POS = new B.Vector3(14, 0, -12)
+      B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
+        .then((res) => {
+          if (disposed) return
+          const gennosMesh = res.meshes[0]
+          gennosMesh.position = GENNOS_POS.clone()
+          gennosMesh.scaling = new B.Vector3(1.55, 1.55, 1.55)
+          const gennosLight = new B.PointLight('gennosLight', GENNOS_POS.add(new B.Vector3(0, 1.4, 0)), scene)
+          gennosLight.diffuse = B.Color3.FromHexString('#ff2b2b')
+          gennosLight.intensity = 0.9
+          gennosLight.range = 6
+        })
+        .catch(() => { /* enemigo opcional — si falla, el personaje sigue jugable sin él */ })
+
       const BOUND = 27
       const SPEED = 0.09
       const TURN_LERP = 0.4
