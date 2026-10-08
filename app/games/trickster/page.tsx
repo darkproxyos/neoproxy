@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { TouchDPad, TouchActionButton, useIsTouchDevice } from '@/components/games/TouchControls'
+import { TouchActionButton, useIsTouchDevice } from '@/components/games/TouchControls'
 import { agents } from '@/components/proxyverse/agents'
 
 const trickster = agents.find(a => a.id === 'trickster')!
@@ -68,9 +68,9 @@ export default function TricksterGame() {
         dust.material = dm
       }
 
-      // Personaje — sin esqueleto todavía (ver panel "ESTADO"), así que el
-      // caminar/saltar es animación procedural sobre el mesh completo: bob
-      // senoidal al moverse, arco parabólico al saltar, giro hacia el rumbo.
+      // Personaje — input por teclado + mobile. En mobile no hay D-pad:
+      // tocar la pantalla alcanza para correr hacia adelante (misma tecla
+      // KeyW que ya mueve en desktop), el botón aparte es solo para saltar.
       keysRef.current = {}
       const keys = keysRef.current
       const onKeyDown = (e: KeyboardEvent) => { keys[e.code] = true; if (e.code === 'Space') e.preventDefault() }
@@ -78,16 +78,27 @@ export default function TricksterGame() {
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
 
+      // touchstart/touchend son eventos táctiles puros (nunca disparan con
+      // mouse), así que esto no interfiere con el drag de la cámara en
+      // desktop ni con el orbit táctil — sigue andando porque Babylon
+      // escucha sus propios pointer events en paralelo sobre el mismo canvas.
+      const canvasEl = canvasRef.current!
+      const onTouchStart = () => { keys['KeyW'] = true }
+      const onTouchEnd = () => { keys['KeyW'] = false }
+      canvasEl.addEventListener('touchstart', onTouchStart, { passive: true })
+      canvasEl.addEventListener('touchend', onTouchEnd, { passive: true })
+      canvasEl.addEventListener('touchcancel', onTouchEnd, { passive: true })
+
       let characterRoot: any = null
       let runAnim: any = null
       let jumpAnim: any = null
+      let idleAnim: any = null
       let runPlaying = false
       let jumpPlaying = false
+      let idlePlaying = false
       let posX = 0, posZ = 0, baseY = 0, velY = 0
       let facing = 0
       let grounded = true
-      let walkPhase = 0
-      let idlePhase = 0
       let spacePrev = false
 
       B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'trickzter.glb', scene)
@@ -95,13 +106,16 @@ export default function TricksterGame() {
           if (disposed) return
           characterRoot = res.meshes[0]
           baseY = characterRoot.position.y
-          // Esqueleto y ambos clips vienen de Mixamo (mismo rig): Run para
-          // caminar/correr, Jump para el salto. La física del arco (posY)
-          // la seguimos calculando nosotros — el clip solo aporta la pose.
+          // Esqueleto y los 3 clips vienen de Mixamo (mismo rig): Idle en
+          // reposo, Run al caminar/correr, Jump al saltar. La física del
+          // arco (posY) la seguimos calculando nosotros — el clip de salto
+          // solo aporta la pose mientras dura.
           runAnim = res.animationGroups.find((a: any) => a.name === 'Run') ?? null
           jumpAnim = res.animationGroups.find((a: any) => a.name === 'Jump') ?? null
+          idleAnim = res.animationGroups.find((a: any) => a.name === 'Idle') ?? null
           if (runAnim) runAnim.stop()
           if (jumpAnim) { jumpAnim.stop(); jumpAnim.loopAnimation = false }
+          if (idleAnim) idleAnim.stop()
           setLoading(false)
         })
         .catch(() => {
@@ -133,9 +147,6 @@ export default function TricksterGame() {
           posZ = Math.max(-BOUND, Math.min(BOUND, posZ + dz * SPEED * dt))
           const target = Math.atan2(dx, dz)
           facing += wrapAngle(target - facing) * TURN_LERP
-          walkPhase += 0.28 * dt
-        } else {
-          idlePhase += 0.03 * dt
         }
 
         // Salto — flanco de subida de Space, solo si está en el piso. La
@@ -146,6 +157,7 @@ export default function TricksterGame() {
           velY = JUMP_VELOCITY
           grounded = false
           if (runAnim && runPlaying) { runAnim.stop(); runPlaying = false }
+          if (idleAnim && idlePlaying) { idleAnim.stop(); idlePlaying = false }
           if (jumpAnim) { jumpAnim.start(false, 1.3); jumpPlaying = true }
         }
         spacePrev = spaceDown
@@ -157,23 +169,26 @@ export default function TricksterGame() {
           jumpPlaying = false
         }
 
-        // Corre con el clip real de Mixamo mientras camina en el piso; en
-        // idle vuelve al bob procedural. El salto usa el clip Jump (arriba).
+        // Los 3 clips de Mixamo son mutuamente excluyentes: Idle en reposo,
+        // Run al caminar/correr en el piso, Jump mientras dura el salto.
         const running = grounded && moving
+        const idling = grounded && !moving
         if (runAnim) {
           if (running && !runPlaying && !jumpPlaying) { runAnim.start(true); runPlaying = true }
           else if (!running && runPlaying) { runAnim.stop(); runPlaying = false }
         }
-
-        const bob = grounded && !running ? Math.sin(idlePhase) * 0.02 : 0
+        if (idleAnim) {
+          if (idling && !idlePlaying && !jumpPlaying) { idleAnim.start(true); idlePlaying = true }
+          else if (!idling && idlePlaying) { idleAnim.stop(); idlePlaying = false }
+        }
 
         if (characterRoot) {
           characterRoot.position.x = posX
           characterRoot.position.z = posZ
           characterRoot.rotation.y = facing
           if (grounded) {
-            characterRoot.position.y = baseY + bob
-            characterRoot.rotation.z = running ? 0 : (moving ? Math.sin(walkPhase) * 0.04 : 0)
+            characterRoot.position.y = baseY
+            characterRoot.rotation.z = 0
           } else {
             characterRoot.position.y += velY * dt
             characterRoot.rotation.z = 0
@@ -218,10 +233,10 @@ export default function TricksterGame() {
           "{trickster.quote}"
         </div>
         <div style={{ color: '#ffb80099', fontSize: 8, marginTop: 10, letterSpacing: 1.5 }}>
-          CORRER Y SALTAR: ESQUELETO Y ANIMACIÓN REAL (MIXAMO)
+          IDLE, CORRER Y SALTAR: ESQUELETO Y ANIMACIÓN REAL (MIXAMO)
         </div>
         <div style={{ color: '#ffffff33', fontSize: 9, marginTop: 8 }}>
-          {isTouch ? 'D-PAD MOVER // BOTÓN SALTAR' : 'WASD / FLECHAS — ESPACIO SALTA'}
+          {isTouch ? 'TOCÁ LA PANTALLA PARA CORRER // BOTÓN SALTAR' : 'WASD / FLECHAS — ESPACIO SALTA'}
         </div>
       </div>
 
@@ -257,11 +272,10 @@ export default function TricksterGame() {
       }}>← EXIT</a>
 
       {isTouch && (
-        <>
-          <TouchDPad keysRef={keysRef} />
-          {/* bottom:100 para despejar el botón de Chat global (bottom:24,right:24) */}
-          <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
-        </>
+        // bottom:100 para despejar el botón de Chat global (bottom:24,right:24).
+        // Sin D-pad: tocar cualquier parte de la pantalla ya hace correr
+        // (ver el listener de touchstart/touchend sobre el canvas, arriba).
+        <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
       )}
     </div>
   )
