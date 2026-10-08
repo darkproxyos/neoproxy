@@ -192,10 +192,14 @@ export default function TricksterGame() {
       // violeta del resto de la escena — "corrupción" en este proyecto
       // es rojo (ver /status), no un tono nuevo inventado acá.
       const GENNOS_POS = new B.Vector3(14, 0, -12)
+      let gennosMesh: any = null
+      let gennosFacing = 0
+      let gennosBobTime = 0
       B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
         .then((res) => {
           if (disposed) return
-          const gennosMesh = res.meshes[0]
+          gennosMesh = res.meshes[0]
+          gennosMesh.rotationQuaternion = null
           gennosMesh.position = GENNOS_POS.clone()
           gennosMesh.scaling = new B.Vector3(1.55, 1.55, 1.55)
           const gennosLight = new B.PointLight('gennosLight', GENNOS_POS.add(new B.Vector3(0, 1.4, 0)), scene)
@@ -210,6 +214,8 @@ export default function TricksterGame() {
       const TURN_LERP = 0.4
       const JUMP_VELOCITY = 0.15
       const GRAVITY = 0.0065
+      const GENNOS_SPEED = 0.07 // algo más lento que SPEED (0.09): se lo puede sacar ventaja corriendo
+      const GENNOS_STOP_DIST = 1.6
       let rifleTime = 0
 
       scene.registerBeforeRender(() => {
@@ -296,6 +302,32 @@ export default function TricksterGame() {
           rifleTime += 0.02 * dt
           rifleMesh.rotation.y += 0.02 * dt
           rifleMesh.position.y = 0.3 + Math.sin(rifleTime) * 0.08
+        }
+
+        // Gennos persigue a Trickster — todavía sin esqueleto/animación
+        // real (malla estática, ver comentario de arriba), así que el
+        // "correr" es la posición moviéndose + un balanceo sinusoidal
+        // simple en Y/rotation.z para que no se vea como un fantasma
+        // deslizándose. Reemplazar por animación real en cuanto llegue
+        // el rig de Mixamo.
+        if (gennosMesh && characterRoot) {
+          const gdx = posX - gennosMesh.position.x
+          const gdz = posZ - gennosMesh.position.z
+          const gdist = Math.hypot(gdx, gdz)
+          if (gdist > GENNOS_STOP_DIST) {
+            const gnx = gdx / gdist, gnz = gdz / gdist
+            gennosMesh.position.x += gnx * GENNOS_SPEED * dt
+            gennosMesh.position.z += gnz * GENNOS_SPEED * dt
+            const gTarget = Math.atan2(gnx, gnz)
+            gennosFacing += wrapAngle(gTarget - gennosFacing) * TURN_LERP
+            gennosBobTime += 0.3 * dt
+            gennosMesh.position.y = Math.abs(Math.sin(gennosBobTime)) * 0.12
+            gennosMesh.rotation.z = Math.sin(gennosBobTime * 2) * 0.05
+          } else {
+            gennosMesh.position.y = 0
+            gennosMesh.rotation.z = 0
+          }
+          gennosMesh.rotation.y = gennosFacing
         }
 
         // Disparo — automático mientras se mantenga la tecla/botón, con
