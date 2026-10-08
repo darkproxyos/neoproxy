@@ -159,7 +159,7 @@ export default function TricksterGame() {
 
       const BOUND = 27
       const SPEED = 0.09
-      const TURN_LERP = 0.18
+      const TURN_LERP = 0.4
       const JUMP_VELOCITY = 0.15
       const GRAVITY = 0.0065
       let rifleTime = 0
@@ -228,8 +228,9 @@ export default function TricksterGame() {
               // de la mano) — ajustado mirando capturas, no hay pose de
               // referencia exacta todavía.
               rifleMesh.attachToBone(handBone, skinnedMesh)
-              rifleMesh.position = new B.Vector3(0, 0, 0)
-              rifleMesh.rotation = new B.Vector3(0, 0, 0)
+              rifleMesh.scaling = new B.Vector3(0.6, 0.6, 0.6)
+              rifleMesh.position = new B.Vector3(-0.32, 0, 0)
+              rifleMesh.rotation = new B.Vector3(Math.PI / 2, 0, -0.3)
             }
           }
         }
