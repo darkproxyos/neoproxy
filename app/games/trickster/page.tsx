@@ -19,6 +19,7 @@ export default function TricksterGame() {
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [armedUi, setArmedUi] = useState(false)
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -90,32 +91,44 @@ export default function TricksterGame() {
       canvasEl.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
       let characterRoot: any = null
+      let skinnedMesh: any = null
+      let handBone: any = null
       let runAnim: any = null
       let jumpAnim: any = null
       let idleAnim: any = null
-      let runPlaying = false
-      let jumpPlaying = false
-      let idlePlaying = false
+      let crouchRunAnim: any = null
+      let currentAnim: any = null
       let posX = 0, posZ = 0, baseY = 0, velY = 0
       let facing = 0
       let grounded = true
       let spacePrev = false
+      let armed = false
+
+      function playAnim(anim: any, loop: boolean, speedRatio = 1) {
+        if (currentAnim === anim) return
+        currentAnim?.stop()
+        currentAnim = anim
+        currentAnim?.start(loop, speedRatio)
+      }
 
       B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'trickzter.glb', scene)
         .then((res) => {
           if (disposed) return
           characterRoot = res.meshes[0]
           baseY = characterRoot.position.y
-          // Esqueleto y los 3 clips vienen de Mixamo (mismo rig): Idle en
-          // reposo, Run al caminar/correr, Jump al saltar. La física del
-          // arco (posY) la seguimos calculando nosotros — el clip de salto
-          // solo aporta la pose mientras dura.
+          skinnedMesh = res.meshes.find((m: any) => m.skeleton) ?? res.meshes[1]
+          handBone = res.skeletons[0]?.bones.find((b: any) => b.name === 'mixamorig:RightHand') ?? null
+          // Esqueleto y los 4 clips vienen de Mixamo (mismo rig): Idle en
+          // reposo, Run al caminar/correr, Jump al saltar, CrouchRun al
+          // correr con el rifle agarrado. La física del arco (posY) la
+          // seguimos calculando nosotros — el clip de salto solo aporta
+          // la pose mientras dura.
           runAnim = res.animationGroups.find((a: any) => a.name === 'Run') ?? null
           jumpAnim = res.animationGroups.find((a: any) => a.name === 'Jump') ?? null
           idleAnim = res.animationGroups.find((a: any) => a.name === 'Idle') ?? null
-          if (runAnim) runAnim.stop()
-          if (jumpAnim) { jumpAnim.stop(); jumpAnim.loopAnimation = false }
-          if (idleAnim) idleAnim.stop()
+          crouchRunAnim = res.animationGroups.find((a: any) => a.name === 'CrouchRun') ?? null
+          ;[runAnim, jumpAnim, idleAnim, crouchRunAnim].forEach((a) => a?.stop())
+          if (jumpAnim) jumpAnim.loopAnimation = false
           setLoading(false)
         })
         .catch(() => {
@@ -124,20 +137,58 @@ export default function TricksterGame() {
           setLoading(false)
         })
 
+      // Rifle — esperando en el mapa hasta que el personaje lo toque (por
+      // cercanía, no por tap: en mobile tocar la pantalla ya corre). Gira y
+      // flota mientras está en el piso; al agarrarlo se cuelga del hueso de
+      // la mano derecha y pasa a seguir al esqueleto solo.
+      // Sobre el eje "adelante" de la cámara por defecto, para que
+      // sostener W (o tocar la pantalla) desde el spawn alcance para
+      // encontrarlo sin tener que orbitar primero.
+      const RIFLE_POS = new B.Vector3(-2, 0, 8)
+      const PICKUP_RADIUS = 1.4
+      let rifleMesh: any = null // raíz __root__ de Babylon — mover esto mueve toda la geometría hija
+
+      B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'rifle.glb', scene)
+        .then((res) => {
+          if (disposed) return
+          rifleMesh = res.meshes[0]
+          rifleMesh.position = RIFLE_POS.clone()
+          rifleMesh.position.y = 0.3
+        })
+        .catch(() => { /* el arma es opcional — si falla, el personaje sigue jugable sin ella */ })
+
       const BOUND = 27
       const SPEED = 0.09
       const TURN_LERP = 0.18
       const JUMP_VELOCITY = 0.15
       const GRAVITY = 0.0065
+      let rifleTime = 0
 
       scene.registerBeforeRender(() => {
-        const dt = engine.getDeltaTime() / 16.67 // normalizado a ~60fps
+        // normalizado a ~60fps, con tope: un frame lento (carga pesada,
+        // pestaña en segundo plano, dispositivo viejo) no debe traducirse
+        // en un salto de posición gigante de un cuadro al otro.
+        const dt = Math.min(engine.getDeltaTime() / 16.67, 3)
 
-        let dx = 0, dz = 0
-        if (keys['ArrowUp'] || keys['KeyW']) dz += 1
-        if (keys['ArrowDown'] || keys['KeyS']) dz -= 1
-        if (keys['ArrowLeft'] || keys['KeyA']) dx -= 1
-        if (keys['ArrowRight'] || keys['KeyD']) dx += 1
+        // Movimiento relativo a cámara: "adelante" es hacia donde mira la
+        // cámara (aplanado al piso), no un eje fijo del mundo — así que
+        // orbitar la cámara (drag, también con el dedo) redirige hacia
+        // dónde corre el personaje.
+        const camForward = camera.getDirection(B.Vector3.Forward())
+        camForward.y = 0
+        if (camForward.lengthSquared() > 0.0001) camForward.normalize()
+        const camRight = camera.getDirection(B.Vector3.Right())
+        camRight.y = 0
+        if (camRight.lengthSquared() > 0.0001) camRight.normalize()
+
+        let inputForward = 0, inputRight = 0
+        if (keys['ArrowUp'] || keys['KeyW']) inputForward += 1
+        if (keys['ArrowDown'] || keys['KeyS']) inputForward -= 1
+        if (keys['ArrowLeft'] || keys['KeyA']) inputRight -= 1
+        if (keys['ArrowRight'] || keys['KeyD']) inputRight += 1
+
+        let dx = camForward.x * inputForward + camRight.x * inputRight
+        let dz = camForward.z * inputForward + camRight.z * inputRight
         const moving = dx !== 0 || dz !== 0
 
         if (moving) {
@@ -156,31 +207,45 @@ export default function TricksterGame() {
         if (spaceDown && !spacePrev && grounded) {
           velY = JUMP_VELOCITY
           grounded = false
-          if (runAnim && runPlaying) { runAnim.stop(); runPlaying = false }
-          if (idleAnim && idlePlaying) { idleAnim.stop(); idlePlaying = false }
-          if (jumpAnim) { jumpAnim.start(false, 1.3); jumpPlaying = true }
         }
         spacePrev = spaceDown
 
         if (!grounded) {
           velY -= GRAVITY * dt
-        } else if (jumpPlaying) {
-          jumpAnim?.stop()
-          jumpPlaying = false
         }
 
-        // Los 3 clips de Mixamo son mutuamente excluyentes: Idle en reposo,
-        // Run al caminar/correr en el piso, Jump mientras dura el salto.
-        const running = grounded && moving
-        const idling = grounded && !moving
-        if (runAnim) {
-          if (running && !runPlaying && !jumpPlaying) { runAnim.start(true); runPlaying = true }
-          else if (!running && runPlaying) { runAnim.stop(); runPlaying = false }
+        // Recolectar el rifle por cercanía — una vez agarrado queda colgado
+        // del hueso de la mano para siempre, no hay forma de soltarlo (todavía).
+        if (!armed && rifleMesh && characterRoot) {
+          const ddx = posX - RIFLE_POS.x
+          const ddz = posZ - RIFLE_POS.z
+          if (Math.hypot(ddx, ddz) < PICKUP_RADIUS) {
+            armed = true
+            setArmedUi(true)
+            if (handBone && skinnedMesh) {
+              // Transform neutro al hueso: tamaño y posición ya salen
+              // correctos así (el rifle queda colgando del costado, agarrado
+              // de la mano) — ajustado mirando capturas, no hay pose de
+              // referencia exacta todavía.
+              rifleMesh.attachToBone(handBone, skinnedMesh)
+              rifleMesh.position = new B.Vector3(0, 0, 0)
+              rifleMesh.rotation = new B.Vector3(0, 0, 0)
+            }
+          }
         }
-        if (idleAnim) {
-          if (idling && !idlePlaying && !jumpPlaying) { idleAnim.start(true); idlePlaying = true }
-          else if (!idling && idlePlaying) { idleAnim.stop(); idlePlaying = false }
+        if (rifleMesh && !armed) {
+          rifleTime += 0.02 * dt
+          rifleMesh.rotation.y += 0.02 * dt
+          rifleMesh.position.y = 0.3 + Math.sin(rifleTime) * 0.08
         }
+
+        // Los 4 clips de Mixamo son mutuamente excluyentes. Correr usa
+        // CrouchRun en vez de Run apenas el personaje tiene el rifle.
+        let desired: any = null
+        if (!grounded) desired = jumpAnim
+        else if (moving) desired = armed ? crouchRunAnim : runAnim
+        else desired = idleAnim
+        playAnim(desired, desired !== jumpAnim, desired === jumpAnim ? 1.3 : 1)
 
         if (characterRoot) {
           characterRoot.position.x = posX
@@ -237,6 +302,12 @@ export default function TricksterGame() {
         </div>
         <div style={{ color: '#ffffff33', fontSize: 9, marginTop: 8 }}>
           {isTouch ? 'TOCÁ LA PANTALLA PARA CORRER // BOTÓN SALTAR' : 'WASD / FLECHAS — ESPACIO SALTA'}
+        </div>
+        <div style={{ color: '#ffffff22', fontSize: 9, marginTop: 4 }}>
+          LA CÁMARA GUÍA EL RUMBO — ORBITÁ PARA APUNTAR A DÓNDE CORRER
+        </div>
+        <div style={{ color: armedUi ? '#00ffccaa' : '#ffffff22', fontSize: 9, marginTop: 4 }}>
+          {armedUi ? 'RIFLE AGARRADO — CORRER AHORA USA CROUCHRUN' : 'HAY UN RIFLE EN EL MAPA — TOCALO CAMINANDO ENCIMA'}
         </div>
       </div>
 
