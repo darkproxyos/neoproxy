@@ -100,26 +100,29 @@ export default function TricksterGame() {
       let spacePrev = false
       let armed = false
       let shootCooldown = 0
-      const bullets: Array<{ mesh: any; dirX: number; dirZ: number; life: number }> = []
+      const bullets: Array<{ mesh: any; dirX: number; dirY: number; dirZ: number; life: number }> = []
       const SHOOT_INTERVAL = 9 // ~150ms a 60fps, dt ya normalizado
       const BULLET_SPEED = 1.3
       const BULLET_LIFE = 40
+      // Dirección de puntería, recalculada cada frame a partir de la cámara
+      // (sin aplanar — a diferencia de camForward que mueve al personaje).
+      // Así orbitar la cámara hacia arriba/abajo apunta el disparo hacia
+      // arriba/abajo, sin necesidad de un control nuevo.
+      let aimX = 0, aimY = 0, aimZ = 1
 
       function shoot() {
         if (!armed || !characterRoot) return
-        const dirX = Math.sin(facing)
-        const dirZ = Math.cos(facing)
         const bullet = B.MeshBuilder.CreateSphere('bullet', { diameter: 0.09 }, scene)
         bullet.position = new B.Vector3(
-          characterRoot.position.x + dirX * 0.7,
-          baseY + 1.1,
-          characterRoot.position.z + dirZ * 0.7,
+          characterRoot.position.x + aimX * 0.7,
+          baseY + 1.1 + aimY * 0.7,
+          characterRoot.position.z + aimZ * 0.7,
         )
         const bm = new B.StandardMaterial('bulletMat', scene)
         bm.emissiveColor = new B.Color3(0.6, 1, 0.95)
         bm.disableLighting = true
         bullet.material = bm
-        bullets.push({ mesh: bullet, dirX, dirZ, life: 0 })
+        bullets.push({ mesh: bullet, dirX: aimX, dirY: aimY, dirZ: aimZ, life: 0 })
       }
 
       function playAnim(anim: any, loop: boolean, speedRatio = 1) {
@@ -194,6 +197,13 @@ export default function TricksterGame() {
         // en un salto de posición gigante de un cuadro al otro.
         const dt = Math.min(engine.getDeltaTime() / 16.67, 3)
 
+        // Dirección cruda de la cámara (sin aplanar) para apuntar — se usa
+        // tal cual para disparar, así que orbitar la cámara hacia
+        // arriba/abajo apunta el disparo hacia arriba/abajo.
+        const rawAim = camera.getDirection(B.Vector3.Forward())
+        if (rawAim.lengthSquared() > 0.0001) rawAim.normalize()
+        aimX = rawAim.x; aimY = rawAim.y; aimZ = rawAim.z
+
         // Movimiento relativo a cámara: "adelante" es hacia donde mira la
         // cámara (aplanado al piso), no un eje fijo del mundo — así que
         // orbitar la cámara (drag, también con el dedo) redirige hacia
@@ -257,7 +267,7 @@ export default function TricksterGame() {
               rifleMesh.attachToBone(handBone, skinnedMesh)
               rifleMesh.scaling = new B.Vector3(0.55, 0.55, 0.55)
               rifleMesh.position = new B.Vector3(-0.14, 0.02, 0.05)
-              rifleMesh.rotation = new B.Vector3(Math.PI / 2, 0, -0.3)
+              rifleMesh.rotation = new B.Vector3(-Math.PI / 4, 0, -0.3)
             }
           }
         }
@@ -269,8 +279,8 @@ export default function TricksterGame() {
 
         // Disparo — automático mientras se mantenga la tecla/botón, con
         // cooldown entre tiros. Los proyectiles son esferas emisivas que
-        // viajan en línea recta en la dirección hacia la que mira el
-        // personaje (mismo eje que `facing`) y se destruyen por tiempo
+        // viajan en línea recta en la dirección cruda de la cámara (aimX/Y/Z,
+        // calculada arriba) y se destruyen por tiempo
         // de vida, no por colisión (todavía no hay nada que impacten).
         shootCooldown -= dt
         if (keys['KeyF'] && armed && shootCooldown <= 0) {
@@ -280,6 +290,7 @@ export default function TricksterGame() {
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i]
           b.mesh.position.x += b.dirX * BULLET_SPEED * dt
+          b.mesh.position.y += b.dirY * BULLET_SPEED * dt
           b.mesh.position.z += b.dirZ * BULLET_SPEED * dt
           b.life += dt
           if (b.life > BULLET_LIFE) {
