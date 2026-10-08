@@ -1,9 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { TouchActionButton, useIsTouchDevice } from '@/components/games/TouchControls'
-import { agents } from '@/components/proxyverse/agents'
-
-const trickster = agents.find(a => a.id === 'trickster')!
 const VIOLET = '#b400ff'
 
 // Normaliza un ángulo al rango (-PI, PI] para interpolar por el camino corto.
@@ -19,7 +16,6 @@ export default function TricksterGame() {
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
-  const [armedUi, setArmedUi] = useState(false)
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -103,6 +99,28 @@ export default function TricksterGame() {
       let grounded = true
       let spacePrev = false
       let armed = false
+      let shootCooldown = 0
+      const bullets: Array<{ mesh: any; dirX: number; dirZ: number; life: number }> = []
+      const SHOOT_INTERVAL = 9 // ~150ms a 60fps, dt ya normalizado
+      const BULLET_SPEED = 1.3
+      const BULLET_LIFE = 40
+
+      function shoot() {
+        if (!armed || !characterRoot) return
+        const dirX = Math.sin(facing)
+        const dirZ = Math.cos(facing)
+        const bullet = B.MeshBuilder.CreateSphere('bullet', { diameter: 0.09 }, scene)
+        bullet.position = new B.Vector3(
+          characterRoot.position.x + dirX * 0.7,
+          baseY + 1.1,
+          characterRoot.position.z + dirZ * 0.7,
+        )
+        const bm = new B.StandardMaterial('bulletMat', scene)
+        bm.emissiveColor = new B.Color3(0.6, 1, 0.95)
+        bm.disableLighting = true
+        bullet.material = bm
+        bullets.push({ mesh: bullet, dirX, dirZ, life: 0 })
+      }
 
       function playAnim(anim: any, loop: boolean, speedRatio = 1) {
         if (currentAnim === anim) return
@@ -230,7 +248,6 @@ export default function TricksterGame() {
           const ddz = posZ - RIFLE_POS.z
           if (Math.hypot(ddx, ddz) < PICKUP_RADIUS) {
             armed = true
-            setArmedUi(true)
             if (handBone && skinnedMesh) {
               // Offset chico a propósito: el rifle cuelga de un solo hueso
               // (la mano derecha) sin IK en la otra mano, así que durante
@@ -248,6 +265,27 @@ export default function TricksterGame() {
           rifleTime += 0.02 * dt
           rifleMesh.rotation.y += 0.02 * dt
           rifleMesh.position.y = 0.3 + Math.sin(rifleTime) * 0.08
+        }
+
+        // Disparo — automático mientras se mantenga la tecla/botón, con
+        // cooldown entre tiros. Los proyectiles son esferas emisivas que
+        // viajan en línea recta en la dirección hacia la que mira el
+        // personaje (mismo eje que `facing`) y se destruyen por tiempo
+        // de vida, no por colisión (todavía no hay nada que impacten).
+        shootCooldown -= dt
+        if (keys['KeyF'] && armed && shootCooldown <= 0) {
+          shoot()
+          shootCooldown = SHOOT_INTERVAL
+        }
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i]
+          b.mesh.position.x += b.dirX * BULLET_SPEED * dt
+          b.mesh.position.z += b.dirZ * BULLET_SPEED * dt
+          b.life += dt
+          if (b.life > BULLET_LIFE) {
+            b.mesh.dispose()
+            bullets.splice(i, 1)
+          }
         }
 
         // Los 4 clips de Mixamo son mutuamente excluyentes. Correr usa
@@ -298,30 +336,6 @@ export default function TricksterGame() {
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#000' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }} />
 
-      <div style={{
-        position: 'absolute', top: 20, left: 20, maxWidth: isTouch ? 200 : 300,
-        fontFamily: 'Space Mono, monospace', fontSize: 10,
-        letterSpacing: 3, lineHeight: 2.2, color: VIOLET,
-        pointerEvents: 'none', textShadow: `0 0 10px ${VIOLET}`,
-      }}>
-        <div style={{ fontSize: 13, marginBottom: 4 }}>TRICKSTER // CAMPO DE PRUEBA</div>
-        <div style={{ color: '#aaaaaa', fontSize: 9, maxWidth: 260, lineHeight: 1.8 }}>
-          "{trickster.quote}"
-        </div>
-        <div style={{ color: '#ffb80099', fontSize: 8, marginTop: 10, letterSpacing: 1.5 }}>
-          IDLE, CORRER Y SALTAR: ESQUELETO Y ANIMACIÓN REAL (MIXAMO)
-        </div>
-        <div style={{ color: '#ffffff33', fontSize: 9, marginTop: 8 }}>
-          {isTouch ? 'TOCÁ LA PANTALLA PARA CORRER // BOTÓN SALTAR' : 'WASD / FLECHAS — ESPACIO SALTA'}
-        </div>
-        <div style={{ color: '#ffffff22', fontSize: 9, marginTop: 4 }}>
-          LA CÁMARA GUÍA EL RUMBO — ORBITÁ PARA APUNTAR A DÓNDE CORRER
-        </div>
-        <div style={{ color: armedUi ? '#00ffccaa' : '#ffffff22', fontSize: 9, marginTop: 4 }}>
-          {armedUi ? 'RIFLE AGARRADO — CORRER AHORA USA CROUCHRUN' : 'HAY UN RIFLE EN EL MAPA — TOCALO CAMINANDO ENCIMA'}
-        </div>
-      </div>
-
       {loading && (
         <div style={{
           position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
@@ -357,7 +371,10 @@ export default function TricksterGame() {
         // bottom:100 para despejar el botón de Chat global (bottom:24,right:24).
         // Sin D-pad: tocar cualquier parte de la pantalla ya hace correr
         // (ver el listener de touchstart/touchend sobre el canvas, arriba).
-        <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
+        <>
+          <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
+          <TouchActionButton keysRef={keysRef} code="KeyF" label="FUEGO" style={{ bottom: 100, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
+        </>
       )}
     </div>
   )
