@@ -202,7 +202,10 @@ export default function TricksterGame() {
           dx /= len; dz /= len
           posX = Math.max(-BOUND, Math.min(BOUND, posX + dx * SPEED * dt))
           posZ = Math.max(-BOUND, Math.min(BOUND, posZ + dz * SPEED * dt))
-          const target = Math.atan2(dx, dz)
+          // +PI: el eje "adelante" del rig queda mirando a cámara con
+          // rotation.y=0, así que sin este offset el personaje corre
+          // de espaldas a su propio movimiento (muestra la cara, no la nuca).
+          const target = Math.atan2(dx, dz) + Math.PI
           facing += wrapAngle(target - facing) * TURN_LERP
         }
 
