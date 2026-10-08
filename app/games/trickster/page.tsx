@@ -232,13 +232,14 @@ export default function TricksterGame() {
             armed = true
             setArmedUi(true)
             if (handBone && skinnedMesh) {
-              // Transform neutro al hueso: tamaño y posición ya salen
-              // correctos así (el rifle queda colgando del costado, agarrado
-              // de la mano) — ajustado mirando capturas, no hay pose de
-              // referencia exacta todavía.
+              // Offset chico a propósito: el rifle cuelga de un solo hueso
+              // (la mano derecha) sin IK en la otra mano, así que durante
+              // CrouchRun el brazo se mueve con el ciclo de carrera entero.
+              // Un offset grande amplifica ese balanceo (se ve como que el
+              // brazo se estira); mantenerlo cerca de la mano lo frena.
               rifleMesh.attachToBone(handBone, skinnedMesh)
-              rifleMesh.scaling = new B.Vector3(0.6, 0.6, 0.6)
-              rifleMesh.position = new B.Vector3(-0.32, 0, 0)
+              rifleMesh.scaling = new B.Vector3(0.55, 0.55, 0.55)
+              rifleMesh.position = new B.Vector3(-0.14, 0.02, 0.05)
               rifleMesh.rotation = new B.Vector3(Math.PI / 2, 0, -0.3)
             }
           }
