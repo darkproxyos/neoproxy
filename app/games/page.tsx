@@ -49,6 +49,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'Sobrevuelo automático de una nave a través de un túnel de anillos y un campo estelar. Todavía sin controles — demo visual, no jugable.',
     controls: 'SIN CONTROLES — AUTOPLAY',
   },
+  {
+    id: 'trickster',
+    code: 'NPX-EXP-TRICKSTER',
+    title: 'TRICKSTER // CAMPO DE PRUEBA',
+    href: '/games/trickster',
+    status: 'demo',
+    blurb: 'El primer personaje jugable del catálogo — generado y traído desde afuera, corriendo con esqueleto y animación real (Mixamo) en una escena propia. El salto todavía es animación procedural, sin clip propio.',
+    controls: 'WASD / FLECHAS — ESPACIO SALTA',
+  },
 ]
 
 export default function GamesHubPage() {
@@ -76,7 +85,7 @@ export default function GamesHubPage() {
         </h1>
         <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 12 }}>
           El brazo de juegos de NeoProxy. Cada título vive adentro del Proxyverse — mundos jugables
-          en vez de solo narrados. Esto recién arranca: tres experimentos ya corriendo, y la línea
+          en vez de solo narrados. Esto recién arranca: cuatro experimentos ya corriendo, y la línea
           de producción se está armando recién ahora.
         </p>
         <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1, lineHeight: 1.9, maxWidth: 620, marginBottom: 56 }}>
@@ -102,7 +111,7 @@ export default function GamesHubPage() {
                   color: game.status === 'jugable' ? '#00ffcc' : '#ffb800',
                   border: `1px solid ${game.status === 'jugable' ? '#00ffcc44' : '#ffb80044'}`,
                 }}>
-                  {game.status === 'jugable' ? 'JUGABLE' : 'DEMO VISUAL'}
+                  {game.status === 'jugable' ? 'JUGABLE' : 'DEMO'}
                 </div>
               </div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{game.title}</div>
@@ -110,16 +119,6 @@ export default function GamesHubPage() {
               <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>{game.controls}</div>
             </Link>
           ))}
-
-          {/* Próximo título: sin ruta real todavía, no inventar una antes de tiempo */}
-          <div className="artifact-card" style={{ padding: 24, borderStyle: 'dashed', opacity: 0.6 }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 12 }}>NPX-EXP-???</div>
-            <div style={{ fontSize: 20, letterSpacing: 2, color: '#8fb8d6', marginBottom: 10 }}>PRÓXIMO TÍTULO</div>
-            <p style={{ fontSize: 11, color: '#4a6080', lineHeight: 1.8 }}>
-              En producción. El primer personaje jugable — generado, convertido a 3D y animado fuera
-              del sitio — va a aparecer acá apenas esté listo para integrarse.
-            </p>
-          </div>
         </div>
       </div>
     </div>
