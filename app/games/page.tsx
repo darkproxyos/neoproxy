@@ -58,6 +58,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'El primer personaje jugable del catálogo — generado y traído desde afuera, corriendo con esqueleto y animación real (Mixamo) en una escena propia. El salto todavía es animación procedural, sin clip propio.',
     controls: 'WASD / FLECHAS — ESPACIO SALTA',
   },
+  {
+    id: 'trickster-mirror',
+    code: 'NPX-EXP-MIRROR',
+    title: 'TRICKSTER // ESPEJO',
+    href: '/games/trickster-mirror',
+    status: 'demo',
+    blurb: 'Trickster en reposo copia tus movimientos de cabeza y brazos en tiempo real, leídos con la cámara del dispositivo (MediaPipe Pose, corre entero en el navegador). Sin piernas ni torso — solo lo que una webcam frontal puede ver bien.',
+    controls: 'CÁMARA — SIN TECLADO',
+  },
 ]
 
 export default function GamesHubPage() {

@@ -60,7 +60,7 @@ export const navConfig: NavEntry[] = [
 // y Spaceship son canvas/iframe a pantalla completa — el SiteNav global
 // flotando encima choca con el HUD propio de cada juego. El catálogo
 // (/games) sí lo muestra, por eso solo se ocultan las sub-rutas.
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/ar', '/realidad-aumentada', '/draw', '/etereo']
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/ar', '/realidad-aumentada', '/draw', '/etereo']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))
