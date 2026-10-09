@@ -92,11 +92,26 @@ export default function TricksterGame() {
       let runAnim: any = null
       let jumpAnim: any = null
       let idleAnim: any = null
+      let kickAnim: any = null
       let currentAnim: any = null
       let posX = 0, posZ = 0, baseY = 0, velY = 0
       let facing = 0
       let grounded = true
       let spacePrev = false
+
+      // Patada voladora — animación propia (Mixamo), no procedural como el
+      // salto. Se dispara una vez por tecla (flanco de subida, no mantener),
+      // y mientras dura fuerza esa animación por encima de Idle/Run/Jump.
+      let kicking = false
+      let kickTimer = 0
+      let kickKeyPrev = false
+      let kickHit = false // para no pegar más de un golpe por patada
+      // FlyingKick.fbx (Mixamo) dura 1.5s reproducido a velocidad normal;
+      // a 60fps y con dt normalizado a ~1 por frame, son 90 dt-units.
+      const KICK_DURATION = 90
+      const KICK_HIT_AT = 50 // momento del impacto dentro de la patada — ajustado visualmente
+      const KICK_RANGE = 2.4
+      const KICK_DAMAGE = 34
 
       // Poderes — sin arma, el ataque es energía acumulada en la mano.
       // Mantener la tecla/botón carga (bola de energía creciendo pegada al
@@ -132,6 +147,16 @@ export default function TricksterGame() {
         bullets.push({ mesh: bullet, dirX: aimX, dirY: aimY, dirZ: aimZ, life: 0, speed: 1 + t * 1.2 })
       }
 
+      function damageGennos(amount: number) {
+        if (!gennosMesh || gennosDefeated) return
+        gennosHP = Math.max(0, gennosHP - amount)
+        if (gennosHP <= 0) {
+          gennosDefeated = true
+          gennosRespawnTimer = 0
+          gennosRunAnim?.stop()
+        }
+      }
+
       function playAnim(anim: any, loop: boolean, speedRatio = 1) {
         if (currentAnim === anim) return
         currentAnim?.stop()
@@ -161,8 +186,10 @@ export default function TricksterGame() {
           runAnim = res.animationGroups.find((a: any) => a.name === 'Run') ?? null
           jumpAnim = res.animationGroups.find((a: any) => a.name === 'Jump') ?? null
           idleAnim = res.animationGroups.find((a: any) => a.name === 'Idle') ?? null
-          ;[runAnim, jumpAnim, idleAnim].forEach((a) => a?.stop())
+          kickAnim = res.animationGroups.find((a: any) => a.name === 'FlyingKick') ?? null
+          ;[runAnim, jumpAnim, idleAnim, kickAnim].forEach((a) => a?.stop())
           if (jumpAnim) jumpAnim.loopAnimation = false
+          if (kickAnim) kickAnim.loopAnimation = false
           setLoading(false)
         })
         .catch(() => {
@@ -183,6 +210,15 @@ export default function TricksterGame() {
       let gennosMesh: any = null
       let gennosFacing = 0
       let gennosRunAnim: any = null
+      // Vida — sin animación de derrota propia todavía, así que "morir" es
+      // caerse (rotation.x) y hundirse en el piso; reaparece solo, para que
+      // el campo de prueba se pueda seguir usando sin recargar la página.
+      const GENNOS_MAX_HP = 100
+      let gennosHP = GENNOS_MAX_HP
+      let gennosDefeated = false
+      let gennosRespawnTimer = 0
+      const GENNOS_RESPAWN_DELAY = 240 // dt-units, ~4s a 60fps
+      let hpBarBg: any = null, hpBarFill: any = null
       B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
         .then((res) => {
           if (disposed) return
@@ -199,6 +235,28 @@ export default function TricksterGame() {
           // propio para Gennos.
           gennosRunAnim = res.animationGroups[0] ?? null
           gennosRunAnim?.start(true)
+
+          // Barra de vida — billboard (siempre de cara a cámara), dos planos
+          // superpuestos: fondo oscuro fijo + relleno rojo que se achica con
+          // gennosHP/GENNOS_MAX_HP. No es texto — el pedido anterior de
+          // sacar el HUD de texto sigue en pie.
+          hpBarBg = B.MeshBuilder.CreatePlane('hpBarBg', { width: 1.1, height: 0.14 }, scene)
+          hpBarBg.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+          const hpBgMat = new B.StandardMaterial('hpBgMat', scene)
+          hpBgMat.emissiveColor = new B.Color3(0.15, 0.03, 0.03)
+          hpBgMat.disableLighting = true
+          hpBarBg.material = hpBgMat
+          hpBarFill = B.MeshBuilder.CreatePlane('hpBarFill', { width: 1, height: 0.1 }, scene)
+          hpBarFill.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+          // Coplanar con hpBarBg (mismo billboard, misma posición): sin un
+          // rendering group propio, el z-fighting hace que el fondo gane y
+          // el relleno quede invisible. Un grupo posterior lo fuerza siempre
+          // encima, sin depender de precisión de depth buffer.
+          hpBarFill.renderingGroupId = 1
+          const hpFillMat = new B.StandardMaterial('hpFillMat', scene)
+          hpFillMat.emissiveColor = new B.Color3(1, 0.15, 0.15)
+          hpFillMat.disableLighting = true
+          hpBarFill.material = hpFillMat
         })
         .catch(() => { /* enemigo opcional — si falla, el personaje sigue jugable sin él */ })
 
@@ -270,20 +328,74 @@ export default function TricksterGame() {
           velY -= GRAVITY * dt
         }
 
+        // Patada voladora — flanco de subida de KeyE (o el botón PATADA),
+        // una sola vez por toque, no se puede re-disparar hasta que termine.
+        // El golpe conecta en un instante fijo dentro de la animación
+        // (KICK_HIT_AT), no apenas se aprieta la tecla, y solo si Gennos
+        // está a KICK_RANGE o menos del personaje en ese momento.
+        const kickKeyDown = !!keys['KeyE']
+        if (kickKeyDown && !kickKeyPrev && !kicking && grounded && kickAnim) {
+          kicking = true
+          kickTimer = 0
+          kickHit = false
+          playAnim(kickAnim, false, 1)
+        }
+        kickKeyPrev = kickKeyDown
+        if (kicking) {
+          kickTimer += dt
+          if (!kickHit && kickTimer >= KICK_HIT_AT) {
+            kickHit = true
+            if (gennosMesh && characterRoot) {
+              const ddx = gennosMesh.position.x - posX
+              const ddz = gennosMesh.position.z - posZ
+              if (Math.hypot(ddx, ddz) <= KICK_RANGE) damageGennos(KICK_DAMAGE)
+            }
+          }
+          if (kickTimer >= KICK_DURATION) kicking = false
+        }
+
         // Gennos persigue a Trickster — esqueleto y animación Run reales
         // (ver comentario de arriba), un solo clip en loop constante.
         if (gennosMesh && characterRoot) {
-          const gdx = posX - gennosMesh.position.x
-          const gdz = posZ - gennosMesh.position.z
-          const gdist = Math.hypot(gdx, gdz)
-          if (gdist > GENNOS_STOP_DIST) {
-            const gnx = gdx / gdist, gnz = gdz / gdist
-            gennosMesh.position.x += gnx * GENNOS_SPEED * dt
-            gennosMesh.position.z += gnz * GENNOS_SPEED * dt
-            const gTarget = Math.atan2(gnx, gnz)
-            gennosFacing += wrapAngle(gTarget - gennosFacing) * TURN_LERP
+          if (gennosDefeated) {
+            // Sin animación de derrota propia: se cae de cara y se hunde un
+            // poco, se queda así un rato y reaparece solo en su posición
+            // original con la vida llena.
+            gennosRespawnTimer += dt
+            gennosMesh.rotation.x = Math.min(gennosMesh.rotation.x + 0.08 * dt, Math.PI / 2)
+            gennosMesh.position.y = Math.max(gennosMesh.position.y - 0.01 * dt, -0.4)
+            if (gennosRespawnTimer >= GENNOS_RESPAWN_DELAY) {
+              gennosDefeated = false
+              gennosHP = GENNOS_MAX_HP
+              gennosMesh.position = GENNOS_POS.clone()
+              gennosMesh.rotation.x = 0
+              gennosFacing = 0
+              gennosRunAnim?.start(true)
+            }
+          } else {
+            const gdx = posX - gennosMesh.position.x
+            const gdz = posZ - gennosMesh.position.z
+            const gdist = Math.hypot(gdx, gdz)
+            if (gdist > GENNOS_STOP_DIST) {
+              const gnx = gdx / gdist, gnz = gdz / gdist
+              gennosMesh.position.x += gnx * GENNOS_SPEED * dt
+              gennosMesh.position.z += gnz * GENNOS_SPEED * dt
+              const gTarget = Math.atan2(gnx, gnz)
+              gennosFacing += wrapAngle(gTarget - gennosFacing) * TURN_LERP
+            }
+            gennosMesh.rotation.y = gennosFacing
           }
-          gennosMesh.rotation.y = gennosFacing
+
+          if (hpBarBg && hpBarFill) {
+            const barY = gennosMesh.position.y + 2.3
+            hpBarBg.position.set(gennosMesh.position.x, barY, gennosMesh.position.z)
+            hpBarFill.position.set(gennosMesh.position.x, barY, gennosMesh.position.z)
+            const hpFrac = Math.max(0, gennosHP / GENNOS_MAX_HP)
+            hpBarFill.scaling.x = hpFrac
+            hpBarFill.position.x -= (1 - hpFrac) * 0.5
+            hpBarBg.setEnabled(!gennosDefeated)
+            hpBarFill.setEnabled(!gennosDefeated)
+          }
         }
 
         // Poder — mantener KeyF (o el botón PODER) carga una bola de energía
@@ -318,23 +430,49 @@ export default function TricksterGame() {
         }
         powerKeyPrev = powerKeyDown
 
+        const BULLET_HIT_RADIUS = 1.3
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i]
-          b.mesh.position.x += b.dirX * b.speed * dt
-          b.mesh.position.y += b.dirY * b.speed * dt
-          b.mesh.position.z += b.dirZ * b.speed * dt
+          // Chequeo de colisión contra el SEGMENTO recorrido este frame, no
+          // solo el punto final — con dt grande (frame lento/tab en 2do
+          // plano) el proyectil puede avanzar más que el radio de impacto
+          // en un solo paso y atravesar a Gennos sin que ningún punto
+          // muestreado caiga dentro del radio.
+          const prevX = b.mesh.position.x, prevY = b.mesh.position.y, prevZ = b.mesh.position.z
+          const nextX = prevX + b.dirX * b.speed * dt
+          const nextY = prevY + b.dirY * b.speed * dt
+          const nextZ = prevZ + b.dirZ * b.speed * dt
+          b.mesh.position.set(nextX, nextY, nextZ)
           b.life += dt
-          if (b.life > BULLET_LIFE) {
+          let hit = false
+          if (gennosMesh && !gennosDefeated) {
+            const gx = gennosMesh.position.x, gy = gennosMesh.position.y + 1.1, gz = gennosMesh.position.z
+            const segX = nextX - prevX, segY = nextY - prevY, segZ = nextZ - prevZ
+            const segLenSq = segX * segX + segY * segY + segZ * segZ
+            let t = 0
+            if (segLenSq > 1e-8) {
+              t = Math.max(0, Math.min(1, ((gx - prevX) * segX + (gy - prevY) * segY + (gz - prevZ) * segZ) / segLenSq))
+            }
+            const bdx = prevX + segX * t - gx
+            const bdy = prevY + segY * t - gy
+            const bdz = prevZ + segZ * t - gz
+            if (Math.sqrt(bdx * bdx + bdy * bdy + bdz * bdz) <= BULLET_HIT_RADIUS) {
+              hit = true
+              damageGennos(22)
+            }
+          }
+          if (hit || b.life > BULLET_LIFE) {
             b.mesh.dispose()
             bullets.splice(i, 1)
           }
         }
 
         let desired: any = null
-        if (!grounded) desired = jumpAnim
+        if (kicking) desired = kickAnim
+        else if (!grounded) desired = jumpAnim
         else if (moving) desired = runAnim
         else desired = idleAnim
-        playAnim(desired, desired !== jumpAnim, desired === jumpAnim ? 1.3 : 1)
+        playAnim(desired, desired !== jumpAnim && desired !== kickAnim, desired === jumpAnim ? 1.3 : 1)
 
         if (characterRoot) {
           characterRoot.position.x = posX
@@ -414,6 +552,7 @@ export default function TricksterGame() {
         <>
           <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
           <TouchActionButton keysRef={keysRef} code="KeyF" label="PODER" style={{ bottom: 100, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
+          <TouchActionButton keysRef={keysRef} code="KeyE" label="PATADA" style={{ bottom: 184, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
         </>
       )}
     </div>
