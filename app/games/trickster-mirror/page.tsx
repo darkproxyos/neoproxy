@@ -134,7 +134,14 @@ export default function TricksterMirrorPage() {
       scene.onAfterAnimationsObservable.add(() => {
         if (!skinnedMesh || !leftArmBone || !rightArmBone) return
         const lm = poseRef.current
-        if (!lm) { calib = null; return }
+        // Si por un frame no hay detección confiable (parpadeo normal del
+        // modelo, no significa que la persona se fue), simplemente no se
+        // actualiza nada ese frame — la calibración NO se resetea. Antes
+        // se reseteaba acá mismo, lo que hacía que la referencia "en
+        // reposo" persiguiera la posición actual todo el tiempo y el
+        // movimiento nunca se notara (parecía que el avatar solo hacía su
+        // animación propia, sin reaccionar a la cámara).
+        if (!lm) return
 
         // Espejo: el lado DERECHO del usuario mueve el brazo IZQUIERDO del
         // avatar y viceversa — así el reflejo se comporta como un espejo de
