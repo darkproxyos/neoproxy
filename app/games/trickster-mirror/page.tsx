@@ -116,12 +116,17 @@ export default function TricksterMirrorPage() {
       // cada hueso en cada frame, así que esto no se acumula sin control).
       // Probado con Space.WORLD primero — bone.getRotationQuaternion(WORLD)
       // devolvía identidad siempre con este mesh/esqueleto (no quedó claro
-      // por qué), así que se abandonó. ARM_AXIS=(0,0,1) está verificado a
-      // mano con un harness de inyección de landmarks falsos (no con una
-      // persona real todavía) — mueve el brazo de forma visible y en la
-      // dirección esperada.
+      // por qué), así que se abandonó. ARM_AXIS: con (0,0,1) el brazo
+      // prácticamente no se movía — medido con un harness de inyección de
+      // landmarks falsos, comparando la posición mundial de la mano antes/
+      // después del mismo delta en cada eje candidato: Z desplazaba la mano
+      // ~0.016 unidades (es casi el eje de "apuntado" del hueso — rotar ahí
+      // es sobre todo un giro sobre sí mismo, no un movimiento de brazo),
+      // mientras que Y desplazaba ~0.127 (8x más) y se ve claramente como el
+      // brazo moviéndose en capturas de pantalla. Y es el eje de swing real
+      // para este rig.
       let calib: { lu: number; lf: number; ru: number; rf: number; yaw: number; pitch: number } | null = null
-      const ARM_AXIS = new B.Vector3(0, 0, 1)
+      const ARM_AXIS = new B.Vector3(0, 1, 0)
       const YAW_AXIS = new B.Vector3(0, 1, 0)
       const PITCH_AXIS = new B.Vector3(1, 0, 0)
       const HEAD_SENSITIVITY = 2.2 // la cabeza se mueve poco en pantalla — hace falta amplificar para que se note
