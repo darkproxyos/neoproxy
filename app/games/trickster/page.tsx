@@ -92,37 +92,44 @@ export default function TricksterGame() {
       let runAnim: any = null
       let jumpAnim: any = null
       let idleAnim: any = null
-      let crouchRunAnim: any = null
       let currentAnim: any = null
       let posX = 0, posZ = 0, baseY = 0, velY = 0
       let facing = 0
       let grounded = true
       let spacePrev = false
-      let armed = false
-      let shootCooldown = 0
-      const bullets: Array<{ mesh: any; dirX: number; dirY: number; dirZ: number; life: number }> = []
-      const SHOOT_INTERVAL = 9 // ~150ms a 60fps, dt ya normalizado
-      const BULLET_SPEED = 1.3
-      const BULLET_LIFE = 40
+
+      // Poderes — sin arma, el ataque es energía acumulada en la mano.
+      // Mantener la tecla/botón carga (bola de energía creciendo pegada al
+      // hueso de la mano), soltar dispara un proyectil cuyo tamaño/velocidad
+      // escalan con lo cargado. `chargeOrb` se crea recién al primer toque
+      // de carga, no de entrada — no tiene sentido si nunca se usa.
+      let powerCharge = 0
+      let powerKeyPrev = false
+      let chargeOrb: any = null
+      const POWER_MAX_CHARGE = 45 // dt-units (~750ms a 60fps) hasta carga completa
+      const POWER_MIN_CHARGE = 4 // por debajo de esto, soltar no dispara nada
+      const bullets: Array<{ mesh: any; dirX: number; dirY: number; dirZ: number; life: number; speed: number }> = []
+      const BULLET_LIFE = 50
       // Dirección de puntería, recalculada cada frame a partir de la cámara
       // (sin aplanar — a diferencia de camForward que mueve al personaje).
-      // Así orbitar la cámara hacia arriba/abajo apunta el disparo hacia
+      // Así orbitar la cámara hacia arriba/abajo apunta el poder hacia
       // arriba/abajo, sin necesidad de un control nuevo.
       let aimX = 0, aimY = 0, aimZ = 1
 
-      function shoot() {
-        if (!armed || !characterRoot) return
-        const bullet = B.MeshBuilder.CreateSphere('bullet', { diameter: 0.09 }, scene)
+      function releasePower(charge: number) {
+        if (!characterRoot || charge < POWER_MIN_CHARGE) return
+        const t = Math.min(charge / POWER_MAX_CHARGE, 1) // 0..1
+        const bullet = B.MeshBuilder.CreateSphere('bullet', { diameter: 0.12 + t * 0.22 }, scene)
         bullet.position = new B.Vector3(
           characterRoot.position.x + aimX * 0.7,
           baseY + 1.1 + aimY * 0.7,
           characterRoot.position.z + aimZ * 0.7,
         )
         const bm = new B.StandardMaterial('bulletMat', scene)
-        bm.emissiveColor = new B.Color3(0.6, 1, 0.95)
+        bm.emissiveColor = B.Color3.FromHexString(VIOLET).scale(0.5 + t * 0.5)
         bm.disableLighting = true
         bullet.material = bm
-        bullets.push({ mesh: bullet, dirX: aimX, dirY: aimY, dirZ: aimZ, life: 0 })
+        bullets.push({ mesh: bullet, dirX: aimX, dirY: aimY, dirZ: aimZ, life: 0, speed: 1 + t * 1.2 })
       }
 
       function playAnim(anim: any, loop: boolean, speedRatio = 1) {
@@ -144,17 +151,17 @@ export default function TricksterGame() {
           characterRoot.rotationQuaternion = null
           baseY = characterRoot.position.y
           skinnedMesh = res.meshes.find((m: any) => m.skeleton) ?? res.meshes[1]
+          // La mano derecha ahora sostiene la bola de energía del poder, no
+          // un arma — mismo hueso, otro propósito.
           handBone = res.skeletons[0]?.bones.find((b: any) => b.name === 'mixamorig:RightHand') ?? null
-          // Esqueleto y los 4 clips vienen de Mixamo (mismo rig): Idle en
-          // reposo, Run al caminar/correr, Jump al saltar, CrouchRun al
-          // correr con el rifle agarrado. La física del arco (posY) la
+          // Esqueleto y clips vienen de Mixamo (mismo rig): Idle en reposo,
+          // Run al moverse, Jump al saltar. La física del arco (posY) la
           // seguimos calculando nosotros — el clip de salto solo aporta
           // la pose mientras dura.
           runAnim = res.animationGroups.find((a: any) => a.name === 'Run') ?? null
           jumpAnim = res.animationGroups.find((a: any) => a.name === 'Jump') ?? null
           idleAnim = res.animationGroups.find((a: any) => a.name === 'Idle') ?? null
-          crouchRunAnim = res.animationGroups.find((a: any) => a.name === 'CrouchRun') ?? null
-          ;[runAnim, jumpAnim, idleAnim, crouchRunAnim].forEach((a) => a?.stop())
+          ;[runAnim, jumpAnim, idleAnim].forEach((a) => a?.stop())
           if (jumpAnim) jumpAnim.loopAnimation = false
           setLoading(false)
         })
@@ -164,48 +171,34 @@ export default function TricksterGame() {
           setLoading(false)
         })
 
-      // Rifle — esperando en el mapa hasta que el personaje lo toque (por
-      // cercanía, no por tap: en mobile tocar la pantalla ya corre). Gira y
-      // flota mientras está en el piso; al agarrarlo se cuelga del hueso de
-      // la mano derecha y pasa a seguir al esqueleto solo.
-      // Sobre el eje "adelante" de la cámara por defecto, para que
-      // sostener W (o tocar la pantalla) desde el spawn alcance para
-      // encontrarlo sin tener que orbitar primero.
-      const RIFLE_POS = new B.Vector3(-2, 0, 8)
-      const PICKUP_RADIUS = 1.4
-      let rifleMesh: any = null // raíz __root__ de Babylon — mover esto mueve toda la geometría hija
-
-      B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'rifle.glb', scene)
-        .then((res) => {
-          if (disposed) return
-          rifleMesh = res.meshes[0]
-          rifleMesh.position = RIFLE_POS.clone()
-          rifleMesh.position.y = 0.3
-        })
-        .catch(() => { /* el arma es opcional — si falla, el personaje sigue jugable sin ella */ })
-
-      // Gennos (versión enemigo) — malla estática sin esqueleto ni
-      // animaciones todavía, parado en otro cuadrante del mapa para
-      // encontrarlo explorando. El bounding box nativo mide ~1.15 de
-      // alto (no viene a escala 1:1 con Trickster, que ronda 1.8), así
-      // que se reescala a mano. Luz de acento roja para distinguirlo del
-      // violeta del resto de la escena — "corrupción" en este proyecto
-      // es rojo (ver /status), no un tono nuevo inventado acá.
+      // Gennos (versión enemigo) — esqueleto Mixamo propio (rigeado en
+      // Mixamo a partir de la malla original, mismo mixamorig: que
+      // Trickster, pero rig independiente ya que es una malla distinta) con
+      // la animación "Run" ya incluida en el archivo. El bounding box
+      // nativo mide ~1.1 de alto (no viene a escala 1:1 con Trickster, que
+      // ronda 1.8), así que se reescala a mano. Luz de acento roja para
+      // distinguirlo del violeta del resto de la escena — "corrupción" en
+      // este proyecto es rojo (ver /status), no un tono nuevo inventado acá.
       const GENNOS_POS = new B.Vector3(14, 0, -12)
       let gennosMesh: any = null
       let gennosFacing = 0
-      let gennosBobTime = 0
+      let gennosRunAnim: any = null
       B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
         .then((res) => {
           if (disposed) return
           gennosMesh = res.meshes[0]
           gennosMesh.rotationQuaternion = null
           gennosMesh.position = GENNOS_POS.clone()
-          gennosMesh.scaling = new B.Vector3(1.55, 1.55, 1.55)
+          gennosMesh.scaling = new B.Vector3(1.63, 1.63, 1.63)
           const gennosLight = new B.PointLight('gennosLight', GENNOS_POS.add(new B.Vector3(0, 1.4, 0)), scene)
           gennosLight.diffuse = B.Color3.FromHexString('#ff2b2b')
           gennosLight.intensity = 0.9
           gennosLight.range = 6
+          // Un solo clip en el archivo (el nombre que le puso Mixamo al
+          // exportar) — se reproduce siempre en loop, todavía no hay Idle
+          // propio para Gennos.
+          gennosRunAnim = res.animationGroups[0] ?? null
+          gennosRunAnim?.start(true)
         })
         .catch(() => { /* enemigo opcional — si falla, el personaje sigue jugable sin él */ })
 
@@ -216,7 +209,6 @@ export default function TricksterGame() {
       const GRAVITY = 0.0065
       const GENNOS_SPEED = 0.07 // algo más lento que SPEED (0.09): se lo puede sacar ventaja corriendo
       const GENNOS_STOP_DIST = 1.6
-      let rifleTime = 0
 
       scene.registerBeforeRender(() => {
         // normalizado a ~60fps, con tope: un frame lento (carga pesada,
@@ -225,8 +217,8 @@ export default function TricksterGame() {
         const dt = Math.min(engine.getDeltaTime() / 16.67, 3)
 
         // Dirección cruda de la cámara (sin aplanar) para apuntar — se usa
-        // tal cual para disparar, así que orbitar la cámara hacia
-        // arriba/abajo apunta el disparo hacia arriba/abajo.
+        // tal cual para el poder, así que orbitar la cámara hacia
+        // arriba/abajo apunta el poder hacia arriba/abajo.
         const rawAim = camera.getDirection(B.Vector3.Forward())
         if (rawAim.lengthSquared() > 0.0001) rawAim.normalize()
         aimX = rawAim.x; aimY = rawAim.y; aimZ = rawAim.z
@@ -278,38 +270,8 @@ export default function TricksterGame() {
           velY -= GRAVITY * dt
         }
 
-        // Recolectar el rifle por cercanía — una vez agarrado queda colgado
-        // del hueso de la mano para siempre, no hay forma de soltarlo (todavía).
-        if (!armed && rifleMesh && characterRoot) {
-          const ddx = posX - RIFLE_POS.x
-          const ddz = posZ - RIFLE_POS.z
-          if (Math.hypot(ddx, ddz) < PICKUP_RADIUS) {
-            armed = true
-            if (handBone && skinnedMesh) {
-              // Offset chico a propósito: el rifle cuelga de un solo hueso
-              // (la mano derecha) sin IK en la otra mano, así que durante
-              // CrouchRun el brazo se mueve con el ciclo de carrera entero.
-              // Un offset grande amplifica ese balanceo (se ve como que el
-              // brazo se estira); mantenerlo cerca de la mano lo frena.
-              rifleMesh.attachToBone(handBone, skinnedMesh)
-              rifleMesh.scaling = new B.Vector3(0.55, 0.55, 0.55)
-              rifleMesh.position = new B.Vector3(-0.14, 0.02, 0.05)
-              rifleMesh.rotation = new B.Vector3(-Math.PI / 4, 0, -0.3)
-            }
-          }
-        }
-        if (rifleMesh && !armed) {
-          rifleTime += 0.02 * dt
-          rifleMesh.rotation.y += 0.02 * dt
-          rifleMesh.position.y = 0.3 + Math.sin(rifleTime) * 0.08
-        }
-
-        // Gennos persigue a Trickster — todavía sin esqueleto/animación
-        // real (malla estática, ver comentario de arriba), así que el
-        // "correr" es la posición moviéndose + un balanceo sinusoidal
-        // simple en Y/rotation.z para que no se vea como un fantasma
-        // deslizándose. Reemplazar por animación real en cuanto llegue
-        // el rig de Mixamo.
+        // Gennos persigue a Trickster — esqueleto y animación Run reales
+        // (ver comentario de arriba), un solo clip en loop constante.
         if (gennosMesh && characterRoot) {
           const gdx = posX - gennosMesh.position.x
           const gdz = posZ - gennosMesh.position.z
@@ -320,31 +282,47 @@ export default function TricksterGame() {
             gennosMesh.position.z += gnz * GENNOS_SPEED * dt
             const gTarget = Math.atan2(gnx, gnz)
             gennosFacing += wrapAngle(gTarget - gennosFacing) * TURN_LERP
-            gennosBobTime += 0.3 * dt
-            gennosMesh.position.y = Math.abs(Math.sin(gennosBobTime)) * 0.12
-            gennosMesh.rotation.z = Math.sin(gennosBobTime * 2) * 0.05
-          } else {
-            gennosMesh.position.y = 0
-            gennosMesh.rotation.z = 0
           }
           gennosMesh.rotation.y = gennosFacing
         }
 
-        // Disparo — automático mientras se mantenga la tecla/botón, con
-        // cooldown entre tiros. Los proyectiles son esferas emisivas que
-        // viajan en línea recta en la dirección cruda de la cámara (aimX/Y/Z,
-        // calculada arriba) y se destruyen por tiempo
-        // de vida, no por colisión (todavía no hay nada que impacten).
-        shootCooldown -= dt
-        if (keys['KeyF'] && armed && shootCooldown <= 0) {
-          shoot()
-          shootCooldown = SHOOT_INTERVAL
+        // Poder — mantener KeyF (o el botón PODER) carga una bola de energía
+        // pegada a la mano derecha, cuyo tamaño crece con `powerCharge`.
+        // Al soltar, se dispara un proyectil: más carga = más grande y más
+        // rápido. Soltar con muy poca carga (tap accidental) no dispara nada.
+        const powerKeyDown = !!keys['KeyF']
+        if (powerKeyDown) {
+          powerCharge = Math.min(powerCharge + dt, POWER_MAX_CHARGE)
+          if (!chargeOrb && handBone && skinnedMesh) {
+            chargeOrb = B.MeshBuilder.CreateSphere('chargeOrb', { diameter: 0.1 }, scene)
+            const com = new B.StandardMaterial('chargeOrbMat', scene)
+            com.emissiveColor = B.Color3.FromHexString(VIOLET)
+            com.disableLighting = true
+            chargeOrb.material = com
+            chargeOrb.attachToBone(handBone, skinnedMesh)
+            // Mismo offset que ya se había afinado para este hueso cuando
+            // colgaba el rifle de acá — en (0,0,0) el anclaje cae cerca del
+            // torso, no de la mano.
+            chargeOrb.position = new B.Vector3(-0.14, 0.02, 0.05)
+          }
+          if (chargeOrb) {
+            const s = 0.4 + (powerCharge / POWER_MAX_CHARGE) * 1.4
+            chargeOrb.scaling.set(s, s, s)
+          }
+        } else if (powerKeyPrev) {
+          // flanco de bajada: se soltó la tecla/botón.
+          releasePower(powerCharge)
+          powerCharge = 0
+          chargeOrb?.dispose()
+          chargeOrb = null
         }
+        powerKeyPrev = powerKeyDown
+
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i]
-          b.mesh.position.x += b.dirX * BULLET_SPEED * dt
-          b.mesh.position.y += b.dirY * BULLET_SPEED * dt
-          b.mesh.position.z += b.dirZ * BULLET_SPEED * dt
+          b.mesh.position.x += b.dirX * b.speed * dt
+          b.mesh.position.y += b.dirY * b.speed * dt
+          b.mesh.position.z += b.dirZ * b.speed * dt
           b.life += dt
           if (b.life > BULLET_LIFE) {
             b.mesh.dispose()
@@ -352,11 +330,9 @@ export default function TricksterGame() {
           }
         }
 
-        // Los 4 clips de Mixamo son mutuamente excluyentes. Correr usa
-        // CrouchRun en vez de Run apenas el personaje tiene el rifle.
         let desired: any = null
         if (!grounded) desired = jumpAnim
-        else if (moving) desired = armed ? crouchRunAnim : runAnim
+        else if (moving) desired = runAnim
         else desired = idleAnim
         playAnim(desired, desired !== jumpAnim, desired === jumpAnim ? 1.3 : 1)
 
@@ -437,7 +413,7 @@ export default function TricksterGame() {
         // (ver el listener de touchstart/touchend sobre el canvas, arriba).
         <>
           <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
-          <TouchActionButton keysRef={keysRef} code="KeyF" label="FUEGO" style={{ bottom: 100, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
+          <TouchActionButton keysRef={keysRef} code="KeyF" label="PODER" style={{ bottom: 100, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
         </>
       )}
     </div>
