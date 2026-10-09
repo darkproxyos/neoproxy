@@ -111,12 +111,17 @@ export default function TricksterMirrorPage() {
       // Calibración: el ángulo de cada segmento (hombro→codo, codo→muñeca)
       // en el primer frame con detección válida queda como referencia "en
       // reposo". Cuadro a cuadro solo aplicamos la DIFERENCIA respecto a esa
-      // referencia, como una rotación de mundo encima de la pose Idle que ya
-      // puso la animación — así no hace falta saber la convención de ejes
-      // local de cada hueso (la causa de casi todos los dolores de cabeza
-      // anteriores con el rifle), solo que el signo del delta sea consistente.
+      // referencia, en espacio LOCAL del hueso, encima de lo que ya dejó la
+      // animación Idle ese mismo frame (Idle resetea el quaternion local de
+      // cada hueso en cada frame, así que esto no se acumula sin control).
+      // Probado con Space.WORLD primero — bone.getRotationQuaternion(WORLD)
+      // devolvía identidad siempre con este mesh/esqueleto (no quedó claro
+      // por qué), así que se abandonó. ARM_AXIS=(0,0,1) está verificado a
+      // mano con un harness de inyección de landmarks falsos (no con una
+      // persona real todavía) — mueve el brazo de forma visible y en la
+      // dirección esperada.
       let calib: { lu: number; lf: number; ru: number; rf: number; yaw: number; pitch: number } | null = null
-      const ARM_AXIS = new B.Vector3(0, 0, 1) // perpendicular a la cámara — gira dentro del plano que la webcam ve
+      const ARM_AXIS = new B.Vector3(0, 0, 1)
       const YAW_AXIS = new B.Vector3(0, 1, 0)
       const PITCH_AXIS = new B.Vector3(1, 0, 0)
       const HEAD_SENSITIVITY = 2.2 // la cabeza se mueve poco en pantalla — hace falta amplificar para que se note
@@ -154,21 +159,25 @@ export default function TricksterMirrorPage() {
         const dRF = wrapAngle(rf - calib.rf)
         const dYaw = (yaw - calib.yaw) * HEAD_SENSITIVITY
         const dPitch = (pitch - calib.pitch) * HEAD_SENSITIVITY
-
         // El antebrazo es hijo del brazo: ya hereda la rotación del brazo
         // por jerarquía, así que acá solo se aplica la flexión del codo en
         // sí (la diferencia entre cuánto giró el antebrazo y cuánto giró
         // el brazo), no el ángulo completo — si no, se cuenta dos veces.
-        leftArmBone.rotate(ARM_AXIS, dLU, B.Space.WORLD, skinnedMesh)
-        leftForeArmBone?.rotate(ARM_AXIS, dLF - dLU, B.Space.WORLD, skinnedMesh)
-        rightArmBone.rotate(ARM_AXIS, dRU, B.Space.WORLD, skinnedMesh)
-        rightForeArmBone?.rotate(ARM_AXIS, dRF - dRU, B.Space.WORLD, skinnedMesh)
+        // Space.WORLD medía siempre identidad acá (getRotationQuaternion
+        // con mesh no devolvía nada útil en este setup) — Space.LOCAL
+        // compone directo sobre el quaternion que ya dejó Idle, sin
+        // depender de que la world matrix del hueso esté actualizada en
+        // este punto del frame.
+        leftArmBone.rotate(ARM_AXIS, dLU, B.Space.LOCAL)
+        leftForeArmBone?.rotate(ARM_AXIS, dLF - dLU, B.Space.LOCAL)
+        rightArmBone.rotate(ARM_AXIS, dRU, B.Space.LOCAL)
+        rightForeArmBone?.rotate(ARM_AXIS, dRF - dRU, B.Space.LOCAL)
         if (neckBone) {
-          neckBone.rotate(YAW_AXIS, dYaw, B.Space.WORLD, skinnedMesh)
-          neckBone.rotate(PITCH_AXIS, dPitch, B.Space.WORLD, skinnedMesh)
+          neckBone.rotate(YAW_AXIS, dYaw, B.Space.LOCAL)
+          neckBone.rotate(PITCH_AXIS, dPitch, B.Space.LOCAL)
         } else if (headBone) {
-          headBone.rotate(YAW_AXIS, dYaw, B.Space.WORLD, skinnedMesh)
-          headBone.rotate(PITCH_AXIS, dPitch, B.Space.WORLD, skinnedMesh)
+          headBone.rotate(YAW_AXIS, dYaw, B.Space.LOCAL)
+          headBone.rotate(PITCH_AXIS, dPitch, B.Space.LOCAL)
         }
       })
 
