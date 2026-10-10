@@ -16,6 +16,10 @@ export default function TricksterGame() {
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  // Lore antes de entrar — no bloquea la carga del modelo (sigue en el
+  // fondo mientras se lee), solo tapa el canvas hasta que el jugador
+  // confirma que quiere entrar al campo de prueba.
+  const [introDismissed, setIntroDismissed] = useState(false)
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -513,6 +517,58 @@ export default function TricksterGame() {
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#000' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }} />
+
+      {!introDismissed && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 50, background: 'rgba(0,2,5,0.95)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          padding: '32px 24px', textAlign: 'center', fontFamily: 'Space Mono, monospace',
+          overflowY: 'auto',
+        }}>
+          <div style={{ fontSize: 9, color: `${VIOLET}66`, letterSpacing: 6, marginBottom: 14 }}>
+            // PROXYVERSE — REGISTRO DE CAMPO
+          </div>
+          <div style={{
+            fontSize: 32, fontWeight: 700, letterSpacing: 6, color: VIOLET,
+            textShadow: `0 0 30px ${VIOLET}66`, marginBottom: 6,
+          }}>
+            TRICKSTER
+          </div>
+          <div style={{ fontSize: 10, letterSpacing: 3, color: `${VIOLET}aa`, marginBottom: 24 }}>
+            EXPLORACIÓN // ROMPE
+          </div>
+          <p style={{
+            fontSize: 11, fontStyle: 'italic', color: '#c8daf0', maxWidth: 460,
+            lineHeight: 1.8, marginBottom: 20,
+          }}>
+            "Las reglas no están para romperse. Están para revelar lo que escondían."
+          </p>
+          <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 460, lineHeight: 1.9, marginBottom: 14 }}>
+            Trickster no tiene una directiva fija. Su única función es encontrar el borde de
+            cualquier sistema y empujar hasta que algo ceda — una regla, un límite, una
+            suposición que todos daban por cierta.
+          </p>
+          <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 460, lineHeight: 1.9, marginBottom: 28 }}>
+            Este campo de prueba es el borde que está empujando ahora. Gennos — un resto
+            corrupto que sigue fabricando sin preguntar — aparece acá como obstáculo. Cada
+            golpe es Trickster buscando la grieta.
+          </p>
+          <button
+            onClick={() => setIntroDismissed(true)}
+            style={{
+              fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
+              background: `${VIOLET}22`, border: `1px solid ${VIOLET}`, color: VIOLET,
+              padding: '14px 32px', borderRadius: 8, cursor: 'pointer', marginBottom: 20,
+            }}
+          >
+            ENTRAR AL CAMPO DE PRUEBA
+          </button>
+          <div style={{ fontSize: 9, letterSpacing: 1.5, color: '#3a4a60', lineHeight: 2 }}>
+            WASD / FLECHAS — MOVER · ESPACIO — SALTAR<br />
+            E — PATADA VOLADORA · F (MANTENER) — CARGAR PODER
+          </div>
+        </div>
+      )}
 
       {loading && (
         <div style={{
