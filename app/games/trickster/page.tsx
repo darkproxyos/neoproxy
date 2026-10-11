@@ -14,6 +14,7 @@ export default function TricksterGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const keysRef = useRef<Record<string, boolean>>({})
   const joyRef = useRef({ x: 0, y: 0 })
+  const reticleRef = useRef<HTMLDivElement>(null)
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
@@ -570,6 +571,16 @@ export default function TricksterGame() {
         }
         powerKeyPrev = powerKeyDown
 
+        // Mira — crece y brilla más mientras se carga el poder, directo por
+        // ref (sin setState) para no repintar React cuadro a cuadro. El
+        // apuntado del poder ya es "hacia donde mira la cámara" (ver
+        // aimX/Y/Z arriba), así que el centro de pantalla es la mira real.
+        if (reticleRef.current) {
+          const t = Math.min(powerCharge / POWER_MAX_CHARGE, 1)
+          reticleRef.current.style.transform = `translate(-50%, -50%) scale(${1 + t * 0.7})`
+          reticleRef.current.style.opacity = String(0.55 + t * 0.45)
+        }
+
         const BULLET_HIT_RADIUS = 1.3
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i]
@@ -726,6 +737,32 @@ export default function TricksterGame() {
           textAlign: 'center', maxWidth: 280,
         }}>
           NO SE PUDO CARGAR EL MODELO. Reintentá recargando la página.
+        </div>
+      )}
+
+      {introDismissed && !loading && !loadError && (
+        // Mira central — el poder apunta hacia donde mira la cámara (ver
+        // aimX/Y/Z en el loop de Babylon), así que el centro de pantalla es
+        // la mira real, no decorativa. El tamaño/brillo lo actualiza el
+        // loop directo sobre este nodo (reticleRef), no React state.
+        <div
+          ref={reticleRef}
+          aria-hidden="true"
+          style={{
+            position: 'absolute', top: '50%', left: '50%', width: 26, height: 26,
+            pointerEvents: 'none', zIndex: 10, opacity: 0.55,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <div style={{ position: 'absolute', inset: 0, border: `1.5px solid ${VIOLET}`, borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', top: '50%', left: -5, width: 7, height: 1.5, background: VIOLET, transform: 'translateY(-50%)' }} />
+          <div style={{ position: 'absolute', top: '50%', right: -5, width: 7, height: 1.5, background: VIOLET, transform: 'translateY(-50%)' }} />
+          <div style={{ position: 'absolute', left: '50%', top: -5, height: 7, width: 1.5, background: VIOLET, transform: 'translateX(-50%)' }} />
+          <div style={{ position: 'absolute', left: '50%', bottom: -5, height: 7, width: 1.5, background: VIOLET, transform: 'translateX(-50%)' }} />
+          <div style={{
+            position: 'absolute', top: '50%', left: '50%', width: 3, height: 3, borderRadius: '50%',
+            background: VIOLET, boxShadow: `0 0 6px ${VIOLET}`, transform: 'translate(-50%, -50%)',
+          }} />
         </div>
       )}
 
