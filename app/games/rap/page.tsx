@@ -174,6 +174,14 @@ export default function RapPage() {
             </button>
           ))}
         </div>
+
+        <div style={{ textAlign: 'center', marginTop: 8 }}>
+          <Link href="/games/rap-aprendizaje" style={{
+            fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${CYAN}88`, textDecoration: 'none',
+          }}>
+            → MODO APRENDIZAJE (vocabulario de filosofía/ciencia agrupado por rima)
+          </Link>
+        </div>
       </div>
     </div>
   )

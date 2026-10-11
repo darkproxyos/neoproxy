@@ -76,6 +76,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'Herramienta de freestyle: cada ciertos segundos aparecen entre 1 y 6 conceptos del Proxyverse (agentes, frases, vocabulario del proyecto) para improvisar encima de tu propia pista.',
     controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
   },
+  {
+    id: 'rap-aprendizaje',
+    code: 'NPX-EXP-RIMA',
+    title: 'FREESTYLE // APRENDIZAJE',
+    href: '/games/rap-aprendizaje',
+    status: 'jugable',
+    blurb: 'Modo aprendizaje del freestyle: vocabulario grande de filosofía, ciencia, matemática y lingüística, agrupado por terminación que rima — cada ronda tira varias palabras del mismo grupo para entrenar el oído a encontrar rimas.',
+    controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
+  },
 ]
 
 export default function GamesHubPage() {
