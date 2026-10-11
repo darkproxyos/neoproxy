@@ -67,6 +67,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'Trickster en reposo copia tus movimientos de cabeza y brazos en tiempo real, leídos con la cámara del dispositivo (MediaPipe Pose, corre entero en el navegador). Sin piernas ni torso — solo lo que una webcam frontal puede ver bien.',
     controls: 'CÁMARA — SIN TECLADO',
   },
+  {
+    id: 'rap',
+    code: 'NPX-EXP-FREESTYLE',
+    title: 'FREESTYLE',
+    href: '/games/rap',
+    status: 'jugable',
+    blurb: 'Herramienta de freestyle: cada ciertos segundos aparecen entre 1 y 6 conceptos del Proxyverse (agentes, frases, vocabulario del proyecto) para improvisar encima de tu propia pista.',
+    controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
+  },
 ]
 
 export default function GamesHubPage() {
