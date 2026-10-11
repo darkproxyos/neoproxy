@@ -152,7 +152,9 @@ export default function TricksterGame() {
       function spawnMagicRing(cx: number, cy: number, cz: number) {
         const ring = B.MeshBuilder.CreateTorus('magicRing', { diameter: MAGIC_RANGE * 2, thickness: 0.12, tessellation: 40 }, scene)
         ring.position.set(cx, cy + 0.05, cz)
-        ring.rotation.x = Math.PI / 2
+        // CreateTorus ya queda plano sobre el piso (plano XZ) por defecto —
+        // el rotation.x = PI/2 que tenía antes lo paraba de canto, por eso
+        // se veía vertical en vez de una onda expansiva en el suelo.
         ring.scaling.set(0.05, 0.05, 0.05)
         const mat = new B.StandardMaterial('magicRingMat', scene)
         mat.emissiveColor = B.Color3.FromHexString(VIOLET)
