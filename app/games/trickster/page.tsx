@@ -109,6 +109,7 @@ export default function TricksterGame() {
       let jumpAnim: any = null
       let idleAnim: any = null
       let kickAnim: any = null
+      let magicAnim: any = null
       let currentAnim: any = null
       let posX = 0, posZ = 0, baseY = 0, velY = 0
       let facing = 0
@@ -128,6 +129,52 @@ export default function TricksterGame() {
       const KICK_HIT_AT = 50 // momento del impacto dentro de la patada — ajustado visualmente
       const KICK_RANGE = 2.4
       const KICK_DAMAGE = 34
+
+      // Ataque de área — segunda animación propia (Mixamo), mismo patrón que
+      // la patada: una vez por toque, fuerza la animación mientras dura.
+      // A diferencia de la patada (rango corto, un objetivo puntual), esto
+      // es un estallido alrededor del personaje con efecto visual propio.
+      let magicking = false
+      let magicTimer = 0
+      let magicKeyPrev = false
+      let magicHit = false
+      // Standing_2H_Magic_Area_Attack_02.fbx dura 3.25s; a 60fps y con dt
+      // normalizado a ~1 por frame, son 195 dt-units. Sin root motion
+      // (verificado contra el clip fuente: el hueso de la cadera no se
+      // desplaza), así que no hace falta neutralizar nada ahí.
+      const MAGIC_DURATION = 195
+      const MAGIC_CAST_AT = 130 // momento del estallido dentro del cast — ajustado visualmente
+      const MAGIC_RANGE = 4.5
+      const MAGIC_DAMAGE = 50
+
+      function spawnMagicRing(cx: number, cy: number, cz: number) {
+        const ring = B.MeshBuilder.CreateTorus('magicRing', { diameter: MAGIC_RANGE * 2, thickness: 0.12, tessellation: 40 }, scene)
+        ring.position.set(cx, cy + 0.05, cz)
+        ring.rotation.x = Math.PI / 2
+        ring.scaling.set(0.05, 0.05, 0.05)
+        const mat = new B.StandardMaterial('magicRingMat', scene)
+        mat.emissiveColor = B.Color3.FromHexString(VIOLET)
+        mat.disableLighting = true
+        mat.alpha = 0.95
+        ring.material = mat
+        const FRAMES = 24
+        B.Animation.CreateAndStartAnimation(
+          'magicRingScale', ring, 'scaling', 60, FRAMES,
+          new B.Vector3(0.05, 0.05, 0.05), new B.Vector3(1, 1, 1), B.Animation.ANIMATIONLOOPMODE_CONSTANT,
+        )
+        B.Animation.CreateAndStartAnimation(
+          'magicRingFade', mat, 'alpha', 60, FRAMES,
+          0.95, 0, B.Animation.ANIMATIONLOOPMODE_CONSTANT, undefined, () => ring.dispose(),
+        )
+        const flash = new B.PointLight('magicFlash', new B.Vector3(cx, cy + 1, cz), scene)
+        flash.diffuse = B.Color3.FromHexString(VIOLET)
+        flash.intensity = 3
+        flash.range = MAGIC_RANGE * 1.5
+        B.Animation.CreateAndStartAnimation(
+          'magicFlashFade', flash, 'intensity', 60, 18,
+          3, 0, B.Animation.ANIMATIONLOOPMODE_CONSTANT, undefined, () => flash.dispose(),
+        )
+      }
 
       // Poderes — sin arma, el ataque es energía acumulada en la mano.
       // Mantener la tecla/botón carga (bola de energía creciendo pegada al
@@ -210,9 +257,11 @@ export default function TricksterGame() {
           jumpAnim = res.animationGroups.find((a: any) => a.name === 'Jump') ?? null
           idleAnim = res.animationGroups.find((a: any) => a.name === 'Idle') ?? null
           kickAnim = res.animationGroups.find((a: any) => a.name === 'FlyingKick') ?? null
-          ;[runAnim, jumpAnim, idleAnim, kickAnim].forEach((a) => a?.stop())
+          magicAnim = res.animationGroups.find((a: any) => a.name === 'MagicAreaAttack') ?? null
+          ;[runAnim, jumpAnim, idleAnim, kickAnim, magicAnim].forEach((a) => a?.stop())
           if (jumpAnim) jumpAnim.loopAnimation = false
           if (kickAnim) kickAnim.loopAnimation = false
+          if (magicAnim) magicAnim.loopAnimation = false
           setLoading(false)
         })
         .catch(() => {
@@ -335,6 +384,11 @@ export default function TricksterGame() {
           }
         }
 
+        // El ataque de área es un cast estático (dos manos en alto) — se
+        // cancela el input de movimiento mientras dura, igual que saltar o
+        // patear ya están implícitamente atados al estado del personaje.
+        if (magicking) { inputForward = 0; inputRight = 0 }
+
         let dx = camForward.x * inputForward + camRight.x * inputRight
         let dz = camForward.z * inputForward + camRight.z * inputRight
         const moving = dx !== 0 || dz !== 0
@@ -371,7 +425,7 @@ export default function TricksterGame() {
         // (KICK_HIT_AT), no apenas se aprieta la tecla, y solo si Gennos
         // está a KICK_RANGE o menos del personaje en ese momento.
         const kickKeyDown = !!keys['KeyE']
-        if (kickKeyDown && !kickKeyPrev && !kicking && grounded && kickAnim) {
+        if (kickKeyDown && !kickKeyPrev && !kicking && !magicking && grounded && kickAnim) {
           kicking = true
           kickTimer = 0
           kickHit = false
@@ -411,6 +465,33 @@ export default function TricksterGame() {
             hipsBaseX = null
             hipsBaseZ = null
           }
+        }
+
+        // Ataque de área — flanco de subida de KeyQ (o el botón MAGIA),
+        // mismo mecanismo que la patada (una vez por toque, bloqueada
+        // hasta terminar). El estallido daña a Gennos si está a MAGIC_RANGE
+        // o menos del personaje en el instante del cast, sin importar la
+        // dirección — es un área alrededor de Trickster, no un golpe dirigido.
+        const magicKeyDown = !!keys['KeyQ']
+        if (magicKeyDown && !magicKeyPrev && !magicking && !kicking && grounded && magicAnim) {
+          magicking = true
+          magicTimer = 0
+          magicHit = false
+          playAnim(magicAnim, false, 1)
+        }
+        magicKeyPrev = magicKeyDown
+        if (magicking) {
+          magicTimer += dt
+          if (!magicHit && magicTimer >= MAGIC_CAST_AT) {
+            magicHit = true
+            if (gennosMesh && characterRoot) {
+              const ddx = gennosMesh.position.x - posX
+              const ddz = gennosMesh.position.z - posZ
+              if (Math.hypot(ddx, ddz) <= MAGIC_RANGE) damageGennos(MAGIC_DAMAGE)
+            }
+            spawnMagicRing(posX, baseY, posZ)
+          }
+          if (magicTimer >= MAGIC_DURATION) magicking = false
         }
 
         // Gennos persigue a Trickster — esqueleto y animación Run reales
@@ -527,11 +608,12 @@ export default function TricksterGame() {
         }
 
         let desired: any = null
-        if (kicking) desired = kickAnim
+        if (magicking) desired = magicAnim
+        else if (kicking) desired = kickAnim
         else if (!grounded) desired = jumpAnim
         else if (moving) desired = runAnim
         else desired = idleAnim
-        playAnim(desired, desired !== jumpAnim && desired !== kickAnim, desired === jumpAnim ? 1.3 : 1)
+        playAnim(desired, desired !== jumpAnim && desired !== kickAnim && desired !== magicAnim, desired === jumpAnim ? 1.3 : 1)
 
         if (characterRoot) {
           characterRoot.position.x = posX
@@ -621,7 +703,8 @@ export default function TricksterGame() {
           </button>
           <div style={{ fontSize: 9, letterSpacing: 1.5, color: '#3a4a60', lineHeight: 2 }}>
             WASD / FLECHAS — MOVER · ESPACIO — SALTAR<br />
-            E — PATADA VOLADORA · F (MANTENER) — CARGAR PODER
+            E — PATADA VOLADORA · F (MANTENER) — CARGAR PODER<br />
+            Q — ATAQUE DE ÁREA
           </div>
         </div>
       )}
@@ -666,6 +749,7 @@ export default function TricksterGame() {
           <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
           <TouchActionButton keysRef={keysRef} code="KeyF" label="PODER" style={{ bottom: 100, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
           <TouchActionButton keysRef={keysRef} code="KeyE" label="PATADA" style={{ bottom: 184, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
+          <TouchActionButton keysRef={keysRef} code="KeyQ" label="MAGIA" style={{ bottom: 184, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
         </>
       )}
     </div>
