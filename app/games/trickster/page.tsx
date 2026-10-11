@@ -15,6 +15,7 @@ export default function TricksterGame() {
   const keysRef = useRef<Record<string, boolean>>({})
   const joyRef = useRef({ x: 0, y: 0 })
   const reticleRef = useRef<HTMLDivElement>(null)
+  const playerHpRef = useRef<HTMLDivElement>(null)
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
@@ -228,6 +229,30 @@ export default function TricksterGame() {
         currentAnim?.start(loop, speedRatio)
       }
 
+      // Colisión contra el SEGMENTO recorrido este frame por un proyectil,
+      // no solo su punto final — con dt grande (frame lento/tab en 2do
+      // plano) un proyectil puede avanzar más que el radio de impacto en
+      // un solo paso y atravesar el objetivo sin que ningún punto
+      // muestreado caiga dentro del radio. Compartida entre las balas del
+      // poder (contra Gennos y drones) y las de los drones (contra el
+      // jugador).
+      function sweptHit(
+        prevX: number, prevY: number, prevZ: number,
+        nextX: number, nextY: number, nextZ: number,
+        tx: number, ty: number, tz: number, radius: number,
+      ) {
+        const segX = nextX - prevX, segY = nextY - prevY, segZ = nextZ - prevZ
+        const segLenSq = segX * segX + segY * segY + segZ * segZ
+        let t = 0
+        if (segLenSq > 1e-8) {
+          t = Math.max(0, Math.min(1, ((tx - prevX) * segX + (ty - prevY) * segY + (tz - prevZ) * segZ) / segLenSq))
+        }
+        const dx = prevX + segX * t - tx
+        const dy = prevY + segY * t - ty
+        const dz = prevZ + segZ * t - tz
+        return Math.sqrt(dx * dx + dy * dy + dz * dz) <= radius
+      }
+
       B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'trickzter.glb', scene)
         .then((res) => {
           if (disposed) return
@@ -333,6 +358,110 @@ export default function TricksterGame() {
         })
         .catch(() => { /* enemigo opcional — si falla, el personaje sigue jugable sin él */ })
 
+      // Drones — enemigos voladores, geometría simple generada (sin asset
+      // propio todavía): cuerpo achatado + anillo que gira para dar
+      // sensación de vuelo, luz roja de acento (mismo código de color
+      // "corrupción" que ya usa Gennos). Vuelan hacia Trickster, se
+      // detienen a DRONE_STOP_DIST y disparan proyectiles — el jugador
+      // puede destruirlos con cualquiera de sus tres ataques (patada,
+      // poder, magia); mueren y reaparecen en otro punto del perímetro
+      // tras un delay, mismo patrón que Gennos.
+      type Drone = {
+        mesh: any; ring: any; light: any
+        hp: number; defeated: boolean; defeatedTimer: number; fireTimer: number
+      }
+      const DRONE_COUNT = 3
+      const DRONE_HEIGHT = 2.6
+      const DRONE_SPEED = 0.045
+      const DRONE_STOP_DIST = 6
+      const DRONE_FIRE_INTERVAL = 100 // dt-units, ~1.7s a 60fps
+      const DRONE_HP_MAX = 40
+      const DRONE_RESPAWN_DELAY = 200 // dt-units, ~3.3s
+      const DRONE_PROJECTILE_SPEED = 1.3
+      const DRONE_PROJECTILE_DAMAGE = 8
+      const DRONE_HIT_RADIUS = 0.9
+
+      function randomDroneSpawn() {
+        const angle = Math.random() * Math.PI * 2
+        const dist = 14 + Math.random() * 8
+        return { x: Math.cos(angle) * dist, z: Math.sin(angle) * dist }
+      }
+
+      function createDrone(): Drone {
+        const spawn = randomDroneSpawn()
+        const mesh = B.MeshBuilder.CreateSphere('drone', { diameterX: 0.5, diameterY: 0.3, diameterZ: 0.5 }, scene)
+        mesh.position.set(spawn.x, baseY + DRONE_HEIGHT, spawn.z)
+        const mat = new B.StandardMaterial('droneMat', scene)
+        mat.emissiveColor = new B.Color3(0.55, 0.05, 0.05)
+        mat.disableLighting = true
+        mesh.material = mat
+        const ring = B.MeshBuilder.CreateTorus('droneRing', { diameter: 0.85, thickness: 0.05, tessellation: 24 }, scene)
+        ring.parent = mesh
+        ring.rotation.x = Math.PI / 2
+        const ringMat = new B.StandardMaterial('droneRingMat', scene)
+        ringMat.emissiveColor = new B.Color3(1, 0.15, 0.15)
+        ringMat.disableLighting = true
+        ring.material = ringMat
+        const light = new B.PointLight('droneLight', mesh.position.clone(), scene)
+        light.diffuse = new B.Color3(1, 0.2, 0.2)
+        light.intensity = 0.5
+        light.range = 4
+        return { mesh, ring, light, hp: DRONE_HP_MAX, defeated: false, defeatedTimer: 0, fireTimer: Math.random() * DRONE_FIRE_INTERVAL }
+      }
+
+      const drones: Drone[] = []
+      for (let i = 0; i < DRONE_COUNT; i++) drones.push(createDrone())
+
+      const droneBullets: Array<{ mesh: any; dirX: number; dirY: number; dirZ: number; life: number }> = []
+      const DRONE_BULLET_LIFE = 90
+
+      function damageDrone(d: Drone, amount: number) {
+        if (d.defeated) return
+        d.hp = Math.max(0, d.hp - amount)
+        if (d.hp <= 0) {
+          d.defeated = true
+          d.defeatedTimer = 0
+          const flash = new B.PointLight('droneExplosion', d.mesh.position.clone(), scene)
+          flash.diffuse = new B.Color3(1, 0.25, 0.1)
+          flash.intensity = 4
+          flash.range = 5
+          B.Animation.CreateAndStartAnimation(
+            'droneExplosionFade', flash, 'intensity', 60, 16,
+            4, 0, B.Animation.ANIMATIONLOOPMODE_CONSTANT, undefined, () => flash.dispose(),
+          )
+        }
+      }
+
+      function damageDronesInRange(cx: number, cz: number, range: number, amount: number) {
+        for (const d of drones) {
+          if (d.defeated) continue
+          const ddx = d.mesh.position.x - cx
+          const ddz = d.mesh.position.z - cz
+          if (Math.hypot(ddx, ddz) <= range) damageDrone(d, amount)
+        }
+      }
+
+      // Vida del jugador — HUD 2D fijo en pantalla (no billboard 3D como
+      // Gennos: es el propio jugador, no tiene sentido una barra flotando
+      // sobre su cabeza que él mismo no vería). "Derrota" acá es un
+      // respawn en el origen con vida llena tras un breve delay, igual de
+      // simple que el de Gennos.
+      const PLAYER_MAX_HP = 100
+      let playerHP = PLAYER_MAX_HP
+      let playerDefeated = false
+      let playerRespawnTimer = 0
+      const PLAYER_RESPAWN_DELAY = 180 // dt-units, ~3s
+      const PLAYER_HIT_RADIUS = 1.0
+
+      function damagePlayer(amount: number) {
+        if (playerDefeated) return
+        playerHP = Math.max(0, playerHP - amount)
+        if (playerHP <= 0) {
+          playerDefeated = true
+          playerRespawnTimer = 0
+        }
+      }
+
       const BOUND = 27
       const SPEED = 0.09
       const TURN_LERP = 0.4
@@ -388,7 +517,7 @@ export default function TricksterGame() {
         // El ataque de área es un cast estático (dos manos en alto) — se
         // cancela el input de movimiento mientras dura, igual que saltar o
         // patear ya están implícitamente atados al estado del personaje.
-        if (magicking) { inputForward = 0; inputRight = 0 }
+        if (magicking || playerDefeated) { inputForward = 0; inputRight = 0 }
 
         let dx = camForward.x * inputForward + camRight.x * inputRight
         let dz = camForward.z * inputForward + camRight.z * inputRight
@@ -425,7 +554,7 @@ export default function TricksterGame() {
         // El golpe conecta en un instante fijo dentro de la animación
         // (KICK_HIT_AT), no apenas se aprieta la tecla, y solo si Gennos
         // está a KICK_RANGE o menos del personaje en ese momento.
-        const kickKeyDown = !!keys['KeyE']
+        const kickKeyDown = !playerDefeated && !!keys['KeyE']
         if (kickKeyDown && !kickKeyPrev && !kicking && !magicking && grounded && kickAnim) {
           kicking = true
           kickTimer = 0
@@ -460,6 +589,7 @@ export default function TricksterGame() {
               const ddz = gennosMesh.position.z - posZ
               if (Math.hypot(ddx, ddz) <= KICK_RANGE) damageGennos(KICK_DAMAGE)
             }
+            damageDronesInRange(posX, posZ, KICK_RANGE, KICK_DAMAGE)
           }
           if (kickTimer >= KICK_DURATION) {
             kicking = false
@@ -473,7 +603,7 @@ export default function TricksterGame() {
         // hasta terminar). El estallido daña a Gennos si está a MAGIC_RANGE
         // o menos del personaje en el instante del cast, sin importar la
         // dirección — es un área alrededor de Trickster, no un golpe dirigido.
-        const magicKeyDown = !!keys['KeyQ']
+        const magicKeyDown = !playerDefeated && !!keys['KeyQ']
         if (magicKeyDown && !magicKeyPrev && !magicking && !kicking && grounded && magicAnim) {
           magicking = true
           magicTimer = 0
@@ -490,6 +620,7 @@ export default function TricksterGame() {
               const ddz = gennosMesh.position.z - posZ
               if (Math.hypot(ddx, ddz) <= MAGIC_RANGE) damageGennos(MAGIC_DAMAGE)
             }
+            damageDronesInRange(posX, posZ, MAGIC_RANGE, MAGIC_DAMAGE)
             spawnMagicRing(posX, baseY, posZ)
           }
           if (magicTimer >= MAGIC_DURATION) magicking = false
@@ -539,11 +670,106 @@ export default function TricksterGame() {
           }
         }
 
+        // Drones — vuelan hacia Trickster y se detienen a DRONE_STOP_DIST,
+        // desde ahí disparan proyectiles periódicamente. Derrotado: cae,
+        // gira y se desvanece; reaparece en otro punto del perímetro tras
+        // DRONE_RESPAWN_DELAY, mismo patrón que Gennos.
+        for (const d of drones) {
+          if (d.defeated) {
+            d.defeatedTimer += dt
+            d.mesh.position.y -= 0.025 * dt
+            d.mesh.rotation.z += 0.12 * dt
+            d.mesh.visibility = Math.max(0, 1 - d.defeatedTimer / DRONE_RESPAWN_DELAY)
+            d.ring.visibility = d.mesh.visibility
+            if (d.defeatedTimer >= DRONE_RESPAWN_DELAY) {
+              const spawn = randomDroneSpawn()
+              d.mesh.position.set(spawn.x, baseY + DRONE_HEIGHT, spawn.z)
+              d.mesh.rotation.z = 0
+              d.mesh.visibility = 1
+              d.ring.visibility = 1
+              d.hp = DRONE_HP_MAX
+              d.defeated = false
+              d.defeatedTimer = 0
+              d.fireTimer = Math.random() * DRONE_FIRE_INTERVAL
+            }
+            continue
+          }
+          d.ring.rotation.y += 0.15 * dt
+          const ddx = posX - d.mesh.position.x
+          const ddz = posZ - d.mesh.position.z
+          const ddist = Math.hypot(ddx, ddz)
+          if (ddist > DRONE_STOP_DIST) {
+            const nx = ddx / ddist, nz = ddz / ddist
+            d.mesh.position.x += nx * DRONE_SPEED * dt
+            d.mesh.position.z += nz * DRONE_SPEED * dt
+          }
+          // Leve "bob" vertical para que no se vean clavados en el aire.
+          d.mesh.position.y = baseY + DRONE_HEIGHT + Math.sin(performance.now() * 0.002 + d.mesh.position.x) * 0.15
+          d.light.position.copyFrom(d.mesh.position)
+          d.fireTimer += dt
+          if (!playerDefeated && ddist <= DRONE_STOP_DIST * 1.4 && d.fireTimer >= DRONE_FIRE_INTERVAL) {
+            d.fireTimer = 0
+            const tx = posX, ty = baseY + 1.1, tz = posZ
+            const ddx2 = tx - d.mesh.position.x, ddy2 = ty - d.mesh.position.y, ddz2 = tz - d.mesh.position.z
+            const len = Math.hypot(ddx2, ddy2, ddz2) || 1
+            const db = B.MeshBuilder.CreateSphere('droneBullet', { diameter: 0.14 }, scene)
+            db.position.copyFrom(d.mesh.position)
+            const dbm = new B.StandardMaterial('droneBulletMat', scene)
+            dbm.emissiveColor = new B.Color3(1, 0.2, 0.2)
+            dbm.disableLighting = true
+            db.material = dbm
+            droneBullets.push({ mesh: db, dirX: ddx2 / len, dirY: ddy2 / len, dirZ: ddz2 / len, life: 0 })
+          }
+        }
+
+        for (let i = droneBullets.length - 1; i >= 0; i--) {
+          const b = droneBullets[i]
+          const prevX = b.mesh.position.x, prevY = b.mesh.position.y, prevZ = b.mesh.position.z
+          const nextX = prevX + b.dirX * DRONE_PROJECTILE_SPEED * dt
+          const nextY = prevY + b.dirY * DRONE_PROJECTILE_SPEED * dt
+          const nextZ = prevZ + b.dirZ * DRONE_PROJECTILE_SPEED * dt
+          b.mesh.position.set(nextX, nextY, nextZ)
+          b.life += dt
+          let hit = false
+          if (!playerDefeated) {
+            if (sweptHit(prevX, prevY, prevZ, nextX, nextY, nextZ, posX, baseY + 1.1, posZ, PLAYER_HIT_RADIUS)) {
+              hit = true
+              damagePlayer(DRONE_PROJECTILE_DAMAGE)
+            }
+          }
+          if (hit || b.life > DRONE_BULLET_LIFE) {
+            b.mesh.dispose()
+            droneBullets.splice(i, 1)
+          }
+        }
+
+        // Derrota del jugador — mismo patrón que Gennos: se cae, se queda
+        // un rato y reaparece solo, acá en el origen con vida llena.
+        if (playerDefeated) {
+          playerRespawnTimer += dt
+          if (characterRoot) {
+            characterRoot.rotation.x = Math.min(characterRoot.rotation.x + 0.06 * dt, Math.PI / 2.2)
+          }
+          if (playerRespawnTimer >= PLAYER_RESPAWN_DELAY) {
+            playerDefeated = false
+            playerHP = PLAYER_MAX_HP
+            posX = 0
+            posZ = 0
+            facing = 0
+            if (characterRoot) characterRoot.rotation.x = 0
+          }
+        }
+
+        if (playerHpRef.current) {
+          const frac = Math.max(0, playerHP / PLAYER_MAX_HP)
+          playerHpRef.current.style.width = `${frac * 100}%`
+        }
+
         // Poder — mantener KeyF (o el botón PODER) carga una bola de energía
         // pegada a la mano derecha, cuyo tamaño crece con `powerCharge`.
         // Al soltar, se dispara un proyectil: más carga = más grande y más
         // rápido. Soltar con muy poca carga (tap accidental) no dispara nada.
-        const powerKeyDown = !!keys['KeyF']
+        const powerKeyDown = !playerDefeated && !!keys['KeyF']
         if (powerKeyDown) {
           powerCharge = Math.min(powerCharge + dt, POWER_MAX_CHARGE)
           if (!chargeOrb && handBone && skinnedMesh) {
@@ -584,11 +810,6 @@ export default function TricksterGame() {
         const BULLET_HIT_RADIUS = 1.3
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i]
-          // Chequeo de colisión contra el SEGMENTO recorrido este frame, no
-          // solo el punto final — con dt grande (frame lento/tab en 2do
-          // plano) el proyectil puede avanzar más que el radio de impacto
-          // en un solo paso y atravesar a Gennos sin que ningún punto
-          // muestreado caiga dentro del radio.
           const prevX = b.mesh.position.x, prevY = b.mesh.position.y, prevZ = b.mesh.position.z
           const nextX = prevX + b.dirX * b.speed * dt
           const nextY = prevY + b.dirY * b.speed * dt
@@ -598,18 +819,20 @@ export default function TricksterGame() {
           let hit = false
           if (gennosMesh && !gennosDefeated) {
             const gx = gennosMesh.position.x, gy = gennosMesh.position.y + 1.1, gz = gennosMesh.position.z
-            const segX = nextX - prevX, segY = nextY - prevY, segZ = nextZ - prevZ
-            const segLenSq = segX * segX + segY * segY + segZ * segZ
-            let t = 0
-            if (segLenSq > 1e-8) {
-              t = Math.max(0, Math.min(1, ((gx - prevX) * segX + (gy - prevY) * segY + (gz - prevZ) * segZ) / segLenSq))
-            }
-            const bdx = prevX + segX * t - gx
-            const bdy = prevY + segY * t - gy
-            const bdz = prevZ + segZ * t - gz
-            if (Math.sqrt(bdx * bdx + bdy * bdy + bdz * bdz) <= BULLET_HIT_RADIUS) {
+            if (sweptHit(prevX, prevY, prevZ, nextX, nextY, nextZ, gx, gy, gz, BULLET_HIT_RADIUS)) {
               hit = true
               damageGennos(22)
+            }
+          }
+          if (!hit) {
+            for (const d of drones) {
+              if (d.defeated) continue
+              const dx = d.mesh.position.x, dy = d.mesh.position.y, dz = d.mesh.position.z
+              if (sweptHit(prevX, prevY, prevZ, nextX, nextY, nextZ, dx, dy, dz, DRONE_HIT_RADIUS)) {
+                hit = true
+                damageDrone(d, 22)
+                break
+              }
             }
           }
           if (hit || b.life > BULLET_LIFE) {
@@ -763,6 +986,27 @@ export default function TricksterGame() {
             position: 'absolute', top: '50%', left: '50%', width: 3, height: 3, borderRadius: '50%',
             background: VIOLET, boxShadow: `0 0 6px ${VIOLET}`, transform: 'translate(-50%, -50%)',
           }} />
+        </div>
+      )}
+
+      {introDismissed && !loading && !loadError && (
+        // Vida del jugador — HUD 2D fijo arriba a la izquierda, libre en
+        // ambos layouts (EXIT va abajo-izquierda en desktop, arriba-derecha
+        // en touch). El relleno se actualiza directo por ref (playerHpRef),
+        // mismo patrón que la mira — nada de setState por cuadro.
+        <div style={{
+          position: 'absolute', top: 20, left: 20, width: 120,
+          fontFamily: 'Space Mono, monospace', zIndex: 10,
+        }}>
+          <div style={{ fontSize: 8, letterSpacing: 2, color: `${VIOLET}aa`, marginBottom: 4 }}>
+            VIDA
+          </div>
+          <div style={{ width: '100%', height: 8, background: '#2a0808', border: '1px solid #5a1515', borderRadius: 2 }}>
+            <div
+              ref={playerHpRef}
+              style={{ width: '100%', height: '100%', background: '#ff3b3b', transition: 'width 0.15s linear' }}
+            />
+          </div>
         </div>
       )}
 
