@@ -492,6 +492,40 @@ export default function TricksterGame() {
         }
       }
 
+      // Ítems de recuperación de vida — cristal verde flotante (verde =
+      // curación; violeta ya es Trickster/magia y rojo ya es
+      // corrupción/Gennos/drones en este proyecto, así que no se reusan
+      // esos dos). Aparecen solos cada HEALTH_PICKUP_INTERVAL, hasta un
+      // máximo simultáneo, en un punto aleatorio del área jugable; al
+      // acercarse el jugador los recoge y recupera vida.
+      type HealthPickup = { mesh: any; light: any }
+      const healthPickups: HealthPickup[] = []
+      const HEALTH_PICKUP_HEAL = 30
+      const HEALTH_PICKUP_RADIUS = 1.2
+      const HEALTH_PICKUP_INTERVAL = 600 // dt-units, ~10s a 60fps
+      const HEALTH_PICKUP_MAX = 2
+      let healthPickupTimer = 0
+
+      function spawnHealthPickup() {
+        if (healthPickups.length >= HEALTH_PICKUP_MAX) return
+        const angle = Math.random() * Math.PI * 2
+        const dist = Math.random() * 20
+        const x = Math.cos(angle) * dist, z = Math.sin(angle) * dist
+        const mesh = B.MeshBuilder.CreateSphere('healthPickup', { diameter: 0.4 }, scene)
+        mesh.position.set(x, baseY + 0.8, z)
+        const mat = new B.StandardMaterial('healthPickupMat', scene)
+        mat.emissiveColor = new B.Color3(0.1, 1, 0.4)
+        mat.disableLighting = true
+        mesh.material = mat
+        const light = new B.PointLight('healthPickupLight', mesh.position.clone(), scene)
+        light.diffuse = new B.Color3(0.2, 1, 0.5)
+        light.intensity = 0.6
+        light.range = 3
+        healthPickups.push({ mesh, light })
+      }
+
+      spawnHealthPickup() // uno disponible desde el arranque, el resto los trae el timer
+
       const BOUND = 27
       const SPEED = 0.09
       const TURN_LERP = 0.4
@@ -794,6 +828,29 @@ export default function TricksterGame() {
         if (playerHpRef.current) {
           const frac = Math.max(0, playerHP / PLAYER_MAX_HP)
           playerHpRef.current.style.width = `${frac * 100}%`
+        }
+
+        // Ítems de vida — timer periódico de spawn, "bob" vertical + giro
+        // para que se note que son recolectables (no un obstáculo más), y
+        // recolección por cercanía con el jugador.
+        healthPickupTimer += dt
+        if (healthPickupTimer >= HEALTH_PICKUP_INTERVAL) {
+          healthPickupTimer = 0
+          spawnHealthPickup()
+        }
+        for (let i = healthPickups.length - 1; i >= 0; i--) {
+          const p = healthPickups[i]
+          p.mesh.rotation.y += 0.05 * dt
+          p.mesh.position.y = baseY + 0.8 + Math.sin(performance.now() * 0.003 + p.mesh.position.x) * 0.15
+          p.light.position.copyFrom(p.mesh.position)
+          const pdx = posX - p.mesh.position.x
+          const pdz = posZ - p.mesh.position.z
+          if (!playerDefeated && Math.hypot(pdx, pdz) <= HEALTH_PICKUP_RADIUS) {
+            playerHP = Math.min(PLAYER_MAX_HP, playerHP + HEALTH_PICKUP_HEAL)
+            p.mesh.dispose()
+            p.light.dispose()
+            healthPickups.splice(i, 1)
+          }
         }
 
         // Poder — mantener KeyF (o el botón PODER) carga una bola de energía
