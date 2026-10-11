@@ -102,6 +102,9 @@ export default function TricksterGame() {
       let characterRoot: any = null
       let skinnedMesh: any = null
       let handBone: any = null
+      let hipsBone: any = null
+      let hipsNode: any = null
+      let hipsBaseX: number | null = null, hipsBaseZ: number | null = null
       let runAnim: any = null
       let jumpAnim: any = null
       let idleAnim: any = null
@@ -192,6 +195,13 @@ export default function TricksterGame() {
           // La mano derecha ahora sostiene la bola de energía del poder, no
           // un arma — mismo hueso, otro propósito.
           handBone = res.skeletons[0]?.bones.find((b: any) => b.name === 'mixamorig:RightHand') ?? null
+          hipsBone = res.skeletons[0]?.bones.find((b: any) => b.name === 'mixamorig:Hips') ?? null
+          // El hueso importado de glTF está vinculado a un TransformNode
+          // propio (bone.getTransformNode()) — la animación mueve ESE nodo,
+          // no bone.position directamente (confirmado: escribir ahí no
+          // tenía ningún efecto). Para neutralizar el desplazamiento hay
+          // que escribir en el nodo vinculado.
+          hipsNode = hipsBone?.getTransformNode?.() ?? null
           // Esqueleto y clips vienen de Mixamo (mismo rig): Idle en reposo,
           // Run al moverse, Jump al saltar. La física del arco (posY) la
           // seguimos calculando nosotros — el clip de salto solo aporta
@@ -370,6 +380,24 @@ export default function TricksterGame() {
         kickKeyPrev = kickKeyDown
         if (kicking) {
           kickTimer += dt
+          // FlyingKick trae "root motion" baqueado en el hueso de la cadera
+          // (Hips) — un salto de ~1.3 unidades hacia adelante dentro del
+          // propio clip, que no pasa por posX/posZ (la posición real que
+          // controla el resto del juego). Sin neutralizarlo, el personaje
+          // se lanza hacia adelante mientras dura la patada y después
+          // "teletransporta" de vuelta en el instante en que termina y
+          // Idle/Run retoman el hueso en su posición de reposo. Se fija el
+          // hueso a su XZ de reposo durante toda la patada — conserva
+          // cualquier sutileza en Y (agache/salto propio del clip), solo
+          // anula el desplazamiento horizontal.
+          if (hipsNode) {
+            if (hipsBaseX === null) {
+              hipsBaseX = hipsNode.position.x
+              hipsBaseZ = hipsNode.position.z
+            }
+            hipsNode.position.x = hipsBaseX
+            hipsNode.position.z = hipsBaseZ
+          }
           if (!kickHit && kickTimer >= KICK_HIT_AT) {
             kickHit = true
             if (gennosMesh && characterRoot) {
@@ -378,7 +406,11 @@ export default function TricksterGame() {
               if (Math.hypot(ddx, ddz) <= KICK_RANGE) damageGennos(KICK_DAMAGE)
             }
           }
-          if (kickTimer >= KICK_DURATION) kicking = false
+          if (kickTimer >= KICK_DURATION) {
+            kicking = false
+            hipsBaseX = null
+            hipsBaseZ = null
+          }
         }
 
         // Gennos persigue a Trickster — esqueleto y animación Run reales
