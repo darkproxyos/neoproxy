@@ -98,12 +98,15 @@ export default function ShopPage() {
 
                 {cat.id === 'insumos' && (
                   <div className="flex gap-6 items-end mb-6 pb-6 border-b border-[#0f1f35]">
-                    <div className="text-center">
+                    <Link href="/shop/esp32" className="text-center group">
                       <Esp32Icon color={cat.color} />
-                      <div className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2" style={{ color: cat.color }}>
-                        ESP32
+                      <div
+                        className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2 group-hover:underline"
+                        style={{ color: cat.color }}
+                      >
+                        ESP32 — FICHA TÉCNICA
                       </div>
-                    </div>
+                    </Link>
                     <div className="text-center">
                       <ArduinoNanoIcon color={cat.color} />
                       <div className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2" style={{ color: cat.color }}>
