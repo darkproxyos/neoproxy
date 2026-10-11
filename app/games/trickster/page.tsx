@@ -214,13 +214,22 @@ export default function TricksterGame() {
         bullets.push({ mesh: bullet, dirX: aimX, dirY: aimY, dirZ: aimZ, life: 0, speed: 1 + t * 1.2 })
       }
 
-      function damageGennos(amount: number) {
-        if (!gennosMesh || gennosDefeated) return
-        gennosHP = Math.max(0, gennosHP - amount)
-        if (gennosHP <= 0) {
-          gennosDefeated = true
-          gennosRespawnTimer = 0
-          gennosRunAnim?.stop()
+      function damageGennosUnit(g: GennosUnit, amount: number) {
+        if (g.defeated) return
+        g.hp = Math.max(0, g.hp - amount)
+        if (g.hp <= 0) {
+          g.defeated = true
+          g.respawnTimer = 0
+          g.runAnim?.stop()
+        }
+      }
+
+      function damageGennosInRange(cx: number, cz: number, range: number, amount: number) {
+        for (const g of gennosList) {
+          if (g.defeated) continue
+          const dx = g.mesh.position.x - cx
+          const dz = g.mesh.position.z - cz
+          if (Math.hypot(dx, dz) <= range) damageGennosUnit(g, amount)
         }
       }
 
@@ -306,59 +315,78 @@ export default function TricksterGame() {
       // ronda 1.8), así que se reescala a mano. Luz de acento roja para
       // distinguirlo del violeta del resto de la escena — "corrupción" en
       // este proyecto es rojo (ver /status), no un tono nuevo inventado acá.
-      const GENNOS_POS = new B.Vector3(14, 0, -12)
-      let gennosMesh: any = null
-      let gennosFacing = 0
-      let gennosRunAnim: any = null
-      // Vida — sin animación de derrota propia todavía, así que "morir" es
-      // caerse (rotation.x) y hundirse en el piso; reaparece solo, para que
-      // el campo de prueba se pueda seguir usando sin recargar la página.
+      //
+      // Oleadas: empieza habiendo 1 Gennos. Cada vez que una unidad completa
+      // su respawn individual (ver más abajo), se suma una unidad nueva a
+      // la lista y sube gennosWaveSize — matar uno lleva, de a poco, a 2,
+      // después 3, y así. Cada unidad se carga recargando el mismo GLB (en
+      // vez de clonar esqueleto+animación a mano, delicado de hacer bien en
+      // Babylon) — el navegador ya lo tiene en caché tras la primera carga.
+      type GennosUnit = {
+        mesh: any; runAnim: any; light: any
+        facing: number; hp: number; defeated: boolean; respawnTimer: number
+        hpBarBg: any; hpBarFill: any
+      }
       const GENNOS_MAX_HP = 100
-      let gennosHP = GENNOS_MAX_HP
-      let gennosDefeated = false
-      let gennosRespawnTimer = 0
       const GENNOS_RESPAWN_DELAY = 240 // dt-units, ~4s a 60fps
-      let hpBarBg: any = null, hpBarFill: any = null
-      B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
-        .then((res) => {
-          if (disposed) return
-          gennosMesh = res.meshes[0]
-          gennosMesh.rotationQuaternion = null
-          gennosMesh.position = GENNOS_POS.clone()
-          gennosMesh.scaling = new B.Vector3(1.63, 1.63, 1.63)
-          const gennosLight = new B.PointLight('gennosLight', GENNOS_POS.add(new B.Vector3(0, 1.4, 0)), scene)
-          gennosLight.diffuse = B.Color3.FromHexString('#ff2b2b')
-          gennosLight.intensity = 0.9
-          gennosLight.range = 6
-          // Un solo clip en el archivo (el nombre que le puso Mixamo al
-          // exportar) — se reproduce siempre en loop, todavía no hay Idle
-          // propio para Gennos.
-          gennosRunAnim = res.animationGroups[0] ?? null
-          gennosRunAnim?.start(true)
+      const gennosList: GennosUnit[] = []
+      let gennosWaveSize = 1
 
-          // Barra de vida — billboard (siempre de cara a cámara), dos planos
-          // superpuestos: fondo oscuro fijo + relleno rojo que se achica con
-          // gennosHP/GENNOS_MAX_HP. No es texto — el pedido anterior de
-          // sacar el HUD de texto sigue en pie.
-          hpBarBg = B.MeshBuilder.CreatePlane('hpBarBg', { width: 1.1, height: 0.14 }, scene)
-          hpBarBg.billboardMode = B.Mesh.BILLBOARDMODE_ALL
-          const hpBgMat = new B.StandardMaterial('hpBgMat', scene)
-          hpBgMat.emissiveColor = new B.Color3(0.15, 0.03, 0.03)
-          hpBgMat.disableLighting = true
-          hpBarBg.material = hpBgMat
-          hpBarFill = B.MeshBuilder.CreatePlane('hpBarFill', { width: 1, height: 0.1 }, scene)
-          hpBarFill.billboardMode = B.Mesh.BILLBOARDMODE_ALL
-          // Coplanar con hpBarBg (mismo billboard, misma posición): sin un
-          // rendering group propio, el z-fighting hace que el fondo gane y
-          // el relleno quede invisible. Un grupo posterior lo fuerza siempre
-          // encima, sin depender de precisión de depth buffer.
-          hpBarFill.renderingGroupId = 1
-          const hpFillMat = new B.StandardMaterial('hpFillMat', scene)
-          hpFillMat.emissiveColor = new B.Color3(1, 0.15, 0.15)
-          hpFillMat.disableLighting = true
-          hpBarFill.material = hpFillMat
-        })
-        .catch(() => { /* enemigo opcional — si falla, el personaje sigue jugable sin él */ })
+      function randomGennosSpawn() {
+        const angle = Math.random() * Math.PI * 2
+        const dist = 14 + Math.random() * 8
+        return { x: Math.cos(angle) * dist, z: Math.sin(angle) * dist }
+      }
+
+      function spawnGennosUnit(spawnX: number, spawnZ: number) {
+        B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
+          .then((res) => {
+            if (disposed) return
+            const mesh = res.meshes[0]
+            mesh.rotationQuaternion = null
+            mesh.position.set(spawnX, 0, spawnZ)
+            mesh.scaling = new B.Vector3(1.63, 1.63, 1.63)
+            const light = new B.PointLight('gennosLight', new B.Vector3(spawnX, 1.4, spawnZ), scene)
+            light.diffuse = B.Color3.FromHexString('#ff2b2b')
+            light.intensity = 0.9
+            light.range = 6
+            // Un solo clip en el archivo (el nombre que le puso Mixamo al
+            // exportar) — se reproduce siempre en loop, todavía no hay Idle
+            // propio para Gennos.
+            const runAnim = res.animationGroups[0] ?? null
+            runAnim?.start(true)
+
+            // Barra de vida — billboard (siempre de cara a cámara), dos
+            // planos superpuestos: fondo oscuro fijo + relleno rojo que se
+            // achica con hp/GENNOS_MAX_HP. No es texto — el pedido anterior
+            // de sacar el HUD de texto sigue en pie.
+            const hpBarBg = B.MeshBuilder.CreatePlane('hpBarBg', { width: 1.1, height: 0.14 }, scene)
+            hpBarBg.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+            const hpBgMat = new B.StandardMaterial('hpBgMat', scene)
+            hpBgMat.emissiveColor = new B.Color3(0.15, 0.03, 0.03)
+            hpBgMat.disableLighting = true
+            hpBarBg.material = hpBgMat
+            const hpBarFill = B.MeshBuilder.CreatePlane('hpBarFill', { width: 1, height: 0.1 }, scene)
+            hpBarFill.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+            // Coplanar con hpBarBg (mismo billboard, misma posición): sin un
+            // rendering group propio, el z-fighting hace que el fondo gane
+            // y el relleno quede invisible. Un grupo posterior lo fuerza
+            // siempre encima, sin depender de precisión de depth buffer.
+            hpBarFill.renderingGroupId = 1
+            const hpFillMat = new B.StandardMaterial('hpFillMat', scene)
+            hpFillMat.emissiveColor = new B.Color3(1, 0.15, 0.15)
+            hpFillMat.disableLighting = true
+            hpBarFill.material = hpFillMat
+
+            gennosList.push({
+              mesh, runAnim, light, facing: 0, hp: GENNOS_MAX_HP, defeated: false, respawnTimer: 0,
+              hpBarBg, hpBarFill,
+            })
+          })
+          .catch(() => { /* enemigo opcional — si falla, el campo de prueba sigue sin esta unidad */ })
+      }
+
+      spawnGennosUnit(14, -12) // posición inicial, igual que la única unidad de antes
 
       // Drones — enemigos voladores, geometría simple generada (sin asset
       // propio todavía): cuerpo achatado + anillo que gira para dar
@@ -586,11 +614,7 @@ export default function TricksterGame() {
           }
           if (!kickHit && kickTimer >= KICK_HIT_AT) {
             kickHit = true
-            if (gennosMesh && characterRoot) {
-              const ddx = gennosMesh.position.x - posX
-              const ddz = gennosMesh.position.z - posZ
-              if (Math.hypot(ddx, ddz) <= KICK_RANGE) damageGennos(KICK_DAMAGE)
-            }
+            damageGennosInRange(posX, posZ, KICK_RANGE, KICK_DAMAGE)
             damageDronesInRange(posX, posZ, KICK_RANGE, KICK_DAMAGE)
           }
           if (kickTimer >= KICK_DURATION) {
@@ -617,11 +641,7 @@ export default function TricksterGame() {
           magicTimer += dt
           if (!magicHit && magicTimer >= MAGIC_CAST_AT) {
             magicHit = true
-            if (gennosMesh && characterRoot) {
-              const ddx = gennosMesh.position.x - posX
-              const ddz = gennosMesh.position.z - posZ
-              if (Math.hypot(ddx, ddz) <= MAGIC_RANGE) damageGennos(MAGIC_DAMAGE)
-            }
+            damageGennosInRange(posX, posZ, MAGIC_RANGE, MAGIC_DAMAGE)
             damageDronesInRange(posX, posZ, MAGIC_RANGE, MAGIC_DAMAGE)
             spawnMagicRing(posX, baseY, posZ)
           }
@@ -629,46 +649,55 @@ export default function TricksterGame() {
         }
 
         // Gennos persigue a Trickster — esqueleto y animación Run reales
-        // (ver comentario de arriba), un solo clip en loop constante.
-        if (gennosMesh && characterRoot) {
-          if (gennosDefeated) {
-            // Sin animación de derrota propia: se cae de cara y se hunde un
-            // poco, se queda así un rato y reaparece solo en su posición
-            // original con la vida llena.
-            gennosRespawnTimer += dt
-            gennosMesh.rotation.x = Math.min(gennosMesh.rotation.x + 0.08 * dt, Math.PI / 2)
-            gennosMesh.position.y = Math.max(gennosMesh.position.y - 0.01 * dt, -0.4)
-            if (gennosRespawnTimer >= GENNOS_RESPAWN_DELAY) {
-              gennosDefeated = false
-              gennosHP = GENNOS_MAX_HP
-              gennosMesh.position = GENNOS_POS.clone()
-              gennosMesh.rotation.x = 0
-              gennosFacing = 0
-              gennosRunAnim?.start(true)
+        // (ver comentario de arriba), un solo clip en loop constante. Cada
+        // unidad de gennosList se procesa igual, individualmente.
+        if (characterRoot) {
+          for (const g of gennosList) {
+            if (g.defeated) {
+              // Sin animación de derrota propia: se cae de cara y se hunde
+              // un poco, se queda así un rato y reaparece sola en un punto
+              // nuevo del perímetro con la vida llena. Al completar el
+              // respawn, sube el tamaño de la oleada y se agrega una unidad
+              // nueva — así "matar uno" va llevando a 2, después 3 Gennos.
+              g.respawnTimer += dt
+              g.mesh.rotation.x = Math.min(g.mesh.rotation.x + 0.08 * dt, Math.PI / 2)
+              g.mesh.position.y = Math.max(g.mesh.position.y - 0.01 * dt, -0.4)
+              if (g.respawnTimer >= GENNOS_RESPAWN_DELAY) {
+                g.defeated = false
+                g.hp = GENNOS_MAX_HP
+                const spawn = randomGennosSpawn()
+                g.mesh.position.set(spawn.x, 0, spawn.z)
+                g.mesh.rotation.x = 0
+                g.facing = 0
+                g.runAnim?.start(true)
+                g.light.position.set(spawn.x, 1.4, spawn.z)
+                gennosWaveSize++
+                const extra = randomGennosSpawn()
+                spawnGennosUnit(extra.x, extra.z)
+              }
+            } else {
+              const gdx = posX - g.mesh.position.x
+              const gdz = posZ - g.mesh.position.z
+              const gdist = Math.hypot(gdx, gdz)
+              if (gdist > GENNOS_STOP_DIST) {
+                const gnx = gdx / gdist, gnz = gdz / gdist
+                g.mesh.position.x += gnx * GENNOS_SPEED * dt
+                g.mesh.position.z += gnz * GENNOS_SPEED * dt
+                const gTarget = Math.atan2(gnx, gnz)
+                g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
+              }
+              g.mesh.rotation.y = g.facing
+              g.light.position.set(g.mesh.position.x, g.mesh.position.y + 1.4, g.mesh.position.z)
             }
-          } else {
-            const gdx = posX - gennosMesh.position.x
-            const gdz = posZ - gennosMesh.position.z
-            const gdist = Math.hypot(gdx, gdz)
-            if (gdist > GENNOS_STOP_DIST) {
-              const gnx = gdx / gdist, gnz = gdz / gdist
-              gennosMesh.position.x += gnx * GENNOS_SPEED * dt
-              gennosMesh.position.z += gnz * GENNOS_SPEED * dt
-              const gTarget = Math.atan2(gnx, gnz)
-              gennosFacing += wrapAngle(gTarget - gennosFacing) * TURN_LERP
-            }
-            gennosMesh.rotation.y = gennosFacing
-          }
 
-          if (hpBarBg && hpBarFill) {
-            const barY = gennosMesh.position.y + 2.3
-            hpBarBg.position.set(gennosMesh.position.x, barY, gennosMesh.position.z)
-            hpBarFill.position.set(gennosMesh.position.x, barY, gennosMesh.position.z)
-            const hpFrac = Math.max(0, gennosHP / GENNOS_MAX_HP)
-            hpBarFill.scaling.x = hpFrac
-            hpBarFill.position.x -= (1 - hpFrac) * 0.5
-            hpBarBg.setEnabled(!gennosDefeated)
-            hpBarFill.setEnabled(!gennosDefeated)
+            const barY = g.mesh.position.y + 2.3
+            g.hpBarBg.position.set(g.mesh.position.x, barY, g.mesh.position.z)
+            g.hpBarFill.position.set(g.mesh.position.x, barY, g.mesh.position.z)
+            const hpFrac = Math.max(0, g.hp / GENNOS_MAX_HP)
+            g.hpBarFill.scaling.x = hpFrac
+            g.hpBarFill.position.x -= (1 - hpFrac) * 0.5
+            g.hpBarBg.setEnabled(!g.defeated)
+            g.hpBarFill.setEnabled(!g.defeated)
           }
         }
 
@@ -819,11 +848,13 @@ export default function TricksterGame() {
           b.mesh.position.set(nextX, nextY, nextZ)
           b.life += dt
           let hit = false
-          if (gennosMesh && !gennosDefeated) {
-            const gx = gennosMesh.position.x, gy = gennosMesh.position.y + 1.1, gz = gennosMesh.position.z
+          for (const g of gennosList) {
+            if (g.defeated) continue
+            const gx = g.mesh.position.x, gy = g.mesh.position.y + 1.1, gz = g.mesh.position.z
             if (sweptHit(prevX, prevY, prevZ, nextX, nextY, nextZ, gx, gy, gz, BULLET_HIT_RADIUS)) {
               hit = true
-              damageGennos(22)
+              damageGennosUnit(g, 22)
+              break
             }
           }
           if (!hit) {
