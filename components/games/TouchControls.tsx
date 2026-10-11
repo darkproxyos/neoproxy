@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, type MutableRefObject, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
+import { useEffect, useRef, useState, type MutableRefObject, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
@@ -78,5 +78,88 @@ export function TouchActionButton({
     >
       {label}
     </button>
+  )
+}
+
+// Joystick analógico (estilo LoL/COD mobile) -- a diferencia del TouchDPad
+// (4 botones discretos), este entrega un vector continuo {x,y} en [-1,1]
+// según cuánto se empuja el stick desde el centro, así que el movimiento
+// escala en velocidad y no solo salta entre 8 direcciones fijas. Escribe
+// directo a `vecRef` cuadro a cuadro (mismo patrón que keysRef: el juego lo
+// lee en su loop, no hay setState de por medio en el camino caliente) --
+// el único setState acá es el del knob visual, que sí necesita re-render.
+export function TouchJoystick({
+  vecRef, style, size = 120, knobSize = 52,
+}: {
+  vecRef: MutableRefObject<{ x: number; y: number }>
+  style?: CSSProperties
+  size?: number
+  knobSize?: number
+}) {
+  const [knob, setKnob] = useState({ x: 0, y: 0 })
+  const baseRef = useRef<HTMLDivElement>(null)
+  const activeId = useRef<number | null>(null)
+  const radius = size / 2
+
+  function updateFromEvent(e: ReactPointerEvent) {
+    const base = baseRef.current
+    if (!base) return
+    const rect = base.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    let dx = e.clientX - cx
+    let dy = e.clientY - cy
+    const dist = Math.hypot(dx, dy)
+    if (dist > radius) {
+      dx = (dx / dist) * radius
+      dy = (dy / dist) * radius
+    }
+    setKnob({ x: dx, y: dy })
+    // La Y de pantalla crece hacia abajo -- se invierte para que empujar el
+    // stick "hacia arriba" sea +1 (adelante), como cualquier eje de juego.
+    vecRef.current = { x: dx / radius, y: -dy / radius }
+  }
+
+  function onDown(e: ReactPointerEvent) {
+    e.preventDefault()
+    activeId.current = e.pointerId
+    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+    updateFromEvent(e)
+  }
+  function onMove(e: ReactPointerEvent) {
+    if (activeId.current !== e.pointerId) return
+    e.preventDefault()
+    updateFromEvent(e)
+  }
+  function onUp(e: ReactPointerEvent) {
+    if (activeId.current !== e.pointerId) return
+    activeId.current = null
+    setKnob({ x: 0, y: 0 })
+    vecRef.current = { x: 0, y: 0 }
+  }
+
+  return (
+    <div
+      ref={baseRef}
+      aria-hidden="true"
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
+      style={{
+        position: 'fixed', zIndex: 30, width: size, height: size, borderRadius: '50%',
+        background: `${CYAN}0d`, border: `1px solid ${CYAN}44`,
+        touchAction: 'none', userSelect: 'none', WebkitUserSelect: 'none', WebkitTapHighlightColor: 'transparent',
+        ...style,
+      }}
+    >
+      <div style={{
+        position: 'absolute', width: knobSize, height: knobSize, borderRadius: '50%',
+        background: `${CYAN}33`, border: `1px solid ${CYAN}aa`,
+        left: '50%', top: '50%',
+        transform: `translate(-50%, -50%) translate(${knob.x}px, ${knob.y}px)`,
+        pointerEvents: 'none',
+      }} />
+    </div>
   )
 }

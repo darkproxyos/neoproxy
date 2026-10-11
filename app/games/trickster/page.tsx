@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { TouchActionButton, useIsTouchDevice } from '@/components/games/TouchControls'
+import { TouchActionButton, TouchJoystick, useIsTouchDevice } from '@/components/games/TouchControls'
 const VIOLET = '#b400ff'
 
 // Normaliza un ángulo al rango (-PI, PI] para interpolar por el camino corto.
@@ -13,6 +13,7 @@ function wrapAngle(a: number) {
 export default function TricksterGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const keysRef = useRef<Record<string, boolean>>({})
+  const joyRef = useRef({ x: 0, y: 0 })
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
@@ -20,6 +21,25 @@ export default function TricksterGame() {
   // fondo mientras se lee), solo tapa el canvas hasta que el jugador
   // confirma que quiere entrar al campo de prueba.
   const [introDismissed, setIntroDismissed] = useState(false)
+
+  // Fullscreen + orientación horizontal — solo en mobile, y solo puede
+  // dispararse desde un gesto directo del usuario (los navegadores lo
+  // bloquean si no), por eso vive en el onClick de "ENTRAR" y no en un
+  // efecto al montar. El lock de orientación además requiere fullscreen
+  // en la mayoría de navegadores Android; iOS Safari no soporta el Screen
+  // Orientation API en absoluto, así que ahí esto no hace nada y el juego
+  // sigue jugable en vertical (sin fallback forzado: no hay forma de
+  // rotar la pantalla por software).
+  async function enterFullscreenLandscape() {
+    if (!isTouch) return
+    try {
+      const el = document.documentElement
+      if (el.requestFullscreen) await el.requestFullscreen()
+      await (screen as any).orientation?.lock?.('landscape')
+    } catch {
+      // Sin soporte o el usuario lo rechazó — se sigue jugando tal cual esté.
+    }
+  }
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -34,7 +54,7 @@ export default function TricksterGame() {
       const scene = new B.Scene(engine)
       scene.clearColor = new B.Color4(0, 0.006, 0.016, 1)
 
-      const camera = new B.ArcRotateCamera('cam', -Math.PI / 2.3, Math.PI / 2.5, 7, new B.Vector3(0, 1, 0), scene)
+      const camera = new B.ArcRotateCamera('cam', -Math.PI / 2.3, Math.PI / 2.5, 5.5, new B.Vector3(0, 1, 0), scene)
       camera.attachControl(canvasRef.current!, true)
       camera.lowerRadiusLimit = 3
       camera.upperRadiusLimit = 16
@@ -69,26 +89,15 @@ export default function TricksterGame() {
         dust.material = dm
       }
 
-      // Personaje — input por teclado + mobile. En mobile no hay D-pad:
-      // tocar la pantalla alcanza para correr hacia adelante (misma tecla
-      // KeyW que ya mueve en desktop), el botón aparte es solo para saltar.
+      // Personaje — input por teclado en desktop, joystick analógico
+      // (TouchJoystick, ver JSX) en mobile. El joystick escribe un vector
+      // continuo en joyRef, leído más abajo junto con las teclas.
       keysRef.current = {}
       const keys = keysRef.current
       const onKeyDown = (e: KeyboardEvent) => { keys[e.code] = true; if (e.code === 'Space') e.preventDefault() }
       const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
-
-      // touchstart/touchend son eventos táctiles puros (nunca disparan con
-      // mouse), así que esto no interfiere con el drag de la cámara en
-      // desktop ni con el orbit táctil — sigue andando porque Babylon
-      // escucha sus propios pointer events en paralelo sobre el mismo canvas.
-      const canvasEl = canvasRef.current!
-      const onTouchStart = () => { keys['KeyW'] = true }
-      const onTouchEnd = () => { keys['KeyW'] = false }
-      canvasEl.addEventListener('touchstart', onTouchStart, { passive: true })
-      canvasEl.addEventListener('touchend', onTouchEnd, { passive: true })
-      canvasEl.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
       let characterRoot: any = null
       let skinnedMesh: any = null
@@ -302,13 +311,27 @@ export default function TricksterGame() {
         if (keys['ArrowLeft'] || keys['KeyA']) inputRight -= 1
         if (keys['ArrowRight'] || keys['KeyD']) inputRight += 1
 
+        // Joystick analógico (mobile) — solo entra en juego si no hay
+        // teclado activo ese frame. A diferencia del teclado (siempre
+        // velocidad máxima), acá se conserva la magnitud del stick para que
+        // empujar poco mueva despacio, como en LoL/COD.
+        let analog = false
+        if (inputForward === 0 && inputRight === 0) {
+          const joy = joyRef.current
+          if (Math.hypot(joy.x, joy.y) > 0.12) {
+            inputForward = joy.y
+            inputRight = joy.x
+            analog = true
+          }
+        }
+
         let dx = camForward.x * inputForward + camRight.x * inputRight
         let dz = camForward.z * inputForward + camRight.z * inputRight
         const moving = dx !== 0 || dz !== 0
 
         if (moving) {
           const len = Math.hypot(dx, dz)
-          dx /= len; dz /= len
+          if (!analog || len > 1) { dx /= len; dz /= len }
           posX = Math.max(-BOUND, Math.min(BOUND, posX + dx * SPEED * dt))
           posZ = Math.max(-BOUND, Math.min(BOUND, posZ + dz * SPEED * dt))
           // +PI: el eje "adelante" del rig queda mirando a cámara con
@@ -511,6 +534,7 @@ export default function TricksterGame() {
     return () => {
       disposed = true
       if (engine) engine.dispose()
+      try { (screen as any).orientation?.unlock?.() } catch {}
     }
   }, [])
 
@@ -554,7 +578,7 @@ export default function TricksterGame() {
             golpe es Trickster buscando la grieta.
           </p>
           <button
-            onClick={() => setIntroDismissed(true)}
+            onClick={() => { enterFullscreenLandscape(); setIntroDismissed(true) }}
             style={{
               fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
               background: `${VIOLET}22`, border: `1px solid ${VIOLET}`, color: VIOLET,
@@ -603,9 +627,10 @@ export default function TricksterGame() {
 
       {isTouch && (
         // bottom:100 para despejar el botón de Chat global (bottom:24,right:24).
-        // Sin D-pad: tocar cualquier parte de la pantalla ya hace correr
-        // (ver el listener de touchstart/touchend sobre el canvas, arriba).
+        // Movimiento por joystick analógico a la izquierda (ver TouchJoystick);
+        // acciones en botones a la derecha, mismo layout que un shooter mobile.
         <>
+          <TouchJoystick vecRef={joyRef} style={{ bottom: 36, left: 28 }} />
           <TouchActionButton keysRef={keysRef} code="Space" label="SALTAR" style={{ bottom: 100, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
           <TouchActionButton keysRef={keysRef} code="KeyF" label="PODER" style={{ bottom: 100, right: 104, width: 72, height: 72, borderRadius: '50%' }} />
           <TouchActionButton keysRef={keysRef} code="KeyE" label="PATADA" style={{ bottom: 184, right: 20, width: 72, height: 72, borderRadius: '50%' }} />
