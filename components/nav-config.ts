@@ -29,6 +29,7 @@ export const navConfig: NavEntry[] = [
     ],
   },
   { label: 'PROXYGAMES', href: '/games', live: true },
+  { label: 'AUDIO', href: '/audio', live: true },
   { label: 'EXPERIMENTAL', href: '/experimental', live: true },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: true },
   { label: 'PROXYVERSE', href: '/proxyverse', live: true },
