@@ -29,38 +29,20 @@ export const navConfig: NavEntry[] = [
     ],
   },
   { label: 'PROXYGAMES', href: '/games', live: true },
-  {
-    label: 'EXPERIMENTAL',
-    live: true,
-    items: [
-      { label: 'Laboratorio', href: '/lab', live: true },
-      { label: 'Proxygenesis', href: '/lab/proxygenesis', live: true },
-      { label: 'Hemibrain', href: '/lab/hemibrain', live: true },
-      { label: 'Stardust', href: '/npos/stardust', live: true },
-      { label: 'Etéreo', href: '/etereo', live: true },
-      {
-        label: 'Realidad Aumentada',
-        live: true,
-        items: [
-          { label: 'Máscara Facial', href: '/realidad-aumentada', live: true },
-          { label: 'AR Combat', href: '/ar', live: true },
-          { label: 'Modo Clásico', href: '/realidad-aumentada/index.html', live: true },
-        ],
-      },
-      { label: 'Synth', href: '/draw/synth', live: true },
-    ],
-  },
+  { label: 'EXPERIMENTAL', href: '/experimental', live: true },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: true },
   { label: 'PROXYVERSE', href: '/proxyverse', live: true },
 ]
 
 // Rutas donde el SiteNav global no se monta: herramientas fullscreen con
-// chrome propio (lab, wired, ar, realidad-aumentada, draw/draw-synth) o
-// vistas que no deben mostrar navegacion (login/admin/kernel). Wired, Planet
-// y Spaceship son canvas/iframe a pantalla completa — el SiteNav global
-// flotando encima choca con el HUD propio de cada juego. El catálogo
-// (/games) sí lo muestra, por eso solo se ocultan las sub-rutas.
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/ar', '/realidad-aumentada', '/draw', '/etereo']
+// chrome propio (ar, realidad-aumentada, draw/draw-synth, los canvas 3D de
+// /lab) o vistas que no deben mostrar navegacion (login/admin/kernel). Wired,
+// Planet y Spaceship son canvas/iframe a pantalla completa — el SiteNav
+// global flotando encima choca con el HUD propio de cada juego. Los
+// catálogos (/games, /experimental, /lab) sí lo muestran, por eso solo se
+// ocultan las sub-rutas que son herramientas fullscreen de verdad —
+// /lab/proxygenesis es solo texto estático, no necesita ocultarlo.
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/ar', '/realidad-aumentada', '/draw', '/etereo']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))
