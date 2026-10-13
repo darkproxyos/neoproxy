@@ -21,15 +21,17 @@ interface GameEntry {
 // inventar mecánicas que no existen. Planet no tiene ningún input handler
 // (sin keydown, sin mouse, sin colisión): es un flythrough automático, no
 // un juego jugable, y se etiqueta como tal.
+// Orden pedido explícitamente: Trickster primero, después Espectro (naves),
+// después Freestyle // Aprendizaje, y el resto al final.
 const CATALOG: GameEntry[] = [
   {
-    id: 'wired',
-    code: 'NPX-EXP-WIRED',
-    title: 'THE WIRED',
-    href: '/games/wired',
-    status: 'jugable',
-    blurb: 'Vuelo en primera persona por la capa entre capas. Absorbé fragmentos de memoria antes de que tu coherencia caiga a cero — la señal corrupta te acerca a la disolución.',
-    controls: 'WASD / FLECHAS · ESPACIO · SHIFT',
+    id: 'trickster',
+    code: 'NPX-EXP-TRICKSTER',
+    title: 'TRICKSTER // CAMPO DE PRUEBA',
+    href: '/games/trickster',
+    status: 'demo',
+    blurb: 'El primer personaje jugable del catálogo — generado y traído desde afuera, corriendo con esqueleto y animación real (Mixamo) en una escena propia. El salto todavía es animación procedural, sin clip propio.',
+    controls: 'WASD / FLECHAS — ESPACIO SALTA',
   },
   {
     id: 'spaceship',
@@ -41,6 +43,24 @@ const CATALOG: GameEntry[] = [
     controls: 'WASD / FLECHAS — DODGE',
   },
   {
+    id: 'rap-aprendizaje',
+    code: 'NPX-EXP-RIMA',
+    title: 'FREESTYLE // APRENDIZAJE',
+    href: '/games/rap-aprendizaje',
+    status: 'jugable',
+    blurb: 'Modo aprendizaje del freestyle: vocabulario grande de filosofía, ciencia, matemática y lingüística, agrupado por terminación que rima — cada ronda tira varias palabras del mismo grupo para entrenar el oído a encontrar rimas.',
+    controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
+  },
+  {
+    id: 'wired',
+    code: 'NPX-EXP-WIRED',
+    title: 'THE WIRED',
+    href: '/games/wired',
+    status: 'jugable',
+    blurb: 'Vuelo en primera persona por la capa entre capas. Absorbé fragmentos de memoria antes de que tu coherencia caiga a cero — la señal corrupta te acerca a la disolución.',
+    controls: 'WASD / FLECHAS · ESPACIO · SHIFT',
+  },
+  {
     id: 'planet',
     code: 'NPX-EXP-FLYBY',
     title: 'FLYBY',
@@ -48,15 +68,6 @@ const CATALOG: GameEntry[] = [
     status: 'demo',
     blurb: 'Sobrevuelo automático de una nave a través de un túnel de anillos y un campo estelar. Todavía sin controles — demo visual, no jugable.',
     controls: 'SIN CONTROLES — AUTOPLAY',
-  },
-  {
-    id: 'trickster',
-    code: 'NPX-EXP-TRICKSTER',
-    title: 'TRICKSTER // CAMPO DE PRUEBA',
-    href: '/games/trickster',
-    status: 'demo',
-    blurb: 'El primer personaje jugable del catálogo — generado y traído desde afuera, corriendo con esqueleto y animación real (Mixamo) en una escena propia. El salto todavía es animación procedural, sin clip propio.',
-    controls: 'WASD / FLECHAS — ESPACIO SALTA',
   },
   {
     id: 'trickster-mirror',
@@ -74,15 +85,6 @@ const CATALOG: GameEntry[] = [
     href: '/games/rap',
     status: 'jugable',
     blurb: 'Herramienta de freestyle: cada ciertos segundos aparecen entre 1 y 6 conceptos del Proxyverse (agentes, frases, vocabulario del proyecto) para improvisar encima de tu propia pista.',
-    controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
-  },
-  {
-    id: 'rap-aprendizaje',
-    code: 'NPX-EXP-RIMA',
-    title: 'FREESTYLE // APRENDIZAJE',
-    href: '/games/rap-aprendizaje',
-    status: 'jugable',
-    blurb: 'Modo aprendizaje del freestyle: vocabulario grande de filosofía, ciencia, matemática y lingüística, agrupado por terminación que rima — cada ronda tira varias palabras del mismo grupo para entrenar el oído a encontrar rimas.',
     controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
   },
 ]
