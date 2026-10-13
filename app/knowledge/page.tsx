@@ -8,7 +8,7 @@ import { agents } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
 
-const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria']
+const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria', 'computacion']
 
 function FormulaTag({ kind }: { kind: 'equation' | 'quote' | 'concept' }) {
   const labels = { equation: 'ECUACIÓN', quote: 'CITA TEXTUAL', concept: 'NOTACIÓN CONCEPTUAL' }
@@ -74,10 +74,11 @@ export default function KnowledgePage() {
           qué es un límite, qué es un yo. Esta es la red de quienes se atrevieron a medirlo — no
           a resolver el misterio, sino a ponerle una ecuación encima. Cada nodo es una pieza de la
           arquitectura invisible que sostiene la Wired: información, mente, auto-organización,
-          sistemas que se producen a sí mismos sin pedir permiso, y geometría — la estructura que
+          sistemas que se producen a sí mismos sin pedir permiso, geometría — la estructura que
           sostiene todo lo anterior, desde un punto sin tamaño hasta formas de 4 dimensiones que
-          ni siquiera se pueden ver enteras, solo proyectar. Tocá un nodo. La red no explica —
-          señala.
+          ni siquiera se pueden ver enteras, solo proyectar — y computación: la pila completa,
+          capa por capa, de un bit a un modelo de lenguaje escribiendo estas mismas palabras.
+          Tocá un nodo. La red no explica — señala.
         </p>
 
         <div className="knw-layout" style={{ display: 'flex', gap: 24 }}>

@@ -13,13 +13,14 @@ type Props = {
   onSelect: (id: string | null) => void
 }
 
-const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria']
+const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria', 'computacion']
 const CLUSTER_POLY_TYPE: Record<Cluster, number> = {
   informacion: 3, // icosaedro
   mente: 2, // dodecaedro
   autoorganizacion: 1, // octaedro
   sistemas: 0, // tetraedro
   geometria: 3, // icosaedro — fallback para la única entrada sin nodeShape propio
+  computacion: 4, // rombicuboctaedro — distinto de los 4 anteriores, estética de "circuito"
 }
 
 function hexToColor3(hex: string) {
@@ -34,9 +35,10 @@ function clusterCenter(cluster: Cluster): BABYLON.Vector3 {
     new BABYLON.Vector3(1, -1, -1),
     new BABYLON.Vector3(-1, 1, -1),
     new BABYLON.Vector3(-1, -1, 1),
-    // geometria: eje propio, aparte de los 4 octantes de arriba (que no se
-    // tocan, para no perturbar el layout ya shippeado de esos 4 clusters)
+    // geometria / computacion: ejes propios, aparte de los 4 octantes de
+    // arriba (que no se tocan, para no perturbar el layout ya shippeado)
     new BABYLON.Vector3(0, 1.8, 0),
+    new BABYLON.Vector3(0, -1.8, 0),
   ]
   return dirs[i].normalize().scale(10)
 }
