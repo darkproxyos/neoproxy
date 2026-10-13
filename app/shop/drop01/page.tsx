@@ -450,7 +450,7 @@ export default function Drop01Page() {
           &iquest;Quieres un objeto con tu propio seed?
         </div>
         <a
-          href="/lab"
+          href="/lab/atractores"
           style={{
             fontFamily: "'DM Mono', monospace",
             fontSize: 8, letterSpacing: '0.2em',
