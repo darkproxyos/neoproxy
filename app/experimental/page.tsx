@@ -16,16 +16,26 @@ interface ExperimentEntry {
 }
 
 // Descripciones verificadas contra el código real de cada página — mismo
-// criterio que app/games/page.tsx. Laboratorio agrupa 4 sub-experimentos
-// propios (ver app/lab/page.tsx) en vez de listarlos acá también.
+// criterio que app/games/page.tsx. Proxygenesis se promovió a tarjeta
+// propia (primera de la lista, pedido explícito) en vez de quedar
+// escondida dentro de Laboratorio — ya no es el placeholder "sin kernel",
+// es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
+  {
+    id: 'proxygenesis',
+    code: 'NPX-XP-GENESIS',
+    title: 'PROXYGENESIS',
+    href: '/lab/proxygenesis',
+    blurb: 'Generador de formas orgánicas para imprimir en resina: coral y árbol con Space Colonization Algorithm (Runions et al., 2007), y conchas con el modelo de coiling de Raup (1962) — parámetros reales de espacio, no ruido decorativo. Export a .STL.',
+    controls: 'SLIDERS DE ESPACIO + SEMILLA — EXPORT .STL',
+  },
   {
     id: 'lab',
     code: 'NPX-XP-LAB',
     title: 'LABORATORIO',
     href: '/lab',
-    blurb: 'El ala de investigación: motor de atractores del caos (10 sistemas dinámicos, exportables a .STL), datos reales de conectómica de Drosophila (Hemibrain), una escena de prueba, y el kernel morfogenético todavía sin arrancar (Proxygenesis).',
-    controls: '4 SUB-EXPERIMENTOS ADENTRO',
+    blurb: 'El resto del ala de investigación: motor de atractores del caos (10 sistemas dinámicos, exportables a .STL), datos reales de conectómica de Drosophila (Hemibrain), y una escena de prueba.',
+    controls: '3 SUB-EXPERIMENTOS ADENTRO',
   },
   {
     id: 'stardust',
