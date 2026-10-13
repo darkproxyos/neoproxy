@@ -18,6 +18,7 @@ export default function SpaceshipGame() {
 
     const init = async () => {
       const B = await import('@babylonjs/core')
+      await import('@babylonjs/loaders/glTF')
       engine = new B.Engine(canvasRef.current!, true)
       const scene = new B.Scene(engine)
       scene.clearColor = new B.Color4(0, 0, 0.01, 1)
@@ -39,19 +40,13 @@ export default function SpaceshipGame() {
         { name: 'GAMMA RAY',     freq: '>30EHz',        color: new B.Color3(1.0, 1.0, 1.0),  ring: 6,  thickness: 0.05 },
       ]
 
-      // Nave
-      const shipMat = new B.StandardMaterial('shipMat', scene)
-      shipMat.emissiveColor = new B.Color3(0.1, 0.4, 0.6)
-      const shipBody = B.MeshBuilder.CreateBox('ship', { width: 1.5, height: 0.35, depth: 2.5 }, scene)
-      shipBody.material = shipMat
-      const wingL = B.MeshBuilder.CreateBox('wL', { width: 2.5, height: 0.08, depth: 1.2 }, scene)
-      wingL.position.x = -1.8; wingL.parent = shipBody; wingL.material = shipMat
-      const wingR = B.MeshBuilder.CreateBox('wR', { width: 2.5, height: 0.08, depth: 1.2 }, scene)
-      wingR.position.x = 1.8; wingR.parent = shipBody; wingR.material = shipMat
+      // Nave — nodo raíz físico (existe desde el frame 0, no depende de que
+      // termine de cargar el modelo real) con el modelo glTF como hijo.
+      const shipBody = new B.TransformNode('shipRoot', scene)
 
-      // Motor glow
+      // Motor glow — queda bajo la nave, visible mientras carga el modelo
       const engineGlow = B.MeshBuilder.CreateSphere('eng', { diameter: 0.4 }, scene)
-      engineGlow.position.z = -1.2; engineGlow.parent = shipBody
+      engineGlow.position.z = -1.1; engineGlow.parent = shipBody
       const engMat = new B.StandardMaterial('engMat', scene)
       engMat.emissiveColor = new B.Color3(0, 0.8, 1)
       engineGlow.material = engMat
@@ -60,6 +55,32 @@ export default function SpaceshipGame() {
       const light = new B.PointLight('light', new B.Vector3(0, 5, 10), scene)
       light.diffuse = spectrum[0].color
       light.intensity = 6
+
+      // Luz de relleno fija sobre la nave: el modelo real usa material PBR
+      // sin emissive propio (a diferencia del box placeholder anterior), así
+      // que sin esto queda como silueta negra cuando el espectro activo es
+      // oscuro (radio/microondas). Limitada a la nave vía includedOnlyMeshes
+      // para no lavar de blanco los anillos/obstáculos, que son emissive
+      // puro sobre diffuse blanco por defecto.
+      const shipLight = new B.HemisphericLight('shipLight', new B.Vector3(0, 1, -1), scene)
+      shipLight.intensity = 1.3
+      shipLight.diffuse = new B.Color3(1, 1, 1)
+      shipLight.groundColor = new B.Color3(0.15, 0.2, 0.3)
+      shipLight.includedOnlyMeshes = [engineGlow]
+
+      B.SceneLoader.ImportMeshAsync('', '/models/spaceship/', 'nave-proxy.glb', scene)
+        .then((res) => {
+          const shipRoot = res.meshes[0]
+          shipRoot.parent = shipBody
+          // Mismo fix que en /games/trickster: el loader de glTF deja
+          // rotationQuaternion seteado, lo que hace que Babylon ignore
+          // .rotation.y/.z al armar la world matrix.
+          shipRoot.rotationQuaternion = null
+          shipRoot.scaling.setAll(2.5)
+          shipRoot.rotation.y = Math.PI
+          shipLight.includedOnlyMeshes.push(...res.meshes)
+        })
+        .catch(() => { /* si falla la carga, queda el glow del motor como nave mínima */ })
 
       // Anillos — se adaptan al espectro actual
       const rings: any[] = []
