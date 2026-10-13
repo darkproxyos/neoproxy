@@ -52,9 +52,9 @@ const CATALOG: LabEntry[] = [
     code: 'NPX-LAB-PROXYGENESIS',
     title: 'PROXYGENESIS',
     href: '/lab/proxygenesis',
-    status: 'placeholder',
-    blurb: 'Página de intención para el NMK (NeoProxy Morphogenetic Kernel) — todavía no corre ningún kernel. Marcada en el propio código como v0.0, pre-kernel.',
-    controls: 'SIN INTERACCIÓN — TODAVÍA',
+    status: 'activo',
+    blurb: 'Generador de formas orgánicas para imprimir: coral y árbol con Space Colonization Algorithm (Runions et al., 2007), y conchas con el modelo de coiling de Raup (1962) — parámetros reales, no ruido decorativo. Export a .STL.',
+    controls: 'SLIDERS DE ESPACIO + SEMILLA — EXPORT .STL',
   },
 ]
 
@@ -86,9 +86,9 @@ export default function LabHubPage() {
         </h1>
         <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 12 }}>
           Todavía no es EL laboratorio — es el índice de lo que ya corre adentro, mientras se arma
-          la versión real. Un motor de atractores del caos funcionando de punta a punta, datos
-          reales de conectómica, una escena de prueba, y la intención escrita de un kernel
-          morfogenético que todavía no arrancó.
+          la versión final. Un motor de atractores del caos funcionando de punta a punta, un
+          generador de formas orgánicas (coral, árbol, concha) con algoritmos reales, datos
+          reales de conectómica, y una escena de prueba.
         </p>
         <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1, lineHeight: 1.9, maxWidth: 620, marginBottom: 56 }}>
           Esta página va a crecer — lo de abajo es lo que existe hoy, no una maqueta de lo que falta.

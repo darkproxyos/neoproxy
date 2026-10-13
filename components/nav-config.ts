@@ -40,9 +40,10 @@ export const navConfig: NavEntry[] = [
 // Planet y Spaceship son canvas/iframe a pantalla completa — el SiteNav
 // global flotando encima choca con el HUD propio de cada juego. Los
 // catálogos (/games, /experimental, /lab) sí lo muestran, por eso solo se
-// ocultan las sub-rutas que son herramientas fullscreen de verdad —
-// /lab/proxygenesis es solo texto estático, no necesita ocultarlo.
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/ar', '/realidad-aumentada', '/draw', '/etereo']
+// ocultan las sub-rutas que son herramientas fullscreen de verdad.
+// /lab/proxygenesis dejó de ser texto estático: ahora es un generador 3D
+// con su propia barra superior — el SiteNav global se le superponía.
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/lab/proxygenesis', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/ar', '/realidad-aumentada', '/draw', '/etereo']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))
