@@ -1,6 +1,16 @@
-export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas'
+export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas' | 'geometria'
 
 export type FormulaKind = 'equation' | 'quote' | 'concept'
+
+// Forma literal que debe tomar el mesh del nodo en la escena 3D, en vez del
+// poliedro genérico por defecto del cluster — solo lo usan las entradas de
+// 'geometria', donde el nodo ES el objeto que describe (components/knowledge/
+// KnowledgeScene.tsx interpreta este campo). 'tesseract' | '24cell' | '600cell'
+// son wireframes 4D reales, proyectados y rotando en vivo — no son clip art.
+export type NodeShape =
+  | 'point' | 'line' | 'triangle'
+  | 'tetrahedron' | 'cube' | 'octahedron' | 'dodecahedron' | 'icosahedron'
+  | 'tesseract' | '24cell' | '600cell'
 
 export type KnowledgeEntry = {
   id: string
@@ -17,6 +27,7 @@ export type KnowledgeEntry = {
   // idea — no todas las entradas tienen una correspondencia lo bastante
   // directa como para forzarla.
   relatedAgent?: string
+  nodeShape?: NodeShape
 }
 
 export const clusters: Record<Cluster, { label: string; color: string }> = {
@@ -24,6 +35,7 @@ export const clusters: Record<Cluster, { label: string; color: string }> = {
   mente: { label: 'MENTE // CONSCIENCIA', color: '#b06bff' },
   autoorganizacion: { label: 'AUTO-ORGANIZACIÓN', color: '#00ffb0' },
   sistemas: { label: 'SISTEMAS // CLAUSURA', color: '#ff3fa4' },
+  geometria: { label: 'GEOMETRÍA // DIMENSIÓN', color: '#ffd400' },
 }
 
 export const entries: KnowledgeEntry[] = [
@@ -576,6 +588,211 @@ export const entries: KnowledgeEntry[] = [
       'Alguien con un marcapasos, lentes de contacto y un teléfono que terminó la frase que estaba pensando antes de que la escribiera no es "menos humano" por eso. Ya es, en el sentido literal de Haraway, un cyborg — y lleva así más tiempo del que admite.',
     relatedAgent: 'genos',
   },
+
+  // tercera tanda — geometría, dimensión por dimensión: del punto (rango 0)
+  // al politopo regular 4D más complejo (600-celdas, "hexacosichoron") y el
+  // cierre conceptual de lo que pasa después. Conteos de vértices/aristas/
+  // caras/celdas y símbolos de Schläfli son hechos tabulados estándar;
+  // las coordenadas de teseracto, 24-celda y 600-celda que usa el render 3D
+  // (KnowledgeScene.tsx) se verificaron numéricamente antes de portarlas
+  // (conteo de vértices, norma uniforme, grado uniforme, Euler V-E+F-C=0).
+  {
+    id: 'punto',
+    name: 'Punto',
+    years: 'DIMENSIÓN 0',
+    role: 'El Origen sin Extensión',
+    cluster: 'geometria',
+    formula: '0 dimensiones · 1 vértice · 0 aristas',
+    formulaLabel: 'Politopo de rango 0',
+    formulaKind: 'concept',
+    summary:
+      'No tiene largo, ni ancho, ni profundidad — solo posición. Es la unidad mínima de existencia en el espacio: todo lo demás, desde una línea hasta el politopo más complejo, se construye agregando puntos y conectándolos. No se puede dividir en algo más simple sin dejar de ser geometría.',
+    example:
+      'Cada modelo 3D de cualquier videojuego, por más detallado que sea, es en el fondo una lista de puntos (vértices) guardada en la memoria de la GPU. Nada se renderiza hasta que se definió primero dónde está cada punto — la forma viene después, como relación entre ellos.',
+    nodeShape: 'point',
+  },
+  {
+    id: 'linea',
+    name: 'Línea',
+    years: 'DIMENSIÓN 1',
+    role: 'La Distancia Entre Dos Puntos',
+    cluster: 'geometria',
+    formula: '2 vértices · 1 arista',
+    formulaLabel: 'Politopo de rango 1 (segmento)',
+    formulaKind: 'concept',
+    summary:
+      'Un punto solo no puede medir nada — hace falta un segundo punto para que exista una distancia. La línea es la primera relación geométrica: el vínculo mínimo necesario para que "cerca" y "lejos" tengan sentido. Antes de ella no hay comparación posible, solo posiciones aisladas.',
+    example:
+      'Una lista enlazada en programación es, estructuralmente, eso mismo: cada nodo apunta al siguiente, y la "distancia" entre dos elementos se mide contando cuántos saltos hay que dar. Es geometría unidimensional disfrazada de estructura de datos.',
+    nodeShape: 'line',
+  },
+  {
+    id: 'poligono',
+    name: 'Polígono',
+    years: 'DIMENSIÓN 2',
+    role: 'El Primer Plano Cerrado',
+    cluster: 'geometria',
+    formula: '3 vértices · 3 aristas · 1 cara (triángulo)',
+    formulaLabel: 'El polígono mínimo',
+    formulaKind: 'concept',
+    summary:
+      'Cerrar una cadena de líneas crea, por primera vez, un adentro y un afuera. El triángulo es el polígono más simple posible — y el único que no se deforma bajo presión sin cambiar la longitud de sus lados: por eso sostiene puentes y torres, mientras un cuadrado sin diagonal se derrumba en un paralelogramo.',
+    example:
+      'Todo modelo 3D en una pantalla, sin excepción, se triangula antes de renderizarse — hasta una esfera perfecta es, para la GPU, miles de triángulos diminutos. El polígono más simple es también la única unidad de construcción que usa la industria entera.',
+    nodeShape: 'triangle',
+  },
+  {
+    id: 'tetraedro',
+    name: 'Tetraedro',
+    years: 'DIMENSIÓN 3',
+    role: 'El Sólido Platónico Mínimo',
+    cluster: 'geometria',
+    formula: '{3,3} · 4 vértices · 6 aristas · 4 caras',
+    formulaLabel: 'Símbolo de Schläfli {3,3}',
+    formulaKind: 'equation',
+    summary:
+      'El primer sólido que encierra un volumen: cuatro triángulos, el mínimo posible para cerrar un espacio en tres dimensiones. Platón se lo asignó al fuego — la forma más afilada e inestable de las cinco. Nadie puede construir un sólido regular con menos caras que esta.',
+    example:
+      'Una molécula de metano tiene sus cuatro átomos de hidrógeno dispuestos exactamente en los vértices de un tetraedro alrededor del carbono central — la química, sin saber de Platón, elige la misma forma mínima por simple economía de espacio.',
+    nodeShape: 'tetrahedron',
+  },
+  {
+    id: 'cubo',
+    name: 'Cubo',
+    years: 'DIMENSIÓN 3',
+    role: 'El Sólido Platónico del Espacio Ortogonal',
+    cluster: 'geometria',
+    formula: '{4,3} · 8 vértices · 12 aristas · 6 caras',
+    formulaLabel: 'Símbolo de Schläfli {4,3}',
+    formulaKind: 'equation',
+    summary:
+      'Tres ejes perpendiculares, repetidos dos veces cada uno: eso alcanza para construir el sólido que después se volvió la unidad básica de todo diseño digital. Platón lo asignó a la tierra, lo más estable de los cinco — y tenía razón: es el único de los cinco que apila sin dejar huecos.',
+    example:
+      'El vóxel —la unidad mínima de Minecraft, de una resonancia magnética, de cualquier escáner 3D— es, literalmente, un cubo. Todo el mundo digital moderno descompone la realidad en pequeños cubos antes de poder procesarla.',
+    relatedAgent: 'genos',
+    nodeShape: 'cube',
+  },
+  {
+    id: 'octaedro',
+    name: 'Octaedro',
+    years: 'DIMENSIÓN 3',
+    role: 'El Sólido Dual del Cubo',
+    cluster: 'geometria',
+    formula: '{3,4} · 6 vértices · 12 aristas · 8 caras',
+    formulaLabel: 'Símbolo de Schläfli {3,4}',
+    formulaKind: 'equation',
+    summary:
+      'Poné un vértice en el centro de cada cara de un cubo y conectalos: aparece un octaedro. Son duales — intercambiables, el mismo objeto visto desde la relación opuesta entre vértices y caras. Platón se lo asignó al aire.',
+    example:
+      'Muchos cristales naturales, como el diamante y la fluorita, crecen espontáneamente en forma de octaedro — la estructura atómica minimiza su energía exactamente en esa geometría, sin que nadie se la imponga desde afuera.',
+    nodeShape: 'octahedron',
+  },
+  {
+    id: 'dodecaedro',
+    name: 'Dodecaedro',
+    years: 'DIMENSIÓN 3',
+    role: 'El Sólido del Cosmos (para Platón)',
+    cluster: 'geometria',
+    formula: '{5,3} · 20 vértices · 30 aristas · 12 caras',
+    formulaLabel: 'Símbolo de Schläfli {5,3}',
+    formulaKind: 'equation',
+    summary:
+      'Doce pentágonos regulares, cerrados en un sólido que Platón reservó para nombrar el cosmos entero, la quinta esencia más allá de los cuatro elementos. Es el único Sólido Platónico cuyas caras no son triángulos ni cuadrados — y el primero en meter el número áureo dentro de una forma 3D.',
+    example:
+      'El balón de fútbol clásico no es un dodecaedro puro, pero nace de truncar uno: sus doce pentágonos negros son la misma simetría pentagonal, apenas recortada para encajar con los hexágonos blancos.',
+    nodeShape: 'dodecahedron',
+  },
+  {
+    id: 'icosaedro',
+    name: 'Icosaedro',
+    years: 'DIMENSIÓN 3',
+    role: 'El Sólido Platónico Máximo',
+    cluster: 'geometria',
+    formula: '{3,5} · 12 vértices · 30 aristas · 20 caras',
+    formulaLabel: 'Símbolo de Schläfli {3,5}',
+    formulaKind: 'equation',
+    summary:
+      'Veinte triángulos, el máximo número de caras que admite un Sólido Platónico antes de que la geometría deje de poder cerrarse. Dual del dodecaedro, Platón se lo asignó al agua — la forma que mejor rueda entre las cinco.',
+    example:
+      'La cápside de la mayoría de los virus esféricos tiene simetría icosaédrica: es la forma que encierra el mayor volumen posible usando subunidades de proteína idénticas, repetidas con el mínimo gasto genético posible.',
+    relatedAgent: 'genos',
+    nodeShape: 'icosahedron',
+  },
+  {
+    id: 'teseracto',
+    name: 'Teseracto',
+    years: 'DIMENSIÓN 4',
+    role: 'El Hipercubo — Lo Que No Se Puede Ver Entero',
+    cluster: 'geometria',
+    formula: '{4,3,3} · 16 vértices · 32 aristas · 24 caras · 8 celdas',
+    formulaLabel: 'Símbolo de Schläfli {4,3,3}',
+    formulaKind: 'equation',
+    summary:
+      'Un cubo tiene seis caras cuadradas; un teseracto tiene ocho celdas cúbicas. No hay forma de verlo entero desde dentro de nuestro espacio de tres dimensiones — solo proyecciones, sombras, cortes. Lo que parece una distorsión imposible en la sombra 3D de un teseracto girando es, en 4D, una rotación perfectamente rígida y consistente: la ilusión no está en el objeto. Está en el ojo que solo puede mirarlo desde una dimensión de menos.',
+    example:
+      'Las redes de interconexión hipercúbicas se usan de verdad en supercomputación: cada nodo se conecta con exactamente otros 4 (uno por cada eje), igual que cada vértice de un teseracto conecta con otros 4 — la topología 4D no es un juguete matemático, resuelve problemas reales de enrutamiento con el mínimo de saltos.',
+    relatedAgent: 'genos',
+    nodeShape: 'tesseract',
+  },
+  {
+    id: 'veinticuatrocelda',
+    name: '24-Celda',
+    years: 'DIMENSIÓN 4',
+    role: 'La Forma Que Solo Existe Una Vez',
+    cluster: 'geometria',
+    formula: '{3,4,3} · 24 vértices · 96 aristas · 96 caras · 24 celdas',
+    formulaLabel: 'Símbolo de Schläfli {3,4,3} — autodual',
+    formulaKind: 'equation',
+    summary:
+      'No tiene análogo en 3D ni en 5D — ninguna otra dimensión admite una forma como esta. Es autodual: su propio dual, vértices por celdas, es ella misma exactamente. Existe una sola vez en toda la escalera infinita de dimensiones posibles — una excepción que la geometría permite ahí, y en ningún otro piso.',
+    example:
+      'Las 24 celdas octaédricas de esta forma corresponden exactamente a un objeto real de la física del estado sólido: el reticulado D4, la forma más densa conocida de empaquetar esferas en 4 dimensiones — usado en teoría de códigos para detectar y corregir errores en transmisiones digitales.',
+    nodeShape: '24cell',
+  },
+  {
+    id: 'hexacosichoron',
+    name: 'Hexacosichoron',
+    years: 'DIMENSIÓN 4',
+    role: '600-Celdas — El Politopo Regular Más Intrincado',
+    cluster: 'geometria',
+    formula: '{3,3,5} · 120 vértices · 720 aristas · 1200 caras · 600 celdas',
+    formulaLabel: 'Símbolo de Schläfli {3,3,5}',
+    formulaKind: 'equation',
+    summary:
+      'El más intrincado de los seis politopos regulares de 4 dimensiones: seiscientos tetraedros, ensamblados con la misma simetría pentagonal del icosaedro, un escalón de dimensión más arriba. Sus 120 vértices no son solo geometría — coinciden exactamente con los 120 elementos del grupo icosaédrico binario, un objeto del álgebra abstracta que vive, sin planearlo, dentro de esta forma.',
+    example:
+      'La misma matemática que describe este politopo aparece en el modelado de cuasicristales — materiales reales, descubiertos en los años 80, cuyo orden atómico nunca se repite periódicamente pero tampoco es aleatorio: estructura perfecta sin simetría de traslación, como el 600-celdas proyectado en 3 dimensiones.',
+    nodeShape: '600cell',
+  },
+  {
+    id: 'hecatonicosacoron',
+    name: 'Hecatonicosacoron',
+    years: 'DIMENSIÓN 4',
+    role: '120-Celdas — El Dual del 600-Celdas',
+    cluster: 'geometria',
+    formula: '{5,3,3} · 600 vértices · 1200 aristas · 720 caras · 120 celdas',
+    formulaLabel: 'Símbolo de Schläfli {5,3,3}',
+    formulaKind: 'equation',
+    summary:
+      'Ciento veinte dodecaedros, ensamblados en 4 dimensiones — el dual exacto del 600-celdas, igual que el dodecaedro y el icosaedro son duales uno del otro un piso más abajo. Es el politopo regular convexo con más celdas de los seis que existen en 4D: el límite superior de complejidad que la geometría regular permite en ese piso del edificio.',
+    example:
+      'No hay forma de construir su modelo físico completo — ni impreso en resina, ni en ningún material: solo se pueden fabricar sus sombras, sus cortes, sus proyecciones a 3D. Lo que se exhibe en un museo de matemáticas como "el 120-celdas" es siempre una sombra, nunca el objeto. (El nodo de abajo se muestra como un dodecaedro — un eco de su dual, no un render literal de sus 600 vértices.)',
+    nodeShape: 'dodecahedron',
+  },
+  {
+    id: 'mas_alla_4d',
+    name: 'Más Allá de la 4ª Dimensión',
+    years: 'DIMENSIÓN 5+',
+    role: 'El Colapso de la Variedad',
+    cluster: 'geometria',
+    formula: 'A partir de la dimensión 5: solo 3 politopos regulares, siempre',
+    formulaLabel: 'Simplex, hipercubo, ortoplex — las únicas tres familias',
+    formulaKind: 'concept',
+    summary:
+      'En 3D hay cinco Sólidos Platónicos. En 4D, inexplicablemente, hay seis — un pico único de abundancia en toda la escalera de dimensiones. Y después, para siempre, solo quedan tres: el simplex, el hipercubo y el ortoplex, repitiéndose sin variación en la dimensión 5, la 6, la 100, la que sea. La riqueza geométrica no crece con la dimensión — tiene un máximo exacto, y ya pasó.',
+    example:
+      'Los modelos de aprendizaje automático trabajan todo el tiempo en espacios de cientos o miles de dimensiones (vectores de embeddings) — y ahí la intuición geométrica se rompe por completo: casi todo el volumen de una esfera de alta dimensión queda pegado a su cáscara, no en el centro. Es la misma variedad colapsada del 600-celdas en adelante, llevada a un extremo que ya no se puede visualizar, solo calcular.',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,
@@ -650,4 +867,25 @@ export const edges: [string, string][] = [
   ['zuboff', 'baudrillard'],
   ['haraway', 'vonneumann'],
   ['haraway', 'baudrillard'],
+
+  // geometría — cadena dimensional (punto → ... → politopos 4D → cierre)
+  ['punto', 'linea'],
+  ['linea', 'poligono'],
+  ['poligono', 'tetraedro'],
+  ['tetraedro', 'cubo'],
+  ['cubo', 'octaedro'],
+  ['octaedro', 'dodecaedro'],
+  ['dodecaedro', 'icosaedro'],
+  ['icosaedro', 'teseracto'],
+  ['teseracto', 'veinticuatrocelda'],
+  ['veinticuatrocelda', 'hexacosichoron'],
+  ['hexacosichoron', 'hecatonicosacoron'],
+  ['hecatonicosacoron', 'mas_alla_4d'],
+
+  // geometría — cruces hacia ideas ya presentes en la red
+  ['mandelbrot', 'mas_alla_4d'],
+  ['baudrillard', 'teseracto'],
+  ['vonneumann', 'cubo'],
+  ['haraway', 'icosaedro'],
+  ['chaitin', 'mas_alla_4d'],
 ]
