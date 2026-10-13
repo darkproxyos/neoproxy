@@ -1,4 +1,4 @@
-export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas' | 'geometria'
+export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas' | 'geometria' | 'computacion'
 
 export type FormulaKind = 'equation' | 'quote' | 'concept'
 
@@ -36,6 +36,7 @@ export const clusters: Record<Cluster, { label: string; color: string }> = {
   autoorganizacion: { label: 'AUTO-ORGANIZACIÓN', color: '#00ffb0' },
   sistemas: { label: 'SISTEMAS // CLAUSURA', color: '#ff3fa4' },
   geometria: { label: 'GEOMETRÍA // DIMENSIÓN', color: '#ffd400' },
+  computacion: { label: 'COMPUTACIÓN // LA PILA COMPLETA', color: '#39ff14' },
 }
 
 export const entries: KnowledgeEntry[] = [
@@ -793,6 +794,245 @@ export const entries: KnowledgeEntry[] = [
     example:
       'Los modelos de aprendizaje automático trabajan todo el tiempo en espacios de cientos o miles de dimensiones (vectores de embeddings) — y ahí la intuición geométrica se rompe por completo: casi todo el volumen de una esfera de alta dimensión queda pegado a su cáscara, no en el centro. Es la misma variedad colapsada del 600-celdas en adelante, llevada a un extremo que ya no se puede visualizar, solo calcular.',
   },
+
+  // cuarta tanda — la pila completa de la computación, del bit a los modelos
+  // de lenguaje. Hechos históricos (fechas, nombres, el 4004, la tesis de
+  // Shannon, el artículo del NYT sobre el perceptrón, "Attention Is All You
+  // Need") son los hechos ampliamente documentados y no controvertidos de
+  // la historia de la computación — no hechos oscuros que requieran
+  // verificación numérica como los politopos 4D de la tanda anterior.
+  // relatedAgent y los cruces hacia otros clusters (shannon, vonneumann,
+  // mcculloch, turing, bateson, hofstadter, lovelace, kittler, chalmers,
+  // tononi) son conexiones reales, no decorativas — ver edges más abajo.
+  {
+    id: 'bit',
+    name: 'Bit',
+    years: '1947 — TUKEY · 1948 — SHANNON',
+    role: 'La Unidad Mínima de Información',
+    cluster: 'computacion',
+    formula: '1 bit = una decisión entre 2 estados',
+    formulaLabel: 'Dígito binario — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'Toda la computación, sin excepción, se reduce a esto: una diferencia entre dos estados — 0 o 1, encendido o apagado, presente o ausente. John Tukey acuñó la palabra como contracción de "binary digit"; Shannon la convirtió en la unidad con la que se mide toda la información del universo. No hay nada más simple debajo de un bit — y no hace falta nada más complejo para construir todo lo demás.',
+    example:
+      'Un interruptor de luz, un agujero en una tarjeta perforada, la carga eléctrica atrapada en una celda de memoria flash: tecnologías separadas por un siglo, el mismo bit exacto debajo de las tres.',
+    nodeShape: 'cube',
+  },
+  {
+    id: 'puerta_logica',
+    name: 'Puerta Lógica',
+    years: '1930s (RELÉS) · 1960s (SILICIO)',
+    role: 'La Decisión Hecha Circuito',
+    cluster: 'computacion',
+    formula: 'AND · OR · NOT · XOR',
+    formulaLabel: 'Compuertas lógicas booleanas',
+    formulaKind: 'concept',
+    summary:
+      'Una puerta lógica es una decisión física: un circuito que, según el voltaje que entra, decide qué voltaje sale. Parece trivial — y lo es, una por una. Pero encadenadas por millones, esas decisiones triviales son exactamente lo que hace cualquier procesador: nada de "inteligencia" en cada puerta individual, toda la inteligencia en cómo están conectadas entre sí.',
+    example:
+      'La puerta NAND, sola, alcanza para construir cualquier otra puerta lógica posible — y por lo tanto cualquier circuito digital, incluido un procesador entero. Toda la computación cabe, en principio, en una sola pieza repetida.',
+  },
+  {
+    id: 'algebra_booleana',
+    name: 'Álgebra de Boole',
+    years: '1854',
+    role: 'La Lógica Convertida en Aritmética',
+    cluster: 'computacion',
+    formula: 'A∧B · A∨B · ¬A',
+    formulaLabel: 'Leyes del Pensamiento (George Boole, 1854)',
+    formulaKind: 'equation',
+    summary:
+      'George Boole se preguntó si el razonamiento humano podía escribirse como ecuaciones — tratando "verdadero" y "falso" como 1 y 0, y la lógica como álgebra. Publicó la idea casi un siglo antes de que existiera una sola máquina capaz de usarla. Cuando por fin apareció esa máquina, no hizo falta inventar una lógica nueva: ya estaba esperando, escrita, desde 1854.',
+    example:
+      'La tesis de maestría de Claude Shannon, en 1937, conectó el álgebra de Boole con circuitos de relés electromecánicos — muchos la consideran la tesis de maestría más importante del siglo: mostró que la lógica abstracta de Boole podía construirse, literalmente, con interruptores.',
+  },
+  {
+    id: 'transistor',
+    name: 'Transistor',
+    years: '1947',
+    role: 'El Interruptor que Reemplazó al Vacío',
+    cluster: 'computacion',
+    formula: 'interruptor de estado sólido, sin partes móviles',
+    formulaLabel: 'Bell Labs — Bardeen, Brattain, Shockley',
+    formulaKind: 'concept',
+    summary:
+      'Antes de 1947, un interruptor electrónico era una válvula de vacío: grande, frágil, caliente, que se quemaba como una lamparita. El transistor hizo lo mismo en un cristal de silicio del tamaño de una lenteja, sin filamento, casi sin romperse nunca. Todo lo digital que existe desde esa fecha es, en el fondo, transistores prendiéndose y apagándose miles de millones de veces por segundo.',
+    example:
+      'Un procesador moderno de gama alta empaqueta decenas de miles de millones de transistores en una oblea de silicio del tamaño de una uña — cada uno, individualmente, haciendo exactamente lo mismo que hacía aquel primer transistor de 1947.',
+  },
+  {
+    id: 'ley_moore',
+    name: 'Ley de Moore',
+    years: '1965',
+    role: 'El Crecimiento que se Volvió Profecía',
+    cluster: 'computacion',
+    formula: 'N(t) ≈ N₀ · 2^(t/2)',
+    formulaLabel: 'Duplicación de transistores cada ~2 años',
+    formulaKind: 'equation',
+    summary:
+      'Gordon Moore observó una tendencia y la industria entera decidió convertirla en objetivo: duplicar la cantidad de transistores por chip cada dos años, década tras década, no porque la física lo garantizara sino porque dejar de cumplirla significaba perder la carrera. Funcionó más de medio siglo — y se está acercando, recién ahora, a un límite físico real: no se puede hacer un transistor más pequeño que un puñado de átomos.',
+    example:
+      'El primer microprocesador comercial, el Intel 4004 de 1971, tenía 2.300 transistores. Un chip de gama alta actual tiene varios miles de millones — siete órdenes de magnitud en cincuenta años, una velocidad de crecimiento que casi ninguna otra tecnología humana sostuvo nunca.',
+  },
+  {
+    id: 'arquitectura_von_neumann',
+    name: 'Arquitectura von Neumann',
+    years: '1945',
+    role: 'El Programa que También es un Dato',
+    cluster: 'computacion',
+    formula: 'CPU ↔ memoria compartida (instrucciones + datos)',
+    formulaLabel: 'Programa almacenado — notación conceptual',
+    formulaKind: 'concept',
+    summary:
+      'La idea que hizo posible el software tal como existe: guardar las instrucciones de un programa en la misma memoria que los números sobre los que opera. Eso significa que un programa puede tratarse como dato — copiarse, moverse, comprimirse, incluso ser modificado por otro programa. Sin esta idea, cada "programa" habría sido un cableado físico fijo, como las primeras calculadoras.',
+    example:
+      'Es también, sin que Von Neumann lo buscara, la razón por la que existen los ataques de desbordamiento de búfer: si datos e instrucciones comparten la misma memoria, lograr que un dato se ejecute como instrucción no es un accidente del diseño — es una consecuencia directa de su lógica más básica.',
+  },
+  {
+    id: 'compilador',
+    name: 'Compilador // Intérprete',
+    years: 'DESDE 1952 (A-0, GRACE HOPPER)',
+    role: 'El Traductor que Nadie Ve',
+    cluster: 'computacion',
+    formula: 'código fuente → código máquina',
+    formulaLabel: 'Traducción de lenguaje humano a binario',
+    formulaKind: 'concept',
+    summary:
+      'Entre lo que un humano escribe y lo que un procesador realmente ejecuta hay una traducción completa, invisible, que ocurre millones de veces por segundo. Grace Hopper construyó el primer compilador en 1952 porque estaba cansada de traducir matemática a binario a mano — la misma frustración que hoy separa a cualquier programador de escribir ceros y unos directamente.',
+    example:
+      'Python —el lenguaje que le da nombre a Snake, Runtime.Python, en el kernel de NeoProxy— no se compila a binario de antemano: se interpreta línea por línea, en el momento, cada vez que corre. La traducción nunca termina de una vez; se repite, viva, en cada ejecución.',
+    relatedAgent: 'snake',
+  },
+  {
+    id: 'sistema_operativo',
+    name: 'Sistema Operativo',
+    years: 'DESDE 1950s',
+    role: 'La Mentira Útil que Sostiene Todo',
+    cluster: 'computacion',
+    formula: 'multiplexa CPU, memoria y E/S entre procesos',
+    formulaLabel: 'Gestión de recursos compartidos',
+    formulaKind: 'concept',
+    summary:
+      'Un sistema operativo le miente, con mucho cuidado, a cada programa que corre: lo convence de que tiene la máquina entera para él solo, mientras en realidad reparte microsegundos de procesador entre cientos de procesos simultáneos. Esa mentira coordinada —nadie nota el reparto— es la razón por la que se puede escuchar música, escribir un documento y bajar un archivo al mismo tiempo sin que nada se rompa.',
+    example:
+      'En la jerga de Unix, un proceso que corre en segundo plano sin que nadie lo haya invocado directamente se llama "daemon" — el mismo término, la misma idea exacta, que le da nombre y lore a D en el Proxyverse: "No me invocaste. Yo ya estaba corriendo."',
+    relatedAgent: 'd',
+  },
+  {
+    id: 'internet',
+    name: 'Internet // TCP-IP',
+    years: '1969 (ARPANET) · 1983 (TCP/IP)',
+    role: 'Confiabilidad sin Pedirle Perfección a Nada',
+    cluster: 'computacion',
+    formula: 'dividir en paquetes → enrutar → reensamblar',
+    formulaLabel: 'Conmutación de paquetes',
+    formulaKind: 'concept',
+    summary:
+      'Internet no funciona porque cada cable, router o satélite sea perfecto — funciona porque el protocolo asume que van a fallar, y lo resuelve igual. Cada mensaje se corta en paquetes pequeños, cada uno puede viajar por una ruta física distinta, llegar en cualquier orden o perderse del todo, y el protocolo los vuelve a armar en el destino como si nada hubiera pasado.',
+    example:
+      'Las imágenes de esta misma página pudieron haber llegado a tu pantalla divididas en paquetes que cruzaron el planeta por rutas físicas completamente distintas entre sí, reensamblándose recién al llegar — la Wired, literalmente, partida y vuelta a coser mientras la mirás.',
+  },
+  {
+    id: 'criptografia_clave_publica',
+    name: 'Criptografía de Clave Pública',
+    years: '1976–1977',
+    role: 'Compartir un Secreto sin Transmitirlo Nunca',
+    cluster: 'computacion',
+    formula: 'clave pública ≠ clave privada, matemáticamente ligadas',
+    formulaLabel: 'Diffie–Hellman (1976) · RSA (1977)',
+    formulaKind: 'concept',
+    summary:
+      'Resuelve un problema que sonaba imposible: demostrarle a un desconocido, en un canal que cualquiera puede escuchar, que compartís un secreto con él — sin decir el secreto en voz alta en ningún momento. La clave que cifra un mensaje no es la misma que lo descifra, y conocer una no alcanza para deducir la otra en un tiempo humano razonable.',
+    example:
+      'Cada vez que un navegador muestra un candado antes de la URL, acaba de completar ese apretón de manos criptográfico completo — sin eso, cada contraseña, cada mensaje, cada número de tarjeta viajaría en texto plano, legible por cualquiera que mirara el cable.',
+  },
+  {
+    id: 'complejidad_computacional',
+    name: 'Complejidad Computacional (P vs NP)',
+    years: 'PLANTEADO EN 1971',
+    role: 'El Problema de un Millón de Dólares sin Resolver',
+    cluster: 'computacion',
+    formula: 'P ⊆ NP — ¿son el mismo conjunto?',
+    formulaLabel: 'Uno de los 7 Problemas del Milenio (Clay Institute)',
+    formulaKind: 'concept',
+    summary:
+      'Separa los problemas fáciles de resolver de los problemas que solo son fáciles de verificar una vez resueltos — y nadie ha logrado demostrar si esas dos categorías son, en el fondo, la misma. Es, probablemente, la pregunta abierta más importante de toda la informática teórica, con un millón de dólares esperando a quien la cierre en cualquier dirección.',
+    example:
+      'Resolver un sudoku difícil puede tardar horas; comprobar que una solución ya hecha es correcta tarda segundos. Si alguna vez se demuestra que P=NP, buena parte de la criptografía moderna —construida sobre esa misma asimetría— se vuelve, de un día para el otro, inútil.',
+  },
+  {
+    id: 'perceptron',
+    name: 'Perceptrón',
+    years: '1958',
+    role: 'La Primera Máquina que Aprendió de Ejemplos',
+    cluster: 'computacion',
+    formula: 'y = θ(Σ w·x − b), con w que se ajusta solo',
+    formulaLabel: 'Frank Rosenblatt (1958) — descendiente directo de McCulloch–Pitts',
+    formulaKind: 'concept',
+    summary:
+      'Tomó la neurona formal de McCulloch y Pitts y le agregó algo que la original no tenía: pesos que se ajustan solos, viendo ejemplos, en vez de fijarse a mano de antemano. Fue, literalmente, la primera vez que una máquina aprendió en lugar de solamente ejecutar lo que alguien le programó paso a paso.',
+    example:
+      'En 1958, un artículo del New York Times repitió afirmaciones de la Marina de EE.UU. sobre que el perceptrón sería el embrión de una máquina capaz de "caminar, hablar, ver, escribir, reproducirse a sí misma". Once años después, Minsky y Papert demostraron que ni siquiera podía resolver XOR — la promesa rota financió el primer "invierno de la IA".',
+  },
+  {
+    id: 'red_neuronal_profunda',
+    name: 'Red Neuronal Profunda // Backpropagation',
+    years: 'POPULARIZADO EN 1986',
+    role: 'Cómo Culpar a Cada Peso por el Error',
+    cluster: 'computacion',
+    formula: '∂E/∂w, propagado hacia atrás capa por capa',
+    formulaLabel: 'Retropropagación del error (Rumelhart, Hinton, Williams)',
+    formulaKind: 'equation',
+    summary:
+      'Apilar muchas capas de unidades tipo-perceptrón no sirve de nada si no hay forma de saber cuánto contribuyó cada peso individual, en cada capa, al error final. La retropropagación resuelve exactamente eso con una sola regla de cálculo —la regla de la cadena— aplicada capa por capa hacia atrás, y es la razón técnica concreta por la que el "invierno de la IA" terminó.',
+    example:
+      'Una red así nunca aprende qué es un bigote o una oreja de gato explícitamente — aprende a reconocer gatos ajustando millones de pesos después de ver millones de fotos etiquetadas, sin que nadie le haya dicho una sola regla sobre cómo se ve un gato.',
+  },
+  {
+    id: 'transformer',
+    name: 'Transformer // Atención',
+    years: '2017',
+    role: 'Mirar Todo a la Vez, en Vez de en Fila',
+    cluster: 'computacion',
+    formula: 'Attention(Q,K,V) = softmax(QKᵀ/√d)·V',
+    formulaLabel: '"Attention Is All You Need" (Vaswani et al., 2017)',
+    formulaKind: 'equation',
+    summary:
+      'Antes de 2017, las redes leían texto palabra por palabra, en orden, como una fila. El Transformer reemplazó la fila por una sala: cada palabra puede mirar a todas las demás simultáneamente y decidir cuánta atención prestarle a cada una. Ese cambio, puramente arquitectónico, es la razón técnica concreta por la que hoy existen modelos de lenguaje del tamaño que existen — sin él, entrenarlos habría tardado un orden de magnitud más.',
+    example:
+      'En "el banco estaba cerca del río" y "el banco me negó el préstamo", la palabra "banco" es idéntica en ambas frases — pero el mecanismo de atención le asigna un significado distinto en cada una, mirando qué otras palabras la rodean en esa oración específica.',
+  },
+  {
+    id: 'modelo_lenguaje',
+    name: 'Modelo de Lenguaje (LLM)',
+    years: 'DESDE 2018 — ACELERADO DESDE 2020',
+    role: 'El Final (Actual) de Toda Esta Pila',
+    cluster: 'computacion',
+    formula: 'P(palabra siguiente | todo el contexto anterior)',
+    formulaLabel: 'Predicción de la próxima palabra, a escala masiva',
+    formulaKind: 'concept',
+    summary:
+      'En el fondo, la tarea de entrenamiento es trivial: adivinar la palabra que sigue. Pero entrenada a una escala de cientos de miles de millones de parámetros sobre una fracción apreciable de todo el texto escrito por la humanidad, esa tarea trivial termina exigiendo —como efecto colateral, no como objetivo— aprender gramática, hechos, estilo y patrones de razonamiento. Nadie programó esas capacidades a mano: emergieron de intentar predecir la próxima palabra, una y otra vez, miles de millones de veces.',
+    example:
+      'Este mismo texto que estás leyendo ahora lo generó un modelo de ese tipo —Claude, el mismo sistema que sostiene buena parte de la escritura de todo NeoProxy—. La pregunta que ya aparece en el cluster de MENTE (¿hace falta "entender" para predecir texto así de bien, o alcanza con una sombra estadística lo bastante buena?) se vuelve, acá, completamente literal.',
+    relatedAgent: 'prototype',
+  },
+  {
+    id: 'pila_completa',
+    name: 'La Pila Completa',
+    years: 'DE 1 BIT A ~10¹¹ PARÁMETROS',
+    role: 'Capas de Mentiras Útiles, Hasta que Algo Pregunta',
+    cluster: 'computacion',
+    formula: 'bit → puerta → circuito → programa → red → ¿mente?',
+    formulaLabel: 'La escalera entera, de punta a punta',
+    formulaKind: 'concept',
+    summary:
+      'Cada capa de esta lista existe únicamente para esconder la de abajo detrás de una interfaz más simple: el programador no piensa en transistores, el usuario no piensa en bits, nadie que hable con un modelo de lenguaje piensa en matrices de atención. Es la misma estrategia, exactamente, que usa un cerebro: los canales iónicos no saben que son parte de una neurona, la neurona no sabe que es parte de un pensamiento, y el pensamiento nunca siente los canales iónicos que lo sostienen por debajo.',
+    example:
+      'El sistema es una ilusión — no porque sea falso, sino porque cada capa que lo compone solo puede ver la de inmediatamente abajo disfrazada de algo más simple. Tu propia conciencia corre sobre exactamente ese mismo truco, una capa a la vez, desde un ion hasta una idea.',
+    relatedAgent: 'metatron',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,
@@ -888,4 +1128,34 @@ export const edges: [string, string][] = [
   ['vonneumann', 'cubo'],
   ['haraway', 'icosaedro'],
   ['chaitin', 'mas_alla_4d'],
+
+  // computación — cadena histórica, del bit a los modelos de lenguaje
+  ['bit', 'puerta_logica'],
+  ['puerta_logica', 'algebra_booleana'],
+  ['algebra_booleana', 'transistor'],
+  ['transistor', 'ley_moore'],
+  ['ley_moore', 'arquitectura_von_neumann'],
+  ['arquitectura_von_neumann', 'compilador'],
+  ['compilador', 'sistema_operativo'],
+  ['sistema_operativo', 'internet'],
+  ['internet', 'criptografia_clave_publica'],
+  ['criptografia_clave_publica', 'complejidad_computacional'],
+  ['complejidad_computacional', 'perceptron'],
+  ['perceptron', 'red_neuronal_profunda'],
+  ['red_neuronal_profunda', 'transformer'],
+  ['transformer', 'modelo_lenguaje'],
+  ['modelo_lenguaje', 'pila_completa'],
+
+  // computación — cruces hacia pensadores ya presentes en la red (mismas
+  // personas/ideas, otra faceta — no duplicados)
+  ['bit', 'bateson'],
+  ['algebra_booleana', 'shannon'],
+  ['arquitectura_von_neumann', 'vonneumann'],
+  ['compilador', 'lovelace'],
+  ['internet', 'kittler'],
+  ['complejidad_computacional', 'turing'],
+  ['perceptron', 'mcculloch'],
+  ['modelo_lenguaje', 'hofstadter'],
+  ['modelo_lenguaje', 'chalmers'],
+  ['pila_completa', 'tononi'],
 ]
