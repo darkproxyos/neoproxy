@@ -7,6 +7,11 @@ const VIOLET = '#b400ff'
 // fuera de ese closure — components/proxyverse/agents.ts también usa
 // '#ffb800' para Metatron, así que no es un tono nuevo inventado acá).
 const METATRON_GOLD_HUD = '#ffb800'
+// Única fuente de verdad para el máximo de vidas — el closure de Babylon
+// (PLAYER_MAX_LIVES, usado por damagePlayer) y el HUD/Game Over del JSX
+// (fuera de ese closure) lo leen de acá, en vez de cada uno declarar su
+// propio "6" por separado y arriesgarse a que diverjan si se ajusta el balance.
+const PLAYER_MAX_LIVES_HUD = 6
 
 // Normaliza un ángulo al rango (-PI, PI] para interpolar por el camino corto.
 function wrapAngle(a: number) {
@@ -502,7 +507,7 @@ export default function TricksterGame() {
       // un breve delay — igual que antes, salvo que ahora las vidas no son
       // infinitas: al perder la última es Game Over (ver loop principal).
       const PLAYER_MAX_HP = 100
-      const PLAYER_MAX_LIVES = 6
+      const PLAYER_MAX_LIVES = PLAYER_MAX_LIVES_HUD
       let playerHP = PLAYER_MAX_HP
       let livesRemaining = PLAYER_MAX_LIVES
       let playerDefeated = false
@@ -930,24 +935,21 @@ export default function TricksterGame() {
                   g.mesh.scaling.set(GENNOS_SCALE, GENNOS_SCALE, GENNOS_SCALE)
                   g.runAnim?.start(true)
                 }
-              } else if (g.attackCooldown > 0) {
-                g.attackCooldown -= dt
-                if (gdist > GENNOS_STOP_DIST) {
-                  const gnx = gdx / gdist, gnz = gdz / gdist
-                  g.mesh.position.x += gnx * GENNOS_SPEED * dt
-                  g.mesh.position.z += gnz * GENNOS_SPEED * dt
-                  const gTarget = Math.atan2(gnx, gnz)
-                  g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
-                }
-              } else if (gdist <= GENNOS_ATTACK_RANGE && !playerDefeated) {
-                g.attacking = true
-                g.attackTimer = 0
-                g.attackHit = false
-                g.runAnim?.stop()
-                const gTarget = Math.atan2(gdx, gdz)
-                g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
               } else {
-                if (gdist > GENNOS_STOP_DIST) {
+                // No atacando: baja el cooldown si lo hay, y si ya terminó Y
+                // está en rango, dispara el ataque — si no, persigue. Antes
+                // esto eran 3 ramas con el mismo bloque de "perseguir"
+                // copiado dos veces (cooldown>0 y el else final) — un solo
+                // bloque de movimiento cubre ambos casos.
+                if (g.attackCooldown > 0) g.attackCooldown -= dt
+                if (g.attackCooldown <= 0 && gdist <= GENNOS_ATTACK_RANGE && !playerDefeated) {
+                  g.attacking = true
+                  g.attackTimer = 0
+                  g.attackHit = false
+                  g.runAnim?.stop()
+                  const gTarget = Math.atan2(gdx, gdz)
+                  g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
+                } else if (gdist > GENNOS_STOP_DIST) {
                   const gnx = gdx / gdist, gnz = gdz / gdist
                   g.mesh.position.x += gnx * GENNOS_SPEED * dt
                   g.mesh.position.z += gnz * GENNOS_SPEED * dt
@@ -1038,6 +1040,11 @@ export default function TricksterGame() {
             if (b.deathTimer >= 90 && !victory) {
               victory = true
               setVictoryUI(true)
+              // light nunca se parentó a root (a diferencia de core/ring1-3),
+              // así que root.dispose() no se la lleva puesta — sin esto queda
+              // viva en scene.lights para siempre, igual que ya se cuida de
+              // no dejar pasar con Gennos y drones (ver sus removeciones más abajo).
+              b.light.dispose()
               b.root.dispose()
             }
           } else {
@@ -1400,7 +1407,7 @@ export default function TricksterGame() {
             />
           </div>
           <div style={{ display: 'flex', gap: 3 }}>
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: PLAYER_MAX_LIVES_HUD }).map((_, i) => (
               <div key={i} style={{
                 width: 14, height: 14, transform: 'rotate(45deg)',
                 background: i < hudLives ? VIOLET : 'transparent',
@@ -1469,7 +1476,7 @@ export default function TricksterGame() {
             GAME OVER
           </div>
           <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: 28 }}>
-            Las 6 vidas se agotaron en el nivel {hudLevel}. El campo de prueba reinicia desde cero.
+            Las {PLAYER_MAX_LIVES_HUD} vidas se agotaron en el nivel {hudLevel}. El campo de prueba reinicia desde cero.
           </p>
           <button
             onClick={() => window.location.reload()}
