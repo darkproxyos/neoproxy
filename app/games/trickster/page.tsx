@@ -2,6 +2,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { TouchActionButton, TouchJoystick, useIsTouchDevice } from '@/components/games/TouchControls'
 const VIOLET = '#b400ff'
+// Mismo dorado que METATRON_GOLD adentro del efecto (duplicado a propósito:
+// ese vive en el closure de Babylon, este lo necesita el JSX del HUD/overlays
+// fuera de ese closure — components/proxyverse/agents.ts también usa
+// '#ffb800' para Metatron, así que no es un tono nuevo inventado acá).
+const METATRON_GOLD_HUD = '#ffb800'
 
 // Normaliza un ángulo al rango (-PI, PI] para interpolar por el camino corto.
 function wrapAngle(a: number) {
@@ -16,9 +21,20 @@ export default function TricksterGame() {
   const joyRef = useRef({ x: 0, y: 0 })
   const reticleRef = useRef<HTMLDivElement>(null)
   const playerHpRef = useRef<HTMLDivElement>(null)
+  const bossHpRef = useRef<HTMLDivElement>(null)
   const isTouch = useIsTouchDevice()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  // Niveles, vidas y jefe — estado de React solo para lo que de verdad hay
+  // que repintar (cambia pocas veces por partida); todo lo que se mueve
+  // cuadro a cuadro sigue viviendo en variables del closure de abajo y
+  // refs directos, mismo patrón que playerHpRef/reticleRef.
+  const [hudLevel, setHudLevel] = useState(1)
+  const [hudLives, setHudLives] = useState(6)
+  const [levelBanner, setLevelBanner] = useState<string | null>(null)
+  const [bossActive, setBossActive] = useState(false)
+  const [gameOverUI, setGameOverUI] = useState(false)
+  const [victoryUI, setVictoryUI] = useState(false)
   // Lore antes de entrar — no bloquea la carga del modelo (sigue en el
   // fondo mientras se lee), solo tapa el canvas hasta que el jugador
   // confirma que quiere entrar al campo de prueba.
@@ -219,7 +235,9 @@ export default function TricksterGame() {
         g.hp = Math.max(0, g.hp - amount)
         if (g.hp <= 0) {
           g.defeated = true
-          g.respawnTimer = 0
+          g.deathTimer = 0
+          g.attacking = false
+          g.mesh.scaling.set(GENNOS_SCALE, GENNOS_SCALE, GENNOS_SCALE)
           g.runAnim?.stop()
         }
       }
@@ -310,27 +328,33 @@ export default function TricksterGame() {
       // Gennos (versión enemigo) — esqueleto Mixamo propio (rigeado en
       // Mixamo a partir de la malla original, mismo mixamorig: que
       // Trickster, pero rig independiente ya que es una malla distinta) con
-      // la animación "Run" ya incluida en el archivo. El bounding box
-      // nativo mide ~1.1 de alto (no viene a escala 1:1 con Trickster, que
-      // ronda 1.8), así que se reescala a mano. Luz de acento roja para
-      // distinguirlo del violeta del resto de la escena — "corrupción" en
-      // este proyecto es rojo (ver /status), no un tono nuevo inventado acá.
-      //
-      // Oleadas: empieza habiendo 1 Gennos. Cada vez que una unidad completa
-      // su respawn individual (ver más abajo), se suma una unidad nueva a
-      // la lista y sube gennosWaveSize — matar uno lleva, de a poco, a 2,
-      // después 3, y así. Cada unidad se carga recargando el mismo GLB (en
-      // vez de clonar esqueleto+animación a mano, delicado de hacer bien en
-      // Babylon) — el navegador ya lo tiene en caché tras la primera carga.
+      // la animación "Run" ya incluida en el archivo — y SOLO esa (verificado
+      // con gltf-transform inspect: un solo AnimationGroup, "mixamo.com", 1s
+      // de duración). No hay clip de ataque en el asset, así que el ataque
+      // de Gennos de más abajo es procedural (escala + lunge de posición),
+      // no una animación nueva. El bounding box nativo mide ~1.1 de alto (no
+      // viene a escala 1:1 con Trickster, que ronda 1.8), así que se
+      // reescala a mano. Luz de acento roja para distinguirlo del violeta
+      // del resto de la escena — "corrupción" en este proyecto es rojo (ver
+      // /status), no un tono nuevo inventado acá.
       type GennosUnit = {
         mesh: any; runAnim: any; light: any
-        facing: number; hp: number; defeated: boolean; respawnTimer: number
+        facing: number; hp: number; defeated: boolean; deathTimer: number
         hpBarBg: any; hpBarFill: any
+        attacking: boolean; attackTimer: number; attackHit: boolean; attackCooldown: number
       }
       const GENNOS_MAX_HP = 100
-      const GENNOS_RESPAWN_DELAY = 240 // dt-units, ~4s a 60fps
+      const GENNOS_SCALE = 1.63
+      const GENNOS_DEATH_REMOVE_DELAY = 70 // dt-units, ~1.2s — se queda caído y desaparece (ya no respawnea solo)
+      const GENNOS_ATTACK_RANGE = 1.6 // mismo radio que GENNOS_STOP_DIST más abajo
+      const GENNOS_ATTACK_WINDUP = 26 // anticipación — se encoge un poco antes de pegar
+      const GENNOS_ATTACK_STRIKE = 34 // instante del golpe: lunge + chequeo de daño
+      const GENNOS_ATTACK_DURATION = 55 // vuelve a perseguir después de esto
+      const GENNOS_ATTACK_COOLDOWN = 60 // antes de poder atacar de nuevo
+      const GENNOS_ATTACK_DAMAGE = 10
+      const GENNOS_ATTACK_LUNGE = 0.5 // unidades que avanza de un salto al golpear
       const gennosList: GennosUnit[] = []
-      let gennosWaveSize = 1
+      let pendingGennosSpawns = 0 // cuenta cargas de GLB en vuelo — ver checkLevelProgress
 
       function randomGennosSpawn() {
         const angle = Math.random() * Math.PI * 2
@@ -339,13 +363,15 @@ export default function TricksterGame() {
       }
 
       function spawnGennosUnit(spawnX: number, spawnZ: number) {
+        pendingGennosSpawns++
         B.SceneLoader.ImportMeshAsync('', '/models/trickster/', 'gennos-enemy.glb', scene)
           .then((res) => {
+            pendingGennosSpawns--
             if (disposed) return
             const mesh = res.meshes[0]
             mesh.rotationQuaternion = null
             mesh.position.set(spawnX, 0, spawnZ)
-            mesh.scaling = new B.Vector3(1.63, 1.63, 1.63)
+            mesh.scaling = new B.Vector3(GENNOS_SCALE, GENNOS_SCALE, GENNOS_SCALE)
             const light = new B.PointLight('gennosLight', new B.Vector3(spawnX, 1.4, spawnZ), scene)
             light.diffuse = B.Color3.FromHexString('#ff2b2b')
             light.intensity = 0.9
@@ -379,14 +405,12 @@ export default function TricksterGame() {
             hpBarFill.material = hpFillMat
 
             gennosList.push({
-              mesh, runAnim, light, facing: 0, hp: GENNOS_MAX_HP, defeated: false, respawnTimer: 0,
-              hpBarBg, hpBarFill,
+              mesh, runAnim, light, facing: 0, hp: GENNOS_MAX_HP, defeated: false, deathTimer: 0,
+              hpBarBg, hpBarFill, attacking: false, attackTimer: 0, attackHit: false, attackCooldown: 0,
             })
           })
-          .catch(() => { /* enemigo opcional — si falla, el campo de prueba sigue sin esta unidad */ })
+          .catch(() => { pendingGennosSpawns--; /* enemigo opcional — si falla, el campo de prueba sigue sin esta unidad */ })
       }
-
-      spawnGennosUnit(14, -12) // posición inicial, igual que la única unidad de antes
 
       // Drones — enemigos voladores, geometría simple generada (sin asset
       // propio todavía): cuerpo achatado + anillo que gira para dar
@@ -394,19 +418,20 @@ export default function TricksterGame() {
       // "corrupción" que ya usa Gennos). Vuelan hacia Trickster, se
       // detienen a DRONE_STOP_DIST y disparan proyectiles — el jugador
       // puede destruirlos con cualquiera de sus tres ataques (patada,
-      // poder, magia); mueren y reaparecen en otro punto del perímetro
-      // tras un delay, mismo patrón que Gennos.
+      // poder, magia). Solo aparecen en el nivel 3 (ver LEVEL_CONFIGS) y,
+      // a diferencia de la versión anterior, no reaparecen solos: una vez
+      // derrotados se desvanecen y quedan afuera para siempre — forman
+      // parte del conteo de enemigos que hay que limpiar para pasar de nivel.
       type Drone = {
         mesh: any; ring: any; light: any
         hp: number; defeated: boolean; defeatedTimer: number; fireTimer: number
       }
-      const DRONE_COUNT = 3
       const DRONE_HEIGHT = 2.6
       const DRONE_SPEED = 0.045
       const DRONE_STOP_DIST = 6
       const DRONE_FIRE_INTERVAL = 100 // dt-units, ~1.7s a 60fps
       const DRONE_HP_MAX = 40
-      const DRONE_RESPAWN_DELAY = 200 // dt-units, ~3.3s
+      const DRONE_DEATH_REMOVE_DELAY = 70 // dt-units, ~1.2s — tiempo de desvanecerse antes de sacarlo de la lista
       const DRONE_PROJECTILE_SPEED = 1.3
       const DRONE_PROJECTILE_DAMAGE = 8
       const DRONE_HIT_RADIUS = 0.9
@@ -439,8 +464,7 @@ export default function TricksterGame() {
         return { mesh, ring, light, hp: DRONE_HP_MAX, defeated: false, defeatedTimer: 0, fireTimer: Math.random() * DRONE_FIRE_INTERVAL }
       }
 
-      const drones: Drone[] = []
-      for (let i = 0; i < DRONE_COUNT; i++) drones.push(createDrone())
+      const drones: Drone[] = [] // se llena desde spawnLevelContent cuando arranca el nivel 3
 
       const droneBullets: Array<{ mesh: any; dirX: number; dirY: number; dirZ: number; life: number }> = []
       const DRONE_BULLET_LIFE = 90
@@ -473,22 +497,33 @@ export default function TricksterGame() {
 
       // Vida del jugador — HUD 2D fijo en pantalla (no billboard 3D como
       // Gennos: es el propio jugador, no tiene sentido una barra flotando
-      // sobre su cabeza que él mismo no vería). "Derrota" acá es un
-      // respawn en el origen con vida llena tras un breve delay, igual de
-      // simple que el de Gennos.
+      // sobre su cabeza que él mismo no vería). Llegar a 0 de vida consume
+      // una de las PLAYER_MAX_LIVES vidas y respawnea con vida llena tras
+      // un breve delay — igual que antes, salvo que ahora las vidas no son
+      // infinitas: al perder la última es Game Over (ver loop principal).
       const PLAYER_MAX_HP = 100
+      const PLAYER_MAX_LIVES = 6
       let playerHP = PLAYER_MAX_HP
+      let livesRemaining = PLAYER_MAX_LIVES
       let playerDefeated = false
       let playerRespawnTimer = 0
+      let gameOver = false
+      let victory = false
       const PLAYER_RESPAWN_DELAY = 180 // dt-units, ~3s
       const PLAYER_HIT_RADIUS = 1.0
 
       function damagePlayer(amount: number) {
-        if (playerDefeated) return
+        if (playerDefeated || gameOver || victory) return
         playerHP = Math.max(0, playerHP - amount)
         if (playerHP <= 0) {
           playerDefeated = true
           playerRespawnTimer = 0
+          livesRemaining = Math.max(0, livesRemaining - 1)
+          setHudLives(livesRemaining)
+          if (livesRemaining <= 0) {
+            gameOver = true
+            setGameOverUI(true)
+          }
         }
       }
 
@@ -526,6 +561,150 @@ export default function TricksterGame() {
 
       spawnHealthPickup() // uno disponible desde el arranque, el resto los trae el timer
 
+      // Jefe final (nivel 4) — Metatron. No hay asset 3D propio para él en
+      // este repo (el arte canónico en public/canon/metatron-v1.jpg es solo
+      // una imagen 2D de referencia, sin rig), así que el jefe es geometría
+      // generada acorde al lore: un núcleo dorado (#ffb800, su color de
+      // Proxyverse) rodeado de 3 anillos en planos distintos — el "Cubo de
+      // Metatron" hecho literal, mismo lenguaje visual que ya usa el anillo
+      // del ataque de área del jugador (CreateTorus + emissive), no un
+      // sistema nuevo. No persigue ni pelea cuerpo a cuerpo (coherente con
+      // "Yo no tomo decisiones... soy la gramática antes que la frase" — un
+      // orquestador no brawlea): flota en un punto fijo, y cada tanto
+      // telegrafía (los anillos se agrandan y brillan) antes de soltar una
+      // onda de daño en área alrededor suyo.
+      type Boss = {
+        root: any; core: any; ring1: any; ring2: any; ring3: any; light: any
+        hp: number; defeated: boolean; deathTimer: number
+        attackTimer: number; attacking: boolean; attackHit: boolean
+      }
+      const BOSS_MAX_HP = 2200
+      const BOSS_HEIGHT = 2.4
+      const BOSS_SPAWN = { x: 0, z: -15 }
+      const BOSS_ATTACK_INTERVAL = 230 // dt-units, ~3.8s entre estallidos cuando no está atacando
+      const BOSS_ATTACK_WINDUP = 70 // telegrafiado — tiempo para que el jugador se aleje
+      const BOSS_ATTACK_RANGE = 6.5
+      const BOSS_ATTACK_DAMAGE = 22
+      const METATRON_GOLD = '#ffb800'
+      let boss: Boss | null = null
+
+      function spawnBoss() {
+        const root = new B.TransformNode('bossRoot', scene)
+        root.position.set(BOSS_SPAWN.x, baseY + BOSS_HEIGHT, BOSS_SPAWN.z)
+
+        const core = B.MeshBuilder.CreatePolyhedron('bossCore', { type: 3, size: 0.85 }, scene) // icosaedro
+        core.parent = root
+        const coreMat = new B.StandardMaterial('bossCoreMat', scene)
+        coreMat.emissiveColor = B.Color3.FromHexString(METATRON_GOLD)
+        coreMat.disableLighting = true
+        core.material = coreMat
+
+        const ringMat = new B.StandardMaterial('bossRingMat', scene)
+        ringMat.emissiveColor = B.Color3.FromHexString(METATRON_GOLD).scale(0.75)
+        ringMat.disableLighting = true
+        const ring1 = B.MeshBuilder.CreateTorus('bossRing1', { diameter: 2.6, thickness: 0.06, tessellation: 48 }, scene)
+        ring1.parent = root; ring1.material = ringMat
+        const ring2 = B.MeshBuilder.CreateTorus('bossRing2', { diameter: 2.6, thickness: 0.06, tessellation: 48 }, scene)
+        ring2.parent = root; ring2.rotation.x = Math.PI / 2.3; ring2.material = ringMat
+        const ring3 = B.MeshBuilder.CreateTorus('bossRing3', { diameter: 2.6, thickness: 0.06, tessellation: 48 }, scene)
+        ring3.parent = root; ring3.rotation.z = Math.PI / 2.6; ring3.material = ringMat
+
+        const light = new B.PointLight('bossLight', root.position.clone(), scene)
+        light.diffuse = B.Color3.FromHexString(METATRON_GOLD)
+        light.intensity = 1.6
+        light.range = 11
+
+        boss = {
+          root, core, ring1, ring2, ring3, light,
+          hp: BOSS_MAX_HP, defeated: false, deathTimer: 0,
+          attackTimer: 0, attacking: false, attackHit: false,
+        }
+      }
+
+      function spawnBossBurst(cx: number, cy: number, cz: number) {
+        const ring = B.MeshBuilder.CreateTorus('bossBurst', { diameter: BOSS_ATTACK_RANGE * 2, thickness: 0.15, tessellation: 48 }, scene)
+        ring.position.set(cx, cy, cz)
+        ring.scaling.set(0.05, 0.05, 0.05)
+        const mat = new B.StandardMaterial('bossBurstMat', scene)
+        mat.emissiveColor = B.Color3.FromHexString(METATRON_GOLD)
+        mat.disableLighting = true
+        mat.alpha = 0.95
+        ring.material = mat
+        const FRAMES = 26
+        B.Animation.CreateAndStartAnimation(
+          'bossBurstScale', ring, 'scaling', 60, FRAMES,
+          new B.Vector3(0.05, 0.05, 0.05), new B.Vector3(1, 1, 1), B.Animation.ANIMATIONLOOPMODE_CONSTANT,
+        )
+        B.Animation.CreateAndStartAnimation(
+          'bossBurstFade', mat, 'alpha', 60, FRAMES,
+          0.95, 0, B.Animation.ANIMATIONLOOPMODE_CONSTANT, undefined, () => ring.dispose(),
+        )
+      }
+
+      function damageBoss(amount: number) {
+        if (!boss || boss.defeated) return
+        boss.hp = Math.max(0, boss.hp - amount)
+        if (boss.hp <= 0) {
+          boss.defeated = true
+          boss.deathTimer = 0
+        }
+      }
+
+      function damageBossInRange(cx: number, cz: number, range: number, amount: number) {
+        if (!boss || boss.defeated) return
+        const bdx = boss.root.position.x - cx
+        const bdz = boss.root.position.z - cz
+        if (Math.hypot(bdx, bdz) <= range) damageBoss(amount)
+      }
+
+      // Niveles — 1: Gennos de a uno (3 en total). 2: 4 Gennos simultáneos.
+      // 3: 6 Gennos + 3 drones simultáneos. 4: Metatron. Pasar de nivel no
+      // depende de un timer: se limpia cuando no queda nada vivo NI en
+      // camino (gennosList/drones vacíos, y ningún spawn de Gennos todavía
+      // cargando — ver pendingGennosSpawns) para los niveles 1-3.
+      const LEVEL_CONFIGS = [
+        { level: 1, gennosTotal: 3, gennosSimultaneous: 1, droneCount: 0 },
+        { level: 2, gennosTotal: 4, gennosSimultaneous: 4, droneCount: 0 },
+        { level: 3, gennosTotal: 6, gennosSimultaneous: 6, droneCount: 3 },
+      ]
+      let currentLevel = 1
+      let levelGennosToSpawn = 0 // para el nivel 1: cuántos Gennos más quedan por aparecer, de a uno
+
+      function showLevelBanner(text: string) {
+        setLevelBanner(text)
+        setTimeout(() => { if (!disposed) setLevelBanner(null) }, 2600)
+      }
+
+      function spawnLevelContent(n: number) {
+        currentLevel = n
+        setHudLevel(Math.min(n, 4))
+        if (n <= 3) {
+          const cfg = LEVEL_CONFIGS[n - 1]
+          levelGennosToSpawn = cfg.gennosTotal - cfg.gennosSimultaneous
+          for (let i = 0; i < cfg.gennosSimultaneous; i++) {
+            const s = randomGennosSpawn()
+            spawnGennosUnit(s.x, s.z)
+          }
+          for (let i = 0; i < cfg.droneCount; i++) drones.push(createDrone())
+          setBossActive(false)
+        } else {
+          spawnBoss()
+          setBossActive(true)
+        }
+      }
+
+      function checkLevelProgress() {
+        if (gameOver || victory || currentLevel > 3) return
+        if (gennosList.length === 0 && levelGennosToSpawn <= 0 && pendingGennosSpawns <= 0 && drones.length === 0) {
+          const next = currentLevel + 1
+          spawnLevelContent(next)
+          showLevelBanner(next <= 3 ? `NIVEL ${next}` : 'JEFE FINAL // METATRON')
+        }
+      }
+
+      showLevelBanner('NIVEL 1')
+      spawnLevelContent(1)
+
       const BOUND = 27
       const SPEED = 0.09
       const TURN_LERP = 0.4
@@ -539,6 +718,15 @@ export default function TricksterGame() {
         // pestaña en segundo plano, dispositivo viejo) no debe traducirse
         // en un salto de posición gigante de un cuadro al otro.
         const dt = Math.min(engine.getDeltaTime() / 16.67, 3)
+
+        // Game Over / Victoria: se congela todo el juego acá (nada de
+        // input, IA, física ni animación corre después de esto) — la
+        // cámara sigue de pie y la escena se sigue renderizando, pero el
+        // mundo queda pausado en el frame exacto en que se definió el
+        // resultado. Reiniciar es recargar la página (ver botón en el JSX):
+        // más simple y seguro que reconstruir a mano cada lista mutable
+        // (bullets, gennosList, drones, boss) sin dejar nada corrupto.
+        if (gameOver || victory) return
 
         // Dirección cruda de la cámara (sin aplanar) para apuntar — se usa
         // tal cual para el poder, así que orbitar la cámara hacia
@@ -650,6 +838,7 @@ export default function TricksterGame() {
             kickHit = true
             damageGennosInRange(posX, posZ, KICK_RANGE, KICK_DAMAGE)
             damageDronesInRange(posX, posZ, KICK_RANGE, KICK_DAMAGE)
+            damageBossInRange(posX, posZ, KICK_RANGE, KICK_DAMAGE)
           }
           if (kickTimer >= KICK_DURATION) {
             kicking = false
@@ -677,49 +866,96 @@ export default function TricksterGame() {
             magicHit = true
             damageGennosInRange(posX, posZ, MAGIC_RANGE, MAGIC_DAMAGE)
             damageDronesInRange(posX, posZ, MAGIC_RANGE, MAGIC_DAMAGE)
+            damageBossInRange(posX, posZ, MAGIC_RANGE, MAGIC_DAMAGE)
             spawnMagicRing(posX, baseY, posZ)
           }
           if (magicTimer >= MAGIC_DURATION) magicking = false
         }
 
-        // Gennos persigue a Trickster — esqueleto y animación Run reales
-        // (ver comentario de arriba), un solo clip en loop constante. Cada
-        // unidad de gennosList se procesa igual, individualmente.
+        // Gennos persigue a Trickster y ataca cuerpo a cuerpo — esqueleto y
+        // animación Run reales (ver comentario de arriba) para perseguir;
+        // el ataque es procedural (sin clip propio en el asset): encogida
+        // de anticipación, lunge + chequeo de daño en el instante del
+        // golpe, y vuelta a la escala normal. Reversa para poder sacar
+        // unidades de gennosList (splice) de forma segura mientras se
+        // itera. Al morir ya NO reaparece sola: se hunde, se saca de la
+        // lista, y eso cuenta para limpiar el nivel (ver checkLevelProgress).
         if (characterRoot) {
-          for (const g of gennosList) {
+          for (let gi = gennosList.length - 1; gi >= 0; gi--) {
+            const g = gennosList[gi]
             if (g.defeated) {
-              // Sin animación de derrota propia: se cae de cara y se hunde
-              // un poco, se queda así un rato y reaparece sola en un punto
-              // nuevo del perímetro con la vida llena. Al completar el
-              // respawn, sube el tamaño de la oleada y se agrega una unidad
-              // nueva — así "matar uno" va llevando a 2, después 3 Gennos.
-              g.respawnTimer += dt
+              g.deathTimer += dt
               g.mesh.rotation.x = Math.min(g.mesh.rotation.x + 0.08 * dt, Math.PI / 2)
               g.mesh.position.y = Math.max(g.mesh.position.y - 0.01 * dt, -0.4)
-              if (g.respawnTimer >= GENNOS_RESPAWN_DELAY) {
-                g.defeated = false
-                g.hp = GENNOS_MAX_HP
-                const spawn = randomGennosSpawn()
-                g.mesh.position.set(spawn.x, 0, spawn.z)
-                g.mesh.rotation.x = 0
-                g.facing = 0
-                g.runAnim?.start(true)
-                g.light.position.set(spawn.x, 1.4, spawn.z)
-                gennosWaveSize++
-                const extra = randomGennosSpawn()
-                spawnGennosUnit(extra.x, extra.z)
+              if (g.deathTimer >= GENNOS_DEATH_REMOVE_DELAY) {
+                g.mesh.dispose(); g.light.dispose(); g.hpBarBg.dispose(); g.hpBarFill.dispose()
+                gennosList.splice(gi, 1)
+                if (levelGennosToSpawn > 0) {
+                  levelGennosToSpawn--
+                  const s = randomGennosSpawn()
+                  spawnGennosUnit(s.x, s.z)
+                }
+                checkLevelProgress()
+                continue
               }
             } else {
               const gdx = posX - g.mesh.position.x
               const gdz = posZ - g.mesh.position.z
               const gdist = Math.hypot(gdx, gdz)
-              if (gdist > GENNOS_STOP_DIST) {
-                const gnx = gdx / gdist, gnz = gdz / gdist
-                g.mesh.position.x += gnx * GENNOS_SPEED * dt
-                g.mesh.position.z += gnz * GENNOS_SPEED * dt
-                const gTarget = Math.atan2(gnx, gnz)
+
+              if (g.attacking) {
+                g.attackTimer += dt
+                const t = g.attackTimer
+                let scaleMul = 1
+                if (t < GENNOS_ATTACK_WINDUP) {
+                  scaleMul = 1 - 0.08 * (t / GENNOS_ATTACK_WINDUP)
+                } else if (t < GENNOS_ATTACK_STRIKE) {
+                  scaleMul = 0.92 + 0.26 * ((t - GENNOS_ATTACK_WINDUP) / Math.max(1, GENNOS_ATTACK_STRIKE - GENNOS_ATTACK_WINDUP))
+                } else {
+                  scaleMul = 1.18 - 0.18 * Math.min(1, (t - GENNOS_ATTACK_STRIKE) / Math.max(1, GENNOS_ATTACK_DURATION - GENNOS_ATTACK_STRIKE))
+                }
+                const s = GENNOS_SCALE * scaleMul
+                g.mesh.scaling.set(s, s, s)
+
+                if (!g.attackHit && t >= GENNOS_ATTACK_STRIKE) {
+                  g.attackHit = true
+                  const adist = gdist || 1
+                  g.mesh.position.x += (gdx / adist) * GENNOS_ATTACK_LUNGE
+                  g.mesh.position.z += (gdz / adist) * GENNOS_ATTACK_LUNGE
+                  if (adist <= GENNOS_ATTACK_RANGE + GENNOS_ATTACK_LUNGE + 0.3) damagePlayer(GENNOS_ATTACK_DAMAGE)
+                }
+                if (t >= GENNOS_ATTACK_DURATION) {
+                  g.attacking = false
+                  g.attackCooldown = GENNOS_ATTACK_COOLDOWN
+                  g.mesh.scaling.set(GENNOS_SCALE, GENNOS_SCALE, GENNOS_SCALE)
+                  g.runAnim?.start(true)
+                }
+              } else if (g.attackCooldown > 0) {
+                g.attackCooldown -= dt
+                if (gdist > GENNOS_STOP_DIST) {
+                  const gnx = gdx / gdist, gnz = gdz / gdist
+                  g.mesh.position.x += gnx * GENNOS_SPEED * dt
+                  g.mesh.position.z += gnz * GENNOS_SPEED * dt
+                  const gTarget = Math.atan2(gnx, gnz)
+                  g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
+                }
+              } else if (gdist <= GENNOS_ATTACK_RANGE && !playerDefeated) {
+                g.attacking = true
+                g.attackTimer = 0
+                g.attackHit = false
+                g.runAnim?.stop()
+                const gTarget = Math.atan2(gdx, gdz)
                 g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
+              } else {
+                if (gdist > GENNOS_STOP_DIST) {
+                  const gnx = gdx / gdist, gnz = gdz / gdist
+                  g.mesh.position.x += gnx * GENNOS_SPEED * dt
+                  g.mesh.position.z += gnz * GENNOS_SPEED * dt
+                  const gTarget = Math.atan2(gnx, gnz)
+                  g.facing += wrapAngle(gTarget - g.facing) * TURN_LERP
+                }
               }
+
               g.mesh.rotation.y = g.facing
               g.light.position.set(g.mesh.position.x, g.mesh.position.y + 1.4, g.mesh.position.z)
             }
@@ -737,25 +973,21 @@ export default function TricksterGame() {
 
         // Drones — vuelan hacia Trickster y se detienen a DRONE_STOP_DIST,
         // desde ahí disparan proyectiles periódicamente. Derrotado: cae,
-        // gira y se desvanece; reaparece en otro punto del perímetro tras
-        // DRONE_RESPAWN_DELAY, mismo patrón que Gennos.
-        for (const d of drones) {
+        // gira y se desvanece, y se saca de la lista para siempre (ya no
+        // reaparece) — cuenta para limpiar el nivel 3, igual que Gennos.
+        // Reversa para poder splice con seguridad mientras se itera.
+        for (let di = drones.length - 1; di >= 0; di--) {
+          const d = drones[di]
           if (d.defeated) {
             d.defeatedTimer += dt
             d.mesh.position.y -= 0.025 * dt
             d.mesh.rotation.z += 0.12 * dt
-            d.mesh.visibility = Math.max(0, 1 - d.defeatedTimer / DRONE_RESPAWN_DELAY)
+            d.mesh.visibility = Math.max(0, 1 - d.defeatedTimer / DRONE_DEATH_REMOVE_DELAY)
             d.ring.visibility = d.mesh.visibility
-            if (d.defeatedTimer >= DRONE_RESPAWN_DELAY) {
-              const spawn = randomDroneSpawn()
-              d.mesh.position.set(spawn.x, baseY + DRONE_HEIGHT, spawn.z)
-              d.mesh.rotation.z = 0
-              d.mesh.visibility = 1
-              d.ring.visibility = 1
-              d.hp = DRONE_HP_MAX
-              d.defeated = false
-              d.defeatedTimer = 0
-              d.fireTimer = Math.random() * DRONE_FIRE_INTERVAL
+            if (d.defeatedTimer >= DRONE_DEATH_REMOVE_DELAY) {
+              d.mesh.dispose(); d.ring.dispose(); d.light.dispose()
+              drones.splice(di, 1)
+              checkLevelProgress()
             }
             continue
           }
@@ -784,6 +1016,67 @@ export default function TricksterGame() {
             dbm.disableLighting = true
             db.material = dbm
             droneBullets.push({ mesh: db, dirX: ddx2 / len, dirY: ddy2 / len, dirZ: ddz2 / len, life: 0 })
+          }
+        }
+
+        // Jefe — flota en su punto fijo (bob vertical + rotación lenta del
+        // núcleo), los 3 anillos giran cada uno a su propia velocidad para
+        // que se note la geometría en 3D, no solo un disco. Ataque:
+        // telegrafiado (los anillos se agrandan y brillan más fuerte
+        // durante BOSS_ATTACK_WINDUP, tiempo de sobra para alejarse) y
+        // después suelta una onda de daño en área — daña al jugador si
+        // sigue dentro de BOSS_ATTACK_RANGE quien no respetó el telegrafiado.
+        if (boss) {
+          const b = boss
+          if (b.defeated) {
+            b.deathTimer += dt
+            b.core.scaling.setAll(Math.max(0, 1 - b.deathTimer / 90))
+            b.ring1.scaling.setAll(1 + b.deathTimer * 0.03)
+            b.ring2.scaling.setAll(1 + b.deathTimer * 0.03)
+            b.ring3.scaling.setAll(1 + b.deathTimer * 0.03)
+            b.light.intensity = Math.max(0, 1.6 - b.deathTimer * 0.03)
+            if (b.deathTimer >= 90 && !victory) {
+              victory = true
+              setVictoryUI(true)
+              b.root.dispose()
+            }
+          } else {
+            b.root.position.y = baseY + BOSS_HEIGHT + Math.sin(performance.now() * 0.0012) * 0.3
+            b.core.rotation.y += 0.01 * dt
+            b.ring1.rotation.z += 0.012 * dt
+            b.ring2.rotation.y += 0.016 * dt
+            b.ring3.rotation.x += 0.009 * dt
+            b.light.position.copyFrom(b.root.position)
+
+            b.attackTimer += dt
+            if (!b.attacking && b.attackTimer >= BOSS_ATTACK_INTERVAL) {
+              b.attacking = true
+              b.attackTimer = 0
+              b.attackHit = false
+            }
+            if (b.attacking) {
+              const wt = Math.min(b.attackTimer / BOSS_ATTACK_WINDUP, 1)
+              const pulse = 1 + wt * 0.5
+              ;[b.ring1, b.ring2, b.ring3].forEach((r) => r.scaling.setAll(pulse))
+              const ringMatAny = b.ring1.material as any
+              if (ringMatAny) ringMatAny.emissiveColor = B.Color3.FromHexString(METATRON_GOLD).scale(0.75 + wt * 1.2)
+              if (!b.attackHit && b.attackTimer >= BOSS_ATTACK_WINDUP) {
+                b.attackHit = true
+                spawnBossBurst(b.root.position.x, b.root.position.y, b.root.position.z)
+                const pdx = posX - b.root.position.x, pdz = posZ - b.root.position.z
+                if (!playerDefeated && Math.hypot(pdx, pdz) <= BOSS_ATTACK_RANGE) damagePlayer(BOSS_ATTACK_DAMAGE)
+              }
+              if (b.attackTimer >= BOSS_ATTACK_WINDUP + 20) {
+                b.attacking = false
+                b.attackTimer = 0
+                ;[b.ring1, b.ring2, b.ring3].forEach((r) => r.scaling.setAll(1))
+                if (ringMatAny) ringMatAny.emissiveColor = B.Color3.FromHexString(METATRON_GOLD).scale(0.75)
+              }
+            }
+          }
+
+          if (bossHpRef.current) {
+            bossHpRef.current.style.width = `${Math.max(0, (b.hp / BOSS_MAX_HP) * 100)}%`
           }
         }
 
@@ -923,6 +1216,13 @@ export default function TricksterGame() {
                 damageDrone(d, 22)
                 break
               }
+            }
+          }
+          if (!hit && boss && !boss.defeated) {
+            const bx = boss.root.position.x, by = boss.root.position.y, bz = boss.root.position.z
+            if (sweptHit(prevX, prevY, prevZ, nextX, nextY, nextZ, bx, by, bz, 1.4)) {
+              hit = true
+              damageBoss(26)
             }
           }
           if (hit || b.life > BULLET_LIFE) {
@@ -1083,20 +1383,129 @@ export default function TricksterGame() {
         // Vida del jugador — HUD 2D fijo arriba a la izquierda, libre en
         // ambos layouts (EXIT va abajo-izquierda en desktop, arriba-derecha
         // en touch). El relleno se actualiza directo por ref (playerHpRef),
-        // mismo patrón que la mira — nada de setState por cuadro.
+        // mismo patrón que la mira — nada de setState por cuadro. Vidas y
+        // nivel sí son useState: cambian pocas veces por partida (una vida
+        // menos, un nivel más), no cuadro a cuadro.
         <div style={{
-          position: 'absolute', top: 20, left: 20, width: 120,
+          position: 'absolute', top: 20, left: 20, width: 140,
           fontFamily: 'Space Mono, monospace', zIndex: 10,
         }}>
           <div style={{ fontSize: 8, letterSpacing: 2, color: `${VIOLET}aa`, marginBottom: 4 }}>
-            VIDA
+            VIDA — NIVEL {hudLevel}/4
           </div>
-          <div style={{ width: '100%', height: 8, background: '#2a0808', border: '1px solid #5a1515', borderRadius: 2 }}>
+          <div style={{ width: '100%', height: 8, background: '#2a0808', border: '1px solid #5a1515', borderRadius: 2, marginBottom: 6 }}>
             <div
               ref={playerHpRef}
               style={{ width: '100%', height: '100%', background: '#ff3b3b', transition: 'width 0.15s linear' }}
             />
           </div>
+          <div style={{ display: 'flex', gap: 3 }}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} style={{
+                width: 14, height: 14, transform: 'rotate(45deg)',
+                background: i < hudLives ? VIOLET : 'transparent',
+                border: `1px solid ${i < hudLives ? VIOLET : '#4a4a5a'}`,
+                boxShadow: i < hudLives ? `0 0 6px ${VIOLET}` : 'none',
+              }} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {introDismissed && !loading && !loadError && bossActive && (
+        // Barra de vida del jefe — HUD fijo arriba al centro, más grande que
+        // la de Gennos (billboard 3D) porque acá es el foco de toda la
+        // pelea. Mismo patrón de ref directo que playerHpRef.
+        <div style={{
+          position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', width: 280,
+          fontFamily: 'Space Mono, monospace', zIndex: 10, textAlign: 'center',
+        }}>
+          <div style={{ fontSize: 9, letterSpacing: 3, color: `${METATRON_GOLD_HUD}cc`, marginBottom: 4, textShadow: `0 0 8px ${METATRON_GOLD_HUD}` }}>
+            METATRON
+          </div>
+          <div style={{ width: '100%', height: 10, background: '#2a2308', border: `1px solid ${METATRON_GOLD_HUD}88`, borderRadius: 2 }}>
+            <div
+              ref={bossHpRef}
+              style={{ width: '100%', height: '100%', background: METATRON_GOLD_HUD, transition: 'width 0.15s linear' }}
+            />
+          </div>
+        </div>
+      )}
+
+      {levelBanner && (
+        // Transición de nivel — banner centrado que aparece y se desvanece
+        // solo (showLevelBanner arma un setTimeout de ~2.6s), no bloquea
+        // el juego de abajo: los enemigos del nivel nuevo ya están
+        // cargando mientras el texto todavía se ve.
+        <div style={{
+          position: 'absolute', top: '38%', left: '50%', transform: 'translate(-50%, -50%)',
+          zIndex: 40, pointerEvents: 'none', textAlign: 'center',
+          fontFamily: 'Space Mono, monospace', animation: 'tricksterLevelBanner 2.6s ease-out',
+        }}>
+          <div style={{
+            fontSize: 34, fontWeight: 700, letterSpacing: 6, color: VIOLET,
+            textShadow: `0 0 30px ${VIOLET}aa`,
+          }}>
+            {levelBanner}
+          </div>
+        </div>
+      )}
+      <style>{`
+        @keyframes tricksterLevelBanner {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+          15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          80% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+      `}</style>
+
+      {gameOverUI && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 60, background: 'rgba(0,2,5,0.92)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'Space Mono, monospace', textAlign: 'center', padding: 24,
+        }}>
+          <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: '#ff3b3b', textShadow: '0 0 30px #ff3b3b88', marginBottom: 16 }}>
+            GAME OVER
+          </div>
+          <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: 28 }}>
+            Las 6 vidas se agotaron en el nivel {hudLevel}. El campo de prueba reinicia desde cero.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
+              background: '#ff3b3b22', border: '1px solid #ff3b3b', color: '#ff3b3b',
+              padding: '14px 32px', borderRadius: 8, cursor: 'pointer',
+            }}
+          >
+            REINICIAR
+          </button>
+        </div>
+      )}
+
+      {victoryUI && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 60, background: 'rgba(0,2,5,0.92)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'Space Mono, monospace', textAlign: 'center', padding: 24,
+        }}>
+          <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: METATRON_GOLD_HUD, textShadow: `0 0 30px ${METATRON_GOLD_HUD}88`, marginBottom: 16 }}>
+            METATRON CAYÓ
+          </div>
+          <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: 28 }}>
+            Trickster empujó el borde del sistema hasta el final. El campo de prueba está limpio.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
+              background: `${METATRON_GOLD_HUD}22`, border: `1px solid ${METATRON_GOLD_HUD}`, color: METATRON_GOLD_HUD,
+              padding: '14px 32px', borderRadius: 8, cursor: 'pointer',
+            }}
+          >
+            JUGAR DE NUEVO
+          </button>
         </div>
       )}
 
