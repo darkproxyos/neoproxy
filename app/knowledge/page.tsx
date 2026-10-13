@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import KnowledgeScene, { type KnowledgeSceneHandle } from '@/components/knowledge/KnowledgeScene'
 import { entries, clusters, type Cluster } from '@/components/knowledge/entries'
@@ -8,7 +8,7 @@ import { agents } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
 
-const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas']
+const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria']
 
 function FormulaTag({ kind }: { kind: 'equation' | 'quote' | 'concept' }) {
   const labels = { equation: 'ECUACIÓN', quote: 'CITA TEXTUAL', concept: 'NOTACIÓN CONCEPTUAL' }
@@ -29,11 +29,17 @@ export default function KnowledgePage() {
 
   const selected = entries.find(e => e.id === selectedId) || null
 
-  const handleSelect = (id: string | null) => {
+  // Memoizado: KnowledgeScene arma el engine de Babylon entero dentro de un
+  // useEffect que depende de esta prop. Sin useCallback, handleSelect se
+  // redefine en cada render (cada click cambia selectedId -> re-render),
+  // así que ese efecto se re-disparaba en cada click y recreaba la escena
+  // desde cero a mitad de la animación de zoom — el foco de cámara al
+  // clickear un nodo nunca llegaba a verse, en ningún nodo.
+  const handleSelect = useCallback((id: string | null) => {
     setSelectedId(id)
     if (id) sceneRef.current?.focusOn(id)
     else sceneRef.current?.resetView()
-  }
+  }, [])
 
   // Deep-link desde un perfil de Proxyverse (/knowledge?entry=vonneumann):
   // selecciona esa entrada apenas la escena carga.
@@ -68,7 +74,9 @@ export default function KnowledgePage() {
           qué es un límite, qué es un yo. Esta es la red de quienes se atrevieron a medirlo — no
           a resolver el misterio, sino a ponerle una ecuación encima. Cada nodo es una pieza de la
           arquitectura invisible que sostiene la Wired: información, mente, auto-organización,
-          sistemas que se producen a sí mismos sin pedir permiso. Tocá un nodo. La red no explica —
+          sistemas que se producen a sí mismos sin pedir permiso, y geometría — la estructura que
+          sostiene todo lo anterior, desde un punto sin tamaño hasta formas de 4 dimensiones que
+          ni siquiera se pueden ver enteras, solo proyectar. Tocá un nodo. La red no explica —
           señala.
         </p>
 
