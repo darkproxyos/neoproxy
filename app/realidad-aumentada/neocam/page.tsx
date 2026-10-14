@@ -122,13 +122,33 @@ export default function NeoCamPage() {
   }
 
   const setCameraStream = async (nextFacing: 'user' | 'environment') => {
-    const newStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
-      audio: false,
-    })
+    // Crítico para que el cambio de cámara funcione en celular: hay que
+    // soltar el stream viejo ANTES de pedir el nuevo. Si se pide primero,
+    // el hardware de cámara sigue "tomado" por el track anterior y muchos
+    // navegadores (sobre todo Android) devuelven en silencio la misma
+    // cámara ya abierta en vez de abrir la otra, aunque facingMode diga
+    // lo contrario — no tira error, simplemente no cambia nada.
     streamRef.current?.getTracks().forEach(t => t.stop())
-    streamRef.current = newStream
+    streamRef.current = null
     const video = videoRef.current!
+    video.srcObject = null
+
+    let newStream: MediaStream
+    try {
+      // "exact" fuerza el cambio real de dispositivo; si el navegador no
+      // puede satisfacerlo (p.ej. layouts raros de facingMode en desktop)
+      // cae a "ideal" como mejor esfuerzo.
+      newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
+        audio: false,
+      })
+    } catch {
+      newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
+        audio: false,
+      })
+    }
+    streamRef.current = newStream
     video.srcObject = newStream
     await video.play()
     setFacing(nextFacing)
