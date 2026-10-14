@@ -53,6 +53,8 @@ export default function NeoCamPage() {
   const [errorMsg, setErrorMsg] = useState('')
   const [state, setState] = useState<PageState>(DEFAULT_STATE)
   const [panelOpen, setPanelOpen] = useState(true)
+  const [facing, setFacing] = useState<'user' | 'environment'>('user')
+  const [multiCamera, setMultiCamera] = useState(false)
   const [fps, setFps] = useState(0)
   const [faceSeen, setFaceSeen] = useState(false)
   const [energyPct, setEnergyPct] = useState(0)
@@ -119,6 +121,40 @@ export default function NeoCamPage() {
     handLandmarkerRef.current?.close?.()
   }
 
+  const setCameraStream = async (nextFacing: 'user' | 'environment') => {
+    const newStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
+      audio: false,
+    })
+    streamRef.current?.getTracks().forEach(t => t.stop())
+    streamRef.current = newStream
+    const video = videoRef.current!
+    video.srcObject = newStream
+    await video.play()
+    setFacing(nextFacing)
+    // la cámara trasera nunca debe verse en espejo — la frontal sí, por
+    // default, para que se sienta como mirarse al espejo.
+    patch({ mirror: nextFacing === 'user' })
+  }
+
+  const detectAvailableFacings = async () => {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const cams = devices.filter(d => d.kind === 'videoinput')
+      setMultiCamera(cams.length > 1)
+    } catch {
+      setMultiCamera(false)
+    }
+  }
+
+  const switchCamera = async () => {
+    try {
+      await setCameraStream(facing === 'user' ? 'environment' : 'user')
+    } catch (err: any) {
+      console.error('No se pudo cambiar de cámara:', err)
+    }
+  }
+
   const start = async () => {
     setErrorMsg('')
     try {
@@ -131,14 +167,8 @@ export default function NeoCamPage() {
       segmenterRef.current = seg
 
       setStatus('requesting-camera')
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 960 }, height: { ideal: 540 } },
-        audio: false,
-      })
-      streamRef.current = stream
-      const video = videoRef.current!
-      video.srcObject = stream
-      await video.play()
+      await setCameraStream('user')
+      await detectAvailableFacings()
 
       runningRef.current = true
       lastTimeRef.current = performance.now()
@@ -401,6 +431,22 @@ export default function NeoCamPage() {
               {state.game && <span style={{ color: '#ffd23c' }}>SCORE {gameScore} x{gameCombo}</span>}
               {roundTimeLeft !== null && <span style={{ color: RED }}>⏱ {roundTimeLeft}s</span>}
             </div>
+          )}
+          {isActive && (
+            <button onClick={() => patch({ faceMaskOn: !state.faceMaskOn })} title="Quitar o poner la máscara de privacidad facial" style={{
+              background: state.faceMaskOn ? 'rgba(0,255,170,0.12)' : 'rgba(255,255,255,0.05)', border: `1px solid ${state.faceMaskOn ? '#00ffaa' : CYAN + '66'}`,
+              color: state.faceMaskOn ? '#00ffaa' : CYAN, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
+            }}>
+              {state.faceMaskOn ? '◉ MÁSCARA' : '○ MÁSCARA'}
+            </button>
+          )}
+          {isActive && multiCamera && (
+            <button onClick={switchCamera} title="Cambiar entre cámara frontal y trasera" style={{
+              background: 'rgba(255,255,255,0.05)', border: `1px solid ${CYAN}66`, color: CYAN,
+              fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
+            }}>
+              🔄 {facing === 'user' ? 'FRONTAL' : 'TRASERA'}
+            </button>
           )}
           <button onClick={() => setPanelOpen(v => !v)} style={{
             background: panelOpen ? `${CYAN}22` : 'rgba(255,255,255,0.05)', border: `1px solid ${CYAN}66`, color: CYAN,
