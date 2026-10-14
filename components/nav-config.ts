@@ -30,21 +30,22 @@ export const navConfig: NavEntry[] = [
   },
   { label: 'PROXYGAMES', href: '/games', live: true },
   { label: 'AUDIO', href: '/audio', live: true },
+  { label: 'REALIDAD AUMENTADA', href: '/realidad-aumentada', live: true },
   { label: 'EXPERIMENTAL', href: '/experimental', live: true },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: true },
   { label: 'PROXYVERSE', href: '/proxyverse', live: true },
 ]
 
 // Rutas donde el SiteNav global no se monta: herramientas fullscreen con
-// chrome propio (ar, realidad-aumentada, draw/draw-synth, los canvas 3D de
-// /lab) o vistas que no deben mostrar navegacion (login/admin/kernel). Wired,
-// Planet y Spaceship son canvas/iframe a pantalla completa — el SiteNav
-// global flotando encima choca con el HUD propio de cada juego. Los
-// catálogos (/games, /experimental, /lab) sí lo muestran, por eso solo se
-// ocultan las sub-rutas que son herramientas fullscreen de verdad.
+// chrome propio (ar, draw/draw-synth, los canvas 3D de /lab) o vistas que no
+// deben mostrar navegacion (login/admin/kernel). Wired, Planet y Spaceship
+// son canvas/iframe a pantalla completa — el SiteNav global flotando encima
+// choca con el HUD propio de cada juego. Los catálogos (/games, /experimental,
+// /lab, /realidad-aumentada) sí lo muestran, por eso solo se ocultan las
+// sub-rutas que son herramientas fullscreen de verdad (mascara y neocam).
 // /lab/proxygenesis dejó de ser texto estático: ahora es un generador 3D
 // con su propia barra superior — el SiteNav global se le superponía.
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/lab/proxygenesis', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/ar', '/realidad-aumentada', '/draw', '/etereo']
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/lab/proxygenesis', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/ar', '/realidad-aumentada/mascara', '/realidad-aumentada/neocam', '/draw', '/etereo']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))

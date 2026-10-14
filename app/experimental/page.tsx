@@ -61,15 +61,6 @@ const CATALOG: ExperimentEntry[] = [
     blurb: 'Dibujá y escuchá: cada trazo se convierte en notas de una escala pentatónica. Siete timbres, incluidos piano, flauta y violín con muestras reales (no solo osciladores) — el trazo se pinta como spray de partículas, no como línea.',
     controls: 'DIBUJÁ CON MOUSE / TOUCH / LÁPIZ',
   },
-  {
-    id: 'realidad-aumentada',
-    code: 'NPX-XP-MASK',
-    title: 'REALIDAD AUMENTADA',
-    href: '/realidad-aumentada',
-    blurb: 'Face tracking real con MediaPipe: una máscara 3D de kitsune sigue tu cara en vivo por cámara, posición y rotación incluidas. Pide permiso de cámara al iniciar.',
-    controls: 'REQUIERE CÁMARA',
-    secondary: { label: '→ MODO CLÁSICO (FILTROS DE CÁMARA EN VIVO)', href: '/realidad-aumentada/index.html' },
-  },
 ]
 
 export default function ExperimentalHubPage() {
