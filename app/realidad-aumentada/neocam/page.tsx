@@ -67,6 +67,9 @@ export default function NeoCamPage() {
   useEffect(() => { stateRef.current = state }, [state])
 
   const streamRef = useRef<MediaStream | null>(null)
+  const facingRef = useRef<'user' | 'environment'>('user')
+  const videoDevicesRef = useRef<MediaDeviceInfo[]>([])
+  const deviceIndexRef = useRef(0)
   const micStreamRef = useRef<MediaStream | null>(null)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
@@ -121,55 +124,78 @@ export default function NeoCamPage() {
     handLandmarkerRef.current?.close?.()
   }
 
-  const setCameraStream = async (nextFacing: 'user' | 'environment') => {
-    // Crítico para que el cambio de cámara funcione en celular: hay que
-    // soltar el stream viejo ANTES de pedir el nuevo. Si se pide primero,
-    // el hardware de cámara sigue "tomado" por el track anterior y muchos
-    // navegadores (sobre todo Android) devuelven en silencio la misma
-    // cámara ya abierta en vez de abrir la otra, aunque facingMode diga
-    // lo contrario — no tira error, simplemente no cambia nada.
-    streamRef.current?.getTracks().forEach(t => t.stop())
-    streamRef.current = null
-    const video = videoRef.current!
-    video.srcObject = null
-
-    let newStream: MediaStream
-    try {
-      // "exact" fuerza el cambio real de dispositivo; si el navegador no
-      // puede satisfacerlo (p.ej. layouts raros de facingMode en desktop)
-      // cae a "ideal" como mejor esfuerzo.
-      newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
-        audio: false,
-      })
-    } catch {
-      newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
-        audio: false,
-      })
-    }
+  // Reemplaza el stream activo por uno nuevo ya abierto. Soltar el viejo
+  // ANTES de pedir el nuevo (acá: el caller ya hizo el stop) es crítico en
+  // celular — con el hardware todavía "tomado" por el track anterior, varios
+  // navegadores devuelven en silencio la misma cámara ya abierta.
+  const applyStream = async (newStream: MediaStream, knownFacing?: 'user' | 'environment') => {
     streamRef.current = newStream
+    const video = videoRef.current!
     video.srcObject = newStream
     await video.play()
+    const settings = newStream.getVideoTracks()[0]?.getSettings()
+    const reported = settings?.facingMode as string | undefined
+    const nextFacing: 'user' | 'environment' =
+      reported === 'environment' || reported === 'user' ? reported : (knownFacing ?? facingRef.current)
+    facingRef.current = nextFacing
     setFacing(nextFacing)
     // la cámara trasera nunca debe verse en espejo — la frontal sí, por
     // default, para que se sienta como mirarse al espejo.
     patch({ mirror: nextFacing === 'user' })
+    return settings?.deviceId
   }
 
-  const detectAvailableFacings = async () => {
+  const refreshVideoDevices = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices()
       const cams = devices.filter(d => d.kind === 'videoinput')
+      videoDevicesRef.current = cams
       setMultiCamera(cams.length > 1)
+      return cams
     } catch {
       setMultiCamera(false)
+      return []
     }
   }
 
+  // Cicla por deviceId real en vez de confiar en facingMode: facingMode es
+  // solo una preferencia y en bastantes navegadores/Android no fuerza el
+  // cambio real de cámara — deviceId sí es inequívoco. Si por lo que sea no
+  // hay 2+ dispositivos listados, cae al viejo método por facingMode.
   const switchCamera = async () => {
     try {
-      await setCameraStream(facing === 'user' ? 'environment' : 'user')
+      let devices = videoDevicesRef.current
+      if (devices.length < 2) devices = await refreshVideoDevices()
+
+      // Soltar el stream viejo ANTES de pedir el nuevo — con el dispositivo
+      // todavía abierto por el track anterior, pedir el mismo deviceId (o
+      // incluso otro) puede fallar o devolver la cámara equivocada en varios
+      // navegadores/Android.
+      streamRef.current?.getTracks().forEach(t => t.stop())
+      streamRef.current = null
+
+      let newStream: MediaStream
+      if (devices.length >= 2) {
+        const nextIndex = (deviceIndexRef.current + 1) % devices.length
+        const nextDevice = devices[nextIndex]
+        newStream = await navigator.mediaDevices.getUserMedia({
+          video: { deviceId: { exact: nextDevice.deviceId }, width: { ideal: 960 }, height: { ideal: 540 } },
+          audio: false,
+        })
+        deviceIndexRef.current = nextIndex
+      } else {
+        const nextFacing = facingRef.current === 'user' ? 'environment' : 'user'
+        newStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { exact: nextFacing }, width: { ideal: 960 }, height: { ideal: 540 } },
+          audio: false,
+        })
+      }
+
+      const deviceId = await applyStream(newStream, facingRef.current === 'user' ? 'environment' : 'user')
+      if (deviceId) {
+        const idx = videoDevicesRef.current.findIndex(d => d.deviceId === deviceId)
+        if (idx >= 0) deviceIndexRef.current = idx
+      }
     } catch (err: any) {
       console.error('No se pudo cambiar de cámara:', err)
     }
@@ -187,8 +213,16 @@ export default function NeoCamPage() {
       segmenterRef.current = seg
 
       setStatus('requesting-camera')
-      await setCameraStream('user')
-      await detectAvailableFacings()
+      const firstStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'user' }, width: { ideal: 960 }, height: { ideal: 540 } },
+        audio: false,
+      })
+      const deviceId = await applyStream(firstStream, 'user')
+      await refreshVideoDevices()
+      if (deviceId) {
+        const idx = videoDevicesRef.current.findIndex(d => d.deviceId === deviceId)
+        if (idx >= 0) deviceIndexRef.current = idx
+      }
 
       runningRef.current = true
       lastTimeRef.current = performance.now()
