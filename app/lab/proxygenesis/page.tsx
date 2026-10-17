@@ -7,6 +7,7 @@ import { runSpaceColonization, computeRadii, type SkeletonNode, type Vec3 as SkV
 import { generateShell, normalizeToViewSize } from './engine/shell'
 import { exportMeshToSTL } from './engine/stl'
 import { saveSpecimenToGallery, consumePendingLoad } from './engine/gallery'
+import { decodeAudioBlob, computeEnergyEnvelope, recordMicClip } from './engine/audioAnalysis'
 
 type Mode = 'coral' | 'arbol' | 'concha'
 type Quality = 'baja' | 'media' | 'alta' | 'extrema'
@@ -74,6 +75,42 @@ export default function ProxygenesisPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [progress, setProgress] = useState(0)
   const [specimenInfo, setSpecimenInfo] = useState<{ nodes: number; faces: number } | null>(null)
+
+  const ENVELOPE_SEGMENTS = 32
+  const [audioEnvelope, setAudioEnvelope] = useState<number[] | null>(null)
+  const [audioStatus, setAudioStatus] = useState<'idle' | 'loading' | 'recording' | 'ready' | 'error'>('idle')
+  const [audioErrorMsg, setAudioErrorMsg] = useState('')
+
+  const handleAudioFile = async (file: File) => {
+    setAudioStatus('loading')
+    setAudioErrorMsg('')
+    try {
+      const buffer = await decodeAudioBlob(file)
+      setAudioEnvelope(computeEnergyEnvelope(buffer, ENVELOPE_SEGMENTS))
+      setAudioStatus('ready')
+    } catch (err) {
+      console.error('No se pudo decodificar el audio:', err)
+      setAudioErrorMsg('No se pudo leer ese archivo de audio.')
+      setAudioStatus('error')
+    }
+  }
+
+  const handleRecordMic = async () => {
+    setAudioStatus('recording')
+    setAudioErrorMsg('')
+    try {
+      const blob = await recordMicClip(4)
+      const buffer = await decodeAudioBlob(blob)
+      setAudioEnvelope(computeEnergyEnvelope(buffer, ENVELOPE_SEGMENTS))
+      setAudioStatus('ready')
+    } catch (err) {
+      console.error('No se pudo grabar del micrófono:', err)
+      setAudioErrorMsg('No se pudo grabar del micrófono (¿diste permiso?).')
+      setAudioStatus('error')
+    }
+  }
+
+  const clearAudio = () => { setAudioEnvelope(null); setAudioStatus('idle') }
   const generationToken = useRef(0)
 
   useEffect(() => {
@@ -259,6 +296,9 @@ export default function ProxygenesisPage() {
       stepSize: Math.max(0.1, params.canopyWidth * 0.5 * 0.14),
       maxIterations,
       curl: params.curl,
+      // 0 (silencio) -> x0.2 de curl, 1 (pico del clip) -> x2.8 — incluso un
+      // tramo mudo deja algo de textura, el pico real empuja bien fuerte.
+      curlEnvelope: audioEnvelope ? audioEnvelope.map(e => 0.2 + e * 2.6) : undefined,
     })
 
     let result = gen.next()
@@ -280,7 +320,7 @@ export default function ProxygenesisPage() {
       }
     }
     requestAnimationFrame(step)
-  }, [sceneReady, buildSkeletonMesh])
+  }, [sceneReady, buildSkeletonMesh, audioEnvelope])
 
   // regenerar cuando cambia de modo o (para coral/arbol) cuando se toca
   // "GENERAR" explícitamente -- la concha, al ser una fórmula cerrada
@@ -447,6 +487,51 @@ export default function ProxygenesisPage() {
                       onChange={(v) => setBranchParams((p) => ({ ...p, curl: v }))} />
                     <Slider label="GROSOR DE RAMAS" value={branchParams.thickness} min={1.5} max={3.2} step={0.1}
                       onChange={(v) => setBranchParams((p) => ({ ...p, thickness: v }))} />
+
+                    <div style={{ marginBottom: 14, borderTop: `1px solid ${accent}22`, paddingTop: 12 }}>
+                      <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 6 }}>
+                        MODULACIÓN SONORA {audioEnvelope && <span style={{ color: accent }}>● ACTIVA</span>}
+                      </div>
+                      {!audioEnvelope ? (
+                        <>
+                          <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
+                            <label style={{
+                              flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 4px', textAlign: 'center', cursor: 'pointer',
+                              background: 'transparent', border: `1px solid ${accent}44`, color: accent,
+                            }}>
+                              ⬆ SUBIR AUDIO
+                              <input type="file" accept="audio/*" style={{ display: 'none' }}
+                                onChange={e => { const f = e.target.files?.[0]; if (f) handleAudioFile(f) }} />
+                            </label>
+                            <button onClick={handleRecordMic} disabled={audioStatus === 'recording' || audioStatus === 'loading'} style={{
+                              flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 4px', cursor: 'pointer',
+                              background: 'transparent', border: `1px solid ${accent}44`, color: accent,
+                              opacity: (audioStatus === 'recording' || audioStatus === 'loading') ? 0.5 : 1,
+                            }}>
+                              {audioStatus === 'recording' ? '● GRABANDO...' : '● MIC (4s)'}
+                            </button>
+                          </div>
+                          <div style={{ fontSize: 7, color: '#3a4a60', lineHeight: 1.6 }}>
+                            Modula la curvatura orgánica a lo largo del crecimiento según el volumen del clip — un tramo fuerte sale más ondulado.
+                          </div>
+                          {audioErrorMsg && <div style={{ fontSize: 8, color: '#ff4444', marginTop: 4 }}>{audioErrorMsg}</div>}
+                        </>
+                      ) : (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 28, marginBottom: 6 }}>
+                            {audioEnvelope.map((e, i) => (
+                              <div key={i} style={{ flex: 1, height: `${Math.max(4, e * 100)}%`, background: accent, opacity: 0.4 + e * 0.6 }} />
+                            ))}
+                          </div>
+                          <button onClick={clearAudio} style={{
+                            width: '100%', fontFamily: mono, fontSize: 8, padding: '6px 0', cursor: 'pointer',
+                            background: 'transparent', border: '1px solid #ff444466', color: '#ff4444',
+                          }}>
+                            ✕ QUITAR AUDIO
+                          </button>
+                        </>
+                      )}
+                    </div>
 
                     <div style={{ marginBottom: 14 }}>
                       <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 4 }}>CALIDAD // DETALLE</div>

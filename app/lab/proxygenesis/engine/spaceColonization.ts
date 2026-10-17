@@ -72,6 +72,18 @@ export type SpaceColonizationParams = {
   stepSize: number
   maxIterations: number
   curl: number
+  // Multiplicador de curl por tramo del crecimiento (0..N valores,
+  // típicamente derivado de un envelope de energía de audio) — se
+  // muestrea por iteración/maxIterations. Opcional: sin esto, curl es
+  // constante como siempre.
+  curlEnvelope?: number[]
+}
+
+function sampleEnvelope(envelope: number[], iteration: number, maxIterations: number): number {
+  if (envelope.length === 0) return 1
+  const t = Math.min(0.999, iteration / Math.max(1, maxIterations))
+  const idx = Math.floor(t * envelope.length)
+  return envelope[Math.min(envelope.length - 1, idx)]
 }
 
 export type SkeletonProgress = {
@@ -86,7 +98,7 @@ export type SkeletonProgress = {
 // alta — cada `yield` es un punto seguro para pausar y devolver control al
 // browser, mostrando progreso real en vez de congelar la pestaña.
 export function* runSpaceColonization(params: SpaceColonizationParams): Generator<SkeletonProgress, SkeletonProgress> {
-  const { seed, numAttractors, canopyCenter, canopyRadius, rootPos, influenceRadius, killDistance, stepSize, maxIterations, curl } = params
+  const { seed, numAttractors, canopyCenter, canopyRadius, rootPos, influenceRadius, killDistance, stepSize, maxIterations, curl, curlEnvelope } = params
   const rand = mulberry32(seed)
 
   type Attractor = { pos: Vec3; alive: boolean }
@@ -154,10 +166,11 @@ export function* runSpaceColonization(params: SpaceColonizationParams): Generato
       }
     }
 
+    const curlNow = curlEnvelope ? curl * sampleEnvelope(curlEnvelope, iteration, maxIterations) : curl
     for (const [idx, sumDir] of influence) {
       let dir = norm(sumDir)
-      if (curl > 0) {
-        dir = norm(add(dir, [(rand() * 2 - 1) * curl, (rand() * 2 - 1) * curl, (rand() * 2 - 1) * curl]))
+      if (curlNow > 0) {
+        dir = norm(add(dir, [(rand() * 2 - 1) * curlNow, (rand() * 2 - 1) * curlNow, (rand() * 2 - 1) * curlNow]))
       }
       const newPos = add(nodes[idx].pos, scale(dir, stepSize))
       nodes.push({ pos: newPos, parent: idx })
