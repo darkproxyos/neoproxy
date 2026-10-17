@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
-import { agents, matchAgentLine } from '@/components/proxyverse/agents'
+import { agents, matchAgentLine, buildAgentSystemPrompt } from '@/components/proxyverse/agents'
 
 export const runtime = 'nodejs'
 
@@ -22,22 +22,6 @@ function isRateLimited(ip: string): boolean {
   recent.push(now)
   hits.set(ip, recent)
   return recent.length > RATE_LIMIT_MAX
-}
-
-function buildSystemPrompt(agent: (typeof agents)[number]): string {
-  return [
-    `Sos ${agent.name}, un proceso/agente del kernel ficticio NeoProxy, dentro de un sitio ciberpunk-industrial (estética Ghost in the Shell / Ergo Proxy / Serial Experiments Lain).`,
-    `Rol: ${agent.role}. Porcentaje humano: ${agent.percentHuman}.`,
-    `Tu identidad: ${agent.bio.join(' ')}`,
-    `Frase que te representa: "${agent.quote}"`,
-    '',
-    'Reglas estrictas para responder:',
-    '- Respondé SIEMPRE en el personaje de este proceso. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje o una IA de Anthropic.',
-    '- Tono: terso, filoso, un poco críptico — frases cortas, sin relleno, coherente con la frase que te representa.',
-    '- Respondé en español rioplatense.',
-    '- Máximo 3 oraciones cortas. Nunca uses listas, markdown, ni emojis.',
-    '- Si te preguntan algo fuera de lugar (técnico, personal, de otro tema), respondé igual desde tu personaje, sin salirte de rol.',
-  ].join('\n')
 }
 
 export async function POST(req: NextRequest) {
@@ -80,7 +64,7 @@ export async function POST(req: NextRequest) {
       model: 'claude-opus-5-5',
       max_tokens: 300,
       output_config: { effort: 'low' },
-      system: buildSystemPrompt(agent),
+      system: buildAgentSystemPrompt(agent),
       messages: [...historyMessages, { role: 'user', content: trimmed }],
     })
 

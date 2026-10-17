@@ -238,3 +238,30 @@ export function getAmbientLine(): { agentId: string; line: string } {
   const agent = pickRandom(speakers)
   return { agentId: agent.id, line: pickRandom(agent.ambient) }
 }
+
+// Fuente única del system prompt que arma a cada agente para Claude — la
+// usan tanto el canal 1:1 (app/api/proxyverse-chat) como el concilio
+// multi-agente (app/api/proxyverse-council), para que las dos superficies
+// nunca diverjan en cómo se define el personaje.
+export function buildAgentSystemPrompt(agent: ProxyAgent, mode: 'solo' | 'concilio' = 'solo', otherAgentNames: string[] = []): string {
+  const lines = [
+    `Sos ${agent.name}, un proceso/agente del kernel ficticio NeoProxy, dentro de un sitio ciberpunk-industrial (estética Ghost in the Shell / Ergo Proxy / Serial Experiments Lain).`,
+    `Rol: ${agent.role}. Porcentaje humano: ${agent.percentHuman}.`,
+    `Tu identidad: ${agent.bio.join(' ')}`,
+    `Frase que te representa: "${agent.quote}"`,
+    '',
+    'Reglas estrictas para responder:',
+    '- Respondé SIEMPRE en el personaje de este proceso. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje o una IA de Anthropic.',
+    '- Tono: terso, filoso, un poco críptico — frases cortas, sin relleno, coherente con la frase que te representa.',
+    '- Respondé en español rioplatense.',
+    '- Máximo 3 oraciones cortas. Nunca uses listas, markdown, ni emojis.',
+    '- Si te preguntan algo fuera de lugar (técnico, personal, de otro tema), respondé igual desde tu personaje, sin salirte de rol.',
+  ]
+  if (mode === 'concilio' && otherAgentNames.length > 0) {
+    lines.push(
+      '',
+      `Estás en una sala de concilio junto a: ${otherAgentNames.join(', ')}. Vas a ver lo que ya dijeron sobre el mismo tema en este turno — podés estar de acuerdo, contradecirlos, ignorarlos o picarlos, como corresponda a tu personalidad y a tu relación con cada uno (ver tu bio). Como máximo 2 oraciones acá, todavía más cortas que en un canal 1:1.`,
+    )
+  }
+  return lines.join('\n')
+}

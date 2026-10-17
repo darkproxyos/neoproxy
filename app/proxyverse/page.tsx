@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import ProxyverseTerminal from '@/components/proxyverse/ProxyverseTerminal'
 
 const mono = "'Space Mono', monospace"
@@ -45,6 +46,22 @@ export default function ProxyversePage() {
           Prototype todavía lo está escribiendo. Vos sos la única variable que el sistema no puede
           medir — por eso te llaman DarkProxy en vez de un porcentaje.
         </p>
+
+        <Link href="/proxyverse/concilio" style={{
+          display: 'block', marginBottom: 40, padding: '20px 24px',
+          border: '1px solid #ffb80055', background: '#ffb80010', textDecoration: 'none',
+        }}>
+          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#ffb800', marginBottom: 8 }}>
+            NPX-PXV-COUNCIL // SALA DE CONCILIO
+          </div>
+          <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
+            Convocá a varios procesos a la vez con el mismo tema — no te responden a vos, se
+            responden entre ellos.
+          </p>
+          <div style={{ fontFamily: mono, fontSize: 9, color: '#ffb800aa', marginTop: 14, letterSpacing: 1 }}>
+            ENTRAR A LA SALA →
+          </div>
+        </Link>
 
         <ProxyverseTerminal />
       </div>
