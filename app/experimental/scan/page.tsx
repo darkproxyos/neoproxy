@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { recordNfcScan } from '@/components/proxyverse/identity'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
@@ -92,6 +93,7 @@ export default function ScanPage() {
         idRef.current += 1
         const records = ev.message.records.map(decodeRecord)
         setEntries(prev => [{ id: idRef.current, time: new Date().toLocaleTimeString('es-AR'), serialNumber: ev.serialNumber || '(sin número de serie)', records }, ...prev].slice(0, 20))
+        recordNfcScan()
       })
       reader.addEventListener('readingerror', () => {
         setErrorMsg('Error leyendo el tag — acercalo de nuevo, sin moverlo.')

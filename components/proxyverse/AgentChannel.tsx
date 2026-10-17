@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { type ProxyAgent, pickRandom, matchAgentLine } from './agents'
+import { recordChatMessage } from './identity'
 
 const mono = "'Space Mono', monospace"
 
@@ -24,6 +25,7 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
     push('you', trimmed)
     setInput('')
     setSending(true)
+    recordChatMessage(agent.id)
     try {
       const res = await fetch('/api/proxyverse-chat', {
         method: 'POST',

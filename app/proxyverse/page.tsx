@@ -47,6 +47,22 @@ export default function ProxyversePage() {
           medir — por eso te llaman DarkProxy en vez de un porcentaje.
         </p>
 
+        <Link href="/proxyverse/id" style={{
+          display: 'block', marginBottom: 20, padding: '20px 24px',
+          border: '1px solid #00d4ff55', background: '#00d4ff10', textDecoration: 'none',
+        }}>
+          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#00d4ff', marginBottom: 8 }}>
+            NPX-PXV-ID // PROXY ID
+          </div>
+          <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
+            Tu identidad acumulada en este navegador — con quién hablaste, qué generaste, hasta
+            dónde llegaste.
+          </p>
+          <div style={{ fontFamily: mono, fontSize: 9, color: '#00d4ffaa', marginTop: 14, letterSpacing: 1 }}>
+            VER MI PROXY ID →
+          </div>
+        </Link>
+
         <Link href="/proxyverse/concilio" style={{
           display: 'block', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #ffb80055', background: '#ffb80010', textDecoration: 'none',
