@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { TouchDPad, useIsTouchDevice } from '@/components/games/TouchControls'
+import { AmbientLoop } from '@/app/audio/engine/ambientLoop'
 
 export default function SpaceshipGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -9,8 +10,18 @@ export default function SpaceshipGame() {
   const [shield, setShield] = useState(100)
   const [score, setScore] = useState(0)
   const [freq, setFreq] = useState('3Hz')
+  const [ambientOn, setAmbientOn] = useState(false)
   const keysRef = useRef<Record<string, boolean>>({})
+  const ambientRef = useRef<AmbientLoop | null>(null)
   const isTouch = useIsTouchDevice()
+
+  const toggleAmbient = () => {
+    if (!ambientRef.current) ambientRef.current = new AmbientLoop('vuelo')
+    if (ambientOn) { ambientRef.current.stop(); setAmbientOn(false) }
+    else { ambientRef.current.start(); setAmbientOn(true) }
+  }
+
+  useEffect(() => () => ambientRef.current?.dispose(), [])
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -230,6 +241,14 @@ export default function SpaceshipGame() {
         <div style={{color:'#ffffff22', fontSize:9, marginTop:8}}>
           {isTouch ? 'D-PAD DODGE' : 'WASD / ↑↓←→ DODGE'}
         </div>
+        <button onClick={toggleAmbient} style={{
+          pointerEvents: 'auto', marginTop: 10, fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2,
+          background: ambientOn ? 'rgba(0,212,255,0.15)' : 'rgba(255,255,255,0.05)',
+          border: `1px solid ${ambientOn ? '#00d4ff' : '#ffffff33'}`, color: ambientOn ? '#00d4ff' : '#8892a4',
+          padding: '6px 10px', cursor: 'pointer',
+        }}>
+          {ambientOn ? '♪ AMBIENTE ON' : '♪ AMBIENTE OFF'}
+        </button>
       </div>
 
       {/* Espectro visual barra derecha */}

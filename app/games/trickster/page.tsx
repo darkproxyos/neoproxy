@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { TouchActionButton, TouchJoystick, useIsTouchDevice } from '@/components/games/TouchControls'
+import { AmbientLoop } from '@/app/audio/engine/ambientLoop'
 const VIOLET = '#b400ff'
 // Mismo dorado que METATRON_GOLD adentro del efecto (duplicado a propósito:
 // ese vive en el closure de Babylon, este lo necesita el JSX del HUD/overlays
@@ -44,6 +45,14 @@ export default function TricksterGame() {
   // fondo mientras se lee), solo tapa el canvas hasta que el jugador
   // confirma que quiere entrar al campo de prueba.
   const [introDismissed, setIntroDismissed] = useState(false)
+  const [ambientOn, setAmbientOn] = useState(true)
+  const ambientRef = useRef<AmbientLoop | null>(null)
+
+  const toggleAmbient = () => {
+    if (!ambientRef.current) ambientRef.current = new AmbientLoop('combate')
+    if (ambientOn) { ambientRef.current.stop(); setAmbientOn(false) }
+    else { ambientRef.current.start(); setAmbientOn(true) }
+  }
 
   // Fullscreen + orientación horizontal — solo en mobile, y solo puede
   // dispararse desde un gesto directo del usuario (los navegadores lo
@@ -1283,6 +1292,8 @@ export default function TricksterGame() {
     }
   }, [])
 
+  useEffect(() => () => ambientRef.current?.dispose(), [])
+
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#000' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }} />
@@ -1323,7 +1334,12 @@ export default function TricksterGame() {
             golpe es Trickster buscando la grieta.
           </p>
           <button
-            onClick={() => { enterFullscreenLandscape(); setIntroDismissed(true) }}
+            onClick={() => {
+              enterFullscreenLandscape()
+              setIntroDismissed(true)
+              if (!ambientRef.current) ambientRef.current = new AmbientLoop('combate')
+              ambientRef.current.start()
+            }}
             style={{
               fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
               background: `${VIOLET}22`, border: `1px solid ${VIOLET}`, color: VIOLET,
@@ -1406,7 +1422,7 @@ export default function TricksterGame() {
               style={{ width: '100%', height: '100%', background: '#ff3b3b', transition: 'width 0.15s linear' }}
             />
           </div>
-          <div style={{ display: 'flex', gap: 3 }}>
+          <div style={{ display: 'flex', gap: 3, marginBottom: 8 }}>
             {Array.from({ length: PLAYER_MAX_LIVES_HUD }).map((_, i) => (
               <div key={i} style={{
                 width: 14, height: 14, transform: 'rotate(45deg)',
@@ -1416,6 +1432,14 @@ export default function TricksterGame() {
               }} />
             ))}
           </div>
+          <button onClick={toggleAmbient} style={{
+            fontFamily: 'Space Mono, monospace', fontSize: 8, letterSpacing: 1,
+            background: ambientOn ? `${VIOLET}22` : 'rgba(255,255,255,0.05)',
+            border: `1px solid ${ambientOn ? VIOLET : '#4a4a5a'}`, color: ambientOn ? VIOLET : '#8892a4',
+            padding: '4px 8px', cursor: 'pointer',
+          }}>
+            {ambientOn ? '♪ AMBIENTE ON' : '♪ AMBIENTE OFF'}
+          </button>
         </div>
       )}
 
