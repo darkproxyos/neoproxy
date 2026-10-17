@@ -61,6 +61,14 @@ const CATALOG: ExperimentEntry[] = [
     blurb: 'Dibujá y escuchá: cada trazo se convierte en notas de una escala pentatónica. Siete timbres, incluidos piano, flauta y violín con muestras reales (no solo osciladores) — el trazo se pinta como spray de partículas, no como línea.',
     controls: 'DIBUJÁ CON MOUSE / TOUCH / LÁPIZ',
   },
+  {
+    id: 'scan',
+    code: 'NPX-XP-SCAN',
+    title: 'SCAN',
+    href: '/experimental/scan',
+    blurb: 'Lector genérico de tags NFC (Web NFC): muestra el payload crudo de cualquier tag — tipo de registro, texto decodificado y hex. Todavía no hay un artefacto físico ni un esquema de datos propio detrás; es el punto de partida para cuando exista uno.',
+    controls: 'REQUIERE CHROME PARA ANDROID + NFC',
+  },
 ]
 
 export default function ExperimentalHubPage() {
