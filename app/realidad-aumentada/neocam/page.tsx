@@ -12,6 +12,8 @@ import {
 } from './engine/vision'
 import { buildMaskCanvas, MaskCache, clamp } from './engine/core'
 import { CubeField, HandGame } from './engine/game'
+import { matchAgentFromCanvas } from './engine/portrait'
+import type { ProxyAgent } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
@@ -62,6 +64,25 @@ export default function NeoCamPage() {
   const [gameCombo, setGameCombo] = useState(1)
   const [roundTimeLeft, setRoundTimeLeft] = useState<number | null>(null)
   const [lastRoundScore, setLastRoundScore] = useState<number | null>(null)
+  const [portrait, setPortrait] = useState<{ dataUrl: string; agent: ProxyAgent; affinity: number } | null>(null)
+
+  const captureProxyversePortrait = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const { agent, affinity } = matchAgentFromCanvas(canvas)
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
+    setPortrait({ dataUrl, agent, affinity })
+  }
+
+  const downloadPortrait = () => {
+    if (!portrait) return
+    const a = document.createElement('a')
+    a.href = portrait.dataUrl
+    a.download = `neoproxy-retrato-${portrait.agent.id}.jpg`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  }
 
   const stateRef = useRef(state)
   useEffect(() => { stateRef.current = state }, [state])
@@ -669,6 +690,72 @@ export default function NeoCamPage() {
               </div>
             )}
           </Section>
+
+          <Section title="RETRATO PROXYVERSE">
+            <p style={{ fontFamily: mono, fontSize: 8, color: '#8fb8d6', lineHeight: 1.7, marginBottom: 10 }}>
+              Captura el frame actual y lo matchea con el agente de Proxyverse de paleta más parecida.
+              Funciona mejor en AURA o INFRARED.
+            </p>
+            <button onClick={captureProxyversePortrait} style={{ ...btnStyle(false), width: '100%' }}>
+              ✦ CAPTURAR RETRATO
+            </button>
+          </Section>
+        </div>
+      )}
+
+      {portrait && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,2,5,0.92)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+        }}>
+          <div style={{
+            maxWidth: 380, width: '100%', background: 'rgba(5,10,20,0.95)',
+            border: `1px solid ${portrait.agent.color}66`, borderRadius: 10, overflow: 'hidden',
+          }}>
+            <img src={portrait.dataUrl} alt="Retrato NeoCam" style={{
+              width: '100%', display: 'block', borderBottom: `2px solid ${portrait.agent.color}`,
+              boxShadow: `0 0 30px ${portrait.agent.color}55 inset`,
+            }} />
+            <div style={{ padding: 20 }}>
+              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 6 }}>
+                MATCH DE PALETA
+              </div>
+              <div style={{
+                fontFamily: mono, fontSize: 22, letterSpacing: 3, color: portrait.agent.color,
+                textShadow: `0 0 20px ${portrait.agent.color}66`, marginBottom: 4,
+              }}>
+                {portrait.agent.name}
+              </div>
+              <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, marginBottom: 14 }}>
+                {portrait.affinity}% DE AFINIDAD — {portrait.agent.role}
+              </div>
+              <div style={{
+                fontFamily: mono, fontSize: 11, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.7, marginBottom: 20,
+              }}>
+                "{portrait.agent.quote}"
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={downloadPortrait} style={{
+                  flex: 1, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 0', cursor: 'pointer',
+                  background: `${portrait.agent.color}15`, border: `1px solid ${portrait.agent.color}66`, color: portrait.agent.color,
+                }}>
+                  ⬇ DESCARGAR
+                </button>
+                <Link href={`/proxyverse/${portrait.agent.id}`} style={{
+                  flex: 1, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 0', textAlign: 'center',
+                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', color: '#8fb8d6', textDecoration: 'none',
+                }}>
+                  VER PERFIL →
+                </Link>
+                <button onClick={() => setPortrait(null)} style={{
+                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 14px', cursor: 'pointer',
+                  background: 'transparent', border: '1px solid rgba(255,45,85,0.4)', color: RED,
+                }}>
+                  CERRAR
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
