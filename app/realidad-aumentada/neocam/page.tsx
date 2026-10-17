@@ -13,6 +13,7 @@ import {
 import { buildMaskCanvas, MaskCache, clamp } from './engine/core'
 import { CubeField, HandGame } from './engine/game'
 import { matchAgentFromCanvas, matchAgentFromRgb, dominantColor, averageRgb } from './engine/portrait'
+import { recordPortraitMatch } from '@/components/proxyverse/identity'
 import type { ProxyAgent } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
@@ -83,6 +84,7 @@ export default function NeoCamPage() {
     const { agent, affinity } = matchAgentFromCanvas(canvas)
     const url = canvas.toDataURL('image/jpeg', 0.88)
     setPortrait({ kind: 'image', url, agent, affinity })
+    recordPortraitMatch(agent.id, affinity)
   }
 
   const pickSupportedMimeType = () => {
@@ -113,6 +115,7 @@ export default function NeoCamPage() {
       const url = URL.createObjectURL(blob)
       const { agent, affinity } = matchAgentFromRgb(averageRgb(colorSamples))
       setPortrait({ kind: 'video', url, agent, affinity })
+      recordPortraitMatch(agent.id, affinity)
       setRecording(false)
       setRecordProgress(0)
     }

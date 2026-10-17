@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { TouchActionButton, TouchJoystick, useIsTouchDevice } from '@/components/games/TouchControls'
 import { AmbientLoop } from '@/app/audio/engine/ambientLoop'
+import { recordTricksterProgress } from '@/components/proxyverse/identity'
 const VIOLET = '#b400ff'
 // Mismo dorado que METATRON_GOLD adentro del efecto (duplicado a propósito:
 // ese vive en el closure de Babylon, este lo necesita el JSX del HUD/overlays
@@ -692,6 +693,7 @@ export default function TricksterGame() {
       function spawnLevelContent(n: number) {
         currentLevel = n
         setHudLevel(Math.min(n, 4))
+        recordTricksterProgress(n, false)
         if (n <= 3) {
           const cfg = LEVEL_CONFIGS[n - 1]
           levelGennosToSpawn = cfg.gennosTotal - cfg.gennosSimultaneous
@@ -1049,6 +1051,7 @@ export default function TricksterGame() {
             if (b.deathTimer >= 90 && !victory) {
               victory = true
               setVictoryUI(true)
+              recordTricksterProgress(4, true)
               // light nunca se parentó a root (a diferencia de core/ring1-3),
               // así que root.dispose() no se la lleva puesta — sin esto queda
               // viva en scene.lights para siempre, igual que ya se cuida de
