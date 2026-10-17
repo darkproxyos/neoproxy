@@ -10,6 +10,7 @@
     "deploy": "gh-pages -d out"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "@babylonjs/core": "^6.49.0",
     "@babylonjs/loaders": "^6.49.0",
     "@libsql/client": "^0.17.4",

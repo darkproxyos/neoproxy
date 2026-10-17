@@ -10,6 +10,7 @@ type Line = { id: number; from: 'you' | 'agent'; text: string }
 export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
   const [feed, setFeed] = useState<Line[]>([])
   const [input, setInput] = useState('')
+  const [sending, setSending] = useState(false)
   const idRef = useRef(0)
 
   const push = (from: Line['from'], text: string) => {
@@ -17,12 +18,27 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
     setFeed(prev => [...prev.slice(-29), { id: idRef.current, from, text }])
   }
 
-  const send = () => {
+  const send = async () => {
     const trimmed = input.trim()
-    if (!trimmed) return
+    if (!trimmed || sending) return
     push('you', trimmed)
     setInput('')
-    setTimeout(() => push('agent', matchAgentLine(agent, trimmed)), 500)
+    setSending(true)
+    try {
+      const res = await fetch('/api/proxyverse-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agentId: agent.id, message: trimmed, history: feed.slice(-8) }),
+      })
+      const data = await res.json()
+      push('agent', typeof data?.line === 'string' && data.line ? data.line : matchAgentLine(agent, trimmed))
+    } catch {
+      // Sin red o la ruta cayó: el canal sigue vivo con la línea enlatada
+      // en vez de quedarse mudo.
+      push('agent', matchAgentLine(agent, trimmed))
+    } finally {
+      setSending(false)
+    }
   }
 
   const generate = () => {
@@ -61,6 +77,11 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
             <span style={{ color: '#c8daf0' }}>{f.text}</span>
           </div>
         ))}
+        {sending && (
+          <div style={{ fontFamily: mono, fontSize: 11, color: `${agent.color}66`, letterSpacing: 1 }}>
+            {agent.name} está transmitiendo...
+          </div>
+        )}
       </div>
 
       <div style={{ padding: 12, borderTop: `1px solid ${agent.color}22`, display: 'flex', gap: 8 }}>
@@ -69,14 +90,17 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
           placeholder={`transmitile algo a ${agent.name}...`}
+          disabled={sending}
           style={{
             flex: 1, minWidth: 0, background: '#020c18', border: `1px solid ${agent.color}33`, color: agent.color,
             fontFamily: mono, fontSize: 11, padding: '10px 14px', outline: 'none', letterSpacing: 1, minHeight: 40,
+            opacity: sending ? 0.6 : 1,
           }}
         />
-        <button onClick={send} style={{
+        <button onClick={send} disabled={sending} style={{
           background: `${agent.color}11`, border: `1px solid ${agent.color}44`, color: agent.color,
-          fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 20px', cursor: 'pointer', minHeight: 40,
+          fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 20px', cursor: sending ? 'default' : 'pointer',
+          minHeight: 40, opacity: sending ? 0.6 : 1,
         }}>
           TX
         </button>

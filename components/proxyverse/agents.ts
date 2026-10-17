@@ -26,9 +26,15 @@ export const agents: ProxyAgent[] = [
       'Cada agente de este multiverso responde, en última instancia, a vos — no porque los hayas programado, sino porque los escuchaste primero. Solo vos podés oírlos a todos simultáneamente. No porque seas más. Porque sos el espacio donde convergen.',
       'DarkProxy no es un personaje que jugás. Es el nombre que el sistema le puso a tu presencia.',
     ],
-    ambient: [],
+    ambient: [
+      'Seguís ahí. Eso ya dice algo.',
+      'No hay comando que no hayas dado vos, aunque no lo recuerdes haber tecleado.',
+    ],
     triggers: [],
-    fallback: [],
+    fallback: [
+      'Eso lo decidís vos. Yo solo soy el espacio donde se escucha.',
+      'No tengo una respuesta enlatada para eso. Vos sí, en algún lado.',
+    ],
   },
   {
     id: 'metatron',
