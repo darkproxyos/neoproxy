@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { runSpaceColonization, computeRadii, type SkeletonNode, type Vec3 as SkVec3 } from './engine/spaceColonization'
 import { generateShell, normalizeToViewSize } from './engine/shell'
 import { exportMeshToSTL } from './engine/stl'
+import { saveSpecimenToGallery, consumePendingLoad } from './engine/gallery'
 
 type Mode = 'coral' | 'arbol' | 'concha'
 type Quality = 'baja' | 'media' | 'alta' | 'extrema'
@@ -84,6 +85,23 @@ export default function ProxygenesisPage() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
   const isMobile = windowWidth <= 768
+
+  // Si venís de la galería local con "CARGAR", aplica esos parámetros antes
+  // de que arranque la primera generación (corre apenas isClient es true,
+  // bien antes de que sceneReady dispare la generación inicial).
+  useEffect(() => {
+    if (!isClient) return
+    const pending = consumePendingLoad()
+    if (!pending) return
+    if (pending.mode === 'concha') {
+      setShellParams(p => ({ ...p, ...(pending.params as Partial<ShellParamsUI>) }))
+    } else {
+      const setter = pending.mode === 'coral' ? setCoralParams : setTreeParams
+      setter(p => ({ ...p, ...(pending.params as Partial<BranchParams>) }))
+    }
+    setMode(pending.mode)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClient])
 
   // Setup de la escena — una sola vez
   useEffect(() => {
@@ -294,6 +312,30 @@ export default function ProxygenesisPage() {
     exportMeshToSTL(mesh, `NeoProxy_proxygenesis_${mode}_specimen.stl`)
   }
 
+  const [savingToGallery, setSavingToGallery] = useState(false)
+  const handleSaveToGallery = async () => {
+    const scene = sceneRef.current
+    const engine = engineRef.current
+    if (!scene || !engine || !scene.activeCamera || !specimenInfo) return
+    setSavingToGallery(true)
+    try {
+      const thumbnail = await BABYLON.Tools.CreateScreenshotAsync(
+        engine, scene.activeCamera, { width: 220, height: 160 }, 'image/jpeg', 0.5,
+      )
+      saveSpecimenToGallery({
+        mode,
+        params: (mode === 'concha' ? shellParams : branchParams) as unknown as Record<string, number | string>,
+        nodes: specimenInfo.nodes,
+        faces: specimenInfo.faces,
+        thumbnail,
+      })
+    } catch (err) {
+      console.error('No se pudo guardar en la galería local:', err)
+    } finally {
+      setSavingToGallery(false)
+    }
+  }
+
   const randomizeSeed = () => {
     const seed = Math.floor(Math.random() * 1_000_000)
     if (mode === 'coral') setCoralParams((p) => ({ ...p, seed }))
@@ -330,9 +372,14 @@ export default function ProxygenesisPage() {
         padding: '0 20px', zIndex: 100, backdropFilter: 'blur(5px)',
       }}>
         <span style={{ fontSize: 11, letterSpacing: 2, color: accent }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
-        <Link href="/lab" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
-          ← LABORATORIO
-        </Link>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <Link href="/lab/proxygenesis/galeria" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+            GALERÍA ▸
+          </Link>
+          <Link href="/lab" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+            ← LABORATORIO
+          </Link>
+        </div>
       </div>
 
       {isClient && (
@@ -454,6 +501,13 @@ export default function ProxygenesisPage() {
                   border: `1px solid ${accent}`, color: accent, opacity: (isGenerating || !specimenInfo) ? 0.4 : 1, letterSpacing: 1,
                 }}>
                   ▽ EXPORTAR .STL
+                </button>
+                <button onClick={handleSaveToGallery} disabled={isGenerating || !specimenInfo || savingToGallery} style={{
+                  width: '100%', fontFamily: mono, fontSize: 9, padding: 9, marginTop: 6,
+                  cursor: (isGenerating || !specimenInfo || savingToGallery) ? 'default' : 'pointer', background: 'transparent',
+                  border: `1px solid ${accent}66`, color: accent, opacity: (isGenerating || !specimenInfo || savingToGallery) ? 0.4 : 1, letterSpacing: 1,
+                }}>
+                  {savingToGallery ? 'GUARDANDO...' : '✦ GUARDAR EN GALERÍA'}
                 </button>
               </div>
             )}
