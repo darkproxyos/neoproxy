@@ -36,8 +36,7 @@ export function dominantColor(source: HTMLCanvasElement): [number, number, numbe
 
 export type PortraitMatch = { agent: ProxyAgent; affinity: number }
 
-export function matchAgentFromCanvas(source: HTMLCanvasElement): PortraitMatch {
-  const [r, g, b] = dominantColor(source)
+export function matchAgentFromRgb([r, g, b]: [number, number, number]): PortraitMatch {
   let best: ProxyAgent = agents[0]
   let bestDist = Infinity
   for (const a of agents) {
@@ -47,4 +46,17 @@ export function matchAgentFromCanvas(source: HTMLCanvasElement): PortraitMatch {
   }
   const affinity = Math.max(0, Math.round((1 - bestDist / MAX_DIST) * 100))
   return { agent: best, affinity }
+}
+
+export function matchAgentFromCanvas(source: HTMLCanvasElement): PortraitMatch {
+  return matchAgentFromRgb(dominantColor(source))
+}
+
+// Promedia varias muestras de color (p.ej. tomadas a lo largo de una
+// grabación de unos segundos) en vez de un solo frame — más representativo
+// para un retrato en video donde el usuario se mueve.
+export function averageRgb(samples: [number, number, number][]): [number, number, number] {
+  if (samples.length === 0) return [0, 0, 0]
+  const sum = samples.reduce((acc, s) => [acc[0] + s[0], acc[1] + s[1], acc[2] + s[2]], [0, 0, 0])
+  return [sum[0] / samples.length, sum[1] / samples.length, sum[2] / samples.length]
 }

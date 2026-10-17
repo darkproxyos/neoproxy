@@ -12,7 +12,7 @@ import {
 } from './engine/vision'
 import { buildMaskCanvas, MaskCache, clamp } from './engine/core'
 import { CubeField, HandGame } from './engine/game'
-import { matchAgentFromCanvas } from './engine/portrait'
+import { matchAgentFromCanvas, matchAgentFromRgb, dominantColor, averageRgb } from './engine/portrait'
 import type { ProxyAgent } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
@@ -64,21 +64,79 @@ export default function NeoCamPage() {
   const [gameCombo, setGameCombo] = useState(1)
   const [roundTimeLeft, setRoundTimeLeft] = useState<number | null>(null)
   const [lastRoundScore, setLastRoundScore] = useState<number | null>(null)
-  const [portrait, setPortrait] = useState<{ dataUrl: string; agent: ProxyAgent; affinity: number } | null>(null)
+  type PortraitResult = { kind: 'image' | 'video'; url: string; agent: ProxyAgent; affinity: number }
+  const [portrait, setPortrait] = useState<PortraitResult | null>(null)
+  const [recording, setRecording] = useState(false)
+  const [recordProgress, setRecordProgress] = useState(0)
+  const recordStopTimerRef = useRef<number | null>(null)
+
+  const RECORD_MS = 3500
+
+  const closePortrait = () => {
+    if (portrait?.url.startsWith('blob:')) URL.revokeObjectURL(portrait.url)
+    setPortrait(null)
+  }
 
   const captureProxyversePortrait = () => {
     const canvas = canvasRef.current
     if (!canvas) return
     const { agent, affinity } = matchAgentFromCanvas(canvas)
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
-    setPortrait({ dataUrl, agent, affinity })
+    const url = canvas.toDataURL('image/jpeg', 0.88)
+    setPortrait({ kind: 'image', url, agent, affinity })
+  }
+
+  const pickSupportedMimeType = () => {
+    const candidates = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm']
+    for (const c of candidates) {
+      if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(c)) return c
+    }
+    return 'video/webm'
+  }
+
+  const recordRitualPortrait = () => {
+    const canvas = canvasRef.current
+    if (!canvas || recording) return
+    if (typeof MediaRecorder === 'undefined' || !canvas.captureStream) {
+      console.error('Este navegador no soporta grabar el retrato en video (MediaRecorder/captureStream).')
+      return
+    }
+    const stream = canvas.captureStream(30)
+    const mimeType = pickSupportedMimeType()
+    const recorder = new MediaRecorder(stream, { mimeType })
+    const chunks: Blob[] = []
+    const colorSamples: [number, number, number][] = []
+
+    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data) }
+    recorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop())
+      const blob = new Blob(chunks, { type: mimeType })
+      const url = URL.createObjectURL(blob)
+      const { agent, affinity } = matchAgentFromRgb(averageRgb(colorSamples))
+      setPortrait({ kind: 'video', url, agent, affinity })
+      setRecording(false)
+      setRecordProgress(0)
+    }
+
+    recorder.start()
+    setRecording(true)
+    setRecordProgress(0)
+    const startedAt = performance.now()
+    const sampleTimer = window.setInterval(() => colorSamples.push(dominantColor(canvas)), 250)
+    const progressTimer = window.setInterval(() => {
+      setRecordProgress(Math.min(1, (performance.now() - startedAt) / RECORD_MS))
+    }, 100)
+    recordStopTimerRef.current = window.setTimeout(() => {
+      recorder.stop()
+      window.clearInterval(sampleTimer)
+      window.clearInterval(progressTimer)
+    }, RECORD_MS)
   }
 
   const downloadPortrait = () => {
     if (!portrait) return
     const a = document.createElement('a')
-    a.href = portrait.dataUrl
-    a.download = `neoproxy-retrato-${portrait.agent.id}.jpg`
+    a.href = portrait.url
+    a.download = portrait.kind === 'video' ? `neoproxy-retrato-${portrait.agent.id}.webm` : `neoproxy-retrato-${portrait.agent.id}.jpg`
     document.body.appendChild(a)
     a.click()
     a.remove()
@@ -137,6 +195,7 @@ export default function NeoCamPage() {
   function stopAll() {
     runningRef.current = false
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    if (recordStopTimerRef.current) window.clearTimeout(recordStopTimerRef.current)
     streamRef.current?.getTracks().forEach(t => t.stop())
     micStreamRef.current?.getTracks().forEach(t => t.stop())
     audioCtxRef.current?.close().catch(() => {})
@@ -693,12 +752,22 @@ export default function NeoCamPage() {
 
           <Section title="RETRATO PROXYVERSE">
             <p style={{ fontFamily: mono, fontSize: 8, color: '#8fb8d6', lineHeight: 1.7, marginBottom: 10 }}>
-              Captura el frame actual y lo matchea con el agente de Proxyverse de paleta más parecida.
-              Funciona mejor en AURA o INFRARED.
+              Captura (foto o video de {(RECORD_MS / 1000).toFixed(1)}s) y lo matchea con el agente de Proxyverse
+              de paleta más parecida. Funciona mejor en AURA o INFRARED.
             </p>
-            <button onClick={captureProxyversePortrait} style={{ ...btnStyle(false), width: '100%' }}>
-              ✦ CAPTURAR RETRATO
-            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+              <button onClick={captureProxyversePortrait} disabled={recording} style={{ ...btnStyle(false), opacity: recording ? 0.4 : 1 }}>
+                ✦ FOTO
+              </button>
+              <button onClick={recordRitualPortrait} disabled={recording} style={{ ...btnStyle(false), opacity: recording ? 0.4 : 1 }}>
+                {recording ? `◉ ${Math.round(recordProgress * 100)}%` : '◉ RITUAL (VIDEO)'}
+              </button>
+            </div>
+            {recording && (
+              <div style={{ height: 3, background: '#1a2436', marginTop: 8 }}>
+                <div style={{ height: '100%', width: `${recordProgress * 100}%`, background: CYAN, transition: 'width 0.1s linear' }} />
+              </div>
+            )}
           </Section>
         </div>
       )}
@@ -712,10 +781,17 @@ export default function NeoCamPage() {
             maxWidth: 380, width: '100%', background: 'rgba(5,10,20,0.95)',
             border: `1px solid ${portrait.agent.color}66`, borderRadius: 10, overflow: 'hidden',
           }}>
-            <img src={portrait.dataUrl} alt="Retrato NeoCam" style={{
-              width: '100%', display: 'block', borderBottom: `2px solid ${portrait.agent.color}`,
-              boxShadow: `0 0 30px ${portrait.agent.color}55 inset`,
-            }} />
+            {portrait.kind === 'video' ? (
+              <video src={portrait.url} autoPlay loop muted playsInline style={{
+                width: '100%', display: 'block', borderBottom: `2px solid ${portrait.agent.color}`,
+                boxShadow: `0 0 30px ${portrait.agent.color}55 inset`,
+              }} />
+            ) : (
+              <img src={portrait.url} alt="Retrato NeoCam" style={{
+                width: '100%', display: 'block', borderBottom: `2px solid ${portrait.agent.color}`,
+                boxShadow: `0 0 30px ${portrait.agent.color}55 inset`,
+              }} />
+            )}
             <div style={{ padding: 20 }}>
               <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 6 }}>
                 MATCH DE PALETA
@@ -747,7 +823,7 @@ export default function NeoCamPage() {
                 }}>
                   VER PERFIL →
                 </Link>
-                <button onClick={() => setPortrait(null)} style={{
+                <button onClick={closePortrait} style={{
                   fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 14px', cursor: 'pointer',
                   background: 'transparent', border: '1px solid rgba(255,45,85,0.4)', color: RED,
                 }}>
