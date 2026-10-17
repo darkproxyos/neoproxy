@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { TouchActionButton, TouchJoystick, useIsTouchDevice } from '@/components/games/TouchControls'
 import { AmbientLoop } from '@/app/audio/engine/ambientLoop'
 import { recordTricksterProgress } from '@/components/proxyverse/identity'
+import { runSpaceColonization, computeRadii, type SkeletonNode } from '@/app/lab/proxygenesis/engine/spaceColonization'
 const VIOLET = '#b400ff'
 // Mismo dorado que METATRON_GOLD adentro del efecto (duplicado a propósito:
 // ese vive en el closure de Babylon, este lo necesita el JSX del HUD/overlays
@@ -42,6 +43,16 @@ export default function TricksterGame() {
   const [bossActive, setBossActive] = useState(false)
   const [gameOverUI, setGameOverUI] = useState(false)
   const [victoryUI, setVictoryUI] = useState(false)
+  // Modo infinito — se arranca desde el overlay de victoria, después de
+  // vencer a Metatron una vez. infiniteMode/infiniteWave también existen
+  // como variables del closure de abajo (el loop de combate las necesita
+  // cuadro a cuadro); este estado es solo para repintar el HUD/overlays.
+  const [infiniteMode, setInfiniteMode] = useState(false)
+  const [infiniteWave, setInfiniteWave] = useState(0)
+  const [generatingBoss, setGeneratingBoss] = useState(false)
+  const [bestInfiniteWave, setBestInfiniteWave] = useState(0)
+  const startInfiniteModeRef = useRef<(() => void) | null>(null)
+  const BEST_INFINITE_WAVE_KEY = 'neoproxy-trickster-best-infinite-wave'
   // Lore antes de entrar — no bloquea la carga del modelo (sigue en el
   // fondo mientras se lee), solo tapa el canvas hasta que el jugador
   // confirma que quiere entrar al campo de prueba.
@@ -528,7 +539,7 @@ export default function TricksterGame() {
       const PLAYER_HIT_RADIUS = 1.0
 
       function damagePlayer(amount: number) {
-        if (playerDefeated || gameOver || victory) return
+        if (playerDefeated || gameOver || (victory && !infiniteMode)) return
         playerHP = Math.max(0, playerHP - amount)
         if (playerHP <= 0) {
           playerDefeated = true
@@ -590,9 +601,15 @@ export default function TricksterGame() {
       // onda de daño en área alrededor suyo.
       type Boss = {
         root: any; core: any; ring1: any; ring2: any; ring3: any; light: any
-        hp: number; defeated: boolean; deathTimer: number
+        hp: number; maxHp: number; defeated: boolean; deathTimer: number
         attackTimer: number; attacking: boolean; attackHit: boolean
+        attackDamage: number; attackInterval: number; colorHex: string
       }
+      // Modo infinito (post-campaña): cada onda sube hp/daño/cadencia y usa
+      // un color distinto — ver spawnBoss() y beginInfiniteWaveGeneration().
+      let infiniteMode = false
+      let infiniteWave = 0
+      const INFINITE_PALETTE = ['#ffb800', '#b400ff', '#00d4ff', '#ff2d55', '#00ff9d']
       const BOSS_MAX_HP = 2200
       const BOSS_HEIGHT = 2.4
       const BOSS_SPAWN = { x: 0, z: -15 }
@@ -603,19 +620,72 @@ export default function TricksterGame() {
       const METATRON_GOLD = '#ffb800'
       let boss: Boss | null = null
 
-      function spawnBoss() {
+      // Jefe procedural del modo infinito — mismo esqueleto de Space
+      // Colonization que usa Proxygenesis (pura matemática, sin
+      // dependencia de ningún paquete de Babylon, así que se reusa tal
+      // cual acá adentro de @babylonjs/core aunque Proxygenesis use el
+      // paquete "babylonjs" completo). El merge de cilindros con el
+      // modelo de tubería (computeRadii) reemplaza al icosaedro fijo.
+      function buildOrganicBossMesh(nodes: SkeletonNode[], colorHex: string): any {
+        const radii = computeRadii(nodes, { leafRadius: 0.05, exponent: 2.3, maxRadius: 0.55 })
+        const up = new B.Vector3(0, 1, 0)
+        const parts: any[] = []
+        for (let i = 1; i < nodes.length; i++) {
+          const child = nodes[i]
+          const parent = nodes[child.parent]
+          const from3 = new B.Vector3(parent.pos[0], parent.pos[1], parent.pos[2])
+          const to3 = new B.Vector3(child.pos[0], child.pos[1], child.pos[2])
+          const seg = to3.subtract(from3)
+          const h = seg.length()
+          if (h < 1e-5) continue
+          const dirN = seg.normalize()
+          const cyl = B.MeshBuilder.CreateCylinder(`bossOrganic${i}`, {
+            diameterTop: Math.max(0.04, radii[i] * 2), diameterBottom: Math.max(0.04, radii[child.parent] * 2),
+            height: h, tessellation: 6,
+          }, scene)
+          cyl.position = B.Vector3.Lerp(from3, to3, 0.5)
+          const dot = B.Vector3.Dot(up, dirN)
+          if (dot < -0.9999) {
+            cyl.rotationQuaternion = B.Quaternion.RotationAxis(new B.Vector3(1, 0, 0), Math.PI)
+          } else if (dot < 0.9999) {
+            const axis = B.Vector3.Cross(up, dirN).normalize()
+            cyl.rotationQuaternion = B.Quaternion.RotationAxis(axis, Math.acos(dot))
+          }
+          parts.push(cyl)
+        }
+        const merged = B.Mesh.MergeMeshes(parts, true, true, undefined, false, true)
+        if (merged) {
+          const mat = new B.StandardMaterial('bossOrganicMat', scene)
+          mat.diffuseColor = B.Color3.FromHexString(colorHex).scale(0.3)
+          mat.emissiveColor = B.Color3.FromHexString(colorHex).scale(0.45)
+          mat.specularColor = B.Color3.FromHexString(colorHex)
+          merged.material = mat
+        }
+        return merged
+      }
+
+      // organicNodes solo lo manda el modo infinito — sin eso (la campaña
+      // normal, Metatron) el comportamiento es exactamente el de antes:
+      // icosaedro fijo, hp/daño/cadencia constantes, color dorado.
+      function spawnBoss(organicNodes?: SkeletonNode[], hpMultiplier = 1, colorHex = METATRON_GOLD, waveDifficulty = 0) {
         const root = new B.TransformNode('bossRoot', scene)
         root.position.set(BOSS_SPAWN.x, baseY + BOSS_HEIGHT, BOSS_SPAWN.z)
 
-        const core = B.MeshBuilder.CreatePolyhedron('bossCore', { type: 3, size: 0.85 }, scene) // icosaedro
-        core.parent = root
-        const coreMat = new B.StandardMaterial('bossCoreMat', scene)
-        coreMat.emissiveColor = B.Color3.FromHexString(METATRON_GOLD)
-        coreMat.disableLighting = true
-        core.material = coreMat
+        let core: any
+        if (organicNodes) {
+          core = buildOrganicBossMesh(organicNodes, colorHex)
+          if (core) core.parent = root
+        } else {
+          core = B.MeshBuilder.CreatePolyhedron('bossCore', { type: 3, size: 0.85 }, scene) // icosaedro
+          core.parent = root
+          const coreMat = new B.StandardMaterial('bossCoreMat', scene)
+          coreMat.emissiveColor = B.Color3.FromHexString(colorHex)
+          coreMat.disableLighting = true
+          core.material = coreMat
+        }
 
         const ringMat = new B.StandardMaterial('bossRingMat', scene)
-        ringMat.emissiveColor = B.Color3.FromHexString(METATRON_GOLD).scale(0.75)
+        ringMat.emissiveColor = B.Color3.FromHexString(colorHex).scale(0.75)
         ringMat.disableLighting = true
         const ring1 = B.MeshBuilder.CreateTorus('bossRing1', { diameter: 2.6, thickness: 0.06, tessellation: 48 }, scene)
         ring1.parent = root; ring1.material = ringMat
@@ -625,23 +695,27 @@ export default function TricksterGame() {
         ring3.parent = root; ring3.rotation.z = Math.PI / 2.6; ring3.material = ringMat
 
         const light = new B.PointLight('bossLight', root.position.clone(), scene)
-        light.diffuse = B.Color3.FromHexString(METATRON_GOLD)
+        light.diffuse = B.Color3.FromHexString(colorHex)
         light.intensity = 1.6
         light.range = 11
 
+        const maxHp = Math.round(BOSS_MAX_HP * hpMultiplier)
         boss = {
           root, core, ring1, ring2, ring3, light,
-          hp: BOSS_MAX_HP, defeated: false, deathTimer: 0,
+          hp: maxHp, maxHp, defeated: false, deathTimer: 0,
           attackTimer: 0, attacking: false, attackHit: false,
+          attackDamage: BOSS_ATTACK_DAMAGE + waveDifficulty * 1.5,
+          attackInterval: Math.max(120, BOSS_ATTACK_INTERVAL - waveDifficulty * 4),
+          colorHex,
         }
       }
 
-      function spawnBossBurst(cx: number, cy: number, cz: number) {
+      function spawnBossBurst(cx: number, cy: number, cz: number, colorHex = METATRON_GOLD) {
         const ring = B.MeshBuilder.CreateTorus('bossBurst', { diameter: BOSS_ATTACK_RANGE * 2, thickness: 0.15, tessellation: 48 }, scene)
         ring.position.set(cx, cy, cz)
         ring.scaling.set(0.05, 0.05, 0.05)
         const mat = new B.StandardMaterial('bossBurstMat', scene)
-        mat.emissiveColor = B.Color3.FromHexString(METATRON_GOLD)
+        mat.emissiveColor = B.Color3.FromHexString(colorHex)
         mat.disableLighting = true
         mat.alpha = 0.95
         ring.material = mat
@@ -670,6 +744,50 @@ export default function TricksterGame() {
         const bdx = boss.root.position.x - cx
         const bdz = boss.root.position.z - cz
         if (Math.hypot(bdx, bdz) <= range) damageBoss(amount)
+      }
+
+      // Genera la próxima anomalía del modo infinito con el mismo motor de
+      // Space Colonization que usa Proxygenesis (semilla al azar, escala y
+      // dificultad crecientes por onda) — corre en chunks vía
+      // requestAnimationFrame propio (no el registerBeforeRender de la
+      // escena) para no trabar el juego mientras genera.
+      function beginInfiniteWaveGeneration(wave: number) {
+        setGeneratingBoss(true)
+        const seed = Math.floor(Math.random() * 1_000_000)
+        const scale = 1 + Math.min(1.3, wave * 0.07)
+        const colorHex = INFINITE_PALETTE[wave % INFINITE_PALETTE.length]
+        const gen = runSpaceColonization({
+          seed,
+          numAttractors: 320,
+          canopyCenter: [0, 0, 0],
+          canopyRadius: [1.3 * scale, 1.3 * scale, 1.3 * scale],
+          rootPos: [0, -1.2 * scale, 0],
+          influenceRadius: Math.max(0.5, 0.85 * scale),
+          killDistance: Math.max(0.12, 0.17 * scale),
+          stepSize: Math.max(0.08, 0.12 * scale),
+          maxIterations: 220,
+          curl: 0.08 + ((seed % 100) / 100) * 0.12,
+        })
+        let result = gen.next()
+        const frameBudgetMs = 12
+        const step = () => {
+          if (disposed) return
+          const t0 = performance.now()
+          while (!result.done && performance.now() - t0 < frameBudgetMs) result = gen.next()
+          if (!result.done) { requestAnimationFrame(step); return }
+          setGeneratingBoss(false)
+          spawnBoss(result.value.nodes, 1 + (wave - 1) * 0.35, colorHex, wave)
+        }
+        requestAnimationFrame(step)
+      }
+
+      startInfiniteModeRef.current = () => {
+        setVictoryUI(false)
+        infiniteMode = true
+        setInfiniteMode(true)
+        infiniteWave = 1
+        setInfiniteWave(1)
+        beginInfiniteWaveGeneration(1)
       }
 
       // Niveles — 1: Gennos de a uno (3 en total). 2: 4 Gennos simultáneos.
@@ -742,7 +860,11 @@ export default function TricksterGame() {
         // resultado. Reiniciar es recargar la página (ver botón en el JSX):
         // más simple y seguro que reconstruir a mano cada lista mutable
         // (bullets, gennosList, drones, boss) sin dejar nada corrupto.
-        if (gameOver || victory) return
+        // Excepción: modo infinito post-victoria sigue corriendo este mismo
+        // loop (es lo que mueve/ataca/mata a cada anomalía) — sin esto el
+        // jefe orgánico de la onda 1 queda congelado para siempre apenas
+        // cae Metatron, porque `victory` nunca se resetea a false.
+        if (gameOver || (victory && !infiniteMode)) return
 
         // Dirección cruda de la cámara (sin aplanar) para apuntar — se usa
         // tal cual para el poder, así que orbitar la cámara hacia
@@ -1048,16 +1170,27 @@ export default function TricksterGame() {
             b.ring2.scaling.setAll(1 + b.deathTimer * 0.03)
             b.ring3.scaling.setAll(1 + b.deathTimer * 0.03)
             b.light.intensity = Math.max(0, 1.6 - b.deathTimer * 0.03)
-            if (b.deathTimer >= 90 && !victory) {
-              victory = true
-              setVictoryUI(true)
-              recordTricksterProgress(4, true)
+            if (b.deathTimer >= 90) {
               // light nunca se parentó a root (a diferencia de core/ring1-3),
               // así que root.dispose() no se la lleva puesta — sin esto queda
               // viva en scene.lights para siempre, igual que ya se cuida de
               // no dejar pasar con Gennos y drones (ver sus removeciones más abajo).
               b.light.dispose()
               b.root.dispose()
+              boss = null // sin esto este bloque se reejecuta cada frame para siempre sobre meshes ya disposed
+              if (!victory) {
+                // primera vez venciendo a la campaña real (Metatron) — overlay de victoria normal
+                victory = true
+                setVictoryUI(true)
+                recordTricksterProgress(4, true)
+              } else if (infiniteMode) {
+                // onda del modo infinito caída — directo a la siguiente, sin reabrir el overlay
+                infiniteWave++
+                setInfiniteWave(infiniteWave)
+                recordInfiniteWave(infiniteWave)
+                showLevelBanner(`ANOMALÍA #${infiniteWave} CAYÓ`)
+                beginInfiniteWaveGeneration(infiniteWave)
+              }
             }
           } else {
             b.root.position.y = baseY + BOSS_HEIGHT + Math.sin(performance.now() * 0.0012) * 0.3
@@ -1068,7 +1201,7 @@ export default function TricksterGame() {
             b.light.position.copyFrom(b.root.position)
 
             b.attackTimer += dt
-            if (!b.attacking && b.attackTimer >= BOSS_ATTACK_INTERVAL) {
+            if (!b.attacking && b.attackTimer >= b.attackInterval) {
               b.attacking = true
               b.attackTimer = 0
               b.attackHit = false
@@ -1078,24 +1211,24 @@ export default function TricksterGame() {
               const pulse = 1 + wt * 0.5
               ;[b.ring1, b.ring2, b.ring3].forEach((r) => r.scaling.setAll(pulse))
               const ringMatAny = b.ring1.material as any
-              if (ringMatAny) ringMatAny.emissiveColor = B.Color3.FromHexString(METATRON_GOLD).scale(0.75 + wt * 1.2)
+              if (ringMatAny) ringMatAny.emissiveColor = B.Color3.FromHexString(b.colorHex).scale(0.75 + wt * 1.2)
               if (!b.attackHit && b.attackTimer >= BOSS_ATTACK_WINDUP) {
                 b.attackHit = true
-                spawnBossBurst(b.root.position.x, b.root.position.y, b.root.position.z)
+                spawnBossBurst(b.root.position.x, b.root.position.y, b.root.position.z, b.colorHex)
                 const pdx = posX - b.root.position.x, pdz = posZ - b.root.position.z
-                if (!playerDefeated && Math.hypot(pdx, pdz) <= BOSS_ATTACK_RANGE) damagePlayer(BOSS_ATTACK_DAMAGE)
+                if (!playerDefeated && Math.hypot(pdx, pdz) <= BOSS_ATTACK_RANGE) damagePlayer(b.attackDamage)
               }
               if (b.attackTimer >= BOSS_ATTACK_WINDUP + 20) {
                 b.attacking = false
                 b.attackTimer = 0
                 ;[b.ring1, b.ring2, b.ring3].forEach((r) => r.scaling.setAll(1))
-                if (ringMatAny) ringMatAny.emissiveColor = B.Color3.FromHexString(METATRON_GOLD).scale(0.75)
+                if (ringMatAny) ringMatAny.emissiveColor = B.Color3.FromHexString(b.colorHex).scale(0.75)
               }
             }
           }
 
           if (bossHpRef.current) {
-            bossHpRef.current.style.width = `${Math.max(0, (b.hp / BOSS_MAX_HP) * 100)}%`
+            bossHpRef.current.style.width = `${Math.max(0, (b.hp / b.maxHp) * 100)}%`
           }
         }
 
@@ -1297,6 +1430,22 @@ export default function TricksterGame() {
 
   useEffect(() => () => ambientRef.current?.dispose(), [])
 
+  useEffect(() => {
+    try {
+      const saved = Number(window.localStorage.getItem(BEST_INFINITE_WAVE_KEY) || '0')
+      if (saved > 0) setBestInfiniteWave(saved)
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const recordInfiniteWave = (wave: number) => {
+    setBestInfiniteWave(prev => {
+      const next = Math.max(prev, wave)
+      try { window.localStorage.setItem(BEST_INFINITE_WAVE_KEY, String(next)) } catch {}
+      return next
+    })
+  }
+
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#000' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }} />
@@ -1455,13 +1604,24 @@ export default function TricksterGame() {
           fontFamily: 'Space Mono, monospace', zIndex: 10, textAlign: 'center',
         }}>
           <div style={{ fontSize: 9, letterSpacing: 3, color: `${METATRON_GOLD_HUD}cc`, marginBottom: 4, textShadow: `0 0 8px ${METATRON_GOLD_HUD}` }}>
-            METATRON
+            {infiniteMode ? `ANOMALÍA #${infiniteWave}` : 'METATRON'}
           </div>
           <div style={{ width: '100%', height: 10, background: '#2a2308', border: `1px solid ${METATRON_GOLD_HUD}88`, borderRadius: 2 }}>
             <div
               ref={bossHpRef}
               style={{ width: '100%', height: '100%', background: METATRON_GOLD_HUD, transition: 'width 0.15s linear' }}
             />
+          </div>
+        </div>
+      )}
+
+      {generatingBoss && (
+        <div style={{
+          position: 'absolute', top: '38%', left: '50%', transform: 'translate(-50%, -50%)',
+          zIndex: 40, pointerEvents: 'none', textAlign: 'center', fontFamily: 'Space Mono, monospace',
+        }}>
+          <div style={{ fontSize: 14, letterSpacing: 3, color: METATRON_GOLD_HUD, textShadow: `0 0 20px ${METATRON_GOLD_HUD}aa` }}>
+            GENERANDO ANOMALÍA #{infiniteWave}...
           </div>
         </div>
       )}
@@ -1502,9 +1662,16 @@ export default function TricksterGame() {
           <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: '#ff3b3b', textShadow: '0 0 30px #ff3b3b88', marginBottom: 16 }}>
             GAME OVER
           </div>
-          <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: 28 }}>
-            Las {PLAYER_MAX_LIVES_HUD} vidas se agotaron en el nivel {hudLevel}. El campo de prueba reinicia desde cero.
+          <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: infiniteMode ? 10 : 28 }}>
+            {infiniteMode
+              ? `Las ${PLAYER_MAX_LIVES_HUD} vidas se agotaron en la anomalía #${infiniteWave} del modo infinito.`
+              : `Las ${PLAYER_MAX_LIVES_HUD} vidas se agotaron en el nivel ${hudLevel}.`} El campo de prueba reinicia desde cero.
           </p>
+          {infiniteMode && (
+            <p style={{ fontSize: 11, color: METATRON_GOLD_HUD, letterSpacing: 1, marginBottom: 28 }}>
+              MEJOR ONDA: {bestInfiniteWave}
+            </p>
+          )}
           <button
             onClick={() => window.location.reload()}
             style={{
@@ -1530,16 +1697,28 @@ export default function TricksterGame() {
           <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: 28 }}>
             Trickster empujó el borde del sistema hasta el final. El campo de prueba está limpio.
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
-              background: `${METATRON_GOLD_HUD}22`, border: `1px solid ${METATRON_GOLD_HUD}`, color: METATRON_GOLD_HUD,
-              padding: '14px 32px', borderRadius: 8, cursor: 'pointer',
-            }}
-          >
-            JUGAR DE NUEVO
-          </button>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button
+              onClick={() => startInfiniteModeRef.current?.()}
+              style={{
+                fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
+                background: `${VIOLET}22`, border: `1px solid ${VIOLET}`, color: VIOLET,
+                padding: '14px 32px', borderRadius: 8, cursor: 'pointer',
+              }}
+            >
+              MODO INFINITO
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 2,
+                background: `${METATRON_GOLD_HUD}22`, border: `1px solid ${METATRON_GOLD_HUD}`, color: METATRON_GOLD_HUD,
+                padding: '14px 32px', borderRadius: 8, cursor: 'pointer',
+              }}
+            >
+              JUGAR DE NUEVO
+            </button>
+          </div>
         </div>
       )}
 
