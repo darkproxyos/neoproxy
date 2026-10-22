@@ -196,6 +196,20 @@ export const agents: ProxyAgent[] = [
   },
 ]
 
+// Arte canónico por agente — fuente única para el perfil (/proxyverse/[id])
+// y para los nodos de la escena 3D (ProxyverseScene). Todavía no todos
+// tienen; un agente sin entrada acá cae a su placeholder/forma abstracta en
+// cada lugar que lo consulta, sin romper nada.
+export const AGENT_IMAGES: Record<string, string> = {
+  darkproxy: '/canon/darkproxy-v1.png',
+  snake: '/canon/snake-v1.jpg',
+  d: '/canon/d-v1.jpg',
+  genos: '/canon/genos-v1.jpg',
+  metatron: '/canon/metatron-v1.jpg',
+  trickster: '/canon/trickster-v1.jpg',
+  prototype: '/canon/prototype-v1.jpg',
+}
+
 function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import * as BABYLON from 'babylonjs'
-import { agents } from './agents'
+import { agents, AGENT_IMAGES } from './agents'
 
 // Sin lineas de conexion a proposito: en la Wired nadie esta atado a nadie,
 // cada proceso flota por su cuenta en la oscuridad. Posiciones dispersas, no
@@ -46,6 +46,41 @@ function makeLabelTexture(scene: BABYLON.Scene, text: string, color: string) {
   ctx.shadowBlur = 18
   ctx.fillText(text, 256, 64)
   tex.update()
+  return tex
+}
+
+// Retrato con marco — mismo truco de DynamicTexture que makeLabelTexture,
+// pero dibujando la foto canónica del agente en vez de texto. Arranca
+// dibujando solo el marco (la imagen tarda en cargar — same-origin, sin
+// problema de CORS por venir de /public) y se redibuja sola al terminar de
+// cargar, sin bloquear el resto del armado de la escena.
+function makePhotoTexture(scene: BABYLON.Scene, agentId: string, src: string, color: string) {
+  const size = 512
+  const tex = new BABYLON.DynamicTexture(`pxv-photo-${agentId}`, { width: size, height: size }, scene, true)
+  tex.hasAlpha = true
+  const ctx = tex.getContext() as CanvasRenderingContext2D
+  const pad = 16
+
+  const draw = (img?: HTMLImageElement) => {
+    ctx.clearRect(0, 0, size, size)
+    if (img) {
+      ctx.drawImage(img, pad, pad, size - pad * 2, size - pad * 2)
+    } else {
+      ctx.fillStyle = `${color}22`
+      ctx.fillRect(pad, pad, size - pad * 2, size - pad * 2)
+    }
+    ctx.strokeStyle = color
+    ctx.lineWidth = 6
+    ctx.shadowColor = color
+    ctx.shadowBlur = 24
+    ctx.strokeRect(pad / 2, pad / 2, size - pad, size - pad)
+    tex.update()
+  }
+
+  draw()
+  const img = new Image()
+  img.onload = () => draw(img)
+  img.src = src
   return tex
 }
 
@@ -103,17 +138,24 @@ export default function ProxyverseScene() {
     dust.color2 = new BABYLON.Color4(0.5, 0.3, 0.7, 0.25)
     dust.start()
 
-    type Drift = { mesh: BABYLON.Mesh; plane: BABYLON.Mesh; base: BABYLON.Vector3; labelOffsetY: number; phase: number; freq: BABYLON.Vector3; amp: BABYLON.Vector3 }
+    type Drift = {
+      mesh: BABYLON.Mesh; plane: BABYLON.Mesh; photoPlane?: BABYLON.Mesh
+      base: BABYLON.Vector3; labelOffsetY: number; phase: number; freq: BABYLON.Vector3; amp: BABYLON.Vector3
+    }
     const drifters: Drift[] = []
 
     agents.forEach((agent, i) => {
       const base = BASE_POSITIONS[agent.id] ?? BABYLON.Vector3.Zero()
       const isRoot = agent.id === 'darkproxy'
       const color = agent.color
+      const image = AGENT_IMAGES[agent.id]
 
+      // Con retrato, el gem queda chico y de adorno atrás (deja de ser
+      // clickeable); sin retrato, sigue siendo el nodo entero como antes —
+      // mismo fallback que usa el perfil en /proxyverse/[id].
       const mesh = BABYLON.MeshBuilder.CreatePolyhedron(`pxv-node-${agent.id}`, {
         type: POLY_TYPES[agent.id] ?? 0,
-        size: isRoot ? 0.85 : 0.55,
+        size: image ? (isRoot ? 0.4 : 0.28) : (isRoot ? 0.85 : 0.55),
       }, scene)
       mesh.position = base.clone()
       const mat = new BABYLON.StandardMaterial(`pxv-mat-${agent.id}`, scene)
@@ -122,7 +164,14 @@ export default function ProxyverseScene() {
       mat.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1)
       mat.alpha = 0.92
       mesh.material = mat
-      mesh.metadata = { agentId: agent.id }
+      mesh.isPickable = !image
+      mesh.metadata = image ? undefined : { agentId: agent.id }
+      // Con retrato el gem no se ve — solo queda como ancla de posición
+      // (lo sigue usando el loop de deriva de abajo) para no duplicar la
+      // lógica de "flotar sin rumbo" en otro lado. Visible se notaba
+      // asomando dentro del marco de la foto por errores de orden de
+      // transparencia entre el plano (alpha-blend) y el poliedro opaco.
+      if (image) mesh.isVisible = false
 
       const spinSpeed = 0.0012 + (i % 5) * 0.0006
       scene.onBeforeRenderObservable.add(() => {
@@ -130,9 +179,28 @@ export default function ProxyverseScene() {
         mesh.rotation.x += spinSpeed * 0.4
       })
 
+      let photoPlane: BABYLON.Mesh | undefined
+      if (image) {
+        const photoTex = makePhotoTexture(scene, agent.id, image, color)
+        photoPlane = BABYLON.MeshBuilder.CreatePlane(`pxv-photo-${agent.id}`, {
+          size: isRoot ? 1.75 : 1.35,
+        }, scene)
+        photoPlane.position = base.clone()
+        photoPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
+        const photoMat = new BABYLON.StandardMaterial(`pxv-photomat-${agent.id}`, scene)
+        photoMat.diffuseTexture = photoTex
+        photoMat.emissiveTexture = photoTex
+        photoMat.opacityTexture = photoTex
+        photoMat.disableLighting = true
+        photoMat.backFaceCulling = false
+        photoPlane.material = photoMat
+        photoPlane.metadata = { agentId: agent.id }
+      }
+
       const label = makeLabelTexture(scene, agent.name, color)
       const plane = BABYLON.MeshBuilder.CreatePlane(`pxv-label-${agent.id}`, { width: 2.4, height: 0.6 }, scene)
-      plane.position = base.add(new BABYLON.Vector3(0, isRoot ? 1.1 : 0.85, 0))
+      const labelOffsetY = image ? (isRoot ? 1.5 : 1.15) : (isRoot ? 1.1 : 0.85)
+      plane.position = base.add(new BABYLON.Vector3(0, labelOffsetY, 0))
       plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
       const planeMat = new BABYLON.StandardMaterial(`pxv-labelmat-${agent.id}`, scene)
       planeMat.diffuseTexture = label
@@ -146,8 +214,7 @@ export default function ProxyverseScene() {
       // Deriva propia, sin rumbo — cada entidad flota a su ritmo, nadie la
       // ata a una posicion fija ni a las demas.
       drifters.push({
-        mesh, plane, base,
-        labelOffsetY: isRoot ? 1.1 : 0.85,
+        mesh, plane, photoPlane, base, labelOffsetY,
         phase: i * 1.7,
         freq: new BABYLON.Vector3(0.18 + i * 0.015, 0.14 + i * 0.02, 0.21 + i * 0.011),
         amp: new BABYLON.Vector3(0.5, 0.4, 0.5),
@@ -162,6 +229,7 @@ export default function ProxyverseScene() {
         const dz = Math.sin(t * d.freq.z + d.phase * 0.7) * d.amp.z
         d.mesh.position.set(d.base.x + dx, d.base.y + dy, d.base.z + dz)
         d.plane.position.set(d.mesh.position.x, d.mesh.position.y + d.labelOffsetY, d.mesh.position.z)
+        d.photoPlane?.position.set(d.mesh.position.x, d.mesh.position.y, d.mesh.position.z)
       }
     })
 

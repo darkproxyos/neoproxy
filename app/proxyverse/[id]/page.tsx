@@ -1,22 +1,27 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { agents } from '@/components/proxyverse/agents'
+import { agents, AGENT_IMAGES } from '@/components/proxyverse/agents'
 import { entries } from '@/components/knowledge/entries'
 import AgentChannel from '@/components/proxyverse/AgentChannel'
+import Agent3DViewer, { type Agent3DConfig } from '@/components/proxyverse/Agent3DViewer'
 
 const mono = "'Space Mono', monospace"
 
-// Arte canonico por agente. Todavia no todos tienen — se van agregando acá
-// a medida que existan.
-const AGENT_IMAGES: Record<string, string> = {
-  darkproxy: '/canon/darkproxy-v1.png',
-  snake: '/canon/snake-v1.jpg',
-  d: '/canon/d-v1.jpg',
-  genos: '/canon/genos-v1.jpg',
-  metatron: '/canon/metatron-v1.jpg',
-  trickster: '/canon/trickster-v1.jpg',
-  prototype: '/canon/prototype-v1.jpg',
+// Modelo 3D por agente — si existe, el perfil muestra el visor en vivo
+// (camina solo, animaciones al azar) en vez del retrato 2D. Mismo glTF que
+// usa el juego de Trickster (public/models/trickster/trickzter.glb), con
+// los nombres de AnimationGroup que ya trae ese rig de Mixamo. Agregar un
+// agente nuevo acá es solo sumar su entrada con el modelo correspondiente —
+// Agent3DViewer no necesita cambios.
+const AGENT_MODELS: Record<string, Agent3DConfig> = {
+  trickster: {
+    path: '/models/trickster/',
+    file: 'trickzter.glb',
+    idleAnim: 'Idle',
+    walkAnim: 'Run',
+    actionAnims: ['FlyingKick', 'MagicAreaAttack'],
+  },
 }
 
 export function generateStaticParams() {
@@ -29,6 +34,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
   if (!agent) notFound()
 
   const image = AGENT_IMAGES[agent.id]
+  const model3d = AGENT_MODELS[agent.id]
   const others = agents.filter(a => a.id !== agent.id)
   const ancestor = entries.find(e => e.relatedAgent === agent.id)
 
@@ -49,7 +55,9 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           NPX-PXV-00 // PERFIL DE PROCESO
         </div>
 
-        {image ? (
+        {model3d ? (
+          <Agent3DViewer config={model3d} color={agent.color} />
+        ) : image ? (
           <div style={{ maxWidth: 420, margin: '0 auto 32px', border: `1px solid ${agent.color}33` }}>
             <Image
               src={image}
