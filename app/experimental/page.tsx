@@ -22,6 +22,14 @@ interface ExperimentEntry {
 // es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
   {
+    id: 'memoria',
+    code: 'NPX-XP-MEMORIA',
+    title: 'MEMORIA',
+    href: '/experimental/memoria',
+    blurb: 'Quinto modo del laboratorio — cada recuerdo guardado es un pozo de energía, no una fila en una tabla. Red de Hopfield (1982) real: rompé un patrón con ruido o pixel por pixel y dejala converger — rueda cuesta abajo en su propia energía hasta caer exactamente en el original. Sobrecargala con más patrones de la cuenta y mirá cómo el recuerdo empieza a fallar de verdad, no en teoría.',
+    controls: 'BITMAP CLICKEABLE — CONVERGENCIA EN VIVO, SIN BABYLON',
+  },
+  {
     id: 'red',
     code: 'NPX-XP-RED',
     title: 'RED',
