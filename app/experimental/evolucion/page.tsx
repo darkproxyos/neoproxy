@@ -6,8 +6,9 @@ import { entries } from '@/components/knowledge/entries'
 import { runSpaceColonization, computeRadii, type SkeletonNode } from '@/app/lab/proxygenesis/engine/spaceColonization'
 import {
   type Genome, GENE_RANGES, GENE_LABELS, mulberry32, randomGenome, mutateGenome,
-  genomeToParams, measureSpecimen, fitnessOf, evolveGeneration,
+  genomeToParams, measureSpecimen, fitnessOf, evolveGeneration, projectToGrid, silhouetteFitness,
 } from './engine/genome'
+import { PATTERN_DEFS, patternFromRows, GRID_SIZE as SIL_GRID_SIZE } from '@/app/experimental/memoria/engine/hopfield'
 
 // NPX-XP-EVOLUCIÓN — sexto modo del laboratorio, el más complejo de los
 // seis: reusa el motor de Space Colonization (Proxygenesis/Workbench) como
@@ -27,7 +28,7 @@ const mono = "'Space Mono', monospace"
 const RED = '#cc0000'
 const CYAN = '#00d4ff'
 
-type Mode = 'seleccion' | 'genetico'
+type Mode = 'seleccion' | 'genetico' | 'sintesis'
 const GENE_KEYS = Object.keys(GENE_RANGES) as (keyof Genome)[]
 
 function GeneBars({ genome, accent }: { genome: Genome; accent: string }) {
@@ -100,6 +101,15 @@ export default function EvolucionPage() {
   const [fitnessHistory, setFitnessHistory] = useState<number[]>([])
   const [bestGenome, setBestGenome] = useState<Genome | null>(null)
   const [bestMeasured, setBestMeasured] = useState<{ height: number; nodeCount: number } | null>(null)
+
+  // --- síntesis (Alsing): evolucionar hacia la silueta de un patrón de Memoria ---
+  const [targetPatternId, setTargetPatternId] = useState(PATTERN_DEFS[0].id)
+  const [silEvolving, setSilEvolving] = useState(false)
+  const [silCurrentGen, setSilCurrentGen] = useState(0)
+  const [silFitnessHistory, setSilFitnessHistory] = useState<number[]>([])
+  const [silBestGenome, setSilBestGenome] = useState<Genome | null>(null)
+  const [silBestGrid, setSilBestGrid] = useState<number[] | null>(null)
+  const SIL_HALF_EXTENT = 2.5
 
   const clearTimers = () => { timersRef.current.forEach((t) => window.clearTimeout(t)); timersRef.current = [] }
 
@@ -262,6 +272,67 @@ export default function EvolucionPage() {
     runGeneration(0)
   }
 
+  // Mismo bucle generacional que evolve(), pero la fitness no mide altura
+  // ni cantidad de nodos — mide qué tan parecida es la silueta del
+  // espécimen (proyectada desde arriba) a un patrón real de Memoria.
+  const evolveSynthesis = () => {
+    if (silEvolving) return
+    clearTimers()
+    setSilEvolving(true)
+    setSilCurrentGen(0)
+    setSilFitnessHistory([])
+    disposeSpecimens()
+
+    const targetDef = PATTERN_DEFS.find((d) => d.id === targetPatternId) ?? PATTERN_DEFS[0]
+    const target = patternFromRows(targetDef.rows)
+    const rand = mulberry32(Date.now() % 1e6)
+    let population = Array.from({ length: popSize }, () => randomGenome(rand))
+
+    const runGeneration = (gen: number) => {
+      const fitnesses: number[] = []
+      for (const genome of population) {
+        const seed = Math.floor(rand() * 1e6)
+        const sim = runSpaceColonization(genomeToParams(genome, seed, 'eval'))
+        let r = sim.next()
+        while (!r.done) r = sim.next()
+        const grid = projectToGrid(r.value.nodes, SIL_GRID_SIZE, SIL_HALF_EXTENT)
+        fitnesses.push(silhouetteFitness(grid, target))
+      }
+      const bestIdx = fitnesses.indexOf(Math.max(...fitnesses))
+      const best = population[bestIdx]
+
+      setSilCurrentGen(gen + 1)
+      setSilFitnessHistory((h) => [...h, fitnesses[bestIdx]])
+      setSilBestGenome(best)
+
+      const B = BRef.current; const scene = sceneRef.current
+      if (B && scene) {
+        disposeSpecimens()
+        const dispSeed = Math.floor(rand() * 1e6)
+        const dispSim = runSpaceColonization(genomeToParams(best, dispSeed, 'display'))
+        let r = dispSim.next()
+        while (!r.done) r = dispSim.next()
+        const mesh = buildSpecimenMesh(B, scene, r.value.nodes, CYAN, 'sil')
+        if (mesh) specimenMeshesRef.current[0] = mesh
+        // La grilla que se muestra en el panel usa la MISMA corrida que se
+        // ve en 3D (calidad display), no la de evaluación — así lo que el
+        // usuario ve comparado contra el objetivo es exactamente lo que
+        // tiene adelante, no una aproximación de otra corrida.
+        setSilBestGrid(projectToGrid(r.value.nodes, SIL_GRID_SIZE, SIL_HALF_EXTENT))
+      }
+
+      population = evolveGeneration(population, fitnesses, rand, 1)
+
+      if (gen + 1 < genCount && !disposedRef.current) {
+        const t = window.setTimeout(() => runGeneration(gen + 1), 260)
+        timersRef.current.push(t)
+      } else {
+        setSilEvolving(false)
+      }
+    }
+    runGeneration(0)
+  }
+
   useEffect(() => {
     if (!canvasRef.current) return
     disposedRef.current = false
@@ -320,19 +391,25 @@ export default function EvolucionPage() {
     if (m === mode) return
     clearTimers()
     setEvolving(false)
+    setSilEvolving(false)
     setMode(m)
     disposeSpecimens()
     const cam = cameraRef.current
     if (m === 'seleccion') {
       if (cam) { cam.radius = 16; cam.beta = 1.0 }
       if (selParent) buildShelf(selParent)
-    } else {
+    } else if (m === 'genetico') {
       if (cam) { cam.radius = 8; cam.beta = 1.15 }
       setFitnessHistory([]); setBestGenome(null); setBestMeasured(null); setCurrentGen(0)
+    } else {
+      if (cam) { cam.radius = 8; cam.beta = 1.15 }
+      setSilFitnessHistory([]); setSilBestGenome(null); setSilBestGrid(null); setSilCurrentGen(0)
     }
   }
 
   const maxFitness = Math.max(0.01, ...fitnessHistory.map((f) => f + 2))
+  const targetGrid = patternFromRows((PATTERN_DEFS.find((d) => d.id === targetPatternId) ?? PATTERN_DEFS[0]).rows)
+  const silMaxFitness = Math.max(0.05, ...silFitnessHistory)
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#020408', fontFamily: mono }}>
@@ -353,14 +430,14 @@ export default function EvolucionPage() {
         background: 'rgba(5,10,20,0.92)', borderRight: `1px solid ${RED}22`, padding: 16, zIndex: 90,
       }}>
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-          {(['seleccion', 'genetico'] as Mode[]).map((m) => (
+          {(['seleccion', 'genetico', 'sintesis'] as Mode[]).map((m) => (
             <button key={m} onClick={() => switchMode(m)} style={{
-              flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
+              flex: 1, fontFamily: mono, fontSize: 8, padding: '8px 4px', letterSpacing: 0.3, cursor: 'pointer',
               background: mode === m ? `${RED}22` : 'transparent',
               border: `1px solid ${mode === m ? RED : '#2a3a50'}`,
               color: mode === m ? RED : '#4a6080',
             }}>
-              {m === 'seleccion' ? 'SELECCIÓN' : 'GENÉTICO'}
+              {m === 'seleccion' ? 'SELECCIÓN' : m === 'genetico' ? 'GENÉTICO' : 'SÍNTESIS'}
             </button>
           ))}
         </div>
@@ -391,7 +468,7 @@ export default function EvolucionPage() {
             )}
             <AuthorCard entryId="dawkins" accent={RED} />
           </>
-        ) : (
+        ) : mode === 'genetico' ? (
           <>
             <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Acá no elegís nada — una población compite por una función de fitness real: qué tan
@@ -456,6 +533,92 @@ export default function EvolucionPage() {
               </>
             )}
             <AuthorCard entryId="holland" accent={RED} />
+          </>
+        ) : (
+          <>
+            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+              Cruza con Memoria: el fitness no mide altura ni ramas — mide qué tan parecida es la
+              silueta del espécimen, vista desde arriba, a un patrón real guardado en /experimental/memoria.
+              Mismo principio que evolucionar polígonos hasta que se parezcan a la Mona Lisa.
+            </p>
+
+            <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 8 }}>PATRÓN OBJETIVO</div>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+              {PATTERN_DEFS.map((d) => (
+                <button key={d.id} onClick={() => setTargetPatternId(d.id)} disabled={silEvolving} style={{
+                  flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 2px', cursor: silEvolving ? 'default' : 'pointer', letterSpacing: 0.3,
+                  background: targetPatternId === d.id ? `${RED}22` : 'transparent',
+                  border: `1px solid ${targetPatternId === d.id ? RED : '#2a3a50'}`,
+                  color: targetPatternId === d.id ? RED : '#4a6080', opacity: silEvolving ? 0.6 : 1,
+                }}>
+                  {d.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+              <div>
+                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>OBJETIVO</div>
+                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIL_GRID_SIZE}, 1fr)`, gap: 1, width: 120, height: 120 }}>
+                  {targetGrid.map((v, i) => (
+                    <div key={i} style={{ background: v === 1 ? RED : '#0a1018' }} />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>PROYECCIÓN ACTUAL</div>
+                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIL_GRID_SIZE}, 1fr)`, gap: 1, width: 120, height: 120 }}>
+                  {(silBestGrid ?? new Array(SIL_GRID_SIZE * SIL_GRID_SIZE).fill(-1)).map((v, i) => (
+                    <div key={i} style={{ background: v === 1 ? CYAN : '#0a1018' }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+              <span>POBLACIÓN</span><span style={{ color: RED }}>{popSize}</span>
+            </div>
+            <input type="range" min={6} max={24} step={1} value={popSize} disabled={silEvolving}
+              onChange={(e) => setPopSize(parseInt(e.target.value, 10))}
+              style={{ width: '100%', accentColor: RED, marginBottom: 10 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+              <span>GENERACIONES</span><span style={{ color: RED }}>{genCount}</span>
+            </div>
+            <input type="range" min={5} max={40} step={1} value={genCount} disabled={silEvolving}
+              onChange={(e) => setGenCount(parseInt(e.target.value, 10))}
+              style={{ width: '100%', accentColor: RED, marginBottom: 14 }} />
+
+            <button onClick={evolveSynthesis} disabled={silEvolving} style={{
+              width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginBottom: 14,
+              cursor: silEvolving ? 'default' : 'pointer', background: RED, color: '#020408', border: 'none',
+              opacity: silEvolving ? 0.6 : 1, letterSpacing: 1,
+            }}>
+              {silEvolving ? `EVOLUCIONANDO... GEN ${silCurrentGen}/${genCount}` : '▶ EVOLUCIONAR HACIA LA SILUETA'}
+            </button>
+
+            {silFitnessHistory.length > 0 && (
+              <>
+                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                  COINCIDENCIA (ÍNDICE DE JACCARD) DEL MEJOR POR GENERACIÓN
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 44, marginBottom: 10, border: `1px solid ${RED}22`, padding: '3px 3px 0' }}>
+                  {silFitnessHistory.map((f, i) => (
+                    <div key={i} style={{ flex: 1, background: RED, opacity: 0.4 + 0.6 * (i / Math.max(1, silFitnessHistory.length - 1)), height: `${Math.max(4, (f / silMaxFitness) * 100)}%` }} />
+                  ))}
+                </div>
+                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>
+                  MEJOR COINCIDENCIA: <span style={{ color: RED }}>{Math.round(silFitnessHistory[silFitnessHistory.length - 1] * 100)}%</span>
+                </div>
+              </>
+            )}
+
+            {silBestGenome && (
+              <>
+                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL MEJOR ENCONTRADO</div>
+                <GeneBars genome={silBestGenome} accent={RED} />
+              </>
+            )}
+            <AuthorCard entryId="alsing" accent={RED} />
           </>
         )}
       </div>
