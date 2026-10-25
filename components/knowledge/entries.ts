@@ -185,6 +185,20 @@ export const entries: KnowledgeEntry[] = [
       'Una compuerta AND es la versión más simple de su modelo: solo "dispara" si las dos entradas están activas a la vez. Encadenando interruptores así de simples se arman circuitos que reconocen patrones enteros.',
   },
   {
+    id: 'hopfield',
+    name: 'John Hopfield',
+    years: '1933–',
+    role: 'Memoria Asociativa // Redes Neuronales',
+    cluster: 'mente',
+    formula: 'E = −½ Σᵢⱼ wᵢⱼ sᵢ sⱼ',
+    formulaLabel: 'Energía de una red de Hopfield (1982)',
+    formulaKind: 'equation',
+    summary:
+      'Mostró que una memoria no necesita una dirección donde buscar — alcanza con una red de neuronas conectadas entre sí que, al arrancar de cualquier estado parecido a uno que ya conoce, rueda cuesta abajo en su propia energía hasta caer exactamente en ese recuerdo completo. No hay búsqueda: hay gravedad.',
+    example:
+      'Mostrale a la red solo la mitad de una cara que ya aprendió, o esa misma cara con ruido — después de unos pocos pasos, la red completa el resto sola, porque esa versión rota cae en el mismo pozo de energía que la versión original. Pero guardale demasiados recuerdos a la vez y los pozos se mezclan: la red empieza a converger a mezclas que nunca aprendió.',
+  },
+  {
     id: 'kauffman',
     name: 'Stuart Kauffman',
     years: '1939–',
