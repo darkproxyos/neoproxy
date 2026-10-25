@@ -22,6 +22,14 @@ interface ExperimentEntry {
 // es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
   {
+    id: 'enjambre',
+    code: 'NPX-XP-ENJAMBRE',
+    title: 'ENJAMBRE',
+    href: '/experimental/enjambre',
+    blurb: 'Segundo modo del laboratorio: sistemas que corren solos, no se generan una vez. Bandada de boids (Craig Reynolds, 1987 — separación, alineación, cohesión, nada de coordinador) o un montículo de arena que deriva solo al borde del colapso (Bak, Tang & Wiesenfeld, 1987 — criticalidad auto-organizada, avalanchas en vivo).',
+    controls: 'SIMULACIÓN EN VIVO — PARÁMETROS AJUSTABLES',
+  },
+  {
     id: 'workbench',
     code: 'NPX-XP-WORKBENCH',
     title: 'WORKBENCH',

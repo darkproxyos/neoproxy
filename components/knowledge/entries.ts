@@ -590,10 +590,10 @@ export const entries: KnowledgeEntry[] = [
     relatedAgent: 'genos',
   },
 
-  // autores de los algoritmos de crecimiento que de verdad corren en el
-  // sitio (Proxygenesis, el workbench de /experimental/workbench) — a
+  // autores de los algoritmos que de verdad corren en el sitio
+  // (Proxygenesis, /experimental/workbench, /experimental/enjambre) — a
   // diferencia del resto de este archivo, que es pensamiento citado, estas
-  // tres entradas son la ecuación/regla EXACTA que el código ejecuta, no una
+  // entradas son la ecuación/regla EXACTA que el código ejecuta, no una
   // paráfrasis.
   {
     id: 'lorenz',
@@ -638,6 +638,21 @@ export const entries: KnowledgeEntry[] = [
     example:
       'Un Nautilus y una torre de caracol de jardín son, matemáticamente, la misma ecuación con D y T distintos — uno mantiene la espira pegada al eje y plana, el otro se despega y se eleva en cada vuelta.',
     relatedAgent: 'genos',
+  },
+  {
+    id: 'reynolds',
+    name: 'Craig Reynolds',
+    years: '1953–',
+    role: 'Vida Artificial // Boids',
+    cluster: 'autoorganizacion',
+    formula: 'v\' = separación + alineación + cohesión',
+    formulaLabel: 'Boids — 3 reglas locales (1987)',
+    formulaKind: 'concept',
+    summary:
+      'Ningún boid conoce a la bandada entera — cada uno mira solo a sus vecinos más próximos y obedece 3 reglas: no chocarlos, volar hacia donde vuelan ellos, acercarse al centro del grupo. La forma fluida de la bandada completa no está escrita en ningún lado.',
+    example:
+      'Una bandada de estorninos al atardecer no tiene líder ni plano — cada pájaro reacciona solo a sus 6 o 7 vecinos más cercanos, y de esa regla puramente local sale la ola que recorre miles de cuerpos a la vez.',
+    relatedAgent: 'trickster',
   },
 
   // tercera tanda — geometría, dimensión por dimensión: del punto (rango 0)
