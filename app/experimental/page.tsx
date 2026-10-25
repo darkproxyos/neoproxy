@@ -22,6 +22,14 @@ interface ExperimentEntry {
 // es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
   {
+    id: 'dialectica',
+    code: 'NPX-XP-DIALÉCTICA',
+    title: 'DIALÉCTICA',
+    href: '/experimental/dialectica',
+    blurb: 'Tercer modo del laboratorio — no genera formas ni corre simulaciones, pone a discutir a los pensadores reales de /knowledge entre sí. 6 tensiones filosóficas documentadas (Chalmers vs Dennett sobre el problema difícil, Baudrillard vs Haraway sobre lo real, Byung-Chul Han vs Zuboff sobre el poder digital, y más): tesis, antítesis, réplica, y un cierre honesto sobre si hay síntesis o la tensión queda abierta.',
+    controls: 'DEBATE EN VIVO — CADA UNO ARGUMENTA SOLO DESDE SU POSICIÓN REAL',
+  },
+  {
     id: 'enjambre',
     code: 'NPX-XP-ENJAMBRE',
     title: 'ENJAMBRE',
