@@ -699,6 +699,21 @@ export const entries: KnowledgeEntry[] = [
     relatedAgent: 'genos',
   },
   {
+    id: 'alsing',
+    name: 'Roger Alsing',
+    years: '2008',
+    role: 'Arte Evolutivo // Fitness por Imagen',
+    cluster: 'autoorganizacion',
+    formula: 'fitness = similitud(imagen_generada, imagen_objetivo)',
+    formulaLabel: 'Genetic Programming: Evolution of Mona Lisa (2008)',
+    formulaKind: 'concept',
+    summary:
+      'Reemplazó la pregunta de siempre en un algoritmo genético —"¿qué tan buena es esta solución?"— por una mucho más visual: "¿qué tan parecida es esta imagen a la que quiero?". Una población de apenas unos polígonos semitransparentes, comparada contra la Mona Lisa generación tras generación, terminó pintándola sola.',
+    example:
+      'Las primeras generaciones son manchas de color sin forma. Después de suficientes generaciones compitiendo solo por parecerse más a la imagen objetivo, los polígonos se acomodan solos en los lugares correctos — nadie le dijo "ahí va la sonrisa", la similitud con el objetivo fue suficiente.',
+    relatedAgent: 'genos',
+  },
+  {
     id: 'erdos-renyi',
     name: 'Erdős & Rényi',
     years: '1913–1996 // 1921–1970',

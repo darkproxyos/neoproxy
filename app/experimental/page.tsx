@@ -26,8 +26,8 @@ const CATALOG: ExperimentEntry[] = [
     code: 'NPX-XP-EVOLUCIÓN',
     title: 'EVOLUCIÓN',
     href: '/experimental/evolucion',
-    blurb: 'Sexto modo del laboratorio, el más complejo de los seis — acá el objeto no es una forma, es una POBLACIÓN cambiando a través de generaciones. Selección artificial (Dawkins, Biomorfos 1986): elegís vos, sin fórmula, cuál de 9 variantes sobrevive. Algoritmo genético (Holland, 1975): una población compite de verdad por una función de fitness medible — altura y ramificación objetivo — con selección por torneo, cruza y mutación, hasta converger sola.',
-    controls: 'DOS PARADIGMAS REALES DE EVOLUCIÓN COMPUTACIONAL',
+    blurb: 'Sexto modo del laboratorio, el más complejo de los seis — acá el objeto no es una forma, es una POBLACIÓN cambiando a través de generaciones. Selección artificial (Dawkins, Biomorfos 1986): elegís vos, sin fórmula, cuál de 9 variantes sobrevive. Algoritmo genético (Holland, 1975): una población compite por una función de fitness medible — altura y ramificación objetivo. Síntesis (Alsing, 2008): cruza con Memoria — evolucionar una silueta real hasta que se parezca a un patrón guardado, mismo principio que evolucionar la Mona Lisa con polígonos.',
+    controls: 'TRES PARADIGMAS REALES DE EVOLUCIÓN COMPUTACIONAL',
   },
   {
     id: 'memoria',

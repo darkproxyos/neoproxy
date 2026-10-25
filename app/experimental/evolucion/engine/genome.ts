@@ -121,6 +121,43 @@ export function fitnessOf(measured: { height: number; nodeCount: number }, targe
   return -(heightErr + nodeErr)
 }
 
+// SÍNTESIS — tercer criterio de fitness: en vez de medir altura/ramas, se
+// proyecta el esqueleto crecido sobre una grilla vista desde arriba (plano
+// X-Z) y se compara contra un patrón objetivo de Memoria (CRUZ, EQUIS,
+// MARCO, DIAGONAL) — mismo principio que Roger Alsing usó para evolucionar
+// la Mona Lisa con polígonos (2008): el fitness es, literalmente, "qué tan
+// parecida es la silueta resultante a la imagen que quiero". Ventana de
+// proyección FIJA (no depende del tamaño real de la copa de cada genoma)
+// para que todos los individuos se comparen contra el mismo objetivo en
+// igualdad de condiciones.
+export function projectToGrid(nodes: { pos: Vec3 }[], gridSize: number, halfExtent: number): number[] {
+  const grid = new Array(gridSize * gridSize).fill(-1)
+  const cellSize = (halfExtent * 2) / gridSize
+  for (const n of nodes) {
+    const gx = Math.floor((n.pos[0] + halfExtent) / cellSize)
+    const gz = Math.floor((n.pos[2] + halfExtent) / cellSize)
+    if (gx >= 0 && gx < gridSize && gz >= 0 && gz < gridSize) grid[gz * gridSize + gx] = 1
+  }
+  return grid
+}
+
+// Índice de Jaccard (intersección sobre unión), NO acuerdo simple celda a
+// celda — verificado antes de usarlo: con acuerdo simple, el fitness
+// arrancaba en ~78% y nunca mejoraba, porque la mayoría de la grilla está
+// vacía en el objetivo Y en cualquier espécimen disperso, así que ese
+// acuerdo trivial sobre el fondo vacío ahogaba la señal real. Jaccard
+// solo mira las celdas "encendidas" de los dos lados — sin fondo que
+// inflar el número de arranque, hay señal de verdad para seleccionar.
+export function silhouetteFitness(projected: number[], target: number[]): number {
+  let intersection = 0, union = 0
+  for (let i = 0; i < target.length; i++) {
+    const p = projected[i] === 1, t = target[i] === 1
+    if (p || t) union++
+    if (p && t) intersection++
+  }
+  return union === 0 ? 0 : intersection / union
+}
+
 // Una generación completa: elitismo (el mejor pasa intacto) + selección
 // por torneo (2 al azar, gana el de mayor fitness) + cruza + mutación
 // probabilística — la estructura estándar de un GA desde Holland, no una
