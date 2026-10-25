@@ -22,6 +22,14 @@ interface ExperimentEntry {
 // es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
   {
+    id: 'red',
+    code: 'NPX-XP-RED',
+    title: 'RED',
+    href: '/experimental/red',
+    blurb: 'Cuarto modo del laboratorio: el objeto es la relación, no la forma. Grafos aleatorios de Erdős–Rényi vs libres de escala de Barabási-Albert — misma cantidad de nodos, distribución de grado radicalmente distinta, graficada en vivo. O una red bayesiana real (Judea Pearl): fijás evidencia en un nodo y la probabilidad posterior de los demás se recalcula por inferencia exacta, no una animación de mentira.',
+    controls: 'LAYOUT DE FUERZAS + INFERENCIA EXACTA EN VIVO',
+  },
+  {
     id: 'dialectica',
     code: 'NPX-XP-DIALÉCTICA',
     title: 'DIALÉCTICA',

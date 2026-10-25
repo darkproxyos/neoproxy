@@ -654,6 +654,48 @@ export const entries: KnowledgeEntry[] = [
       'Una bandada de estorninos al atardecer no tiene líder ni plano — cada pájaro reacciona solo a sus 6 o 7 vecinos más cercanos, y de esa regla puramente local sale la ola que recorre miles de cuerpos a la vez.',
     relatedAgent: 'trickster',
   },
+  {
+    id: 'erdos-renyi',
+    name: 'Erdős & Rényi',
+    years: '1913–1996 // 1921–1970',
+    role: 'Grafos Aleatorios',
+    cluster: 'autoorganizacion',
+    formula: 'P(arista) = p, independiente para cada par de nodos',
+    formulaLabel: 'Grafo aleatorio G(n,p) (1959)',
+    formulaKind: 'concept',
+    summary:
+      'Preguntaron qué pasa si cada posible conexión entre n puntos se decide por moneda al aire, con probabilidad p. La respuesta no fue gradual: hay un umbral exacto de p donde el grafo pasa, de golpe, de ser un archipiélago de piezas sueltas a tener una sola componente gigante que conecta casi todo.',
+    example:
+      'Con pocas conexiones al azar, una red de conocidos queda en grupitos aislados. Agregá apenas un poco más de probabilidad de conexión y, sin aviso previo, casi todo el mundo termina conectado con casi todo el mundo — ese salto abrupto, no gradual, es lo que Erdős y Rényi demostraron que siempre pasa.',
+  },
+  {
+    id: 'barabasi',
+    name: 'Albert-László Barabási',
+    years: '1967–',
+    role: 'Redes Libres de Escala',
+    cluster: 'autoorganizacion',
+    formula: 'P(conectar al nodo i) ∝ grado(i)',
+    formulaLabel: 'Apego preferencial — "Emergence of Scaling" (1999)',
+    formulaKind: 'concept',
+    summary:
+      'Notó que las redes reales (internet, citas académicas, vuelos) no se parecen al grafo parejo de Erdős y Rényi — un puñado de nodos concentra una cantidad desproporcionada de conexiones. La razón: los nodos nuevos prefieren conectarse a los que YA están bien conectados. "El rico se hace más rico", corriendo desde el primer nodo de la red.',
+    example:
+      'Un aeropuerto nuevo en una ciudad chica casi siempre abre su primera ruta hacia un hub grande, no hacia otro aeropuerto chico — esa preferencia, repetida miles de veces, es lo que convierte a un puñado de aeropuertos en hubs gigantes mientras la mayoría queda con dos o tres rutas nomás.',
+  },
+  {
+    id: 'pearl',
+    name: 'Judea Pearl',
+    years: '1936–',
+    role: 'Redes Bayesianas // Inferencia Causal',
+    cluster: 'informacion',
+    formula: 'P(A|B) = P(B|A)·P(A) / P(B)',
+    formulaLabel: 'Redes bayesianas — propagación de evidencia (1988)',
+    formulaKind: 'equation',
+    summary:
+      'Armó un grafo donde cada nodo es una creencia y cada flecha una dependencia causal, y mostró cómo, al confirmar un solo hecho en un extremo de la red, la probabilidad de todo lo demás se actualiza propagándose por esas flechas — sin tener que recalcular el mundo entero a mano cada vez.',
+    example:
+      'Si sabés que el pasto está mojado, la probabilidad de que haya llovido sube. Pero si además sabés que el aspersor estuvo prendido, esa misma evidencia "se explica" de otra forma y la probabilidad de lluvia vuelve a bajar — la misma evidencia pesa distinto según qué más ya sabías. Eso es inferencia bayesiana.',
+  },
 
   // tercera tanda — geometría, dimensión por dimensión: del punto (rango 0)
   // al politopo regular 4D más complejo (600-celdas, "hexacosichoron") y el
