@@ -590,6 +590,56 @@ export const entries: KnowledgeEntry[] = [
     relatedAgent: 'genos',
   },
 
+  // autores de los algoritmos de crecimiento que de verdad corren en el
+  // sitio (Proxygenesis, el workbench de /experimental/workbench) — a
+  // diferencia del resto de este archivo, que es pensamiento citado, estas
+  // tres entradas son la ecuación/regla EXACTA que el código ejecuta, no una
+  // paráfrasis.
+  {
+    id: 'lorenz',
+    name: 'Edward Lorenz',
+    years: '1917–2008',
+    role: 'Caos Determinista',
+    cluster: 'autoorganizacion',
+    formula: 'dx/dt = σ(y−x), dy/dt = x(ρ−z)−y, dz/dt = xy−βz',
+    formulaLabel: 'Sistema de Lorenz (1963)',
+    formulaKind: 'equation',
+    summary:
+      'Buscaba predecir el clima y encontró, por accidente, que un sistema totalmente determinista —sin una sola moneda al aire— puede volverse impredecible solo por redondear un decimal de más. No hay azar en la ecuación: hay sensibilidad.',
+    example:
+      'Correr la misma ecuación con 0.506127 en vez de 0.506 da, al principio, casi el mismo resultado. Después de un rato las dos trayectorias no se parecen en nada — el "efecto mariposa" es literalmente esto, no una metáfora.',
+  },
+  {
+    id: 'runions-lane-prusinkiewicz',
+    name: 'Runions, Lane & Prusinkiewicz',
+    years: '2007',
+    role: 'Space Colonization Algorithm',
+    cluster: 'autoorganizacion',
+    formula: 'nodo_nuevo = nodo_más_cercano + paso · dirección(atractor)',
+    formulaLabel: 'Colonización del espacio — regla de crecimiento',
+    formulaKind: 'concept',
+    summary:
+      'Modelaron cómo crece un árbol sin dibujar un árbol: una nube de puntos de "luz" atrae al nodo más cercano del esqueleto, que avanza hacia ella y la consume al llegar. La forma no está en la regla — emerge de competir por el mismo espacio.',
+    example:
+      'Dos ramas creciendo hacia la misma nube de luz terminan separándose solas, cada una drenando los puntos de su lado — nadie programó "no choques con tu hermana", es consecuencia directa de que un punto ya consumido deja de atraer a nadie más.',
+    relatedAgent: 'genos',
+  },
+  {
+    id: 'raup',
+    name: 'David Raup',
+    years: '1933–2015',
+    role: 'Morfología Computacional',
+    cluster: 'autoorganizacion',
+    formula: 'r(θ) = r₀ · W^(θ/2π)',
+    formulaLabel: 'Espiral logarítmica de coiling (1962)',
+    formulaKind: 'equation',
+    summary:
+      'Redujo la forma de cualquier caracol o amonite a tres números: cuánto se expande por vuelta, qué tan lejos del eje gira, cuánto sube. Recorriendo a mano ese espacio de 3 parámetros encontró formas que ningún molusco real adoptó jamás — la biología solo ocupa una esquina de lo posible.',
+    example:
+      'Un Nautilus y una torre de caracol de jardín son, matemáticamente, la misma ecuación con D y T distintos — uno mantiene la espira pegada al eje y plana, el otro se despega y se eleva en cada vuelta.',
+    relatedAgent: 'genos',
+  },
+
   // tercera tanda — geometría, dimensión por dimensión: del punto (rango 0)
   // al politopo regular 4D más complejo (600-celdas, "hexacosichoron") y el
   // cierre conceptual de lo que pasa después. Conteos de vértices/aristas/
