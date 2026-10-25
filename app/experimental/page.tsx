@@ -22,6 +22,14 @@ interface ExperimentEntry {
 // es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
   {
+    id: 'workbench',
+    code: 'NPX-XP-WORKBENCH',
+    title: 'WORKBENCH',
+    href: '/experimental/workbench',
+    blurb: 'Banco de trabajo real: una sola forma 3D donde se apilan teorías científicas como capas — esqueleto por Space Colonization (Runions, Lane & Prusinkiewicz 2007) o espiral de Raup (1962), patrón de reacción-difusión de Turing (1952) pintado sobre la superficie, y un sistema caótico real (Lorenz y otros 9) deformando los nodos. Cada capa cita a su autor. Export a .STL.',
+    controls: 'STACK DE CAPAS + SLIDERS — EXPORT .STL',
+  },
+  {
     id: 'proxygenesis',
     code: 'NPX-XP-GENESIS',
     title: 'PROXYGENESIS',
