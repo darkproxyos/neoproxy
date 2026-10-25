@@ -669,6 +669,36 @@ export const entries: KnowledgeEntry[] = [
     relatedAgent: 'trickster',
   },
   {
+    id: 'dawkins',
+    name: 'Richard Dawkins',
+    years: '1941–',
+    role: 'Biomorfos // Selección Artificial',
+    cluster: 'autoorganizacion',
+    formula: 'genotipo → fenotipo → elegido por vos → mutación → repetir',
+    formulaLabel: 'Biomorfos — El Relojero Ciego (1986)',
+    formulaKind: 'concept',
+    summary:
+      'Programó un puñado de genes que dibujan una forma ramificada, y dejó que el usuario —no una fórmula— eligiera cuál de las variantes mutadas sobrevivía a cada generación. En unas pocas decenas de generaciones de selección puramente estética, formas simples derivaron en algo que de pronto se parecía a un insecto. Nadie lo diseñó: lo eligieron, paso a paso, sin saber hacia dónde iba.',
+    example:
+      'Elegís, entre 9 variantes apenas distintas de una ramita, la que te parece más "interesante" — no la más alta ni la más simétrica, la que te llama la atención. Repetido 30 veces, ese criterio puramente subjetivo alcanza para esculpir formas que ningún diseñador habría dibujado a propósito.',
+    relatedAgent: 'genos',
+  },
+  {
+    id: 'holland',
+    name: 'John Holland',
+    years: '1929–2015',
+    role: 'Algoritmos Genéticos',
+    cluster: 'autoorganizacion',
+    formula: 'selección + cruza + mutación, generación tras generación',
+    formulaLabel: 'Adaptation in Natural and Artificial Systems (1975)',
+    formulaKind: 'concept',
+    summary:
+      'Formalizó la evolución como un algoritmo de búsqueda: una población de soluciones candidatas compite por una función de aptitud (fitness), las mejores se cruzan entre sí, y una mutación ocasional mantiene la variedad. No hace falta entender el problema para resolverlo — alcanza con poder medir qué tan buena es cada solución.',
+    example:
+      'Para encontrar la forma que más se acerca a una altura y densidad de ramas objetivo, no hace falta calcular la fórmula exacta — alcanza con generar variantes al azar, quedarse con las mejores, cruzarlas entre sí, y repetir unas pocas decenas de veces hasta que la población converge sola hacia el objetivo.',
+    relatedAgent: 'genos',
+  },
+  {
     id: 'erdos-renyi',
     name: 'Erdős & Rényi',
     years: '1913–1996 // 1921–1970',
