@@ -22,6 +22,14 @@ interface ExperimentEntry {
 // es el experimento más terminado de toda la sección.
 const CATALOG: ExperimentEntry[] = [
   {
+    id: 'evolucion',
+    code: 'NPX-XP-EVOLUCIÓN',
+    title: 'EVOLUCIÓN',
+    href: '/experimental/evolucion',
+    blurb: 'Sexto modo del laboratorio, el más complejo de los seis — acá el objeto no es una forma, es una POBLACIÓN cambiando a través de generaciones. Selección artificial (Dawkins, Biomorfos 1986): elegís vos, sin fórmula, cuál de 9 variantes sobrevive. Algoritmo genético (Holland, 1975): una población compite de verdad por una función de fitness medible — altura y ramificación objetivo — con selección por torneo, cruza y mutación, hasta converger sola.',
+    controls: 'DOS PARADIGMAS REALES DE EVOLUCIÓN COMPUTACIONAL',
+  },
+  {
     id: 'memoria',
     code: 'NPX-XP-MEMORIA',
     title: 'MEMORIA',
