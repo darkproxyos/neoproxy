@@ -456,9 +456,15 @@ export default function ProxygenesisPage() {
 
             {(!isMobile || isPanelOpen) && (
               <div style={{ padding: 16, maxHeight: isMobile ? '55vh' : '72vh', overflowY: 'auto' }}>
-                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10 }}>
-                  {mode === 'concha' ? 'MODELO DE COILING (RAUP, 1962)' : 'SPACE COLONIZATION (RUNIONS ET AL., 2007)'}
-                </div>
+                <Link
+                  href={`/knowledge?entry=${mode === 'concha' ? 'raup' : 'runions-lane-prusinkiewicz'}`}
+                  style={{
+                    display: 'block', fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10,
+                    textDecoration: 'none',
+                  }}
+                >
+                  {mode === 'concha' ? 'MODELO DE COILING (RAUP, 1962)' : 'SPACE COLONIZATION (RUNIONS ET AL., 2007)'} →
+                </Link>
 
                 {/* Presets */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 14 }}>

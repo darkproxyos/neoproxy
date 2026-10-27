@@ -246,18 +246,27 @@ export default function GenerativeLab() {
                   </div>
 
                   {/* Current Algorithm Info */}
-                  <div style={{ 
-                    padding: '8px', 
-                    background: '#00000044', 
-                    fontSize: '8px', 
-                    color: '#00d4ff88', 
-                    whiteSpace: 'pre-wrap', 
-                    marginBottom: '10px',
+                  <div style={{
+                    padding: '8px',
+                    background: '#00000044',
+                    fontSize: '8px',
+                    color: '#00d4ff88',
+                    whiteSpace: 'pre-wrap',
+                    marginBottom: selectedAlgo === 'lorenz' ? '6px' : '10px',
                     maxHeight: '80px',
                     overflow: 'auto'
                   }}>
                     {attractors[selectedAlgo].equations}
                   </div>
+
+                  {selectedAlgo === 'lorenz' && (
+                    <Link href="/knowledge?entry=lorenz" style={{
+                      display: 'block', fontSize: '8px', color: '#00d4ff', letterSpacing: '1px',
+                      textDecoration: 'none', marginBottom: '10px',
+                    }}>
+                      EDWARD LORENZ, 1917–2008 →
+                    </Link>
+                  )}
 
                   {/* Export Button */}
                   <button 
@@ -326,19 +335,28 @@ export default function GenerativeLab() {
                 ))}
               </div>
               
-              <div style={{ 
-                padding: '10px', 
-                background: '#00000044', 
-                fontSize: '9px', 
-                color: '#00d4ff88', 
-                whiteSpace: 'pre-wrap', 
-                marginBottom: '15px', 
+              <div style={{
+                padding: '10px',
+                background: '#00000044',
+                fontSize: '9px',
+                color: '#00d4ff88',
+                whiteSpace: 'pre-wrap',
+                marginBottom: selectedAlgo === 'lorenz' ? '6px' : '15px',
                 overflow: 'hidden'
               }}>
                 {attractors[selectedAlgo].equations}
               </div>
 
-              <button 
+              {selectedAlgo === 'lorenz' && (
+                <Link href="/knowledge?entry=lorenz" style={{
+                  display: 'block', fontSize: '9px', color: '#00d4ff', letterSpacing: '1px',
+                  textDecoration: 'none', marginBottom: '15px',
+                }}>
+                  EDWARD LORENZ, 1917–2008 →
+                </Link>
+              )}
+
+              <button
                 onClick={handleExportSTL}
                 style={{ 
                   width: '100%', 

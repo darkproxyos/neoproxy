@@ -19,8 +19,11 @@ export default function DialecticaPage() {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [visible, setVisible] = useState<ExchangeLine[]>([])
+  const [typingLine, setTypingLine] = useState<ExchangeLine | null>(null)
+  const [typedChars, setTypedChars] = useState(0)
   const idRef = useRef(0)
   const revealTimers = useRef<number[]>([])
+  const revealIntervals = useRef<number[]>([])
 
   const tension = tensions.find(t => t.id === tensionId)!
   const entryA = entries.find(e => e.id === tension.aId)!
@@ -29,6 +32,10 @@ export default function DialecticaPage() {
   const clearTimers = () => {
     revealTimers.current.forEach(t => window.clearTimeout(t))
     revealTimers.current = []
+    revealIntervals.current.forEach(t => window.clearInterval(t))
+    revealIntervals.current = []
+    setTypingLine(null)
+    setTypedChars(0)
   }
 
   const selectTension = (id: string) => {
@@ -60,14 +67,33 @@ export default function DialecticaPage() {
       if (exchange.length === 0) throw new Error('intercambio vacío')
 
       setStatus('revealing')
-      exchange.forEach((e, i) => {
-        const timer = window.setTimeout(() => {
-          idRef.current += 1
-          setVisible(prev => [...prev, { id: idRef.current, ...e }])
-          if (i === exchange.length - 1) setStatus('done')
-        }, i * 1400)
-        revealTimers.current.push(timer)
-      })
+
+      // Máquina de escribir: cada línea se tipea de a un par de caracteres
+      // genuino, no aparece de golpe — es el único modo del laboratorio
+      // donde el objeto es lenguaje, así que la revelación también se
+      // siente como alguien escribiendo, no como un panel actualizándose.
+      const typeLine = (i: number) => {
+        if (i >= exchange.length) { setStatus('done'); return }
+        const e = exchange[i]
+        setTypingLine({ id: -1, ...e })
+        let shown = 0
+        const text = e.line
+        const interval = window.setInterval(() => {
+          shown = Math.min(text.length, shown + 2)
+          setTypedChars(shown)
+          if (shown >= text.length) {
+            window.clearInterval(interval)
+            idRef.current += 1
+            setVisible(prev => [...prev, { id: idRef.current, ...e }])
+            setTypingLine(null)
+            setTypedChars(0)
+            const t = window.setTimeout(() => typeLine(i + 1), 450)
+            revealTimers.current.push(t)
+          }
+        }, 16)
+        revealIntervals.current.push(interval)
+      }
+      typeLine(0)
     } catch (err) {
       console.error('Error en la dialéctica:', err)
       setErrorMsg('No se pudo abrir la dialéctica. Probá de nuevo.')
@@ -181,6 +207,22 @@ export default function DialecticaPage() {
                 <span style={{ color: v.speaker === 'sistema' ? SISTEMA : '#c8daf0' }}>{v.line}</span>
               </div>
             ))}
+            {typingLine && (
+              <div style={{
+                marginBottom: 16, fontFamily: mono, fontSize: 12, lineHeight: 1.7,
+                fontStyle: typingLine.speaker === 'sistema' ? 'italic' : 'normal',
+                borderLeft: typingLine.speaker !== 'sistema' ? `2px solid ${speakerColor(typingLine.speaker)}44` : 'none',
+                paddingLeft: typingLine.speaker !== 'sistema' ? 12 : 0,
+              }}>
+                <div style={{ fontSize: 8, letterSpacing: 2, color: speakerColor(typingLine.speaker), marginBottom: 4 }}>
+                  {typingLine.role} — {speakerName(typingLine.speaker)}
+                </div>
+                <span style={{ color: typingLine.speaker === 'sistema' ? SISTEMA : '#c8daf0' }}>
+                  {typingLine.line.slice(0, typedChars)}
+                  <span className="blink-cursor" style={{ color: speakerColor(typingLine.speaker) }}>▊</span>
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
