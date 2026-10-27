@@ -52,6 +52,20 @@ export default function FabricationPage() {
           >
             ← BACK TO HOME
           </Link>
+          <div style={{ display: 'flex', gap: 10 }}>
+          <Link
+            href="/fabrication/cola"
+            style={{
+              fontSize: 9,
+              color: '#39ff6a',
+              letterSpacing: 3,
+              textDecoration: 'none',
+              border: '1px solid #39ff6a44',
+              padding: '6px 14px'
+            }}
+          >
+            COLA DE FABRICACIÓN →
+          </Link>
           {hasGallery && (
             <Link
               href="/fabrication/gallery"
@@ -67,6 +81,7 @@ export default function FabricationPage() {
               CURATED GALLERY →
             </Link>
           )}
+          </div>
         </div>
       </nav>
 

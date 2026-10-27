@@ -2,9 +2,10 @@
 
 import { auth } from "@/auth";
 import { db } from "@/src/db";
-import { systemState, memoryEvents } from "@/src/db/schema";
+import { systemState, memoryEvents, fabricationSubmissions } from "@/src/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { isoWeekKey } from "@/lib/isoWeek";
 
 // El gate de /admin/overseer/page.tsx es puramente client-side (una password
 // hardcodeada) y no protege nada por si solo — cualquier sesion autenticada,
@@ -103,5 +104,31 @@ export async function getSystemHistory() {
   } catch (error) {
     console.error("Error fetching history:", error);
     return [];
+  }
+}
+
+// El voto de la comunidad (app/fabrication/cola) es insumo, no un gatillo
+// automático — fabricar algo cuesta tiempo y material real, así que quien
+// decide es DarkProxy a mano, acá, no un cron. No hace falta que el líder
+// de la semana tenga más votos que nadie más: se declara explícitamente a
+// cuál submissionId, puede o no coincidir con el que lidera el conteo.
+export async function declareFabricationWinner(submissionId: string) {
+  const gate = await requireRoot();
+  if (!gate.authorized) return { success: false, error: gate.error };
+  try {
+    await db.update(fabricationSubmissions)
+      .set({ status: "winner" })
+      .where(eq(fabricationSubmissions.id, submissionId));
+
+    await db.insert(memoryEvents).values({
+      eventType: "FABRICATION_WINNER_DECLARED",
+      payload: { submissionId, weekOf: isoWeekKey() },
+    });
+
+    revalidatePath("/fabrication/cola");
+    return { success: true, message: "Ganador declarado." };
+  } catch (error) {
+    console.error("Error declarando ganador de fabricación:", error);
+    return { success: false, error: "Database connection failed" };
   }
 }

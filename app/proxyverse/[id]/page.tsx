@@ -6,6 +6,9 @@ import { entries } from '@/components/knowledge/entries'
 import AgentChannel from '@/components/proxyverse/AgentChannel'
 import Agent3DViewer, { type Agent3DConfig } from '@/components/proxyverse/Agent3DViewer'
 import PrototypeFragments from '@/components/proxyverse/PrototypeFragments'
+import { db } from '@/src/db'
+import { agentDiaryEntries } from '@/src/db/schema'
+import { eq, desc } from 'drizzle-orm'
 
 const mono = "'Space Mono', monospace"
 
@@ -54,6 +57,14 @@ export function generateStaticParams() {
   return agents.map(a => ({ id: a.id }))
 }
 
+// Esta página es SSG (generateStaticParams) — sin esto, el HTML prerenderizado
+// en el deploy nunca se enteraría de entradas nuevas de BITÁCORA (las
+// escribe el cron de app/api/cron/agent-dreams, después del deploy). Esa
+// route además llama a revalidatePath por cada agente apenas escribe, así
+// que esto es el respaldo — para cuando algo más (un voto a Grietas, etc.)
+// cambió algo en la página sin pasar por esa route.
+export const revalidate = 3600
+
 export default async function AgentProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const agent = agents.find(a => a.id === id)
@@ -63,6 +74,22 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
   const model3d = AGENT_MODELS[agent.id]
   const others = agents.filter(a => a.id !== agent.id)
   const relatedEntries = entries.filter(e => e.relatedAgent === agent.id)
+
+  // darkproxy no tiene diario — no es un proceso de kernel, es el root. Si
+  // la base no responde (sin credenciales Turso, por ejemplo) el perfil
+  // sigue renderizando igual, sin esta sección.
+  let diaryEntries: { dateKey: string; entry: string }[] = []
+  if (agent.id !== 'darkproxy') {
+    try {
+      diaryEntries = await db.select({ dateKey: agentDiaryEntries.dateKey, entry: agentDiaryEntries.entry })
+        .from(agentDiaryEntries)
+        .where(eq(agentDiaryEntries.agentId, agent.id))
+        .orderBy(desc(agentDiaryEntries.dateKey))
+        .limit(14)
+    } catch (err) {
+      console.error('No se pudo leer la bitácora del agente:', err)
+    }
+  }
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', position: 'relative' }}>
@@ -202,6 +229,32 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         )}
 
         {agent.id === 'prototype' && <PrototypeFragments />}
+
+        {diaryEntries.length > 0 && (
+          <div style={{ marginBottom: 40 }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${agent.color}aa`, marginBottom: 4 }}>
+              BITÁCORA
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+              Un fragmento por día, anclado a lo que de verdad pasó en el sistema — no son líneas
+              sueltas, es lo que {agent.name} anota al cierre de cada jornada real.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {diaryEntries.map(d => (
+                <div key={d.dateKey} style={{
+                  borderLeft: `2px solid ${agent.color}44`, paddingLeft: 14,
+                }}>
+                  <div style={{ fontFamily: mono, fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                    {d.dateKey}
+                  </div>
+                  <div style={{ fontFamily: mono, fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.8 }}>
+                    "{d.entry}"
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <AgentChannel agent={agent} />
 

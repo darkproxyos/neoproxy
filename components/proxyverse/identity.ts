@@ -11,6 +11,7 @@ const PORTRAIT_KEY = 'neoproxy-identity-last-portrait'
 const TRICKSTER_KEY = 'neoproxy-identity-trickster'
 const SCAN_COUNT_KEY = 'neoproxy-identity-nfc-scans'
 const GRIETAS_KEY = 'neoproxy-identity-grietas'
+const VOTER_ID_KEY = 'neoproxy-identity-voter-id'
 
 function safeGet<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback
@@ -143,4 +144,16 @@ export function computeIdentity(): IdentitySummary {
   const hasAnySignal = bestScore > 0 || trickster.bestLevel > 0 || nfcScans > 0 || proxygenesisCount > 0
 
   return { dominant, scorePerAgent, chatCounts, portrait, trickster, nfcScans, proxygenesisCount, hasAnySignal }
+}
+
+// Un voto por visitante en la cola de fabricación (app/fabrication/cola):
+// no hay cuentas de usuario en el sitio, así que esto es lo más parecido a
+// "quién sos" que tenemos — no a prueba de fraude real, pero suficiente
+// para que recargar la página no cuente como un voto nuevo.
+export function getVoterId(): string {
+  const existing = safeGet<string | null>(VOTER_ID_KEY, null)
+  if (existing) return existing
+  const id = crypto.randomUUID()
+  safeSet(VOTER_ID_KEY, id)
+  return id
 }
