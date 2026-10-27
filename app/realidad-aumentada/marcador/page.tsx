@@ -3,27 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js'
+import { IMAGE_ARTIFACTS } from '@/components/artifacts/registry'
+import RevealPanel from '@/components/artifacts/RevealPanel'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
-const GREEN = '#39ff6a'
-const PURPLE = '#a537fd'
-
-// Un marcador = una imagen entrenada offline (.mind, compilado con el
-// offline-compiler de MindAR) + lo que aparece en pantalla al reconocerla.
-// Agregar otro marcador en el futuro es sumar una entrada acá, no tocar
-// el resto del componente.
-const MARKERS = [
-  {
-    id: 'joker',
-    targetSrc: '/ar-targets/joker.mind',
-    preview: '/ar-targets/joker-preview.jpg',
-    label: 'STICKER — JOKER',
-    reveal: 'WHY SO SERIOUS?',
-    color: GREEN,
-    glow: PURPLE,
-  },
-]
 
 type Status = 'idle' | 'starting' | 'scanning' | 'found' | 'error'
 
@@ -33,7 +17,7 @@ export default function MarcadorPage() {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const marker = MARKERS[0]
+  const artifact = IMAGE_ARTIFACTS[0]
 
   const activar = async () => {
     if (status === 'starting' || status === 'scanning' || status === 'found') return
@@ -49,7 +33,7 @@ export default function MarcadorPage() {
 
       const mindarThree = new MindARThree({
         container,
-        imageTargetSrc: marker.targetSrc,
+        imageTargetSrc: artifact.targetSrc,
         uiLoading: 'no',
         uiScanning: 'no',
         uiError: 'no',
@@ -114,10 +98,10 @@ export default function MarcadorPage() {
           border: `1px solid ${CYAN}33`, background: `${CYAN}0a`, padding: '14px 18px', marginBottom: 28,
           display: 'flex', gap: 14, alignItems: 'center',
         }}>
-          <Image src={marker.preview} alt={marker.label} width={56} height={56} style={{ width: 56, height: 56, objectFit: 'cover', border: `1px solid ${CYAN}44` }} />
+          <Image src={artifact.preview} alt={artifact.reveal.label} width={56} height={56} style={{ width: 56, height: 56, objectFit: 'cover', border: `1px solid ${CYAN}44` }} />
           <div>
             <div style={{ fontSize: 9, letterSpacing: 2, color: `${CYAN}aa`, marginBottom: 4 }}>MARCADOR ACTIVO</div>
-            <div style={{ fontSize: 11, color: '#c8daf0' }}>{marker.label}</div>
+            <div style={{ fontSize: 11, color: '#c8daf0' }}>{artifact.reveal.label}</div>
           </div>
         </div>
 
@@ -150,16 +134,7 @@ export default function MarcadorPage() {
 
           {status === 'found' && (
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-              <div
-                className="marcador-reveal-text"
-                style={{
-                  fontFamily: mono, fontSize: 'clamp(24px, 6vw, 48px)', fontWeight: 700, letterSpacing: 3,
-                  color: marker.color, textShadow: `0 0 12px ${marker.color}, 0 0 34px ${marker.glow}, 0 0 60px ${marker.glow}`,
-                  textAlign: 'center', padding: '0 20px',
-                }}
-              >
-                {marker.reveal}
-              </div>
+              <RevealPanel reveal={artifact.reveal} />
             </div>
           )}
         </div>

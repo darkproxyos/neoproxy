@@ -14,6 +14,13 @@ import { buildMaskCanvas, MaskCache, clamp } from './engine/core'
 import { CubeField, HandGame } from './engine/game'
 import { matchAgentFromCanvas, matchAgentFromRgb, dominantColor, averageRgb } from './engine/portrait'
 import { startMarkerController, drawMarkerReveal, drawMarkerScanningHint, type MarkerHandle } from './engine/marker'
+import { IMAGE_ARTIFACTS } from '@/components/artifacts/registry'
+import { playRevealSound } from '@/components/artifacts/playReveal'
+
+// Mismo artefacto que lee /realidad-aumentada/marcador — ver
+// components/artifacts/registry.ts. El toggle MARCADOR de NeoCam escanea
+// este, no uno propio.
+const activeArtifact = IMAGE_ARTIFACTS[0]
 import { recordPortraitMatch } from '@/components/proxyverse/identity'
 import type { ProxyAgent } from '@/components/proxyverse/agents'
 
@@ -237,7 +244,11 @@ export default function NeoCamPage() {
     try {
       markerHandleRef.current = await startMarkerController(
         video,
-        () => { markerFoundRef.current = true },
+        activeArtifact.targetSrc,
+        () => {
+          if (!markerFoundRef.current) playRevealSound(activeArtifact.reveal)
+          markerFoundRef.current = true
+        },
         () => { markerFoundRef.current = false },
       )
     } catch (err) {
@@ -547,7 +558,7 @@ export default function NeoCamPage() {
 
       if (st.faceMaskOn && faceBox) drawFaceMask(ctx, videoSource, faceBox, w, h, st.faceMaskStyle)
       if (st.marcador) {
-        if (markerFoundRef.current) drawMarkerReveal(ctx, w, h, now)
+        if (markerFoundRef.current) drawMarkerReveal(ctx, w, h, now, activeArtifact.reveal)
         else drawMarkerScanningHint(ctx, w, h)
       }
       if (st.hud) drawHud(ctx, w, h, faceBox, fpsRef.current, MODE_LIST.find(m => m.id === st.mode)?.label ?? '')
