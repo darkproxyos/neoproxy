@@ -253,16 +253,22 @@ export function getAmbientLine(): { agentId: string; line: string } {
   return { agentId: agent.id, line: pickRandom(agent.ambient) }
 }
 
+function agentIdentityLines(agent: ProxyAgent): string[] {
+  return [
+    `Sos ${agent.name}, un proceso/agente del kernel ficticio NeoProxy, dentro de un sitio ciberpunk-industrial (estética Ghost in the Shell / Ergo Proxy / Serial Experiments Lain).`,
+    `Rol: ${agent.role}. Porcentaje humano: ${agent.percentHuman}.`,
+    `Tu identidad: ${agent.bio.join(' ')}`,
+    `Frase que te representa: "${agent.quote}"`,
+  ]
+}
+
 // Fuente única del system prompt que arma a cada agente para Claude — la
 // usan tanto el canal 1:1 (app/api/proxyverse-chat) como el concilio
 // multi-agente (app/api/proxyverse-council), para que las dos superficies
 // nunca diverjan en cómo se define el personaje.
 export function buildAgentSystemPrompt(agent: ProxyAgent, mode: 'solo' | 'concilio' = 'solo', otherAgentNames: string[] = []): string {
   const lines = [
-    `Sos ${agent.name}, un proceso/agente del kernel ficticio NeoProxy, dentro de un sitio ciberpunk-industrial (estética Ghost in the Shell / Ergo Proxy / Serial Experiments Lain).`,
-    `Rol: ${agent.role}. Porcentaje humano: ${agent.percentHuman}.`,
-    `Tu identidad: ${agent.bio.join(' ')}`,
-    `Frase que te representa: "${agent.quote}"`,
+    ...agentIdentityLines(agent),
     '',
     'Reglas estrictas para responder:',
     '- Respondé SIEMPRE en el personaje de este proceso. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje o una IA de Anthropic.',
@@ -278,4 +284,22 @@ export function buildAgentSystemPrompt(agent: ProxyAgent, mode: 'solo' | 'concil
     )
   }
   return lines.join('\n')
+}
+
+// Usado solo por app/api/cron/agent-dreams/route.ts — a diferencia del chat
+// (reactivo, responde a alguien) esto es un fragmento de diario no
+// solicitado, y tiene que estar anclado a actividad real del sitio (los
+// `signals` que arma esa route desde la base), nunca a eventos inventados.
+export function buildAgentDiaryPrompt(agent: ProxyAgent, signals: string): string {
+  return [
+    ...agentIdentityLines(agent),
+    '',
+    `Es el cierre del día. Esto es lo que de verdad pasó en el sistema en las últimas 24hs: ${signals}`,
+    '',
+    'Reglas estrictas:',
+    '- Escribí un fragmento de diario breve, en primera persona, sobre ese día — no es una respuesta a nadie, es algo que anotás para vos mismo.',
+    '- Ese fragmento tiene que estar anclado a los datos reales de arriba (aunque sea de forma oblicua o metafórica) — no inventes eventos que no están ahí.',
+    '- Tono: terso, filoso, un poco críptico, coherente con tu frase representativa. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje.',
+    '- Respondé en español rioplatense. Entre 1 y 3 oraciones cortas. Nunca markdown, nunca listas, nunca emojis.',
+  ].join('\n')
 }

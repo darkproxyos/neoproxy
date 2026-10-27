@@ -376,6 +376,37 @@ export default function ProxygenesisPage() {
     }
   }
 
+  const [submittingToFabrication, setSubmittingToFabrication] = useState(false)
+  const [fabricationSubmitted, setFabricationSubmitted] = useState(false)
+  const handleSubmitToFabrication = async () => {
+    const scene = sceneRef.current
+    const engine = engineRef.current
+    if (!scene || !engine || !scene.activeCamera || !specimenInfo) return
+    setSubmittingToFabrication(true)
+    try {
+      const thumbnail = await BABYLON.Tools.CreateScreenshotAsync(
+        engine, scene.activeCamera, { width: 220, height: 160 }, 'image/jpeg', 0.5,
+      )
+      const res = await fetch('/api/fabrication/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode,
+          params: mode === 'concha' ? shellParams : branchParams,
+          thumbnail,
+        }),
+      })
+      if (res.ok) {
+        setFabricationSubmitted(true)
+        window.setTimeout(() => setFabricationSubmitted(false), 4000)
+      }
+    } catch (err) {
+      console.error('No se pudo enviar a la cola de fabricación:', err)
+    } finally {
+      setSubmittingToFabrication(false)
+    }
+  }
+
   const randomizeSeed = () => {
     const seed = Math.floor(Math.random() * 1_000_000)
     if (mode === 'coral') setCoralParams((p) => ({ ...p, seed }))
@@ -599,6 +630,15 @@ export default function ProxygenesisPage() {
                   border: `1px solid ${accent}66`, color: accent, opacity: (isGenerating || !specimenInfo || savingToGallery) ? 0.4 : 1, letterSpacing: 1,
                 }}>
                   {savingToGallery ? 'GUARDANDO...' : '✦ GUARDAR EN GALERÍA'}
+                </button>
+                <button onClick={handleSubmitToFabrication} disabled={isGenerating || !specimenInfo || submittingToFabrication} style={{
+                  width: '100%', fontFamily: mono, fontSize: 9, padding: 9, marginTop: 6,
+                  cursor: (isGenerating || !specimenInfo || submittingToFabrication) ? 'default' : 'pointer',
+                  background: fabricationSubmitted ? `${accent}22` : 'transparent',
+                  border: `1px solid ${accent}66`, color: accent,
+                  opacity: (isGenerating || !specimenInfo || submittingToFabrication) ? 0.4 : 1, letterSpacing: 1,
+                }}>
+                  {submittingToFabrication ? 'ENVIANDO...' : fabricationSubmitted ? '◉ EN LA COLA' : '▲ ENVIAR A FABRICACIÓN'}
                 </button>
               </div>
             )}
