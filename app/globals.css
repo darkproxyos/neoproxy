@@ -214,6 +214,15 @@ body {
   animation: fadeIn 0.8s ease forwards;
 }
 
+@keyframes blinkCursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.blink-cursor {
+  animation: blinkCursor 1s step-end infinite;
+}
+
 /* Glitch effect */
 @keyframes glitch {
   0% { transform: translate(0); }

@@ -24,6 +24,31 @@ const AGENT_MODELS: Record<string, Agent3DConfig> = {
   },
 }
 
+// Dónde se puede PROBAR en vivo, no solo leer, cada entrada de /knowledge
+// que tiene relatedAgent — no todas tienen una (hay varias puramente
+// conceptuales, como Bateson o Nietzsche, sin algoritmo que correr en
+// ningún lado del sitio), y eso está bien: mejor un link de menos que uno
+// inventado hacia una página que no usa de verdad esa idea.
+const ENTRY_LIVE_LOCATIONS: Record<string, { label: string; href: string }[]> = {
+  'runions-lane-prusinkiewicz': [
+    { label: 'WORKBENCH', href: '/experimental/workbench' },
+    { label: 'EVOLUCIÓN', href: '/experimental/evolucion' },
+    { label: 'PROXYGENESIS', href: '/lab/proxygenesis' },
+  ],
+  raup: [
+    { label: 'WORKBENCH', href: '/experimental/workbench' },
+    { label: 'PROXYGENESIS', href: '/lab/proxygenesis' },
+  ],
+  reynolds: [{ label: 'ENJAMBRE', href: '/experimental/enjambre' }],
+  dawkins: [{ label: 'EVOLUCIÓN', href: '/experimental/evolucion' }],
+  holland: [{ label: 'EVOLUCIÓN', href: '/experimental/evolucion' }],
+  alsing: [{ label: 'EVOLUCIÓN', href: '/experimental/evolucion' }],
+  tononi: [{ label: 'DIALÉCTICA', href: '/experimental/dialectica' }],
+  descartes: [{ label: 'DIALÉCTICA', href: '/experimental/dialectica' }],
+  spinoza: [{ label: 'DIALÉCTICA', href: '/experimental/dialectica' }],
+  haraway: [{ label: 'DIALÉCTICA', href: '/experimental/dialectica' }],
+}
+
 export function generateStaticParams() {
   return agents.map(a => ({ id: a.id }))
 }
@@ -36,7 +61,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
   const image = AGENT_IMAGES[agent.id]
   const model3d = AGENT_MODELS[agent.id]
   const others = agents.filter(a => a.id !== agent.id)
-  const ancestor = entries.find(e => e.relatedAgent === agent.id)
+  const relatedEntries = entries.filter(e => e.relatedAgent === agent.id)
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', position: 'relative' }}>
@@ -131,18 +156,48 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           </Link>
         )}
 
-        {ancestor && (
-          <Link href={`/knowledge?entry=${ancestor.id}`} style={{
-            display: 'block', marginBottom: 40, padding: '16px 20px',
-            border: `1px solid ${agent.color}33`, background: `${agent.color}0a`, textDecoration: 'none',
-          }}>
-            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: `${agent.color}aa`, marginBottom: 6 }}>
-              ANCESTRO INTELECTUAL
+        {relatedEntries.length > 0 && (
+          <div style={{ marginBottom: 40 }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${agent.color}aa`, marginBottom: 4 }}>
+              SUSTRATO COMPUTACIONAL
             </div>
-            <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5 }}>
-              {ancestor.name} — {ancestor.role} →
+            <p style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+              {agent.name} no es un personaje arbitrario — es, en parte, estas ideas reales con una
+              voz puesta encima. Lo que sigue no es decoración: es la matemática que efectivamente
+              corre en el sitio, citada con su autor real.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {relatedEntries.map(entry => {
+                const liveSpots = ENTRY_LIVE_LOCATIONS[entry.id]
+                return (
+                  <div key={entry.id} style={{
+                    border: `1px solid ${agent.color}33`, background: `${agent.color}0a`, padding: '14px 18px',
+                  }}>
+                    <Link href={`/knowledge?entry=${entry.id}`} style={{ display: 'block', textDecoration: 'none' }}>
+                      <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5, marginBottom: 2 }}>
+                        {entry.name} <span style={{ color: `${agent.color}aa` }}>→</span>
+                      </div>
+                      <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 0.5 }}>
+                        {entry.role} · {entry.years}
+                      </div>
+                    </Link>
+                    {liveSpots && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+                        {liveSpots.map(spot => (
+                          <Link key={spot.href} href={spot.href} style={{
+                            fontFamily: mono, fontSize: 8, letterSpacing: 1, textDecoration: 'none',
+                            color: agent.color, border: `1px solid ${agent.color}55`, padding: '5px 10px',
+                          }}>
+                            ▶ PROBAR EN {spot.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
             </div>
-          </Link>
+          </div>
         )}
 
         <AgentChannel agent={agent} />
