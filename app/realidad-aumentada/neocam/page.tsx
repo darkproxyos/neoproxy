@@ -13,6 +13,7 @@ import {
 import { buildMaskCanvas, MaskCache, clamp } from './engine/core'
 import { CubeField, HandGame } from './engine/game'
 import { matchAgentFromCanvas, matchAgentFromRgb, dominantColor, averageRgb } from './engine/portrait'
+import { startMarkerController, drawMarkerReveal, drawMarkerScanningHint, type MarkerHandle } from './engine/marker'
 import { recordPortraitMatch } from '@/components/proxyverse/identity'
 import type { ProxyAgent } from '@/components/proxyverse/agents'
 
@@ -22,7 +23,7 @@ const RED = '#ff2d55'
 
 type Fit = 'blur' | 'crop' | 'pad'
 type Rot = 0 | 90 | 180 | 270
-type PageState = NeoCamState & { faceMaskOn: boolean; faceMaskStyle: MaskStyle; fit: Fit; rot: Rot; cubes: boolean; game: boolean }
+type PageState = NeoCamState & { faceMaskOn: boolean; faceMaskStyle: MaskStyle; fit: Fit; rot: Rot; cubes: boolean; game: boolean; marcador: boolean }
 
 const DEFAULT_STATE: PageState = {
   mode: 'neon', pal: 'inferno', blur: 10, irBlur: 14, irMotion: true,
@@ -31,7 +32,7 @@ const DEFAULT_STATE: PageState = {
   ghost: false, ghostDecay: 0.1, audio: false, audioGain: 1.2,
   energy: false, energyGain: 1, failsafe: false,
   faceMaskOn: false, faceMaskStyle: 'soft',
-  fit: 'crop', rot: 0, cubes: false, game: false,
+  fit: 'crop', rot: 0, cubes: false, game: false, marcador: false,
 }
 
 type Status = 'idle' | 'loading' | 'requesting-camera' | 'running' | 'error'
@@ -173,6 +174,10 @@ export default function NeoCamPage() {
   const cubesRef = useRef(new CubeField())
   const gameRef = useRef(new HandGame())
 
+  const markerHandleRef = useRef<MarkerHandle | null>(null)
+  const markerLoadingRef = useRef(false)
+  const markerFoundRef = useRef(false)
+
   const rafRef = useRef<number | null>(null)
   const runningRef = useRef(false)
   const lastTimeRef = useRef(0)
@@ -205,6 +210,42 @@ export default function NeoCamPage() {
     faceLandmarkerRef.current?.close?.()
     segmenterRef.current?.close?.()
     handLandmarkerRef.current?.close?.()
+    markerHandleRef.current?.dispose()
+    markerHandleRef.current = null
+    markerFoundRef.current = false
+  }
+
+  // El Controller de mind-ar se arma una sola vez (carga el target por
+  // red y corre un dummyRun de calibración, ~1-2s) y después se
+  // pausa/reanuda con el mismo <video> que NeoCam ya tiene abierto —
+  // prender y apagar el toggle no vuelve a descargar ni recompilar nada.
+  const toggleMarcador = async (on: boolean) => {
+    patch({ marcador: on })
+    const video = videoRef.current
+    if (!on) {
+      markerHandleRef.current?.pause()
+      markerFoundRef.current = false
+      return
+    }
+    if (!video) return
+    if (markerHandleRef.current) {
+      markerHandleRef.current.resume(video)
+      return
+    }
+    if (markerLoadingRef.current) return
+    markerLoadingRef.current = true
+    try {
+      markerHandleRef.current = await startMarkerController(
+        video,
+        () => { markerFoundRef.current = true },
+        () => { markerFoundRef.current = false },
+      )
+    } catch (err) {
+      console.error('No se pudo iniciar el marcador:', err)
+      patch({ marcador: false })
+    } finally {
+      markerLoadingRef.current = false
+    }
   }
 
   // Reemplaza el stream activo por uno nuevo ya abierto. Soltar el viejo
@@ -505,6 +546,10 @@ export default function NeoCamPage() {
       if (overloading) { ctx.fillStyle = 'rgba(255,0,60,0.18)'; ctx.fillRect(0, 0, w, h) }
 
       if (st.faceMaskOn && faceBox) drawFaceMask(ctx, videoSource, faceBox, w, h, st.faceMaskStyle)
+      if (st.marcador) {
+        if (markerFoundRef.current) drawMarkerReveal(ctx, w, h, now)
+        else drawMarkerScanningHint(ctx, w, h)
+      }
       if (st.hud) drawHud(ctx, w, h, faceBox, fpsRef.current, MODE_LIST.find(m => m.id === st.mode)?.label ?? '')
     }
     ctx.restore()
@@ -711,6 +756,7 @@ export default function NeoCamPage() {
               <button onClick={() => patch({ cubes: !state.cubes })} style={toggleStyle(state.cubes)}>CUBES</button>
               <button onClick={() => patch({ game: !state.game })} style={toggleStyle(state.game)}>GAME</button>
               <button onClick={() => patch({ failsafe: !state.failsafe })} style={toggleStyle(state.failsafe)}>FAILSAFE</button>
+              <button onClick={() => toggleMarcador(!state.marcador)} style={toggleStyle(state.marcador)}>MARCADOR</button>
             </div>
           </Section>
 
