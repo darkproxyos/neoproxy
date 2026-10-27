@@ -1,19 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import PusherClient from 'pusher-js'
+import { getSitePusher, SITE_PRESENCE_CHANNEL } from './pusher/siteConnection'
 
 // Cuenta operadores conectados en tiempo real vía un canal de presencia.
 // A propósito es casi invisible — una línea más de status, no un widget.
+// Comparte conexión con GhostPresence (ver components/pusher/siteConnection.ts)
+// en vez de abrir un segundo socket al mismo canal.
 export default function PresenceCounter() {
   const [count, setCount] = useState<number | null>(null)
 
   useEffect(() => {
-    const pusher = new PusherClient('e1dd2b8f196d106ff74f', {
-      cluster: 'mt1',
-      authEndpoint: '/api/pusher/auth',
-    })
-    const channel = pusher.subscribe('presence-neoproxy-site')
+    const { pusher } = getSitePusher()
+    const channel = pusher.subscribe(SITE_PRESENCE_CHANNEL)
 
     channel.bind('pusher:subscription_succeeded', (members: { count: number }) => {
       setCount(members.count)
@@ -26,8 +25,9 @@ export default function PresenceCounter() {
     })
 
     return () => {
-      pusher.unsubscribe('presence-neoproxy-site')
-      pusher.disconnect()
+      channel.unbind('pusher:subscription_succeeded')
+      channel.unbind('pusher:member_added')
+      channel.unbind('pusher:member_removed')
     }
   }, [])
 

@@ -223,6 +223,38 @@ export default function ExperimentalHubPage() {
           ))}
         </div>
 
+        <div style={{ fontSize: 10, color: '#b06bff', letterSpacing: 4, marginBottom: 10 }}>
+          EL ORÁCULO
+        </div>
+        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+          No es un séptimo modo del laboratorio — no estudia un objeto nuevo, lee a través de los seis.
+          Te tocan al azar tres posiciones documentadas de /knowledge, sin relación previa entre ellas,
+          y el sistema busca una conexión real con tu pregunta en vez de generar una forma o correr una simulación.
+        </p>
+        <Link href="/experimental/oraculo" className="fade-in artifact-card" style={{
+          display: 'block', textDecoration: 'none', color: 'inherit', padding: 24, marginBottom: 56,
+          background: 'rgba(2,4,8,0.8)', border: '1px solid #b06bff33', borderLeft: '3px solid #b06bff',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+            <span style={{ fontSize: 9, letterSpacing: 2, color: '#b06bffaa' }}>NPX-XP-ORÁCULO</span>
+            <span style={{
+              fontSize: 9, letterSpacing: 1, color: '#b06bff', border: '1px solid #b06bff55', padding: '2px 7px',
+            }}>
+              CRUZA LOS 6
+            </span>
+          </div>
+          <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>ORÁCULO</div>
+          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            Tres cartas al azar de /knowledge — autores y algoritmos reales, sin relación documentada entre
+            sí — y una lectura en vivo que busca una conexión honesta con tu pregunta, citando solo lo que
+            esos tres de verdad sostuvieron.
+          </p>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#b06bffcc', marginBottom: 8 }}>
+            78 ENTRADAS POSIBLES · 3 AL AZAR POR TIRADA
+          </div>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>LECTURA EN VIVO — NUNCA LA MISMA COMBINACIÓN</div>
+        </Link>
+
         <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 22 }}>
           OTROS EXPERIMENTOS
         </div>

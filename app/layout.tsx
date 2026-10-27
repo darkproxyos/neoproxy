@@ -5,9 +5,11 @@ import SiteNav from '@/components/SiteNav'
 import Chat from '@/components/Chat'
 import ConsoleEasterEgg from '@/components/ConsoleEasterEgg'
 import PresenceCounter from '@/components/PresenceCounter'
+import GhostPresence from '@/components/GhostPresence'
 import AgentWatcher from '@/components/proxyverse/AgentWatcher'
 import ProxyBiodiversity from '@/components/biodiversity/ProxyBiodiversity'
 import Grieta from '@/components/grietas/Grieta'
+import EntropyField from '@/components/EntropyField'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -28,14 +30,16 @@ export default function RootLayout({
       <body className={`${spaceMono.variable} ${inter.variable} bg-[#020408] text-[#c8daf0] overflow-y-auto`}>
         <Providers>
           <SiteNav />
-          <div className="fixed inset-0 pointer-events-none z-0 mix-blend-screen opacity-10 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')]" />
+          <div className="entropy-noise fixed inset-0 pointer-events-none z-0 mix-blend-screen bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')]" />
           {children}
           <Chat />
           <ConsoleEasterEgg />
           <PresenceCounter />
+          <GhostPresence />
           <AgentWatcher />
           <ProxyBiodiversity />
           <Grieta />
+          <EntropyField />
         </Providers>
       </body>
     </html>
