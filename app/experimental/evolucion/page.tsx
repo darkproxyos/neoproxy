@@ -9,6 +9,7 @@ import {
   genomeToParams, measureSpecimen, fitnessOf, evolveGeneration, projectToGrid, silhouetteFitness,
 } from './engine/genome'
 import { PATTERN_DEFS, patternFromRows, GRID_SIZE as SIL_GRID_SIZE } from '@/app/experimental/memoria/engine/hopfield'
+import { SonifyEngine } from '../engine/audio'
 
 // NPX-XP-EVOLUCIÓN — sexto modo del laboratorio, el más complejo de los
 // seis: reusa el motor de Space Colonization (Proxygenesis/Workbench) como
@@ -110,6 +111,23 @@ export default function EvolucionPage() {
   const [silBestGenome, setSilBestGenome] = useState<Genome | null>(null)
   const [silBestGrid, setSilBestGrid] = useState<number[] | null>(null)
   const SIL_HALF_EXTENT = 2.5
+
+  // Sonificación: cada cierre de generación dispara un swell cuyo tono
+  // sube con el fitness del mejor espécimen — se escucha la convergencia,
+  // no solo se lee en el gráfico de historial.
+  const [audioOn, setAudioOn] = useState(false)
+  const audioOnRef = useRef(false)
+  useEffect(() => { audioOnRef.current = audioOn }, [audioOn])
+  const sonifyRef = useRef<SonifyEngine | null>(null)
+  const toggleAudio = () => {
+    if (!sonifyRef.current) sonifyRef.current = new SonifyEngine()
+    const engine = sonifyRef.current
+    if (!audioOn) engine.start()
+    setAudioOn((v) => !v)
+  }
+  useEffect(() => {
+    return () => { sonifyRef.current?.stop() }
+  }, [])
 
   const clearTimers = () => { timersRef.current.forEach((t) => window.clearTimeout(t)); timersRef.current = [] }
 
@@ -247,6 +265,14 @@ export default function EvolucionPage() {
       setBestGenome(best)
       setBestMeasured(measurements[bestIdx])
 
+      if (audioOnRef.current && sonifyRef.current?.running) {
+        // fitnessOf es <= 0 (0 = objetivo perfecto); -2 de error
+        // combinado ya es bastante malo para esta función de fitness, así
+        // que ese es el piso de la normalización.
+        const norm = Math.max(0, Math.min(1, 1 + fitnesses[bestIdx] / 2))
+        sonifyRef.current.swell({ freq: 160 + norm * 560, duration: 0.22, gain: 0.18 + norm * 0.1 })
+      }
+
       // Render del mejor de esta generación a mejor calidad — solo 1
       // malla por generación, no toda la población, así es viable mostrar
       // la evolución en vivo sin construir cientos de mallas de más.
@@ -304,6 +330,12 @@ export default function EvolucionPage() {
       setSilCurrentGen(gen + 1)
       setSilFitnessHistory((h) => [...h, fitnesses[bestIdx]])
       setSilBestGenome(best)
+
+      if (audioOnRef.current && sonifyRef.current?.running) {
+        // silhouetteFitness ya es Jaccard 0..1 — no hace falta normalizar.
+        const norm = fitnesses[bestIdx]
+        sonifyRef.current.swell({ freq: 160 + norm * 560, duration: 0.22, gain: 0.18 + norm * 0.1 })
+      }
 
       const B = BRef.current; const scene = sceneRef.current
       if (B && scene) {
@@ -423,6 +455,13 @@ export default function EvolucionPage() {
         </Link>
         <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-EVOLUCIÓN</div>
         <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>una población, no una forma</div>
+        <button onClick={toggleAudio} title="Sonificar el fitness de cada generación" style={{
+          marginLeft: 'auto', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
+          background: audioOn ? `${CYAN}22` : 'transparent', border: `1px solid ${audioOn ? CYAN : '#2a3a50'}`,
+          color: audioOn ? CYAN : '#4a6080',
+        }}>
+          {audioOn ? '♫ AUDIO ON' : '♪ AUDIO'}
+        </button>
       </div>
 
       <div style={{

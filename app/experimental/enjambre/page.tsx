@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { entries } from '@/components/knowledge/entries'
 import { initBoids, stepBoids, type Boid, type BoidsParams } from './engine/boids'
 import { createSandpile, stepSandpileRandom, mulberry32, type SandpileGrid } from './engine/sandpile'
+import { SonifyEngine } from '../engine/audio'
 
 // NPX-XP-ENJAMBRE — segundo modo del laboratorio, estructuralmente distinto
 // del Workbench: ahí se generaba UNA vez y se inspeccionaba el resultado;
@@ -98,6 +99,27 @@ export default function EnjambrePage() {
   const [maxAvalanche, setMaxAvalanche] = useState(0)
   const [totalDrops, setTotalDrops] = useState(0)
   const [avalancheLog, setAvalancheLog] = useState<number[]>([])
+
+  // Sonificación: un drone de fondo modulado por la velocidad/dispersión
+  // real de la bandada (no por los sliders — por lo que los boids están
+  // haciendo de verdad cuadro a cuadro), y un golpe corto por cada
+  // avalancha del sandpile, con tono y volumen según su tamaño.
+  const [audioOn, setAudioOn] = useState(false)
+  const audioOnRef = useRef(false)
+  useEffect(() => { audioOnRef.current = audioOn }, [audioOn])
+  const sonifyRef = useRef<SonifyEngine | null>(null)
+  const toggleAudio = () => {
+    if (!sonifyRef.current) sonifyRef.current = new SonifyEngine()
+    const engine = sonifyRef.current
+    if (!audioOn) {
+      engine.start()
+      engine.ensureDrone(90)
+      setAudioOn(true)
+    } else {
+      engine.setDrone({ gain: 0 })
+      setAudioOn(false)
+    }
+  }
 
   const rebuildBoids = () => {
     boidsRef.current = initBoids(boidCount, Math.floor(Math.random() * 1e6), boundsRadius * 0.6)
@@ -226,6 +248,34 @@ export default function EnjambrePage() {
             mesh.thinInstanceSetMatrixAt(i, m, false)
           }
           mesh.thinInstanceBufferUpdated('matrix')
+
+          const sonify = sonifyRef.current
+          if (sonify?.running) {
+            if (audioOnRef.current) {
+              let sumSpeed = 0
+              let cx = 0, cy = 0, cz = 0
+              for (const b of bArr) {
+                sumSpeed += Math.hypot(b.vel[0], b.vel[1], b.vel[2])
+                cx += b.pos[0]; cy += b.pos[1]; cz += b.pos[2]
+              }
+              const n = bArr.length || 1
+              const avgSpeed = sumSpeed / n
+              cx /= n; cy /= n; cz /= n
+              let spread = 0
+              for (const b of bArr) spread += Math.hypot(b.pos[0] - cx, b.pos[1] - cy, b.pos[2] - cz)
+              spread /= n
+              // más rápido = filtro más abierto (más brillante); más
+              // dispersa la bandada, más "detune" entre voces — un
+              // enjambre apretado suena afinado, uno disperso suena roto.
+              sonify.setDrone({
+                cutoff: 180 + avgSpeed * 260,
+                detune: Math.min(40, spread * 18),
+                gain: 0.16,
+              })
+            } else {
+              sonify.setDrone({ gain: 0 })
+            }
+          }
         }
 
         if (modeRef.current === 'sandpile' && sandRunningRef.current && sandGridRef.current) {
@@ -248,6 +298,18 @@ export default function EnjambrePage() {
             setMaxAvalanche((m) => Math.max(m, avalanche))
             setTotalDrops((t) => t + 1)
             setAvalancheLog((log) => [...log.slice(-39), avalanche])
+
+            if (avalanche > 0 && audioOnRef.current && sonifyRef.current?.running) {
+              // avalanchas chicas son frecuentes y agudas; una grande (ley
+              // de potencias, no campana) baja de tono y dura más — se
+              // escucha la diferencia de escala, no solo se ve en el gráfico.
+              sonifyRef.current.hit({
+                freq: Math.max(70, 480 - avalanche * 9),
+                duration: Math.min(1.1, 0.18 + avalanche * 0.018),
+                gain: Math.min(0.55, 0.12 + avalanche * 0.01),
+                type: 'triangle',
+              })
+            }
           }
         }
       })
@@ -262,6 +324,10 @@ export default function EnjambrePage() {
       if (engine) engine.dispose()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    return () => { sonifyRef.current?.stop() }
   }, [])
 
   const accent = mode === 'boids' ? RED : AMBER
@@ -279,6 +345,13 @@ export default function EnjambrePage() {
         </Link>
         <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-ENJAMBRE</div>
         <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>sistemas que corren solos, no se generan una vez</div>
+        <button onClick={toggleAudio} title="Sonificar la simulación en vivo" style={{
+          marginLeft: 'auto', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
+          background: audioOn ? `${accent}22` : 'transparent', border: `1px solid ${audioOn ? accent : '#2a3a50'}`,
+          color: audioOn ? accent : '#4a6080',
+        }}>
+          {audioOn ? '♫ AUDIO ON' : '♪ AUDIO'}
+        </button>
       </div>
 
       <div style={{
