@@ -32,6 +32,14 @@ const CATALOG: ArEntry[] = [
     controls: 'REQUIERE CÁMARA',
   },
   {
+    id: 'marcador',
+    code: 'NPX-AR-MARCADOR',
+    title: 'MARCADOR',
+    href: '/realidad-aumentada/marcador',
+    blurb: 'Tracking de imagen real (MindAR): enfocá un objeto o dibujo entrenado como marcador y aparece contenido en pantalla mientras lo mantengas en cuadro — reconocimiento continuo, no una foto única.',
+    controls: 'REQUIERE CÁMARA Y EL MARCADOR FÍSICO',
+  },
+  {
     id: 'clasico',
     code: 'NPX-AR-CLASSIC',
     title: 'MODO CLÁSICO',
