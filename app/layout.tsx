@@ -5,6 +5,7 @@ import SiteNav from '@/components/SiteNav'
 import Chat from '@/components/Chat'
 import ConsoleEasterEgg from '@/components/ConsoleEasterEgg'
 import PresenceCounter from '@/components/PresenceCounter'
+import GhostPresence from '@/components/GhostPresence'
 import AgentWatcher from '@/components/proxyverse/AgentWatcher'
 import ProxyBiodiversity from '@/components/biodiversity/ProxyBiodiversity'
 import EntropyField from '@/components/EntropyField'
@@ -33,6 +34,7 @@ export default function RootLayout({
           <Chat />
           <ConsoleEasterEgg />
           <PresenceCounter />
+          <GhostPresence />
           <AgentWatcher />
           <ProxyBiodiversity />
           <EntropyField />
