@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { recordNfcScan } from '@/components/proxyverse/identity'
+import { matchNfcArtifact, type NfcArtifact } from '@/components/artifacts/registry'
+import RevealPanel from '@/components/artifacts/RevealPanel'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
@@ -32,7 +34,7 @@ interface NDEFReaderLike extends EventTarget {
 }
 
 type DecodedRecord = { recordType: string; mediaType?: string; lang?: string; text: string; hex: string }
-type ScanEntry = { id: number; time: string; serialNumber: string; records: DecodedRecord[] }
+type ScanEntry = { id: number; time: string; serialNumber: string; records: DecodedRecord[]; artifact: NfcArtifact | null }
 
 function bufferToHex(buf: ArrayBuffer | DataView): string {
   const bytes = buf instanceof DataView ? new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength) : new Uint8Array(buf)
@@ -92,7 +94,11 @@ export default function ScanPage() {
       reader.addEventListener('reading', (ev: NDEFReadingEventLike) => {
         idRef.current += 1
         const records = ev.message.records.map(decodeRecord)
-        setEntries(prev => [{ id: idRef.current, time: new Date().toLocaleTimeString('es-AR'), serialNumber: ev.serialNumber || '(sin número de serie)', records }, ...prev].slice(0, 20))
+        const artifact = matchNfcArtifact(records.map(r => r.text))
+        setEntries(prev => [{
+          id: idRef.current, time: new Date().toLocaleTimeString('es-AR'),
+          serialNumber: ev.serialNumber || '(sin número de serie)', records, artifact,
+        }, ...prev].slice(0, 20))
         recordNfcScan()
       })
       reader.addEventListener('readingerror', () => {
@@ -128,9 +134,11 @@ export default function ScanPage() {
           SCAN
         </h1>
         <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 8 }}>
-          Lector genérico de tags NFC vía Web NFC — muestra el payload crudo de cualquier tag que acerques,
-          sin asumir un formato propio todavía. Punto de partida para cuando haya un artefacto físico real
-          con un esquema de datos definido.
+          Lector genérico de tags NFC vía Web NFC — muestra el payload crudo de cualquier tag que acerques.
+          Si el texto coincide con un artefacto registrado (mismo esquema que usa el marcador por cámara de{' '}
+          <Link href="/realidad-aumentada/marcador" style={{ color: CYAN }}>/realidad-aumentada/marcador</Link>),
+          aparece su revelación acá también — un tag físico todavía no fue fabricado, pero el pipeline ya
+          está listo para recibirlo.
         </p>
         <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8, maxWidth: 560, marginBottom: 48 }}>
           Web NFC solo existe en Chrome para Android, sobre HTTPS. En cualquier otro navegador o dispositivo
@@ -190,6 +198,11 @@ export default function ScanPage() {
               <span style={{ fontSize: 10, color: '#8fb8d6', letterSpacing: 1 }}>SERIAL: {e.serialNumber}</span>
               <span style={{ fontSize: 9, color: '#4a6080' }}>{e.time}</span>
             </div>
+            {e.artifact && (
+              <div style={{ padding: '18px 0', marginBottom: 14, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                <RevealPanel reveal={e.artifact.reveal} />
+              </div>
+            )}
             {e.records.length === 0 && (
               <div style={{ fontSize: 10, color: '#4a6080' }}>Tag sin registros NDEF (o vacío).</div>
             )}

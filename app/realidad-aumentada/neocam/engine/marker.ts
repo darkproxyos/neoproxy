@@ -3,11 +3,12 @@
 // mismo <video> que ya está corriendo y nos avisa por frame si el
 // marcador entrenado está en cuadro, igual que MediaPipe nos da cara o
 // manos — una fuente de tracking más, no una cámara aparte.
+//
+// El target y el reveal (qué aparece al reconocerlo) salen de
+// components/artifacts/registry.ts — el mismo registro que usa
+// /realidad-aumentada/marcador y /experimental/scan, no una copia local.
 
-const MARKER_TARGET_SRC = '/ar-targets/joker.mind'
-const MARKER_REVEAL_TEXT = 'WHY SO SERIOUS?'
-const MARKER_COLOR = '#39ff6a'
-const MARKER_GLOW = '#a537fd'
+import type { ArtifactReveal } from '@/components/artifacts/registry'
 
 export type MarkerHandle = {
   pause: () => void
@@ -17,6 +18,7 @@ export type MarkerHandle = {
 
 export async function startMarkerController(
   video: HTMLVideoElement,
+  targetSrc: string,
   onFound: () => void,
   onLost: () => void,
 ): Promise<MarkerHandle> {
@@ -41,7 +43,7 @@ export async function startMarkerController(
     },
   })
 
-  await controller.addImageTargets(MARKER_TARGET_SRC)
+  await controller.addImageTargets(targetSrc)
   await controller.dummyRun(video)
   controller.processVideo(video)
 
@@ -55,19 +57,19 @@ export async function startMarkerController(
   }
 }
 
-export function drawMarkerReveal(ctx: CanvasRenderingContext2D, w: number, h: number, t: number) {
+export function drawMarkerReveal(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, reveal: ArtifactReveal) {
   const pulse = 0.85 + Math.sin(t / 220) * 0.15
   const size = Math.max(20, Math.min(52, w * 0.07))
   ctx.save()
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.font = `700 ${size}px 'Space Mono', monospace`
-  ctx.shadowColor = MARKER_GLOW
+  ctx.shadowColor = reveal.glow
   ctx.shadowBlur = 42 * pulse
-  ctx.fillStyle = MARKER_COLOR
-  ctx.fillText(MARKER_REVEAL_TEXT, w / 2, h / 2)
+  ctx.fillStyle = reveal.color
+  ctx.fillText(reveal.text, w / 2, h / 2)
   ctx.shadowBlur = 16
-  ctx.fillText(MARKER_REVEAL_TEXT, w / 2, h / 2)
+  ctx.fillText(reveal.text, w / 2, h / 2)
   ctx.restore()
 }
 
