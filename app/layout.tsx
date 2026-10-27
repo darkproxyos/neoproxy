@@ -8,6 +8,7 @@ import PresenceCounter from '@/components/PresenceCounter'
 import GhostPresence from '@/components/GhostPresence'
 import AgentWatcher from '@/components/proxyverse/AgentWatcher'
 import ProxyBiodiversity from '@/components/biodiversity/ProxyBiodiversity'
+import Grieta from '@/components/grietas/Grieta'
 import EntropyField from '@/components/EntropyField'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -37,6 +38,7 @@ export default function RootLayout({
           <GhostPresence />
           <AgentWatcher />
           <ProxyBiodiversity />
+          <Grieta />
           <EntropyField />
         </Providers>
       </body>
