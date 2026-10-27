@@ -5,6 +5,7 @@ import { agents, AGENT_IMAGES } from '@/components/proxyverse/agents'
 import { entries } from '@/components/knowledge/entries'
 import AgentChannel from '@/components/proxyverse/AgentChannel'
 import Agent3DViewer, { type Agent3DConfig } from '@/components/proxyverse/Agent3DViewer'
+import PrototypeFragments from '@/components/proxyverse/PrototypeFragments'
 
 const mono = "'Space Mono', monospace"
 
@@ -199,6 +200,8 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             </div>
           </div>
         )}
+
+        {agent.id === 'prototype' && <PrototypeFragments />}
 
         <AgentChannel agent={agent} />
 

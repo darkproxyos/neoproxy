@@ -7,6 +7,7 @@ import ConsoleEasterEgg from '@/components/ConsoleEasterEgg'
 import PresenceCounter from '@/components/PresenceCounter'
 import AgentWatcher from '@/components/proxyverse/AgentWatcher'
 import ProxyBiodiversity from '@/components/biodiversity/ProxyBiodiversity'
+import Grieta from '@/components/grietas/Grieta'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -34,6 +35,7 @@ export default function RootLayout({
           <PresenceCounter />
           <AgentWatcher />
           <ProxyBiodiversity />
+          <Grieta />
         </Providers>
       </body>
     </html>

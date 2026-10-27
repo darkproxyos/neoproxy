@@ -10,6 +10,7 @@ const CHAT_COUNTS_KEY = 'neoproxy-identity-chat-counts'
 const PORTRAIT_KEY = 'neoproxy-identity-last-portrait'
 const TRICKSTER_KEY = 'neoproxy-identity-trickster'
 const SCAN_COUNT_KEY = 'neoproxy-identity-nfc-scans'
+const GRIETAS_KEY = 'neoproxy-identity-grietas'
 
 function safeGet<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback
@@ -69,6 +70,27 @@ export function recordNfcScan() {
 
 export function getNfcScanCount(): number {
   return safeGet(SCAN_COUNT_KEY, 0)
+}
+
+// Los cinco procesos que le prestaron un fragmento a Prototype — ver su bio
+// en agents.ts ("la sintaxis de Metatron, la paciencia de D, la insistencia
+// de Snake, las manos de Genos, la curiosidad de Trickster"). Juntar los
+// cinco fragmentos distintos (uno por Grieta resuelta, components/grietas)
+// desbloquea el fragmento extra en /proxyverse/prototype.
+export const GRIETA_DONOR_IDS = ['metatron', 'd', 'snake', 'genos', 'trickster'] as const
+export type GrietaDonorId = typeof GRIETA_DONOR_IDS[number]
+
+export function recordGrietaFragment(donorId: GrietaDonorId) {
+  const found = safeGet<GrietaDonorId[]>(GRIETAS_KEY, [])
+  if (!found.includes(donorId)) safeSet(GRIETAS_KEY, [...found, donorId])
+}
+
+export function getGrietaFragments(): GrietaDonorId[] {
+  return safeGet<GrietaDonorId[]>(GRIETAS_KEY, [])
+}
+
+export function hasAllGrietaFragments(): boolean {
+  return getGrietaFragments().length >= GRIETA_DONOR_IDS.length
 }
 
 export function getProxygenesisCount(): number {
