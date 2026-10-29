@@ -46,7 +46,7 @@ async function buildRealSignals(): Promise<string> {
     const recentSubmissions = await db.select({ count: sql<number>`count(*)` })
       .from(fabricationSubmissions).where(gte(fabricationSubmissions.createdAt, since))
     const count = recentSubmissions[0]?.count ?? 0
-    parts.push(count > 0 ? `${count} espímenes nuevos entraron a la cola de fabricación` : 'nadie mandó nada nuevo a la cola de fabricación')
+    parts.push(count > 0 ? `${count} especímenes nuevos entraron a la cola de fabricación` : 'nadie mandó nada nuevo a la cola de fabricación')
   } catch (err) {
     console.error('agent-dreams: no se pudo leer fabricationSubmissions:', err)
   }
