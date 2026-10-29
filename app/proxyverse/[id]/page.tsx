@@ -253,6 +253,12 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                 </div>
               ))}
             </div>
+            <Link href="/proxyverse/suenos" style={{
+              display: 'inline-block', marginTop: 14, fontFamily: mono, fontSize: 9, letterSpacing: 2,
+              color: `${agent.color}aa`, textDecoration: 'none',
+            }}>
+              VER TODOS LOS SUEÑOS →
+            </Link>
           </div>
         )}
 
