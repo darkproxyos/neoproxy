@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/consejo-nocturno",
       "schedule": "0 10 * * 0"
+    },
+    {
+      "path": "/api/cron/entropy-entity",
+      "schedule": "0 4 * * *"
     }
   ]
 }

@@ -89,6 +89,36 @@
       "system_health": "optimal",
       "memory_sync_pct": null,
       "last_updated": null
+    },
+    "entropy": {
+      "id": "ENTITY-001",
+      "codename": "ENTROPY",
+      "type": "Entropy Control",
+      "status": "idle",
+      "hidden": true,
+      "current_intent": null,
+      "current_pipeline": [],
+      "running_agents": [],
+      "completed_tasks": [],
+      "pending_tasks": [],
+      "system_health": "optimal",
+      "memory_sync_pct": null,
+      "last_updated": null
+    },
+    "glitchi": {
+      "id": "ENTITY-002",
+      "codename": "GLITCHI",
+      "type": "Glitch Identity",
+      "status": "idle",
+      "hidden": true,
+      "current_intent": null,
+      "current_pipeline": [],
+      "running_agents": [],
+      "completed_tasks": [],
+      "pending_tasks": [],
+      "system_health": "optimal",
+      "memory_sync_pct": null,
+      "last_updated": null
     }
   },
   "pending_tasks": [

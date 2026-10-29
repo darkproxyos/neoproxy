@@ -391,3 +391,45 @@ body {
   z-index: 996;
   animation: syncPulseExpand 1.5s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
 }
+
+/* Entropy (components/EntropyEntity.tsx) — sin ícono, sin avatar, sin
+   perfil: la única forma en la que se hace notar es esta frase apareciendo
+   sola, igual para todos los conectados en ese instante, y yéndose sola.
+   Deliberadamente distinta de .entropy-glitch-bar (que es ruido anónimo del
+   sistema) — esto tiene puntuación, alguien la "dijo". */
+@keyframes entropyEntityFade {
+  0% { opacity: 0; transform: translateY(6px); }
+  12% { opacity: 1; transform: translateY(0); }
+  82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.entropy-entity-signature {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  max-width: 90vw;
+  z-index: 999;
+  pointer-events: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #6a7a8a;
+  text-shadow: 0 0 6px #000a;
+  white-space: nowrap;
+  animation: entropyEntityFade 4.2s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entropy-entity-signature {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+
+/* Glitchi (components/Glitchi.tsx) — firma fija #39ff14, distinta de los
+   colores de los 6 agentes y de los donantes de Grieta, para que sea
+   reconocible como la MISMA fuente a través de apariciones separadas, en
+   vez de un glitch anónimo más. Reusa .bio-glitch-word/.bio-glitch-strike
+   (mismo mecanismo que GlitchMite y Grieta) vía --glitch-color/--glitch-glow. */
