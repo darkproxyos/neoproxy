@@ -120,9 +120,17 @@ export async function declareFabricationWinner(submissionId: string) {
       .set({ status: "winner" })
       .where(eq(fabricationSubmissions.id, submissionId));
 
+    // El nivel de entropía en el momento exacto de declarar queda en el
+    // payload del evento — no hace falta una columna nueva en
+    // fabrication_submissions, memory_events ya es JSON libre. Lo lee
+    // app/api/fabrication/queue/route.ts para marcar en /fabrication/cola
+    // si este ganador se declaró "bajo corrupción".
+    const [state] = await db.select({ entropyLevel: systemState.entropyLevel })
+      .from(systemState).where(eq(systemState.id, "GLOBAL")).limit(1);
+
     await db.insert(memoryEvents).values({
       eventType: "FABRICATION_WINNER_DECLARED",
-      payload: { submissionId, weekOf: isoWeekKey() },
+      payload: { submissionId, weekOf: isoWeekKey(), entropyAtDeclare: state?.entropyLevel ?? null },
     });
 
     revalidatePath("/fabrication/cola");

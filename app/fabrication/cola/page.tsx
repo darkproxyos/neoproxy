@@ -16,6 +16,8 @@ type Submission = {
   status: string
   votes: number
   votedByMe: boolean
+  entropyAtDeclare: number | null
+  corrupted: boolean
 }
 
 type Status = 'loading' | 'ready' | 'error'
@@ -25,6 +27,20 @@ export default function FabricationQueuePage() {
   const [weekOf, setWeekOf] = useState('')
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [votingId, setVotingId] = useState<string | null>(null)
+  const [entropy, setEntropy] = useState(0)
+
+  useEffect(() => {
+    // Entropía en vivo, no un snapshot — las miniaturas se corrompen en
+    // tiempo real con el estado actual del sistema (ver app/api/entropy),
+    // no con lo que había cuando cargó la página.
+    const poll = () => fetch('/api/entropy', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => { if (typeof d?.entropyLevel === 'number') setEntropy(d.entropyLevel) })
+      .catch(() => {})
+    poll()
+    const id = window.setInterval(poll, 45_000)
+    return () => window.clearInterval(id)
+  }, [])
 
   const load = async () => {
     try {
@@ -105,13 +121,21 @@ export default function FabricationQueuePage() {
         </p>
 
         {winner && (
-          <div style={{ border: `1px solid ${GREEN}66`, background: `${GREEN}0d`, padding: 20, marginBottom: 32 }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: GREEN, marginBottom: 6 }}>
-              ◉ GANADOR DECLARADO ESTA SEMANA
+          <div style={{
+            border: `1px solid ${winner.corrupted ? '#ff2d55' : GREEN}66`,
+            background: winner.corrupted ? '#ff2d550d' : `${GREEN}0d`, padding: 20, marginBottom: 32,
+          }}>
+            <div style={{ fontSize: 9, letterSpacing: 2, color: winner.corrupted ? '#ff2d55' : GREEN, marginBottom: 6 }}>
+              ◉ GANADOR DECLARADO ESTA SEMANA{winner.corrupted ? ' — FORJADO BAJO CORRUPCIÓN' : ''}
             </div>
             <div style={{ fontSize: 11, color: '#c8daf0' }}>
               {winner.label || `${winner.mode.toUpperCase()} sin nombre`} — pasa a fabricación real.
             </div>
+            {winner.corrupted && (
+              <div style={{ fontSize: 9, color: '#ff2d5599', letterSpacing: 0.5, marginTop: 6 }}>
+                La entropía del sistema estaba en {winner.entropyAtDeclare?.toFixed(1)}% cuando se declaró.
+              </div>
+            )}
           </div>
         )}
 
@@ -136,7 +160,12 @@ export default function FabricationQueuePage() {
               border: s.id === leader?.id ? `1px solid ${GREEN}66` : undefined,
             }}>
               <Image src={s.thumbnail} alt={s.label || s.mode} width={220} height={160} unoptimized
-                style={{ width: '100%', height: 140, objectFit: 'cover', border: `1px solid ${CYAN}22`, marginBottom: 10 }} />
+                style={{
+                  width: '100%', height: 140, objectFit: 'cover', border: `1px solid ${CYAN}22`, marginBottom: 10,
+                  filter: entropy > 5
+                    ? `contrast(${1 + entropy / 150}) saturate(${1 + entropy / 60}) hue-rotate(${entropy * 1.3}deg)`
+                    : undefined,
+                }} />
               <div style={{ fontSize: 10, color: '#c8daf0', marginBottom: 4 }}>
                 {s.label || `${s.mode.toUpperCase()} sin nombre`}
               </div>
