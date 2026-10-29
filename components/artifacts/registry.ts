@@ -51,7 +51,7 @@ export const ARTIFACTS: Artifact[] = [
     reveal: JOKER_REVEAL,
   },
   // Mismo reveal, segundo disparador: un tag NFC pegado al dorso del mismo
-  // sticker (payload "neoproxy:joker") dispararía lo mismo que enfocarlo
+  // sticker (payload "neoproxy:joker") dispararia lo mismo que enfocarlo
   // con la cámara — la prueba de que es un solo pipeline, no dos sistemas
   // que coinciden en el contenido por casualidad. Sin tag físico todavía
   // (ver /experimental/scan), pero el esquema ya está listo para recibirlo.
@@ -75,4 +75,25 @@ export function matchNfcArtifact(decodedTexts: string[]): NfcArtifact | null {
 
 export function findImageArtifact(id: string): ImageArtifact | undefined {
   return IMAGE_ARTIFACTS.find(a => a.id === id)
+}
+
+// Un tap real deja un rastro real en memory_events (app/api/marker/
+// recognized), no solo localStorage — pero el tracking de MindAR puede
+// parpadear (found/lost/found) y una lectura NFC puede repetirse mientras
+// el tag sigue cerca del lector, así que esto dedupea por sessionStorage:
+// un artefacto cuenta una sola vez por pestaña, no una vez por frame.
+export function recordArtifactRecognition(artifactId: string, trigger: 'image' | 'nfc') {
+  const key = `neoproxy-marker-recorded-${artifactId}`
+  try {
+    if (window.sessionStorage.getItem(key)) return
+    window.sessionStorage.setItem(key, '1')
+  } catch {
+    // si sessionStorage falla, mejor mandar el evento de más que no mandarlo nunca
+  }
+  fetch('/api/marker/recognized', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ artifactId, trigger }),
+    keepalive: true,
+  }).catch(() => {})
 }

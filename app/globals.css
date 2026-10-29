@@ -15,6 +15,12 @@
   --neo-glow: rgba(0, 212, 255, 0.4);
   --neo-rounding: 0px;
   --neo-blur: 10px;
+
+  /* Modo quieto (components/EntropyField.tsx) — 0 o 1, solo cuando la
+     entropía real lleva horas sin moverse. No agrega un elemento nuevo:
+     atúnúa lo que ya está (scanlines, grid) para que la calma se note
+     como ausencia, no como otro efecto encima de los demás. */
+  --neo-calm: 0;
 }
 
 @theme inline {
@@ -53,7 +59,8 @@ body {
     transparent 1px,
     transparent 2px
   );
-  opacity: 0.3;
+  opacity: calc(0.3 - var(--neo-calm, 0) * 0.16);
+  transition: opacity 3s ease;
 }
 
 /* Subtle Grid Background */
@@ -69,7 +76,8 @@ body {
     linear-gradient(var(--grid-color) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 60px 60px;
-  opacity: 0.5;
+  opacity: calc(0.5 - var(--neo-calm, 0) * 0.25);
+  transition: opacity 3s ease;
 }
 
 /* Particle container */

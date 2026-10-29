@@ -13,12 +13,19 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const rows = await db.select({ entropyLevel: systemState.entropyLevel })
+    const rows = await db.select({ entropyLevel: systemState.entropyLevel, lastUpdated: systemState.lastUpdated })
       .from(systemState)
       .where(eq(systemState.id, 'GLOBAL'))
-    return NextResponse.json({ entropyLevel: rows[0]?.entropyLevel ?? 0 })
+    const row = rows[0]
+    return NextResponse.json({
+      entropyLevel: row?.entropyLevel ?? 0,
+      // ISO: deja que el cliente calcule hace cuánto no se toca de verdad
+      // (components/EntropyField.tsx, modo quieto) sin inventar un
+      // "tiempo sin eventos" que no sea el timestamp real de la fila.
+      lastUpdated: row?.lastUpdated ? row.lastUpdated.toISOString() : null,
+    })
   } catch (error) {
     console.error('Error leyendo entropía:', error)
-    return NextResponse.json({ entropyLevel: 0 })
+    return NextResponse.json({ entropyLevel: 0, lastUpdated: null })
   }
 }

@@ -12,6 +12,7 @@ const TRICKSTER_KEY = 'neoproxy-identity-trickster'
 const SCAN_COUNT_KEY = 'neoproxy-identity-nfc-scans'
 const GRIETAS_KEY = 'neoproxy-identity-grietas'
 const VOTER_ID_KEY = 'neoproxy-identity-voter-id'
+const ENTITY_SIGHTING_KEY = 'neoproxy-identity-entity-sighting'
 
 function safeGet<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback
@@ -144,6 +145,19 @@ export function computeIdentity(): IdentitySummary {
   const hasAnySignal = bestScore > 0 || trickster.bestLevel > 0 || nfcScans > 0 || proxygenesisCount > 0
 
   return { dominant, scorePerAgent, chatCounts, portrait, trickster, nfcScans, proxygenesisCount, hasAnySignal }
+}
+
+// Sin nombrar a quién viste — components/EntropyEntity.tsx y
+// components/Glitchi.tsx llaman esto cuando de verdad se disparan en ESTE
+// navegador (no cuando el cron corre en el server, eso no lo vio nadie
+// todavía). Un booleano, no un conteo: importa que haya pasado al menos
+// una vez, no cuántas.
+export function recordEntitySighting() {
+  safeSet(ENTITY_SIGHTING_KEY, true)
+}
+
+export function hasEntitySighting(): boolean {
+  return safeGet<boolean>(ENTITY_SIGHTING_KEY, false)
 }
 
 // Un voto por visitante en la cola de fabricación (app/fabrication/cola):

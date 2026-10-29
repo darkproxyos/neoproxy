@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js'
-import { IMAGE_ARTIFACTS } from '@/components/artifacts/registry'
+import { IMAGE_ARTIFACTS, recordArtifactRecognition } from '@/components/artifacts/registry'
 import RevealPanel from '@/components/artifacts/RevealPanel'
 
 const mono = "'Space Mono', monospace"
@@ -41,7 +41,10 @@ export default function MarcadorPage() {
       mindarRef.current = mindarThree
 
       const anchor = mindarThree.addAnchor(0)
-      anchor.onTargetFound = () => setStatus('found')
+      anchor.onTargetFound = () => {
+        setStatus('found')
+        recordArtifactRecognition(artifact.id, 'image')
+      }
       anchor.onTargetLost = () => setStatus('scanning')
 
       await mindarThree.start()
@@ -89,7 +92,7 @@ export default function MarcadorPage() {
           MARCADOR
         </h1>
         <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 28 }}>
-          Enfocá un marcador entrenado con la cámara y mantenelo en cuadro — nada de apretar un
+          Enfocá un marcador entrenado con la cámara y manteneloen cuadro — nada de apretar un
           botón para "sacar foto": el reconocimiento es continuo, en vivo, mientras la imagen
           esté enfocada. Tracking de imagen real (MindAR), no un lector de QR.
         </p>

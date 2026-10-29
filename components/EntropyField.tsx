@@ -16,6 +16,14 @@ type GlitchBar = { id: number; top: number; height: number }
 // invisible — no hay nada que simular, es lo que realmente hay.
 const BURST_THRESHOLD = 25
 
+// Modo quieto: no es "entropía baja en este instante" (eso pasa seguido,
+// apenas después de un purgeEntropy) sino entropía baja Y sin tocarse en
+// serio hace rato — el timestamp real de systemState.lastUpdated, no un
+// contador propio que se resetea con cada carga de página. El contraste
+// solo es real si la calma también lo es.
+const QUIET_LEVEL_MAX = 8
+const QUIET_DURATION_MS = 2 * 60 * 60 * 1000
+
 let barId = 0
 
 export default function EntropyField() {
@@ -26,10 +34,14 @@ export default function EntropyField() {
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    const applyEntropy = (level: number) => {
+    const applyEntropy = (level: number, lastUpdated: string | null) => {
       const clamped = Math.max(0, Math.min(100, level))
       entropyRef.current = clamped
       document.documentElement.style.setProperty('--neo-entropy', String(clamped / 100))
+
+      const quietStretch = lastUpdated ? Date.now() - new Date(lastUpdated).getTime() : 0
+      const calm = clamped <= QUIET_LEVEL_MAX && quietStretch >= QUIET_DURATION_MS
+      document.documentElement.style.setProperty('--neo-calm', calm ? '1' : '0')
     }
 
     const poll = async () => {
@@ -37,7 +49,9 @@ export default function EntropyField() {
         const res = await fetch('/api/entropy', { cache: 'no-store' })
         if (!res.ok) return
         const data = await res.json()
-        if (typeof data?.entropyLevel === 'number') applyEntropy(data.entropyLevel)
+        if (typeof data?.entropyLevel === 'number') {
+          applyEntropy(data.entropyLevel, typeof data?.lastUpdated === 'string' ? data.lastUpdated : null)
+        }
       } catch {
         // sin conexión momentánea: queda el último valor conocido, no hay
         // nada que reportarle al visitante por esto
