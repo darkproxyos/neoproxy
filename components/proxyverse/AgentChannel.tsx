@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import { type ProxyAgent, pickRandom, matchAgentLine } from './agents'
 import { recordChatMessage } from './identity'
+import BiometricPulse from '@/components/BiometricPulse'
 
 const mono = "'Space Mono', monospace"
 
@@ -80,8 +81,11 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
           </div>
         ))}
         {sending && (
-          <div style={{ fontFamily: mono, fontSize: 11, color: `${agent.color}66`, letterSpacing: 1 }}>
-            {agent.name} está transmitiendo...
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <BiometricPulse color={agent.color} active={sending} />
+            <div style={{ fontFamily: mono, fontSize: 11, color: `${agent.color}66`, letterSpacing: 1 }}>
+              {agent.name} está transmitiendo...
+            </div>
           </div>
         )}
       </div>

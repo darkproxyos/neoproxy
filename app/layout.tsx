@@ -12,6 +12,11 @@ import Grieta from '@/components/grietas/Grieta'
 import EntropyField from '@/components/EntropyField'
 import EntropyEntity from '@/components/EntropyEntity'
 import Glitchi from '@/components/Glitchi'
+import CircadianField from '@/components/CircadianField'
+import ClickDesync from '@/components/ClickDesync'
+import ConsoleOverlay from '@/components/ConsoleOverlay'
+import FragmentedMemory from '@/components/FragmentedMemory'
+import ScrollHeatmap from '@/components/ScrollHeatmap'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -44,6 +49,11 @@ export default function RootLayout({
           <EntropyField />
           <EntropyEntity />
           <Glitchi />
+          <CircadianField />
+          <ClickDesync />
+          <ConsoleOverlay />
+          <FragmentedMemory />
+          <ScrollHeatmap />
         </Providers>
       </body>
     </html>
