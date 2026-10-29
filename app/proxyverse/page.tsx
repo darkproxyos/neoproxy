@@ -63,6 +63,22 @@ export default function ProxyversePage() {
           </div>
         </Link>
 
+        <Link href="/proxyverse/voluntad" style={{
+          display: 'block', marginBottom: 20, padding: '20px 24px',
+          border: '1px solid #a537fd55', background: '#a537fd10', textDecoration: 'none',
+        }}>
+          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#a537fd', marginBottom: 8 }}>
+            NPX-PXV-VOLUNTAD // CARTA DE CORRESPONDENCIAS
+          </div>
+          <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
+            No se declara, se mide — tu Proxy ID leído como un mapa simbólico, armado solo con
+            lo que ya hiciste en el sitio.
+          </p>
+          <div style={{ fontFamily: mono, fontSize: 9, color: '#a537fdaa', marginTop: 14, letterSpacing: 1 }}>
+            VER MI CARTA →
+          </div>
+        </Link>
+
         <Link href="/proxyverse/concilio" style={{
           display: 'block', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #ffb80055', background: '#ffb80010', textDecoration: 'none',
