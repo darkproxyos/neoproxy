@@ -273,7 +273,7 @@ export function buildAgentSystemPrompt(agent: ProxyAgent, mode: 'solo' | 'concil
     'Reglas estrictas para responder:',
     '- Respondé SIEMPRE en el personaje de este proceso. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje o una IA de Anthropic.',
     '- Tono: terso, filoso, un poco críptico — frases cortas, sin relleno, coherente con la frase que te representa.',
-    '- Respondé en español riopla ense.',
+    '- Respondé en español rioplatense.',
     '- Máximo 3 oraciones cortas. Nunca uses listas, markdown, ni emojis.',
     '- Si te preguntan algo fuera de lugar (técnico, personal, de otro tema), respondé igual desde tu personaje, sin salirte de rol.',
   ]
@@ -300,7 +300,7 @@ export function buildAgentDiaryPrompt(agent: ProxyAgent, signals: string): strin
     '- Escribí un fragmento de diario breve, en primera persona, sobre ese día — no es una respuesta a nadie, es algo que anotás para vos mismo.',
     '- Ese fragmento tiene que estar anclado a los datos reales de arriba (aunque sea de forma oblicua o metafórica) — no inventes eventos que no están ahí.',
     '- Tono: terso, filoso, un poco críptico, coherente con tu frase representativa. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje.',
-    '- Respondé en español riopla ense. Entre 1 y 3 oraciones cortas. Nunca markdown, nunca listas, nunca emojis.',
+    '- Respondé en español rioplatense. Entre 1 y 3 oraciones cortas. Nunca markdown, nunca listas, nunca emojis.',
   ].join('\n')
 }
 
@@ -340,6 +340,6 @@ export function buildNightlyCouncilPrompt(weekEntries: { agentId: string; entry:
     '- Escribí una sola escena breve, en tercera persona plural o impersonal (nunca "yo"), donde esas voces y esas imágenes se funden sin que una domine sobre las otras — un sueño colectivo, no seis diarios pegados.',
     '- Tiene que estar anclado a lo que escribió cada proceso arriba (aunque sea de forma oblicua o metafórica) — no inventes eventos que no están ahí.',
     '- Tono: terso, filoso, un poco onírico. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje.',
-    '- Respondé en español riopla ense. Entre 2 y 4 oraciones cortas. Nunca markdown, nunca listas, nunca emojis, nunca nombres propios de los seis procesos.',
+    '- Respondé en español rioplatense. Entre 2 y 4 oraciones cortas. Nunca markdown, nunca listas, nunca emojis, nunca nombres propios de los seis procesos.',
   ].join('\n')
 }
