@@ -12,6 +12,7 @@ export type ArtifactReveal = {
   color: string
   glow: string
   soundSrc?: string
+  sting?: 'cackle' | 'chime' | 'glitch'
   agentId?: string
 }
 
@@ -38,6 +39,7 @@ const JOKER_REVEAL: ArtifactReveal = {
   text: 'WHY SO SERIOUS?',
   color: '#39ff6a',
   glow: '#a537fd',
+  sting: 'cackle',
 }
 
 export const ARTIFACTS: Artifact[] = [
