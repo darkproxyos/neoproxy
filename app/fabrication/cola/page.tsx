@@ -72,12 +72,18 @@ export default function FabricationQueuePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/fabrication" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
-          display: 'inline-block', marginBottom: 32,
-        }}>
-          ← VOLVER A FABRICACIÓN
-        </Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+          <Link href="/fabrication" style={{
+            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          }}>
+            ← VOLVER A FABRICACIÓN
+          </Link>
+          <Link href="/fabrication/archivo" style={{
+            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: CYAN, textDecoration: 'none',
+          }}>
+            ARCHIVO →
+          </Link>
+        </div>
 
         <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-FAB-COLA // {weekOf || '...'}
