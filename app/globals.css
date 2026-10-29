@@ -339,3 +339,27 @@ body {
   mix-blend-mode: screen;
   animation: entropyBurst 0.5s steps(2) forwards;
 }
+
+/* Campo de sincronía (components/GhostPresence.tsx) — un anillo que se
+   expande desde el centro, visto por TODOS los visitantes conectados al
+   mismo tiempo (el server reenvía el evento, ver app/api/presence/sync) —
+   nunca uno por visitante por separado, eso sería solo un efecto más, no
+   un campo compartido. */
+@keyframes syncPulseExpand {
+  0% { width: 0; height: 0; opacity: 0.9; border-width: 2px; }
+  70% { opacity: 0.35; }
+  100% { width: 140vmax; height: 140vmax; opacity: 0; border-width: 0.5px; }
+}
+
+.sync-pulse-ring {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 2px solid #00d4ff;
+  box-shadow: 0 0 40px #00d4ff88;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 996;
+  animation: syncPulseExpand 1.5s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+}
