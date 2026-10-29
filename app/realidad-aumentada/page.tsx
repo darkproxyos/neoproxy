@@ -32,6 +32,14 @@ const CATALOG: ArEntry[] = [
     controls: 'REQUIERE CÁMARA',
   },
   {
+    id: 'freestyle',
+    code: 'NPX-AR-FREESTYLE',
+    title: 'FREESTYLE AR',
+    href: '/realidad-aumentada/freestyle',
+    blurb: 'Los conceptos del Proxyverse (mismo pool que /games/rap) se acercan a la cámara, creciendo en pantalla, y los sacás tocándolos con la mano — tracking real de dedos (MediaPipe), no clicks. Si no los tocás a tiempo, pasan de largo.',
+    controls: 'REQUIERE CÁMARA',
+  },
+  {
     id: 'marcador',
     code: 'NPX-AR-MARCADOR',
     title: 'MARCADOR',
