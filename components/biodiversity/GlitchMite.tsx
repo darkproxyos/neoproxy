@@ -1,55 +1,19 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { findWordSpan, revertSpan, GLITCH_STRIKE_CLASS } from './glitchWord'
 
 // Especie 2: quietud puntuada por acción. A diferencia de SweepCrawler (que
 // nunca para), el ácaro se posa sobre una palabra real, se queda quieto un
 // momento, y de golpe ataca -- le cambia la tipografía a la palabra en vivo
 // (span real insertado vía splitText/replaceWith, no una copia encima) antes
 // de revertirla y saltar a la siguiente. Tres golpes, después se va.
+// La mecánica de envolver/revertir la palabra (findWordSpan/revertSpan) vive
+// en ./glitchWord, compartida con Grieta.tsx.
 const CYCLES = 3
 const STILL_MS = 1000
 const STRIKE_MS = 320
 const HOLD_MS = 480
-const GLITCH_CLASS = 'bio-glitch-word'
-
-function findWordSpan(root: HTMLElement): { span: HTMLSpanElement; rect: DOMRect } | null {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
-  const textNodes: Text[] = []
-  let node: Node | null
-  while ((node = walker.nextNode())) {
-    if (node.textContent && node.textContent.trim().length > 0) textNodes.push(node as Text)
-  }
-  if (textNodes.length === 0) return null
-
-  const textNode = textNodes[Math.floor(Math.random() * textNodes.length)]
-  const text = textNode.textContent ?? ''
-  const matches = Array.from(text.matchAll(/[\p{L}]{3,}/gu))
-  if (matches.length === 0) return null
-  const match = matches[Math.floor(Math.random() * matches.length)]
-  const start = match.index ?? 0
-  const end = start + match[0].length
-
-  try {
-    if (end < text.length) textNode.splitText(end)
-    const wordNode = start > 0 ? textNode.splitText(start) : textNode
-    const span = document.createElement('span')
-    span.className = GLITCH_CLASS
-    span.textContent = wordNode.textContent
-    wordNode.replaceWith(span)
-    return { span, rect: span.getBoundingClientRect() }
-  } catch {
-    return null
-  }
-}
-
-function revertSpan(span: HTMLSpanElement) {
-  try {
-    span.replaceWith(document.createTextNode(span.textContent ?? ''))
-  } catch {
-    // ya pudo haber sido removido por otra causa (navegación, etc.) -- no pasa nada
-  }
-}
 
 export default function GlitchMite({
   target, color, onDone,
@@ -94,7 +58,9 @@ export default function GlitchMite({
       setPhase('still')
 
       schedule(() => {
-        found.span.classList.add('bio-glitch-strike')
+        found.span.style.setProperty('--glitch-color', color)
+        found.span.style.setProperty('--glitch-glow', `${color}99`)
+        found.span.classList.add(GLITCH_STRIKE_CLASS)
         setPhase('strike')
         schedule(() => {
           schedule(() => {
@@ -147,25 +113,6 @@ export default function GlitchMite({
           0% { transform: translate(0, 0); }
           50% { transform: translate(-2px, 1.5px) scale(1.25); }
           100% { transform: translate(2px, -1.5px) scale(1.25); }
-        }
-        .${GLITCH_CLASS} {
-          display: inline-block;
-          transition: transform 0.12s ease;
-        }
-        .${GLITCH_CLASS}.bio-glitch-strike {
-          font-family: var(--font-inter), sans-serif;
-          font-style: italic;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          color: ${color};
-          text-shadow: 0 0 8px ${color}99;
-          animation: bio-word-glitch 0.3s steps(3);
-        }
-        @keyframes bio-word-glitch {
-          0% { transform: translate(0); }
-          33% { transform: translate(-2px, 1px) skewX(-6deg); }
-          66% { transform: translate(2px, -1px) skewX(4deg); }
-          100% { transform: translate(0) skewX(0deg); }
         }
       `}</style>
     </div>

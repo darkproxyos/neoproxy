@@ -3,8 +3,60 @@
 import { useEffect, useRef, useState } from 'react'
 import { agents } from '@/components/proxyverse/agents'
 import { recordGrietaFragment, GRIETA_DONOR_IDS } from '@/components/proxyverse/identity'
+import { findWordSpan, revertSpan, GLITCH_STRIKE_CLASS } from '@/components/biodiversity/glitchWord'
 
 const DONOR_COLORS = GRIETA_DONOR_IDS.map(id => agents.find(a => a.id === id)!.color)
+
+// Antes de cerrarse (por click o por vencerse sola), la grieta contagia
+// palabras reales cercanas a donde apareció — mismo mecanismo que GlitchMite
+// (components/biodiversity/glitchWord.ts), así que Grietas y
+// ProxyBiodiversity comparten literalmente el código del glitch de texto, no
+// solo el estilo. Cuántas palabras se contagian depende de la entropía real
+// del sitio (--neo-entropy, ver EntropyField.tsx) — con el sistema en calma
+// es solo una, corrupto es un ataque de a tres.
+const INFECT_HOLD_MS = 460
+
+function readEntropyFraction(): number {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--neo-entropy')
+  const value = parseFloat(raw)
+  return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0
+}
+
+function findNearbyTextRoot(x: number, y: number): HTMLElement {
+  // elementsFromPoint devuelve la pila completa superpuesta en ese pixel, de
+  // la más próxima a la más lejana — salta la grieta misma (sin texto) y los
+  // overlays fijos vacíos (ruido de fondo, GhostPresence, etc.) hasta llegar
+  // al primer elemento real de la página con texto debajo del punto exacto
+  // donde apareció, en vez de escalar por los ancestros de un solo hit.
+  const stack = document.elementsFromPoint(x, y) as HTMLElement[]
+  for (const el of stack) {
+    if (el === document.body || el === document.documentElement) break
+    // Salta la grieta misma (su <style> interno cuenta como "texto" para
+    // textContent aunque no sea una palabra visible) y cualquier otro
+    // elemento sin texto visible real.
+    if (el.getAttribute('aria-label') === 'Grieta') continue
+    if ((el.textContent ?? '').trim().length >= 12) return el
+  }
+  return document.body
+}
+
+function infectNearbyWords(topVh: number, leftVw: number, color: string): HTMLSpanElement[] {
+  const x = (leftVw / 100) * window.innerWidth
+  const y = (topVh / 100) * window.innerHeight
+  const root = findNearbyTextRoot(x, y)
+  const wordCount = readEntropyFraction() >= 0.7 ? 3 : readEntropyFraction() >= 0.3 ? 2 : 1
+
+  const infected: HTMLSpanElement[] = []
+  for (let i = 0; i < wordCount; i++) {
+    const found = findWordSpan(root)
+    if (!found) break
+    found.span.style.setProperty('--glitch-color', color)
+    found.span.style.setProperty('--glitch-glow', `${color}99`)
+    found.span.classList.add(GLITCH_STRIKE_CLASS)
+    infected.push(found.span)
+  }
+  return infected
+}
 
 // A propósito mucho más raro que ProxyBiodiversity (que aparece garantizado
 // cada 55-80s): acá se tira una moneda cada CHECK_INTERVAL_MS, y la mayoría
@@ -30,6 +82,27 @@ export default function Grieta() {
   const activeRef = useRef<ActiveGrieta | null>(null)
   const resolvingRef = useRef(false)
   const despawnTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const infectedSpansRef = useRef<HTMLSpanElement[]>([])
+
+  const clearInfection = () => {
+    infectedSpansRef.current.forEach(revertSpan)
+    infectedSpansRef.current = []
+  }
+
+  const beginResolve = (color: string) => {
+    if (!activeRef.current || resolvingRef.current) return
+    if (despawnTimer.current) window.clearTimeout(despawnTimer.current)
+    resolvingRef.current = true
+    setResolving(true)
+    const { top, left } = activeRef.current
+    infectedSpansRef.current = infectNearbyWords(top, left, color)
+    window.setTimeout(() => {
+      clearInfection()
+      activeRef.current = null
+      resolvingRef.current = false
+      setActive(null)
+    }, INFECT_HOLD_MS)
+  }
 
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -46,8 +119,8 @@ export default function Grieta() {
       setActive(next)
       setResolving(false)
       despawnTimer.current = setTimeout(() => {
-        activeRef.current = null
-        setActive(null)
+        const randomColor = DONOR_COLORS[Math.floor(Math.random() * DONOR_COLORS.length)]
+        beginResolve(randomColor)
       }, VISIBLE_MS)
     }
 
@@ -60,21 +133,16 @@ export default function Grieta() {
     return () => {
       window.clearInterval(interval)
       if (despawnTimer.current) window.clearTimeout(despawnTimer.current)
+      clearInfection()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleClick = () => {
     if (!activeRef.current || resolvingRef.current) return
-    if (despawnTimer.current) window.clearTimeout(despawnTimer.current)
-    resolvingRef.current = true
-    setResolving(true)
     const donorId = GRIETA_DONOR_IDS[Math.floor(Math.random() * GRIETA_DONOR_IDS.length)]
     recordGrietaFragment(donorId)
-    window.setTimeout(() => {
-      activeRef.current = null
-      setActive(null)
-    }, 420)
+    beginResolve(agents.find(a => a.id === donorId)!.color)
   }
 
   if (!active) return null
@@ -116,7 +184,7 @@ export default function Grieta() {
           50% { opacity: 1; transform: scale(1.12); }
         }
         .grieta-resolve {
-          animation: grieta-dissolve 0.42s ease-out forwards;
+          animation: grieta-dissolve 0.46s ease-out forwards;
           pointer-events: none;
         }
         @keyframes grieta-dissolve {

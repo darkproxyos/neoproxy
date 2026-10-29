@@ -310,6 +310,34 @@ body {
   animation: glitch 0.3s infinite;
 }
 
+/* Glitcheo de palabra real del DOM (components/biodiversity/glitchWord.ts) —
+   compartido por GlitchMite (ProxyBiodiversity) y Grieta: ambos envuelven
+   una palabra viva en un span con esta clase y fijan --glitch-color/
+   --glitch-glow inline antes de agregar bio-glitch-strike, así que el color
+   lo decide quien dispara el efecto (color de agente, color de donante de
+   Grieta) sin necesitar una regla CSS por instancia. */
+.bio-glitch-word {
+  display: inline-block;
+  transition: transform 0.12s ease;
+}
+
+.bio-glitch-word.bio-glitch-strike {
+  font-family: var(--font-inter), sans-serif;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--glitch-color, #00d4ff);
+  text-shadow: 0 0 8px var(--glitch-glow, rgba(0, 212, 255, 0.6));
+  animation: bio-word-glitch 0.3s steps(3);
+}
+
+@keyframes bio-word-glitch {
+  0% { transform: translate(0); }
+  33% { transform: translate(-2px, 1px) skewX(-6deg); }
+  66% { transform: translate(2px, -1px) skewX(4deg); }
+  100% { transform: translate(0) skewX(0deg); }
+}
+
 /* Entropía del sistema real (ver /api/entropy y components/EntropyField.tsx)
    modulando el ruido de fondo que ya existía en layout.tsx — en vez de un
    valor fijo, la textura del sitio respira con el estado real del Overseer. */
