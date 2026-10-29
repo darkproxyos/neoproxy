@@ -1,8 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { eq, desc, sql } from 'drizzle-orm'
 import { entries, type KnowledgeEntry } from '@/components/knowledge/entries'
+import { db } from '@/src/db'
+import { systemState, fabricationSubmissions, fabricationVotes } from '@/src/db/schema'
+import { isoWeekKey } from '@/lib/isoWeek'
 
 export const runtime = 'nodejs'
+
+// El oráculo no lee solo un archivo estático — si el sistema real tiene
+// algo que decir (entropía actual, quién lidera la cola de fabricación
+// esta semana), se lo pasamos como contexto opcional. Que Claude decida si
+// vale la pena tejerlo en la lectura o ignorarlo — no lo forzamos nosotros
+// con una moneda al aire; si no aporta a la pregunta, es ruido.
+async function buildLiveSignal(): Promise<string | null> {
+  const parts: string[] = []
+  try {
+    const rows = await db.select({ entropyLevel: systemState.entropyLevel }).from(systemState).where(eq(systemState.id, 'GLOBAL')).limit(1)
+    if (rows[0]) parts.push(`la entropía del sistema está en ${rows[0].entropyLevel.toFixed(1)}%`)
+  } catch {
+    // sin conexión a la base — el oráculo sigue funcionando solo con las 3 posiciones
+  }
+  try {
+    const [leader] = await db.select({
+      label: fabricationSubmissions.label,
+      mode: fabricationSubmissions.mode,
+      votes: sql<number>`count(${fabricationVotes.visitorId})`,
+    })
+      .from(fabricationSubmissions)
+      .leftJoin(fabricationVotes, eq(fabricationVotes.submissionId, fabricationSubmissions.id))
+      .where(eq(fabricationSubmissions.weekOf, isoWeekKey()))
+      .groupBy(fabricationSubmissions.id)
+      .orderBy(desc(sql`count(${fabricationVotes.visitorId})`))
+      .limit(1)
+    if (leader && leader.votes > 0) {
+      parts.push(`en la cola de fabricación de esta semana lidera un espécimen ${leader.mode}${leader.label ? ` llamado "${leader.label}"` : ''} con ${leader.votes} votos`)
+    }
+  } catch {
+    // idem
+  }
+  return parts.length > 0 ? parts.join('; ') + '.' : null
+}
 
 const MAX_QUESTION_LEN = 300
 
@@ -25,14 +63,23 @@ function isRateLimited(ip: string): boolean {
 // es encontrar o forzar con honestidad una conexión real entre esas tres
 // ideas documentadas y la pregunta — sin inventarle a ningún autor real
 // una posición que no sostuvo.
-function buildOraclePrompt(a: KnowledgeEntry, b: KnowledgeEntry, c: KnowledgeEntry, question: string): string {
-  return [
+function buildOraclePrompt(a: KnowledgeEntry, b: KnowledgeEntry, c: KnowledgeEntry, question: string, liveSignal: string | null): string {
+  const lines = [
     'Sos la voz de lectura de NeoProxy — no un místico, no un personaje: el sistema leyendo tres fragmentos documentados contra una pregunta.',
     'Te tocaron al azar estas tres posiciones reales, cada una tal como consta en el archivo:',
     `1. ${a.name} (${a.years}), ${a.role}: "${a.summary}"`,
     `2. ${b.name} (${b.years}), ${b.role}: "${b.summary}"`,
     `3. ${c.name} (${c.years}), ${c.role}: "${c.summary}"`,
     `La pregunta que se hizo: "${question}"`,
+  ]
+  if (liveSignal) {
+    lines.push(
+      '',
+      `Esto es lo que de verdad está pasando en el sistema ahora mismo, no un dato inventado: ${liveSignal}`,
+      '- Si ese estado real le aporta algo genuino a la lectura (una resonancia real con la pregunta o las tres posiciones), tejelo adentro, de forma oblicua, sin explicarlo como si fuera una métrica de panel. Si no aporta nada, ignoralo del todo — no lo menciones solo porque está disponible.',
+    )
+  }
+  lines.push(
     '',
     'Reglas estrictas:',
     '- Conectá las tres posiciones documentadas con la pregunta — de verdad, no decorativamente. Si dos de las tres chocan entre sí, decilo en vez de forzar que encajen.',
@@ -40,7 +87,8 @@ function buildOraclePrompt(a: KnowledgeEntry, b: KnowledgeEntry, c: KnowledgeEnt
     '- Nombralos a los tres por su apellido en algún momento del texto, en el orden que mejor sirva a la lectura, no necesariamente 1-2-3.',
     '- Tono: una lectura, no una clase — directo, con peso, sin new age ni misticismo inventado. La autoridad viene de que las tres posiciones son reales, no de dramatismo.',
     '- Respondé en español. Entre 3 y 5 oraciones. Nunca markdown, nunca listas, nunca digas que sos un modelo de lenguaje o una IA.',
-  ].join('\n')
+  )
+  return lines.join('\n')
 }
 
 function cannedReading(a: KnowledgeEntry, b: KnowledgeEntry, c: KnowledgeEntry): string {
@@ -74,11 +122,12 @@ export async function POST(req: NextRequest) {
 
   const client = new Anthropic({ apiKey })
   try {
+    const liveSignal = await buildLiveSignal()
     const response = await client.messages.create({
       model: 'claude-opus-5-5',
       max_tokens: 320,
       output_config: { effort: 'low' },
-      system: buildOraclePrompt(a, b, c, trimmedQuestion),
+      system: buildOraclePrompt(a, b, c, trimmedQuestion, liveSignal),
       messages: [{ role: 'user', content: 'Armá la lectura.' }],
     })
     const textBlock = response.content.find((block): block is Anthropic.TextBlock => block.type === 'text')
