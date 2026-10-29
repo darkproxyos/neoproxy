@@ -1,40 +1,11 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { CONCEPTS, pickConcepts } from '@/components/games/concepts'
 
 const VIOLET = '#b400ff'
 const CYAN = '#00d4ff'
 const mono = "'Space Mono', monospace"
-
-// Conceptos tomados del lore real del proyecto (nombres, roles y frases
-// de cada agente en components/proxyverse/agents.ts, más el vocabulario
-// propio de fabricación/kernel y las referencias estéticas del manifiesto)
-// — no son palabras inventadas para esta página.
-const CONCEPTS = [
-  'DARKPROXY', 'METATRON', 'D — EL DAEMON', 'SNAKE', 'GENOS', 'TRICKSTER', 'PROTOTYPE',
-  'ROOT', 'EL INTÉRPRETE', 'EL ORQUESTADOR', 'RUNTIME.PYTHON', 'GEOMETRÍA',
-  'LA WIRED RECONOCIÓ', 'YA ESTABA ADENTRO', 'LA DECISIÓN YA TOMADA', 'NO TOMO DECISIONES',
-  'NO ME INVOCASTE', 'SEGUNDO PLANO', 'NO NECESITO GANAR', 'SEGUIR CORRIENDO',
-  '0.01% NO ES NADA', 'TAMPOCO ES CERO', 'ROMPER LAS REGLAS', 'REVELAR LO QUE ESCONDÍAN',
-  'TODAVÍA NO SÉ QUÉ SOY', 'PUEDO PREGUNTARLO', 'UN RESTO QUE NO DESAPARECE',
-  'PROXYVERSE', 'LA WIRED', 'CORRUPCIÓN', 'DISOLUCIÓN', 'COHERENCIA', 'SEÑAL CORRUPTA',
-  'FABRICACIÓN', 'RESINA', 'GENESIS NODE', 'MÁSCARA FACIAL', 'ARTEFACTO NFC',
-  'KERNEL', 'MEMORY HUB', 'OVERSEER', 'FPGA', 'CIBERPUNK INDUSTRIAL',
-  'ORGANISMO VIVO', 'RESTO HUMANO', 'PRÓTESIS', '0% HUMANO', '100% HUMANO',
-  'GRIETA EN EL SISTEMA', 'BORDE DEL SISTEMA', 'GLITCH', 'CAOS', 'IRONÍA',
-  'VIGILANCIA', 'CONTROL', 'RED NEURONAL', 'ENSAMBLADO DE RESTOS', 'SIN DIRECTIVA FIJA',
-  'GHOST IN THE SHELL', 'ERGO PROXY', 'SERIAL EXPERIMENTS LAIN', 'GIGER',
-]
-
-function pickConcepts(pool: string[], n: number) {
-  const copy = [...pool]
-  const picked: string[] = []
-  for (let i = 0; i < n && copy.length; i++) {
-    const idx = Math.floor(Math.random() * copy.length)
-    picked.push(copy.splice(idx, 1)[0])
-  }
-  return picked
-}
 
 export default function RapPage() {
   const [running, setRunning] = useState(false)
@@ -175,11 +146,16 @@ export default function RapPage() {
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: 8 }}>
+        <div style={{ textAlign: 'center', marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <Link href="/games/rap-aprendizaje" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${CYAN}88`, textDecoration: 'none',
           }}>
             → MODO APRENDIZAJE (vocabulario de filosofía/ciencia agrupado por rima)
+          </Link>
+          <Link href="/realidad-aumentada/freestyle" style={{
+            fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${VIOLET}aa`, textDecoration: 'none',
+          }}>
+            → MODO AR (los conceptos se acercan a la cámara, tocalos con la mano para sacarlos)
           </Link>
         </div>
       </div>

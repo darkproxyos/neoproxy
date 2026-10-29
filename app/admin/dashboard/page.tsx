@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { auth } from '@/auth'
+import BiometricPulse from '@/components/BiometricPulse'
 
 export default function AdminDashboard() {
   const [session, setSession] = useState<any>(null)
@@ -129,15 +130,18 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div style={{ 
-        background: '#0a0a0a', 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
+      <div style={{
+        background: '#0a0a0a',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'column',
+        gap: 10,
         fontFamily: 'Inter, sans-serif',
         color: '#71717a'
       }}>
+        <BiometricPulse color="#71717a" active={loading} />
         Loading...
       </div>
     )

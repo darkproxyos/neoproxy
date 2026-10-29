@@ -18,9 +18,16 @@
 
   /* Modo quieto (components/EntropyField.tsx) — 0 o 1, solo cuando la
      entropía real lleva horas sin moverse. No agrega un elemento nuevo:
-     atúnúa lo que ya está (scanlines, grid) para que la calma se note
+     atenúa lo que ya está (scanlines, grid) para que la calma se note
      como ausencia, no como otro efecto encima de los demás. */
   --neo-calm: 0;
+
+  /* Ciclo circadiano (components/CircadianField.tsx) — la hora real del
+     dispositivo del visitante recolorea las dos capas ambiente que ya
+     existen (scanlines + grid) en vez de agregar una tercera. Default
+     idéntico al negro ya hardcodeado, para que no haya flash antes de que
+     el componente mida la hora. */
+  --circadian-scanline-rgb: 0, 0, 0;
 }
 
 @theme inline {
@@ -41,6 +48,47 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  /* Tipografía que respira: el texto base (lo que no fija su propio
+     letter-spacing línea por línea) sigue --neo-entropy, la misma variable
+     real que ya pone components/EntropyField.tsx — sin cableado nuevo. Los
+     títulos grandes de cada página fijan su propio letter-spacing inline a
+     propósito (son identidad de marca, no deben respirar) y quedan afuera. */
+  letter-spacing: calc(0.01em + var(--neo-entropy, 0) * 0.05em);
+  transition: letter-spacing 2.5s ease;
+}
+
+/* Scrollbar CRT: reemplaza la barra nativa por algo que se sienta parte
+   del mismo artefacto que el resto del sitio, no un control de browser
+   genérico pegado encima. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #000205;
+}
+::-webkit-scrollbar-thumb {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 212, 255, 0.35),
+    rgba(0, 212, 255, 0.35) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  border: 1px solid rgba(0, 212, 255, 0.25);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 212, 255, 0.55),
+    rgba(0, 212, 255, 0.55) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 212, 255, 0.35) #000205;
 }
 
 /* CRT Scanline Effect */
@@ -54,13 +102,13 @@ body {
   z-index: 9999;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
+    rgba(var(--circadian-scanline-rgb, 0, 0, 0), 0.15),
+    rgba(var(--circadian-scanline-rgb, 0, 0, 0), 0.15) 1px,
     transparent 1px,
     transparent 2px
   );
   opacity: calc(0.3 - var(--neo-calm, 0) * 0.16);
-  transition: opacity 3s ease;
+  transition: opacity 3s ease, background 4s ease;
 }
 
 /* Subtle Grid Background */
@@ -434,6 +482,91 @@ body {
     animation: none;
     opacity: 0.85;
   }
+}
+
+/* Micro-desync (components/ClickDesync.tsx) — 1 frame de split RGB en el
+   punto real donde tocaste, no un timer propio ni un efecto de hover. */
+@keyframes click-desync-burst {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.click-desync {
+  position: fixed;
+  width: 42px;
+  height: 42px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: screen;
+  animation: click-desync-burst 0.14s steps(2) forwards;
+}
+
+.click-desync::before,
+.click-desync::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.click-desync::before { background: #ff2d55; opacity: 0.4; transform: translate(-3px, 1px); }
+.click-desync::after { background: #00d4ff; opacity: 0.4; transform: translate(3px, -1px); }
+
+/* Lectura biométrica (components/BiometricPulse.tsx) — reemplaza spinners
+   genéricos en los puntos donde de verdad hay una request real en vuelo
+   (canal de un agente, carga del admin). No mide % real (no lo hay de
+   antemano) pero nunca corre si no hay una espera real detrás. */
+@keyframes biometric-sweep {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -54; }
+}
+
+.biometric-pulse-trace {
+  stroke-dasharray: 54;
+  animation: biometric-sweep 1.1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .biometric-pulse-trace { animation: none; }
+  .click-desync { display: none; }
+}
+
+/* Memoria corta fragmentada (components/FragmentedMemory.tsx) — un único
+   dato real de tu sesión anterior (identity.ts), mostrado borroso y
+   fragmentado a propósito: la fragmentación es el punto, no un error de
+   render. Solo al volver después de un rato, una vez por sesión nueva. */
+@keyframes fragmented-memory-flicker {
+  0% { opacity: 0; filter: blur(6px); }
+  18% { opacity: 0.9; filter: blur(0px); }
+  30% { opacity: 0.3; filter: blur(3px); }
+  40% { opacity: 0.9; filter: blur(0px); }
+  85% { opacity: 0.9; filter: blur(0px); }
+  100% { opacity: 0; filter: blur(8px); }
+}
+
+.fragmented-memory {
+  position: fixed;
+  top: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 86vw;
+  z-index: 999;
+  pointer-events: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #8fb8d6;
+  text-shadow: 0 0 10px #000c;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: fragmented-memory-flicker 5s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fragmented-memory { animation: none; opacity: 0.75; filter: none; }
 }
 
 /* Glitchi (components/Glitchi.tsx) — firma fija #39ff14, distinta de los

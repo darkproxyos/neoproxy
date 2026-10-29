@@ -51,7 +51,7 @@ export const ARTIFACTS: Artifact[] = [
     reveal: JOKER_REVEAL,
   },
   // Mismo reveal, segundo disparador: un tag NFC pegado al dorso del mismo
-  // sticker (payload "neoproxy:joker") dispararia lo mismo que enfocarlo
+  // sticker (payload "neoproxy:joker") dispararía lo mismo que enfocarlo
   // con la cámara — la prueba de que es un solo pipeline, no dos sistemas
   // que coinciden en el contenido por casualidad. Sin tag físico todavía
   // (ver /experimental/scan), pero el esquema ya está listo para recibirlo.
