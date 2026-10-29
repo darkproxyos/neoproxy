@@ -255,6 +255,38 @@ export default function ExperimentalHubPage() {
           <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>LECTURA EN VIVO — NUNCA LA MISMA COMBINACIÓN</div>
         </Link>
 
+        <div style={{ fontSize: 10, color: '#00ff9d', letterSpacing: 4, marginBottom: 10 }}>
+          EL SIGILO
+        </div>
+        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+          Tampoco es un séptimo modo — no genera una forma nueva ni simula nada, reduce. Un procedimiento
+          real de reducción de texto a símbolo: se le sacan las letras repetidas a tu intención y lo que
+          sobrevive se funde en un trazo sobre una rueda fija de 26 posiciones. Determinístico — mismo
+          texto, mismo sigilo, siempre.
+        </p>
+        <Link href="/experimental/sigilo" className="fade-in artifact-card" style={{
+          display: 'block', textDecoration: 'none', color: 'inherit', padding: 24, marginBottom: 56,
+          background: 'rgba(2,4,8,0.8)', border: '1px solid #00ff9d33', borderLeft: '3px solid #00ff9d',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+            <span style={{ fontSize: 9, letterSpacing: 2, color: '#00ff9daa' }}>NPX-XP-SIGILO</span>
+            <span style={{
+              fontSize: 9, letterSpacing: 1, color: '#00ff9d', border: '1px solid #00ff9d55', padding: '2px 7px',
+            }}>
+              REDUCE, NO GENERA
+            </span>
+          </div>
+          <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>SIGILO</div>
+          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            Escribís una intención, se eliminan las letras repetidas, y el set resultante se dibuja como
+            un único trazo — procedimiento determinístico real, no una animación al azar.
+          </p>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#00ff9dcc', marginBottom: 8 }}>
+            GALERÍA LOCAL — CADA SIGILO QUEDA GUARDADO
+          </div>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>MISMO TEXTO, MISMO SIGILO — SIEMPRE</div>
+        </Link>
+
         <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 22 }}>
           OTROS EXPERIMENTOS
         </div>

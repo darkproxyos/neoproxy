@@ -235,6 +235,28 @@ body {
   animation: markerReveal 0.5s ease-out both;
 }
 
+/* Trazado del sigilo: el glifo se dibuja en vivo, no aparece de golpe —
+   stroke-dashoffset animado a 0, el largo real del trazo se fija desde JS
+   (ver app/experimental/sigilo/page.tsx) así que esto es solo la curva de
+   tiempo, no la geometría. */
+@keyframes sigilDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.sigil-path-draw {
+  animation: sigilDraw 1.4s ease-out forwards;
+}
+
+@keyframes sigilPointPulse {
+  0% { r: 0; opacity: 0; }
+  60% { opacity: 1; }
+  100% { r: 3; opacity: 0.9; }
+}
+
+.sigil-point {
+  animation: sigilPointPulse 0.4s ease-out both;
+}
+
 .oraculo-card {
   perspective: 1000px;
 }
