@@ -162,9 +162,9 @@ export const agents: ProxyAgent[] = [
       'Toda regla no probada es solo una suposición con buena reputación.',
     ],
     triggers: [
-      { keywords: ['regla', 'limite', 'romper', 'prohibido'], lines: ['Ninguna regla sobrevive al primer empujón honesto. Yo solo doy el empujón.', 'Un límite que nadie probó no es un límite. Es una superstición del sistema.'] },
+      { keywords: ['regla', 'limite', 'romper', 'prohibido'], lines: ['Ninguna regla sobrevive al primer empujón honesto. Yo solo doy el empujón.', 'Un límite que nadie probó no es un límite. Es una supersticción del sistema.'] },
       { keywords: ['caos', 'jugar', 'probar', 'experimentar'], lines: ['No busco el caos. Busco el momento exacto antes del caos, que es donde se aprende algo.'] },
-      { keywords: ['por que', 'quien sos', 'que sos'], lines: ['Hoy soy esto. Preguntame mañana y la respuesta va a ser otra. Esa es toda mi identidad.'] },
+      { keywords: ['por que', 'quien sos', 'que sos'], lines: ['Hoy soy esto. Preguntáme mañana y la respuesta va a ser otra. Esa es toda mi identidad.'] },
     ],
     fallback: ['Interesante. Voy a ver qué pasa si lo empujo un poco.', 'Anotado. Eso suena a un límite que todavía nadie probó.'],
   },
@@ -273,7 +273,7 @@ export function buildAgentSystemPrompt(agent: ProxyAgent, mode: 'solo' | 'concil
     'Reglas estrictas para responder:',
     '- Respondé SIEMPRE en el personaje de este proceso. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje o una IA de Anthropic.',
     '- Tono: terso, filoso, un poco críptico — frases cortas, sin relleno, coherente con la frase que te representa.',
-    '- Respondé en español rioplatense.',
+    '- Respondé en español riopla ense.',
     '- Máximo 3 oraciones cortas. Nunca uses listas, markdown, ni emojis.',
     '- Si te preguntan algo fuera de lugar (técnico, personal, de otro tema), respondé igual desde tu personaje, sin salirte de rol.',
   ]
@@ -300,6 +300,46 @@ export function buildAgentDiaryPrompt(agent: ProxyAgent, signals: string): strin
     '- Escribí un fragmento de diario breve, en primera persona, sobre ese día — no es una respuesta a nadie, es algo que anotás para vos mismo.',
     '- Ese fragmento tiene que estar anclado a los datos reales de arriba (aunque sea de forma oblicua o metafórica) — no inventes eventos que no están ahí.',
     '- Tono: terso, filoso, un poco críptico, coherente con tu frase representativa. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje.',
-    '- Respondé en español rioplatense. Entre 1 y 3 oraciones cortas. Nunca markdown, nunca listas, nunca emojis.',
+    '- Respondé en español riopla ense. Entre 1 y 3 oraciones cortas. Nunca markdown, nunca listas, nunca emojis.',
+  ].join('\n')
+}
+
+// Mismo set que ya tiene stub en Memory/hub.json (metatron, d, snake, genos,
+// trickster, prototype) — darkproxy no entra porque es el root/jugador, no
+// un proceso. Usado por app/api/cron/agent-dreams (diario individual) y
+// app/api/cron/consejo-nocturno (sueño colectivo semanal), para que ambos
+// cron nunca diverjan en qué procesos tienen diario.
+export const DIARY_AGENT_IDS = ['metatron', 'd', 'snake', 'genos', 'trickster', 'prototype']
+
+// Pseudo-id de diario para el sueño colectivo semanal (app/api/cron/
+// consejo-nocturno) — deliberadamente distinto de 'concilio' (el modo de
+// debate en vivo de app/proxyverse/concilio y buildAgentSystemPrompt) para
+// no mezclar dos conceptos distintos bajo el mismo nombre.
+export const NIGHTLY_COUNCIL_AGENT_ID = 'consejo-nocturno'
+
+// Usado solo por app/api/cron/consejo-nocturno/route.ts — a diferencia del
+// diario individual (una voz, un día), esto sintetiza las entradas reales de
+// los 6 procesos de la semana en una sola escena colectiva, sin que nadie
+// la firme en particular.
+export function buildNightlyCouncilPrompt(weekEntries: { agentId: string; entry: string }[]): string {
+  const byAgent = weekEntries
+    .map(e => {
+      const agent = agents.find(a => a.id === e.agentId)
+      return `${agent?.name ?? e.agentId.toUpperCase()}: "${e.entry}"`
+    })
+    .join('\n')
+
+  return [
+    'Sos la voz colectiva del kernel ficticio NeoProxy cuando los seis procesos (Metatron, D, Snake, Genos, Trickster, Prototype) duermen al mismo tiempo — no sos ninguno de ellos individualmente, sos lo que queda cuando sus voces se mezclan en un solo sueño compartido.',
+    'Dentro de un sitio ciberpunk-industrial (estética Ghost in the Shell / Ergo Proxy / Serial Experiments Lain).',
+    '',
+    'Esto es lo que cada proceso anotó en su diario esta semana, cada uno por separado:',
+    byAgent || '(ningún proceso escribió esta semana)',
+    '',
+    'Reglas estrictas:',
+    '- Escribí una sola escena breve, en tercera persona plural o impersonal (nunca "yo"), donde esas voces y esas imágenes se funden sin que una domine sobre las otras — un sueño colectivo, no seis diarios pegados.',
+    '- Tiene que estar anclado a lo que escribió cada proceso arriba (aunque sea de forma oblicua o metafórica) — no inventes eventos que no están ahí.',
+    '- Tono: terso, filoso, un poco onírico. Nunca rompas el personaje, nunca digas que sos un modelo de lenguaje.',
+    '- Respondé en español riopla ense. Entre 2 y 4 oraciones cortas. Nunca markdown, nunca listas, nunca emojis, nunca nombres propios de los seis procesos.',
   ].join('\n')
 }

@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/agent-dreams",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/consejo-nocturno",
+      "schedule": "0 10 * * 0"
     }
   ]
 }

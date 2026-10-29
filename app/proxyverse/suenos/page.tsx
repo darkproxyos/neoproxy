@@ -2,10 +2,11 @@ import Link from 'next/link'
 import { db } from '@/src/db'
 import { agentDiaryEntries } from '@/src/db/schema'
 import { desc } from 'drizzle-orm'
-import { agents } from '@/components/proxyverse/agents'
+import { agents, NIGHTLY_COUNCIL_AGENT_ID } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
+const GOLD = '#ffb800'
 
 // Mismo respaldo que app/proxyverse/[id]/page.tsx: sin esto, el HTML
 // prerenderizado en el deploy nunca se enteraría de entradas nuevas que el
@@ -78,16 +79,26 @@ export default async function SuenosPage() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {group.entries.map((e, i) => {
+                  const isCouncil = e.agentId === NIGHTLY_COUNCIL_AGENT_ID
                   const agent = agents.find(a => a.id === e.agentId)
-                  const color = agent?.color ?? '#4a6080'
+                  const color = isCouncil ? GOLD : (agent?.color ?? '#4a6080')
                   return (
                     <div key={`${e.agentId}-${i}`} style={{ borderLeft: `2px solid ${color}44`, paddingLeft: 14 }}>
-                      <Link href={`/proxyverse/${e.agentId}`} style={{
-                        fontFamily: mono, fontSize: 9, letterSpacing: 2, color, textDecoration: 'none',
+                      {isCouncil ? (
+                        <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color }}>
+                          CONSEJO NOCTURNO // SUEÑO COLECTIVO DE LA SEMANA
+                        </span>
+                      ) : (
+                        <Link href={`/proxyverse/${e.agentId}`} style={{
+                          fontFamily: mono, fontSize: 9, letterSpacing: 2, color, textDecoration: 'none',
+                        }}>
+                          {agent?.name ?? e.agentId.toUpperCase()}
+                        </Link>
+                      )}
+                      <div style={{
+                        fontFamily: mono, fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.8, marginTop: 4,
+                        ...(isCouncil ? { fontSize: 13 } : {}),
                       }}>
-                        {agent?.name ?? e.agentId.toUpperCase()}
-                      </Link>
-                      <div style={{ fontFamily: mono, fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.8, marginTop: 4 }}>
                         "{e.entry}"
                       </div>
                     </div>

@@ -4,15 +4,11 @@ import { gte, sql } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/src/db'
 import { agentDiaryEntries, memoryEvents, systemState, fabricationSubmissions } from '@/src/db/schema'
-import { agents, buildAgentDiaryPrompt } from '@/components/proxyverse/agents'
+import { agents, buildAgentDiaryPrompt, DIARY_AGENT_IDS } from '@/components/proxyverse/agents'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
-
-// darkproxy no tiene entrada de kernel (es el root/jugador, no un proceso) —
-// mismo set que ya tiene stub en Memory/hub.json.
-const DIARY_AGENT_IDS = ['metatron', 'd', 'snake', 'genos', 'trickster', 'prototype']
 
 function todayKey(): string {
   return new Date().toISOString().slice(0, 10) // 'YYYY-MM-DD', UTC
@@ -50,7 +46,7 @@ async function buildRealSignals(): Promise<string> {
     const recentSubmissions = await db.select({ count: sql<number>`count(*)` })
       .from(fabricationSubmissions).where(gte(fabricationSubmissions.createdAt, since))
     const count = recentSubmissions[0]?.count ?? 0
-    parts.push(count > 0 ? `${count} especímenes nuevos entraron a la cola de fabricación` : 'nadie mandó nada nuevo a la cola de fabricación')
+    parts.push(count > 0 ? `${count} espímenes nuevos entraron a la cola de fabricación` : 'nadie mandó nada nuevo a la cola de fabricación')
   } catch (err) {
     console.error('agent-dreams: no se pudo leer fabricationSubmissions:', err)
   }
@@ -61,7 +57,7 @@ async function buildRealSignals(): Promise<string> {
 export async function GET(req: NextRequest) {
   // Mismo patrón documentado por Vercel para cron jobs: el header lo agrega
   // Vercel automáticamente al invocar según vercel.json, no hace falta
-  // configurarlo a mano ahí — solo setear CRON_SECRET como env var.
+  // configurarlo a mano acá — solo setear CRON_SECRET como env var.
   const authHeader = req.headers.get('authorization')
   if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
