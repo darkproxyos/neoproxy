@@ -28,6 +28,13 @@ const AGENT_MODELS: Record<string, Agent3DConfig> = {
   },
 }
 
+// Retrato animado por agente — generado a partir del retrato canónico 2D
+// (public/canon/*-v1.{png,jpg}), no reemplaza el canon, lo anima. Si un
+// agente no tiene entrada acá, el perfil sigue usando la imagen estática.
+const AGENT_VIDEOS: Record<string, string> = {
+  metatron: '/canon/metatron-v1.mp4',
+}
+
 // Dónde se puede PROBAR en vivo, no solo leer, cada entrada de /knowledge
 // que tiene relatedAgent — no todas tienen una (hay varias puramente
 // conceptuales, como Bateson o Nietzsche, sin algoritmo que correr en
@@ -72,6 +79,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
   const image = AGENT_IMAGES[agent.id]
   const model3d = AGENT_MODELS[agent.id]
+  const video = AGENT_VIDEOS[agent.id]
   const others = agents.filter(a => a.id !== agent.id)
   const relatedEntries = entries.filter(e => e.relatedAgent === agent.id)
 
@@ -110,6 +118,19 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
         {model3d ? (
           <Agent3DViewer config={model3d} color={agent.color} />
+        ) : video ? (
+          <div style={{ maxWidth: 420, margin: '0 auto 32px', border: `1px solid ${agent.color}33` }}>
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster={image}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            >
+              <source src={video} type="video/mp4" />
+            </video>
+          </div>
         ) : image ? (
           <div style={{ maxWidth: 420, margin: '0 auto 32px', border: `1px solid ${agent.color}33` }}>
             <Image
