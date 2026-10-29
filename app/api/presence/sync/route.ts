@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import Pusher from 'pusher'
-import { SITE_PRESENCE_CHANNEL } from '@/components/pusher/siteConnection'
+import { SITE_PRESENCE_CHANNEL } from '@/components/pusher/constants'
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
