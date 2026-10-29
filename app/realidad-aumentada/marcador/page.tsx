@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js'
-import { IMAGE_ARTIFACTS } from '@/components/artifacts/registry'
+import { IMAGE_ARTIFACTS, recordArtifactRecognition } from '@/components/artifacts/registry'
 import RevealPanel from '@/components/artifacts/RevealPanel'
 
 const mono = "'Space Mono', monospace"
@@ -41,7 +41,10 @@ export default function MarcadorPage() {
       mindarRef.current = mindarThree
 
       const anchor = mindarThree.addAnchor(0)
-      anchor.onTargetFound = () => setStatus('found')
+      anchor.onTargetFound = () => {
+        setStatus('found')
+        recordArtifactRecognition(artifact.id, 'image')
+      }
       anchor.onTargetLost = () => setStatus('scanning')
 
       await mindarThree.start()

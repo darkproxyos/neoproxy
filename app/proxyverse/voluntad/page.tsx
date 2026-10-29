@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
-  computeIdentity, getGrietaFragments, GRIETA_DONOR_IDS, type IdentitySummary,
+  computeIdentity, getGrietaFragments, GRIETA_DONOR_IDS, hasEntitySighting, type IdentitySummary,
 } from '@/components/proxyverse/identity'
 
 const mono = "'Space Mono', monospace"
@@ -16,7 +16,7 @@ const CYAN = '#00d4ff'
 // medir una práctica que no existió.
 type Axis = { id: string; label: string; value: number; max: number }
 
-function buildAxes(identity: IdentitySummary, grietaCount: number): Axis[] {
+function buildAxes(identity: IdentitySummary, grietaCount: number, entitySighting: boolean): Axis[] {
   const dominantChats = identity.dominant ? (identity.chatCounts[identity.dominant.id] || 0) : 0
   return [
     { id: 'dialogo', label: 'DIÁLOGO', value: dominantChats, max: 20 },
@@ -25,6 +25,9 @@ function buildAxes(identity: IdentitySummary, grietaCount: number): Axis[] {
     { id: 'genesis', label: 'GÉNESIS', value: identity.proxygenesisCount, max: 10 },
     { id: 'senal', label: 'SEÑAL', value: identity.nfcScans, max: 10 },
     { id: 'fragmentos', label: 'FRAGMENTOS', value: grietaCount, max: GRIETA_DONOR_IDS.length },
+    // Sin nombrar a qué — ver recordEntitySighting en identity.ts. Binario
+    // a propósito: importa que haya pasado, no cuántas veces.
+    { id: 'margen', label: 'MARGEN', value: entitySighting ? 1 : 0, max: 1 },
   ]
 }
 
@@ -35,6 +38,7 @@ const AXIS_READINGS: Record<string, string> = {
   genesis: 'Preferís construir la pregunta antes que hacerla. Lo tuyo es la forma, no la explicación.',
   senal: 'Buscás el objeto físico detrás de la pantalla. Lo digital no te alcanza si no toca algo real.',
   fragmentos: 'Juntaste lo que el sistema dejó tirado. Nadie te pidió que lo hicieras.',
+  margen: 'Viste algo que el sistema no explica en ningún lado. No hace falta que lo entiendas para que cuente.',
 }
 
 function radarPoint(index: number, total: number, ratio: number, radius: number): { x: number; y: number } {
@@ -50,20 +54,22 @@ const MAX_RADIUS = 110
 export default function VoluntadPage() {
   const [identity, setIdentity] = useState<IdentitySummary | null>(null)
   const [grietaCount, setGrietaCount] = useState(0)
+  const [entitySighting, setEntitySighting] = useState(false)
 
   useEffect(() => {
     setIdentity(computeIdentity())
     setGrietaCount(getGrietaFragments().length)
+    setEntitySighting(hasEntitySighting())
   }, [])
 
   if (!identity) {
     return <div style={{ background: '#000205', minHeight: '100vh' }} />
   }
 
-  const axes = buildAxes(identity, grietaCount)
+  const axes = buildAxes(identity, grietaCount, entitySighting)
   const total = axes.length
 
-  if (!identity.hasAnySignal) {
+  if (!identity.hasAnySignal && !entitySighting) {
     return (
       <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative' }}>
         <div className="crt-scanlines" />
@@ -112,7 +118,10 @@ export default function VoluntadPage() {
     )
   }
 
-  const agent = identity.dominant!
+  // dominant puede ser null acá: hasAnySignal ahora también se vuelve true
+  // solo con entitySighting (sin chat ni retrato, cero afinidad por ningún
+  // proceso) — fallback neutro, ninguno de los 6 colores.
+  const agent = identity.dominant ?? { id: '', name: 'SIN ANCLA', role: 'NINGÚN PROCESO DOMINANTE TODAVÍA', color: '#6a7a8a' }
   const points = axes.map((a, i) => radarPoint(i, total, a.value / a.max, MAX_RADIUS))
   const polygon = points.map(p => `${CENTER + p.x},${CENTER + p.y}`).join(' ')
   const strongest = axes.reduce((best, a) => (a.value / a.max > best.value / best.max ? a : best), axes[0])

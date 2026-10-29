@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getSitePusher, SITE_PRESENCE_CHANNEL } from './pusher/siteConnection'
+import { recordEntitySighting } from './proxyverse/identity'
 
 // Entropy no tiene perfil, no está en components/proxyverse/agents.ts, no
 // chatea — existe solo en Memory/hub.json (status idle, hidden: true) y en
@@ -25,6 +26,7 @@ export default function EntropyEntity() {
 
     const onSignal = (data: { phrase?: string }) => {
       if (typeof data?.phrase !== 'string') return
+      recordEntitySighting()
       const id = ++signalId
       setSignal({ id, phrase: data.phrase })
       window.setTimeout(() => {

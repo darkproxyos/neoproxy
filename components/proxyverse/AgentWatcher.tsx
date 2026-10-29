@@ -8,6 +8,8 @@ const IDLE_MS = 50_000
 const COOLDOWN_MS = 25_000
 const TOAST_MS = 6_500
 const RETURN_MIN_AWAY_MS = 12_000
+const FRICTION_POLL_MS = 90_000
+const FRICTION_SHOWN_KEY = 'neoproxy-metatron-friction-shown'
 
 type Toast = { agentId: string; line: string }
 
@@ -23,15 +25,40 @@ export default function AgentWatcher() {
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    const fire = () => {
-      const now = Date.now()
-      if (now - lastToastAt.current < COOLDOWN_MS) return
-      lastToastAt.current = now
-      const { agentId, line } = getAmbientLine()
+    const showToast = (agentId: string, line: string) => {
+      lastToastAt.current = Date.now()
       setToast({ agentId, line })
       if (toastTimer.current) clearTimeout(toastTimer.current)
       toastTimer.current = setTimeout(() => setToast(null), TOAST_MS)
     }
+
+    const fire = () => {
+      if (Date.now() - lastToastAt.current < COOLDOWN_MS) return
+      const { agentId, line } = getAmbientLine()
+      showToast(agentId, line)
+    }
+
+    // Fricción real: Metatron nota cuando una acción del admin coincidió
+    // cerca en el tiempo con un movimiento de entropía que él no pidió
+    // (ver app/api/metatron/friction) — esto sí salta el cooldown normal,
+    // es raro de por sí y nunca se repite para el mismo evento admin
+    // (dedupe en sessionStorage).
+    const checkFriction = async () => {
+      try {
+        const res = await fetch('/api/metatron/friction', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        if (!data?.active || typeof data.adminEventId !== 'number' || typeof data.line !== 'string') return
+        const shownId = Number(window.sessionStorage.getItem(FRICTION_SHOWN_KEY) ?? 'NaN')
+        if (shownId === data.adminEventId) return
+        window.sessionStorage.setItem(FRICTION_SHOWN_KEY, String(data.adminEventId))
+        showToast('metatron', data.line)
+      } catch {
+        // sin red momentánea: no pasa nada, el próximo poll lo intenta de nuevo
+      }
+    }
+    checkFriction()
+    const frictionPollId = window.setInterval(checkFriction, FRICTION_POLL_MS)
 
     // Idle: nadie tocó nada por un rato
     let idleTimer: ReturnType<typeof setTimeout>
@@ -70,6 +97,7 @@ export default function AgentWatcher() {
     return () => {
       clearTimeout(idleTimer)
       if (toastTimer.current) clearTimeout(toastTimer.current)
+      window.clearInterval(frictionPollId)
       activityEvents.forEach(ev => window.removeEventListener(ev, resetIdle))
       document.removeEventListener('visibilitychange', handleVisibility)
       window.removeEventListener('scroll', handleScroll)

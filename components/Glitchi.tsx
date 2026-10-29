@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { findWordSpan, revertSpan, GLITCH_STRIKE_CLASS } from './biodiversity/glitchWord'
 import { getSitePusher, SITE_PRESENCE_CHANNEL } from './pusher/siteConnection'
+import { recordEntitySighting } from './proxyverse/identity'
 
 // Glitchi no tiene ícono, ni botón, ni posición visible antes de actuar —
 // a diferencia de Grieta (que avisa con un glifo quieto antes de poder
@@ -28,6 +29,7 @@ export default function Glitchi() {
       const found = findWordSpan(document.body)
       if (!found) return
       busyRef.current = true
+      recordEntitySighting()
       found.span.style.setProperty('--glitch-color', GLITCHI_COLOR)
       found.span.style.setProperty('--glitch-glow', `${GLITCHI_COLOR}99`)
       found.span.classList.add(GLITCH_STRIKE_CLASS)

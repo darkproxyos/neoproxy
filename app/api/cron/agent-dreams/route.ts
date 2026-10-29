@@ -33,10 +33,22 @@ async function buildRealSignals(): Promise<string> {
       eventType: memoryEvents.eventType,
       count: sql<number>`count(*)`,
     }).from(memoryEvents).where(gte(memoryEvents.timestamp, since)).groupBy(memoryEvents.eventType)
-    if (recentEvents.length > 0) {
-      parts.push(`eventos de memoria en las últimas 24hs: ${recentEvents.map(e => `${e.eventType} x${e.count}`).join(', ')}`)
+
+    // ENTROPY_ENTITY_SHIFT se saca del conteo genérico y se nombra aparte,
+    // sin decir quién lo causó (el proceso que lee esto no sabe de Entropy,
+    // ni debería) — una línea distinta para "algo cambió solo" en vez de
+    // mezclarse con ADMIN_PURGE/FABRICATION_WINNER_DECLARED como un evento
+    // más del montón.
+    const entropyShifts = recentEvents.find(e => e.eventType === 'ENTROPY_ENTITY_SHIFT')
+    const otherEvents = recentEvents.filter(e => e.eventType !== 'ENTROPY_ENTITY_SHIFT')
+
+    if (otherEvents.length > 0) {
+      parts.push(`eventos de memoria en las últimas 24hs: ${otherEvents.map(e => `${e.eventType} x${e.count}`).join(', ')}`)
     } else {
       parts.push('sin eventos de memoria nuevos en las últimas 24hs')
+    }
+    if (entropyShifts) {
+      parts.push(`la entropía del sistema se movió ${entropyShifts.count} ${entropyShifts.count === 1 ? 'vez' : 'veces'} en las últimas 24hs sin que nadie con nombre lo pidiera`)
     }
   } catch (err) {
     console.error('agent-dreams: no se pudo leer memoryEvents:', err)

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { recordNfcScan } from '@/components/proxyverse/identity'
-import { matchNfcArtifact, type NfcArtifact } from '@/components/artifacts/registry'
+import { matchNfcArtifact, recordArtifactRecognition, type NfcArtifact } from '@/components/artifacts/registry'
 import RevealPanel from '@/components/artifacts/RevealPanel'
 
 const mono = "'Space Mono', monospace"
@@ -100,6 +100,7 @@ export default function ScanPage() {
           serialNumber: ev.serialNumber || '(sin número de serie)', records, artifact,
         }, ...prev].slice(0, 20))
         recordNfcScan()
+        if (artifact) recordArtifactRecognition(artifact.id, 'nfc')
       })
       reader.addEventListener('readingerror', () => {
         setErrorMsg('Error leyendo el tag — acercalo de nuevo, sin moverlo.')
