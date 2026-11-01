@@ -41,6 +41,7 @@ const ROUTES: Record<string, string> = {
   marcador: '/realidad-aumentada/marcador',
   mascara: '/realidad-aumentada/mascara',
   neocam: '/realidad-aumentada/neocam',
+  freestyle: '/realidad-aumentada/freestyle',
   knowledge: '/knowledge',
   shop: '/shop',
   entropia: '/system/entropia',
