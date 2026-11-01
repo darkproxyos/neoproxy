@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { db } from "@/src/db";
 import { systemState, memoryEvents, fabricationSubmissions } from "@/src/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { isoWeekKey } from "@/lib/isoWeek";
 
@@ -104,6 +104,33 @@ export async function getSystemHistory() {
   } catch (error) {
     console.error("Error fetching history:", error);
     return [];
+  }
+}
+
+// Uso real acumulado del sitio, no narrado — el mismo memory_events que ya
+// alimenta el log de eventos de arriba, agregado por tipo. No agrega una
+// tabla nueva ni un conteo paralelo: es la cuenta real de lo que cada
+// subsistema ya escribió ahí (ver cron de Entropy, /api/marker/recognized,
+// /api/fabrication, declareFabricationWinner acá mismo).
+export async function getUsageMetrics() {
+  const gate = await requireRoot();
+  if (!gate.authorized) return null;
+  try {
+    const counts = await db.select({
+      eventType: memoryEvents.eventType,
+      count: sql<number>`count(*)`,
+    }).from(memoryEvents).groupBy(memoryEvents.eventType);
+
+    const [submissions] = await db.select({ count: sql<number>`count(*)` }).from(fabricationSubmissions);
+
+    return {
+      byType: counts.map(c => ({ eventType: c.eventType, count: Number(c.count) })),
+      totalEvents: counts.reduce((sum, c) => sum + Number(c.count), 0),
+      fabricationSubmissions: Number(submissions?.count ?? 0),
+    };
+  } catch (error) {
+    console.error("Error fetching usage metrics:", error);
+    return null;
   }
 }
 

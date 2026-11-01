@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   computeIdentity, getGrietaFragments, GRIETA_DONOR_IDS, hasEntitySighting, type IdentitySummary,
@@ -47,6 +47,26 @@ function radarPoint(index: number, total: number, ratio: number, radius: number)
   return { x: Math.cos(angle) * r, y: Math.sin(angle) * r }
 }
 
+// Parte el texto en líneas que entran en maxWidth — ctx.measureText necesita
+// la font ya seteada antes de llamarla, por eso vive junto al export, no
+// suelta arriba del todo.
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+  const words = text.split(' ')
+  const lines: string[] = []
+  let current = ''
+  for (const w of words) {
+    const test = current ? `${current} ${w}` : w
+    if (current && ctx.measureText(test).width > maxWidth) {
+      lines.push(current)
+      current = w
+    } else {
+      current = test
+    }
+  }
+  if (current) lines.push(current)
+  return lines
+}
+
 const SIZE = 280
 const CENTER = SIZE / 2
 const MAX_RADIUS = 110
@@ -55,6 +75,8 @@ export default function VoluntadPage() {
   const [identity, setIdentity] = useState<IdentitySummary | null>(null)
   const [grietaCount, setGrietaCount] = useState(0)
   const [entitySighting, setEntitySighting] = useState(false)
+  const [exporting, setExporting] = useState(false)
+  const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
     setIdentity(computeIdentity())
@@ -130,6 +152,86 @@ export default function VoluntadPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
 
+  // Exporta la carta como PNG: serializa el SVG del radar real (no un
+  // dibujo aparte) a imagen, y arma el resto con Canvas puro — sin
+  // librerías nuevas, sin pegarle a ningún server.
+  const downloadCard = async () => {
+    const svgEl = svgRef.current
+    if (!svgEl || exporting) return
+    setExporting(true)
+    try {
+      await document.fonts.ready
+      const svgString = new XMLSerializer().serializeToString(svgEl)
+      const svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString)
+
+      const img = new Image()
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = () => reject(new Error('no se pudo rasterizar el radar'))
+        img.src = svgDataUrl
+      })
+
+      const W = 680, H = 940
+      const canvas = document.createElement('canvas')
+      canvas.width = W
+      canvas.height = H
+      const ctx = canvas.getContext('2d')
+      if (!ctx) throw new Error('sin contexto 2d')
+
+      ctx.fillStyle = '#000205'
+      ctx.fillRect(0, 0, W, H)
+
+      ctx.textAlign = 'center'
+      ctx.fillStyle = agent.color
+      ctx.font = "700 24px 'Space Mono', monospace"
+      ctx.fillText('VOLUNTAD VERDADERA', W / 2, 56)
+      ctx.fillStyle = '#4a6080'
+      ctx.font = "9px 'Space Mono', monospace"
+      ctx.fillText('ARMADA DESDE USO REAL — NEOPROXY.ART', W / 2, 78)
+
+      const drawSize = SIZE * 1.55
+      ctx.drawImage(img, (W - drawSize) / 2, 96, drawSize, drawSize)
+
+      let y = 96 + drawSize + 46
+      ctx.fillStyle = '#4a6080'
+      ctx.font = "9px 'Space Mono', monospace"
+      ctx.fillText('ANCLA', W / 2, y)
+      y += 30
+      ctx.fillStyle = agent.color
+      ctx.font = "700 22px 'Space Mono', monospace"
+      ctx.fillText(agent.name, W / 2, y)
+      y += 22
+      ctx.fillStyle = '#8fb8d6'
+      ctx.font = "10px 'Space Mono', monospace"
+      ctx.fillText(agent.role, W / 2, y)
+      y += 38
+
+      ctx.textAlign = 'left'
+      ctx.fillStyle = `${agent.color}cc`
+      ctx.font = "9px 'Space Mono', monospace"
+      ctx.fillText(`EJE DOMINANTE — ${strongest.label}`, 60, y)
+      y += 22
+      ctx.fillStyle = '#c8daf0'
+      ctx.font = "italic 12px 'Space Mono', monospace"
+      for (const line of wrapText(ctx, AXIS_READINGS[strongest.id], W - 120)) {
+        ctx.fillText(line, 60, y)
+        y += 20
+      }
+
+      const url = canvas.toDataURL('image/png')
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `voluntad-verdadera-${agent.id || 'sin-ancla'}.png`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    } catch (err) {
+      console.error('No se pudo generar la tarjeta:', err)
+    } finally {
+      setExporting(false)
+    }
+  }
+
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative' }}>
       <div className="crt-scanlines" />
@@ -158,7 +260,7 @@ export default function VoluntadPage() {
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-          <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+          <svg ref={svgRef} width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
             {[0.25, 0.5, 0.75, 1].map(ring => (
               <polygon
                 key={ring}
@@ -201,6 +303,16 @@ export default function VoluntadPage() {
             })}
             <circle cx={CENTER} cy={CENTER} r={5} fill={agent.color} />
           </svg>
+        </div>
+
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <button onClick={downloadCard} disabled={exporting} style={{
+            fontFamily: mono, fontSize: 9, letterSpacing: 2, padding: '8px 18px', cursor: exporting ? 'default' : 'pointer',
+            background: `${agent.color}11`, border: `1px solid ${agent.color}44`, color: agent.color,
+            opacity: exporting ? 0.5 : 1,
+          }}>
+            {exporting ? 'GENERANDO...' : '⬇ DESCARGAR TARJETA (.png)'}
+          </button>
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: 32 }}>

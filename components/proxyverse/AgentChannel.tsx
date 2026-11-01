@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { type ProxyAgent, pickRandom, matchAgentLine } from './agents'
-import { recordChatMessage } from './identity'
+import { recordChatMessage, getChatCounts } from './identity'
 import BiometricPulse from '@/components/BiometricPulse'
 
 const mono = "'Space Mono', monospace"
@@ -13,7 +13,16 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
   const [feed, setFeed] = useState<Line[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
+  const [priorExchanges, setPriorExchanges] = useState(0)
   const idRef = useRef(0)
+
+  // Eco real, no inventado: cuántos mensajes le mandaste a ESTE agente antes
+  // de ahora (identity.ts, mismo contador que ya alimenta /proxyverse/id),
+  // mostrado solo mientras el feed de esta carga está vacío — apenas mandás
+  // algo nuevo, el feed real lo tapa.
+  useEffect(() => {
+    setPriorExchanges(getChatCounts()[agent.id] || 0)
+  }, [agent.id])
 
   const push = (from: Line['from'], text: string) => {
     idRef.current += 1
@@ -69,7 +78,9 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
       <div style={{ minHeight: 140, maxHeight: 260, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {feed.length === 0 && (
           <div style={{ fontFamily: mono, fontSize: 10, color: '#ffffff22', letterSpacing: 1 }}>
-            CANAL ABIERTO. SIN TRÁFICO TODAVÍA.
+            {priorExchanges > 0
+              ? `CANAL REABIERTO. ${priorExchanges} ${priorExchanges === 1 ? 'INTERCAMBIO REAL' : 'INTERCAMBIOS REALES'} ANTES DE ESTE.`
+              : 'CANAL ABIERTO. SIN TRÁFICO TODAVÍA.'}
           </div>
         )}
         {feed.map(f => (

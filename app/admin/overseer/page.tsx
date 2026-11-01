@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { purgeEntropy, injectCorruption, getSystemState, getSystemHistory } from '../actions';
+import { purgeEntropy, injectCorruption, getSystemState, getSystemHistory, getUsageMetrics } from '../actions';
 
 const styles = {
   container: { 
@@ -58,6 +58,7 @@ export default function OverseerDashboard() {
   const [password, setPassword] = useState('');
   const [entropyHistory, setEntropyHistory] = useState<any[]>([]);
   const [systemState, setSystemState] = useState<any>(null);
+  const [usageMetrics, setUsageMetrics] = useState<any>(null);
   const [status, setStatus] = useState<string>('SYSTEM ONLINE');
   const [loading, setLoading] = useState(false);
 
@@ -72,8 +73,10 @@ export default function OverseerDashboard() {
   const loadData = async () => {
     const state = await getSystemState();
     const history = await getSystemHistory();
+    const metrics = await getUsageMetrics();
     setSystemState(state);
     setEntropyHistory(history);
+    setUsageMetrics(metrics);
   };
 
   const handlePurge = async () => {
@@ -162,6 +165,30 @@ export default function OverseerDashboard() {
           <button style={styles.button} disabled={loading}>
             PAUSE SYSTEM
           </button>
+        </div>
+
+        <div style={styles.card}>
+          <h3>// USO REAL ACUMULADO</h3>
+          {usageMetrics ? (
+            <>
+              <div style={{ ...styles.metric, fontSize: '1.5rem' }}>{usageMetrics.totalEvents}</div>
+              <p>EVENTOS TOTALES EN MEMORY_EVENTS</p>
+              <hr style={{ borderColor: '#330000', margin: '1rem 0' }} />
+              {usageMetrics.byType.length === 0 ? (
+                <p style={{ fontSize: '0.8rem' }}>SIN EVENTOS TODAVÍA</p>
+              ) : (
+                usageMetrics.byType
+                  .sort((a: any, b: any) => b.count - a.count)
+                  .map((c: any) => (
+                    <p key={c.eventType} style={{ fontSize: '0.8rem' }}>{c.eventType}: {c.count}</p>
+                  ))
+              )}
+              <hr style={{ borderColor: '#330000', margin: '1rem 0' }} />
+              <p style={{ fontSize: '0.8rem' }}>ESPECÍMENES EN COLA DE FABRICACIÓN: {usageMetrics.fabricationSubmissions}</p>
+            </>
+          ) : (
+            <p style={{ fontSize: '0.8rem' }}>CARGANDO...</p>
+          )}
         </div>
 
         <div style={styles.card}>

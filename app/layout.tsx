@@ -17,6 +17,7 @@ import ClickDesync from '@/components/ClickDesync'
 import ConsoleOverlay from '@/components/ConsoleOverlay'
 import FragmentedMemory from '@/components/FragmentedMemory'
 import ScrollHeatmap from '@/components/ScrollHeatmap'
+import MoonPhaseField from '@/components/MoonPhaseField'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -54,6 +55,7 @@ export default function RootLayout({
           <ConsoleOverlay />
           <FragmentedMemory />
           <ScrollHeatmap />
+          <MoonPhaseField />
         </Providers>
       </body>
     </html>

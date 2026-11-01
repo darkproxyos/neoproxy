@@ -13,6 +13,7 @@ const SCAN_COUNT_KEY = 'neoproxy-identity-nfc-scans'
 const GRIETAS_KEY = 'neoproxy-identity-grietas'
 const VOTER_ID_KEY = 'neoproxy-identity-voter-id'
 const ENTITY_SIGHTING_KEY = 'neoproxy-identity-entity-sighting'
+const CONSOLE_COMMANDS_KEY = 'neoproxy-identity-console-commands'
 
 function safeGet<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback
@@ -158,6 +159,20 @@ export function recordEntitySighting() {
 
 export function hasEntitySighting(): boolean {
   return safeGet<boolean>(ENTITY_SIGHTING_KEY, false)
+}
+
+// Comandos reconocidos (no "ayuda"/"limpiar"/"salir") que de verdad se
+// ejecutaron alguna vez en ConsoleOverlay.tsx — distinto del historial de
+// sesión (sessionStorage, para navegar con ↑/↓), esto es permanente y sirve
+// para la Constelación de secretos: cuántas rutas ocultas ya encontraste
+// usando la consola, no cuántas veces la usaste.
+export function recordConsoleCommand(cmd: string) {
+  const found = safeGet<string[]>(CONSOLE_COMMANDS_KEY, [])
+  if (!found.includes(cmd)) safeSet(CONSOLE_COMMANDS_KEY, [...found, cmd])
+}
+
+export function getConsoleCommandsUsed(): string[] {
+  return safeGet<string[]>(CONSOLE_COMMANDS_KEY, [])
 }
 
 // Un voto por visitante en la cola de fabricación (app/fabrication/cola):
