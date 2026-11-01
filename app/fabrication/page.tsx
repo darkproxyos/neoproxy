@@ -169,7 +169,9 @@ export default function FabricationPage() {
 
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
             <a
-              href="mailto:contact@neoproxy.art?subject=Pedido%20de%20impresi%C3%B3n%203D&body=Hola%2C%20quiero%20cotizar%20una%20pieza.%0A%0ADescripci%C3%B3n%3A%0AMaterial%20(PLA%20%2F%20resina)%3A%0AReferencia%20o%20STL%20(si%20tengo)%3A"
+              href="https://wa.me/56993550010?text=Hola%2C%20quiero%20cotizar%20una%20pieza.%0A%0ADescripci%C3%B3n%3A%0AMaterial%20(PLA%20%2F%20resina)%3A%0AReferencia%20o%20STL%20(si%20tengo)%3A"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cyber-btn"
               style={{
                 display: 'inline-block', fontSize: 11, color: '#00d4ff', letterSpacing: 3,
@@ -266,7 +268,9 @@ export default function FabricationPage() {
           </div>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
             <a
-              href="mailto:contact@neoproxy.art?subject=Pedido%20de%20impresi%C3%B3n%203D"
+              href="https://wa.me/56993550010?text=Hola%2C%20quiero%20cotizar%20un%20pedido%20de%20impresi%C3%B3n%203D."
+              target="_blank"
+              rel="noopener noreferrer"
               className="cyber-btn"
               style={{
                 display: 'inline-block',

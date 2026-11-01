@@ -297,7 +297,9 @@ export default function Esp32TechPage() {
 
           <div className="text-center py-12 border-t border-[#0f1f35]">
             <Link
-              href="mailto:contact@neoproxy.art?subject=Consulta%20ESP32"
+              href="https://wa.me/56993550010?text=Hola%2C%20tengo%20una%20consulta%20sobre%20el%20ESP32."
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border"
               style={{ color: ACCENT, borderColor: `${ACCENT}66` }}
             >
