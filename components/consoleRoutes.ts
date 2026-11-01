@@ -16,6 +16,7 @@ export const CONSOLE_ROUTES: Record<string, string> = {
   voluntad: '/proxyverse/voluntad',
   id: '/proxyverse/id',
   constelacion: '/proxyverse/constelacion',
+  topologia: '/proxyverse/topologia',
   oraculo: '/experimental/oraculo',
   sigilo: '/experimental/sigilo',
   scan: '/experimental/scan',

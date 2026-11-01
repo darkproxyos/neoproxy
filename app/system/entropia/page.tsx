@@ -2,6 +2,7 @@ import { db } from '@/src/db'
 import { memoryEvents } from '@/src/db/schema'
 import { desc, eq } from 'drizzle-orm'
 import ExportJsonButton from '@/components/ExportJsonButton'
+import LiveAttractor from '@/components/LiveAttractor'
 
 const mono = "'Space Mono', monospace"
 const GREEN = '#39ff14'
@@ -20,7 +21,7 @@ export const dynamic = 'force-dynamic'
 
 type ShiftRow = { id: number; timestamp: Date; payload: unknown }
 
-function readPayload(payload: unknown): { delta?: number; previousLevel?: number; newLevel?: number; phrase?: string } {
+function readPayload(payload: unknown): { delta?: number; previousLevel?: number; newLevel?: number; candidates?: string[]; corruptionCost?: number } {
   return (payload && typeof payload === 'object') ? payload as Record<string, unknown> : {}
 }
 
@@ -43,6 +44,10 @@ export default async function EntropiaLogPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '64px 24px 80px' }}>
         <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 4, marginBottom: 12 }}>
           REGISTRO SIN CURAR — ENTROPY_ENTITY_SHIFT
+        </div>
+
+        <div style={{ marginBottom: 28 }}>
+          <LiveAttractor />
         </div>
 
         {rows.length > 0 && (
@@ -72,7 +77,14 @@ export default async function EntropiaLogPage() {
                 <span style={{ color: GREEN }}>{deltaSign}{typeof p.delta === 'number' ? p.delta.toFixed(1) : '?'}</span>
                 {' → '}
                 <span>{typeof p.newLevel === 'number' ? p.newLevel.toFixed(1) : '?'}</span>
-                {p.phrase && <span style={{ color: '#4a6080' }}> // "{p.phrase}"</span>}
+                {typeof p.corruptionCost === 'number' && (
+                  <span style={{ color: '#ff6a6a' }}> // orden pagado: +{p.corruptionCost.toFixed(1)} corrupción</span>
+                )}
+                {p.candidates && p.candidates.length > 0 && (
+                  <span style={{ color: '#4a6080' }}>
+                    {' // sin colapsar: "'}{p.candidates.join('" / "')}{'"'}
+                  </span>
+                )}
               </div>
             )
           })}

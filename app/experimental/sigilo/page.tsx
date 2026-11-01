@@ -1,7 +1,10 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { reduceIntention, buildSigilGlyph, type ReducedIntention, type SigilGlyph } from './engine/sigil'
+import {
+  reduceIntention, buildSigilGlyph, buildConceptualInstruction,
+  type ReducedIntention, type SigilGlyph, type ConceptualInstruction,
+} from './engine/sigil'
 import { loadSigilGallery, saveSigilToGallery, deleteSigilFromGallery, type GallerySigil } from './engine/gallery'
 
 const mono = "'Space Mono', monospace"
@@ -74,6 +77,7 @@ export default function SigiloPage() {
   const [status, setStatus] = useState<Status>('idle')
   const [reduced, setReduced] = useState<ReducedIntention | null>(null)
   const [glyph, setGlyph] = useState<SigilGlyph | null>(null)
+  const [instruction, setInstruction] = useState<ConceptualInstruction | null>(null)
   const [gallery, setGallery] = useState<GallerySigil[]>([])
   const [saved, setSaved] = useState(false)
   const timersRef = useRef<number[]>([])
@@ -91,6 +95,7 @@ export default function SigiloPage() {
     setGlyph(null)
     const r = reduceIntention(phrase)
     setReduced(r)
+    setInstruction(buildConceptualInstruction(r.keptLetters))
     setStatus('reducing')
 
     const t = window.setTimeout(() => {
@@ -222,6 +227,44 @@ export default function SigiloPage() {
                 </button>
               </div>
             )}
+          </div>
+        )}
+
+        {instruction && status === 'done' && (
+          <div className="fade-in" style={{ marginBottom: 40 }}>
+            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10 }}>
+              PASO 4 — INSTRUCCIÓN CONCEPTUAL
+            </div>
+            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+              Las mismas {reduced?.keptLetters.length ?? 0} letras del set, leídas distinto: no un glifo,
+              una receta de texto (al estilo Sol LeWitt) — lo que sigue se dibuja exactamente como dice,
+              nada librado al criterio de quien lo ejecuta.
+            </p>
+            <div style={{
+              fontFamily: mono, fontSize: 12, letterSpacing: 1, color: VIOLET, lineHeight: 1.9,
+              border: `1px solid ${VIOLET}44`, background: `${VIOLET}0a`, padding: '14px 18px', marginBottom: 16,
+            }}>
+              {instruction.text}
+            </div>
+            <div style={{
+              display: 'flex', justifyContent: 'center', border: `1px solid ${VIOLET}33`,
+              background: 'rgba(10,2,20,0.5)', padding: 20,
+            }}>
+              <svg viewBox="0 0 200 200" width={220} height={220}>
+                <g transform={`rotate(${instruction.angleDeg} 100 100)`}>
+                  {Array.from({ length: instruction.lines }, (_, i) => {
+                    const offset = (i - (instruction.lines - 1) / 2) * instruction.spacing
+                    return (
+                      <line
+                        key={i}
+                        x1={10} y1={100 + offset} x2={190} y2={100 + offset}
+                        stroke={VIOLET} strokeWidth={1.2} opacity={0.85}
+                      />
+                    )
+                  })}
+                </g>
+              </svg>
+            </div>
           </div>
         )}
 

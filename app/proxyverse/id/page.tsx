@@ -98,6 +98,10 @@ export default function ProxyIdPage() {
                   <Link href="/proxyverse/constelacion" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER CONSTELACIÓN →
                   </Link>
+                  <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
+                  <Link href="/proxyverse/topologia" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                    VER TOPOLOGÍA →
+                  </Link>
                 </>
               ) : (
                 <div style={{ fontSize: 11, color: '#8fb8d6' }}>Todavía sin un proceso dominante claro.</div>

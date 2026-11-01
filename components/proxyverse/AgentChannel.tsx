@@ -7,6 +7,31 @@ import BiometricPulse from '@/components/BiometricPulse'
 
 const mono = "'Space Mono', monospace"
 
+const SESSION_AGENTS_KEY = 'neoproxy-session-agents-chatted'
+
+// Topología de mundo pequeño (/proxyverse/topologia): la primera vez que
+// hablás con un SEGUNDO agente en esta sesión, se registra el par real con
+// cada otro agente con el que ya hablaste — una sola vez por par nuevo,
+// no en cada mensaje. sessionStorage, no localStorage: es "en esta visita",
+// no un historial permanente de quién hablaste con quién.
+function recordAgentPairIfNew(agentId: string) {
+  try {
+    const seen: string[] = JSON.parse(window.sessionStorage.getItem(SESSION_AGENTS_KEY) || '[]')
+    if (seen.includes(agentId)) return
+    for (const other of seen) {
+      fetch('/api/agent-pair-seen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ a: other, b: agentId }),
+        keepalive: true,
+      }).catch(() => {})
+    }
+    window.sessionStorage.setItem(SESSION_AGENTS_KEY, JSON.stringify([...seen, agentId]))
+  } catch {
+    // sin sessionStorage: no pasa nada, el grafo se pierde esta visita
+  }
+}
+
 type Line = { id: number; from: 'you' | 'agent'; text: string }
 
 export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
@@ -36,6 +61,7 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
     setInput('')
     setSending(true)
     recordChatMessage(agent.id)
+    recordAgentPairIfNew(agent.id)
     try {
       const res = await fetch('/api/proxyverse-chat', {
         method: 'POST',

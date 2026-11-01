@@ -41,6 +41,22 @@ export function reduceIntention(raw: string): ReducedIntention {
   return { original, normalizedLetters, keptLetters, keptMask }
 }
 
+// Arte conceptual al estilo Sol LeWitt / Vera Molnár: una instrucción
+// escrita en texto plano, derivada determinísticamente del mismo set de
+// letras que ya produce el sigilo (reduceIntention), y después ejecutada
+// al pie de la letra — nada librado al azar entre la instrucción y el
+// dibujo, la instrucción ES la receta exacta de lo que se ve.
+export type ConceptualInstruction = { lines: number; spacing: number; angleDeg: number; text: string }
+
+export function buildConceptualInstruction(keptLetters: string[]): ConceptualInstruction {
+  const lines = Math.max(1, keptLetters.length)
+  const sum = keptLetters.reduce((acc, l) => acc + l.charCodeAt(0), 0)
+  const spacing = 6 + (sum % 20)
+  const angleDeg = keptLetters.length > 0 ? Math.round((keptLetters[0].charCodeAt(0) - 65) * (180 / 26)) : 0
+  const text = `TRAZÁ ${lines} LÍNEA${lines === 1 ? '' : 'S'} PARALELA${lines === 1 ? '' : 'S'}, SEPARADAS ${spacing}PX, INCLINADAS ${angleDeg}°.`
+  return { lines, spacing, angleDeg, text }
+}
+
 export type SigilPoint = { letter: string; x: number; y: number }
 export type SigilGlyph = {
   points: SigilPoint[]
