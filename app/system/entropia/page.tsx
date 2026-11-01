@@ -1,6 +1,7 @@
 import { db } from '@/src/db'
 import { memoryEvents } from '@/src/db/schema'
 import { desc, eq } from 'drizzle-orm'
+import ExportJsonButton from '@/components/ExportJsonButton'
 
 const mono = "'Space Mono', monospace"
 const GREEN = '#39ff14'
@@ -40,9 +41,19 @@ export default async function EntropiaLogPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#8fb8d6', fontFamily: mono, position: 'relative' }}>
       <div className="crt-scanlines" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '64px 24px 80px' }}>
-        <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 4, marginBottom: 24 }}>
+        <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 4, marginBottom: 12 }}>
           REGISTRO SIN CURAR — ENTROPY_ENTITY_SHIFT
         </div>
+
+        {rows.length > 0 && (
+          <div style={{ marginBottom: 24 }}>
+            <ExportJsonButton
+              data={rows.map(r => ({ ...r, timestamp: r.timestamp.toISOString() }))}
+              filename={`neoproxy-entropia-${new Date().toISOString().slice(0, 10)}.json`}
+              label="EXPORTAR REGISTRO (.json)"
+            />
+          </div>
+        )}
 
         {rows.length === 0 && (
           <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>

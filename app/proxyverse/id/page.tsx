@@ -94,6 +94,10 @@ export default function ProxyIdPage() {
                   <Link href="/proxyverse/voluntad" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
                     LEER LA CARTA →
                   </Link>
+                  <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
+                  <Link href="/proxyverse/constelacion" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                    VER CONSTELACIÓN →
+                  </Link>
                 </>
               ) : (
                 <div style={{ fontSize: 11, color: '#8fb8d6' }}>Todavía sin un proceso dominante claro.</div>

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { recordConsoleCommand } from '@/components/proxyverse/identity'
+import { CONSOLE_ROUTES as ROUTES } from '@/components/consoleRoutes'
 
 const mono = "'Space Mono', monospace"
 
@@ -9,49 +11,30 @@ const mono = "'Space Mono', monospace"
 // esta capa, ningún atajo a algo que no esté shippeado. Pensado como la
 // Navi de Lain: una capa de texto por encima de todo, para quien ya conoce
 // el sitio y no quiere navegar menú por menú (o para que descubra lo que
-// no está linkeado desde ningún lado, como /system/entropia).
-const ROUTES: Record<string, string> = {
-  proxyverse: '/proxyverse',
-  metatron: '/proxyverse/metatron',
-  d: '/proxyverse/d',
-  snake: '/proxyverse/snake',
-  genos: '/proxyverse/genos',
-  trickster: '/proxyverse/trickster',
-  prototype: '/proxyverse/prototype',
-  darkproxy: '/proxyverse/darkproxy',
-  casino: '/proxyverse/trickster/casino',
-  concilio: '/proxyverse/concilio',
-  suenos: '/proxyverse/suenos',
-  voluntad: '/proxyverse/voluntad',
-  id: '/proxyverse/id',
-  oraculo: '/experimental/oraculo',
-  sigilo: '/experimental/sigilo',
-  scan: '/experimental/scan',
-  dialectica: '/experimental/dialectica',
-  enjambre: '/experimental/enjambre',
-  evolucion: '/experimental/evolucion',
-  memoria: '/experimental/memoria',
-  workbench: '/experimental/workbench',
-  red: '/experimental/red',
-  proxygenesis: '/lab/proxygenesis',
-  atractores: '/lab/atractores',
-  cola: '/fabrication/cola',
-  archivo: '/fabrication/archivo',
-  gallery: '/fabrication/gallery',
-  marcador: '/realidad-aumentada/marcador',
-  mascara: '/realidad-aumentada/mascara',
-  neocam: '/realidad-aumentada/neocam',
-  freestyle: '/realidad-aumentada/freestyle',
-  knowledge: '/knowledge',
-  shop: '/shop',
-  entropia: '/system/entropia',
-}
+// no está linkeado desde ningún lado, como /system/entropia). El mapa en sí
+// vive en components/consoleRoutes.ts — lo lee también la Constelación de
+// secretos para saber cuántas rutas ocultas existen en total.
 
 const META_COMMANDS = new Set(['ayuda', 'help', 'limpiar', 'clear', 'salir', 'exit', 'cerrar'])
+const HISTORY_KEY = 'neoproxy-console-history'
+const HISTORY_MAX = 20
 
 type LogLine = { id: number; text: string; kind: 'echo' | 'ok' | 'error' | 'info' }
 
 let lineId = 0
+
+function loadHistory(): string[] {
+  try {
+    const raw = window.sessionStorage.getItem(HISTORY_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function saveHistory(history: string[]) {
+  try { window.sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history)) } catch {}
+}
 
 function isTypingTarget(el: Element | null): boolean {
   if (!el) return false
@@ -64,6 +47,8 @@ export default function ConsoleOverlay() {
   const [input, setInput] = useState('')
   const [log, setLog] = useState<LogLine[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
+  const historyRef = useRef<string[]>([])
+  const historyPosRef = useRef(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -80,7 +65,11 @@ export default function ConsoleOverlay() {
   }, [open])
 
   useEffect(() => {
-    if (open) inputRef.current?.focus()
+    if (open) {
+      historyRef.current = loadHistory()
+      historyPosRef.current = historyRef.current.length
+      inputRef.current?.focus()
+    }
   }, [open])
 
   const push = (text: string, kind: LogLine['kind']) => {
@@ -95,9 +84,17 @@ export default function ConsoleOverlay() {
     push(`> ${raw}`, 'echo')
     setInput('')
 
+    // Historial de sesión (↑/↓), no confundir con getConsoleCommandsUsed
+    // (identity.ts) — eso es permanente y solo guarda comandos RECONOCIDOS,
+    // esto guarda todo lo que tipeaste, se borra al cerrar la pestaña.
+    const nextHistory = [...historyRef.current.filter(h => h !== raw), raw].slice(-HISTORY_MAX)
+    historyRef.current = nextHistory
+    historyPosRef.current = nextHistory.length
+    saveHistory(nextHistory)
+
     if (cmd === 'ayuda' || cmd === 'help') {
       push(`rutas: ${Object.keys(ROUTES).join(', ')}`, 'info')
-      push('limpiar / salir también funcionan.', 'info')
+      push('limpiar / salir también funcionan. ↑/↓ navega el historial.', 'info')
       return
     }
     if (cmd === 'limpiar' || cmd === 'clear') {
@@ -110,12 +107,34 @@ export default function ConsoleOverlay() {
     }
     const target = ROUTES[cmd]
     if (target) {
+      recordConsoleCommand(cmd)
       push(`redirigiendo a ${target}...`, 'ok')
       router.push(target)
       window.setTimeout(() => setOpen(false), 400)
       return
     }
     push('comando no reconocido. probá "ayuda".', 'error')
+  }
+
+  const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') { run(); return }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (historyPosRef.current <= 0) return
+      historyPosRef.current -= 1
+      setInput(historyRef.current[historyPosRef.current] ?? '')
+      return
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (historyPosRef.current >= historyRef.current.length - 1) {
+        historyPosRef.current = historyRef.current.length
+        setInput('')
+        return
+      }
+      historyPosRef.current += 1
+      setInput(historyRef.current[historyPosRef.current] ?? '')
+    }
   }
 
   if (!open) return null
@@ -163,8 +182,8 @@ export default function ConsoleOverlay() {
             ref={inputRef}
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && run()}
-            placeholder="comando..."
+            onKeyDown={onInputKeyDown}
+            placeholder="comando... (↑/↓ historial)"
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#39ff14',
               fontFamily: mono, fontSize: 12, letterSpacing: 1,
