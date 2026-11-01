@@ -33,6 +33,10 @@
      (luna llena), calculada, no narrada. Default 0 para que no haya flash
      antes de que el componente calcule la fase real. */
   --moon-glow: 0;
+
+  /* Compresión con pérdida (components/RepetitionCompression.tsx) — 0 a 1,
+     crece con visitas repetidas reales a la MISMA ruta en esta sesión. */
+  --repeat-compress: 0;
 }
 
 @theme inline {
@@ -59,7 +63,11 @@ body {
      títulos grandes de cada página fijan su propio letter-spacing inline a
      propósito (son identidad de marca, no deben respirar) y quedan afuera. */
   letter-spacing: calc(0.01em + var(--neo-entropy, 0) * 0.05em);
-  transition: letter-spacing 2.5s ease;
+  transition: letter-spacing 2.5s ease, filter 3s ease;
+  /* Compresión con pérdida: redundancia real (misma ruta visitada muchas
+     veces esta sesión) se vuelve menos detalle visual real — no es un
+     filtro decorativo fijo, depende de components/RepetitionCompression.tsx. */
+  filter: contrast(calc(1 + var(--repeat-compress, 0) * 0.35)) saturate(calc(1 - var(--repeat-compress, 0) * 0.45));
 }
 
 /* Scrollbar CRT: reemplaza la barra nativa por algo que se sienta parte

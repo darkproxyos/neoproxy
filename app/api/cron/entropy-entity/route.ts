@@ -70,29 +70,48 @@ export async function GET(req: NextRequest) {
     const previousLevel = state.entropyLevel
     const newLevel = clamp(previousLevel + delta, 0, 100)
 
+    // Demonio de Maxwell invertido: cuando Entropy ordena (baja el nivel),
+    // el orden no sale gratis — una fracción de lo que bajó se paga subiendo
+    // totalCorruption, en el mismo write, la misma fila real. Cuando sube
+    // el nivel no hay nada que "pagar": ahí el caos no cuesta, lo cobra.
+    const corruptionCost = goingUp ? 0 : Math.abs(delta) * 0.4
+    const newCorruption = corruptionCost > 0 ? state.totalCorruption + corruptionCost : state.totalCorruption
+
     await db.update(systemState)
-      .set({ entropyLevel: newLevel, lastUpdated: new Date() })
+      .set({ entropyLevel: newLevel, totalCorruption: newCorruption, lastUpdated: new Date() })
       .where(eq(systemState.id, 'GLOBAL'))
 
-    const phrase = SIGNALS[Math.floor(Math.random() * SIGNALS.length)]
+    // Colapso por observación: Entropy no resuelve qué frase "dijo" —
+    // manda dos candidatas reales, sin curar cuál es la verdadera. El
+    // cliente recién fija una de las dos (EntropyEntity.tsx) en el instante
+    // real en que alguien la mira de verdad (pestaña visible); si nadie
+    // mira, queda sin colapsar. El registro acá abajo guarda las DOS, no
+    // una curada después del hecho.
+    const idxA = Math.floor(Math.random() * SIGNALS.length)
+    let idxB = Math.floor(Math.random() * SIGNALS.length)
+    if (SIGNALS.length > 1) while (idxB === idxA) idxB = Math.floor(Math.random() * SIGNALS.length)
+    const candidates = [SIGNALS[idxA], SIGNALS[idxB]]
 
     await db.insert(memoryEvents).values({
       eventType: 'ENTROPY_ENTITY_SHIFT',
-      payload: { delta: Math.round(delta * 10) / 10, previousLevel, newLevel, recentCount, phrase },
+      payload: {
+        delta: Math.round(delta * 10) / 10, previousLevel, newLevel, recentCount, candidates,
+        corruptionCost: corruptionCost > 0 ? Math.round(corruptionCost * 10) / 10 : undefined,
+      },
     })
 
     // El cambio real (DB) ya quedó hecho acá — si el broadcast falla (Pusher
     // caído, red), que no reporte la corrida entera como error: lo único que
     // se pierde es el aviso en vivo, no la intervención.
     try {
-      await pusher.trigger(SITE_PRESENCE_CHANNEL, 'entropy-entity-signal', { phrase })
+      await pusher.trigger(SITE_PRESENCE_CHANNEL, 'entropy-entity-signal', { candidates })
     } catch (broadcastErr) {
       console.error('entropy-entity: el shift se aplicó pero el broadcast falló:', broadcastErr)
     }
 
     revalidatePath('/admin/overseer')
 
-    return NextResponse.json({ status: 'shifted', delta, previousLevel, newLevel, phrase })
+    return NextResponse.json({ status: 'shifted', delta, previousLevel, newLevel, candidates })
   } catch (err) {
     console.error('entropy-entity: error:', err)
     return NextResponse.json({ error: 'internal' }, { status: 500 })
