@@ -33,6 +33,7 @@ const AGENT_MODELS: Record<string, Agent3DConfig> = {
 // agente no tiene entrada acá, el perfil sigue usando la imagen estática.
 const AGENT_VIDEOS: Record<string, string> = {
   metatron: '/canon/metatron-v1.mp4',
+  d: '/canon/d-v1.mp4',
 }
 
 // Dónde se puede PROBAR en vivo, no solo leer, cada entrada de /knowledge
