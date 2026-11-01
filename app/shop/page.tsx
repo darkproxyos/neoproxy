@@ -19,7 +19,7 @@ const categories: Category[] = [
     color: '#00ff9d',
     desc: 'Componentes para tus propios builds: microcontroladores, sensores y actuadores.',
     items: ['ESP32 DevKit', 'Arduino Nano', 'Arduino Uno R3', 'Sensores (PIR, ultrasónico, temperatura)', 'Servos SG90 / MG996R'],
-    cta: { label: 'CONSULTAR DISPONIBILIDAD', href: 'mailto:contact@neoproxy.art?subject=Insumos%20electr%C3%B3nicos' },
+    cta: { label: 'CONSULTAR DISPONIBILIDAD', href: 'https://wa.me/56993550010?text=Hola%2C%20quiero%20consultar%20disponibilidad%20de%20insumos%20electr%C3%B3nicos.', external: true },
   },
   {
     id: 'impresion-3d',
@@ -27,7 +27,7 @@ const categories: Category[] = [
     color: '#ffb800',
     desc: 'Piezas impresas bajo pedido, en resina o filamento, a partir de tu modelo o el nuestro.',
     items: ['Impresión bajo pedido (STL propio)', 'Acabado y post-proceso', 'Prototipado rápido'],
-    cta: { label: 'PEDIR COTIZACIÓN', href: 'mailto:contact@neoproxy.art?subject=Impresi%C3%B3n%203D' },
+    cta: { label: 'PEDIR COTIZACIÓN', href: 'https://wa.me/56993550010?text=Hola%2C%20quiero%20cotizar%20impresi%C3%B3n%203D.', external: true },
   },
   {
     id: 'modelos-3d',
@@ -35,7 +35,7 @@ const categories: Category[] = [
     color: '#b400ff',
     desc: 'Archivos descargables — geometría generativa lista para imprimir o modificar.',
     items: ['Archivos STL / OBJ', 'Modelos generativos NeoProxy', 'Licencia de uso personal'],
-    cta: { label: 'CONSULTAR CATÁLOGO', href: 'mailto:contact@neoproxy.art?subject=Modelos%203D' },
+    cta: { label: 'CONSULTAR CATÁLOGO', href: 'https://wa.me/56993550010?text=Hola%2C%20quiero%20consultar%20el%20cat%C3%A1logo%20de%20modelos%203D.', external: true },
   },
   {
     id: 'arte',
@@ -126,6 +126,7 @@ export default function ShopPage() {
 
                 <Link
                   href={cat.cta.href}
+                  {...(cat.cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border transition-colors"
                   style={{ color: cat.color, borderColor: `${cat.color}66` }}
                 >
