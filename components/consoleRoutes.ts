@@ -36,6 +36,7 @@ export const CONSOLE_ROUTES: Record<string, string> = {
   neocam: '/realidad-aumentada/neocam',
   freestyle: '/realidad-aumentada/freestyle',
   knowledge: '/knowledge',
+  filosofia: '/knowledge/filosofia',
   shop: '/shop',
   entropia: '/system/entropia',
 }

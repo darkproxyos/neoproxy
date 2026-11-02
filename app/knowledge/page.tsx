@@ -81,6 +81,14 @@ export default function KnowledgePage() {
           Tocá un nodo. La red no explica — señala.
         </p>
 
+        <Link href="/knowledge/filosofia" style={{
+          display: 'inline-block', marginTop: -28, marginBottom: 48, fontFamily: mono, fontSize: 9,
+          letterSpacing: 2, color: '#b06bff', textDecoration: 'none', border: '1px solid #b06bff44',
+          padding: '10px 18px', background: '#b06bff0a',
+        }}>
+          → FILOSOFÍA: UN SOLO RECORRIDO, SEIS NODOS, UN ARGUMENTO
+        </Link>
+
         <div className="knw-layout" style={{ display: 'flex', gap: 24 }}>
           <div style={{
             flex: '1 1 auto', minWidth: 0, height: '70vh', minHeight: 480,
