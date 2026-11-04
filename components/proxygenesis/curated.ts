@@ -6,7 +6,7 @@
 // desde semilla+parámetros al instante), acá el STL final SÍ se persiste:
 // estas corridas no son instantáneas de reproducir.
 
-export type CuratedMode = 'arbol' | 'coral' | 'concha'
+export type CuratedMode = 'arbol' | 'coral' | 'concha' | 'red'
 
 export type CuratedStats = {
   seed: number
@@ -52,6 +52,18 @@ export const THINKERS: Record<string, { name: string; years: string; line: strin
   'mandelbrot': {
     name: 'Benoit Mandelbrot', years: '1924–2010',
     line: 'La naturaleza rara vez usa las formas lisas de la geometría clásica.',
+  },
+  'barabasi': {
+    name: 'Albert-László Barabási', years: '1967–',
+    line: '"El rico se hace más rico", corriendo desde el primer nodo de la red.',
+  },
+  'mcculloch': {
+    name: 'Warren McCulloch', years: '1898–1969',
+    line: 'La mente, por primera vez, tuvo un plano de circuito.',
+  },
+  'hopfield': {
+    name: 'John Hopfield', years: '1933–',
+    line: 'No hay búsqueda: hay gravedad.',
   },
 }
 

@@ -66,5 +66,42 @@
       ]
     },
     "createdAt": "2026-11-04T04:55:00.000Z"
+  },
+  {
+    "id": "neural-01",
+    "title": "Red Neuronal 01 — lo que sobrevivió a la poda",
+    "mode": "red",
+    "stlPath": "/proxygenesis/stls/neural-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/neural-01.webp",
+    "stats": {
+      "seed": 1,
+      "nodeCount": 400,
+      "iteration": 1974,
+      "maxIterations": 1974,
+      "elapsedSeconds": 0.6,
+      "iterationsPerSecond": 3284.5,
+      "params": {
+        "volume": "3x3x3",
+        "connectionRadius": 0.45,
+        "maxDegree": 5,
+        "growProb": 0.85,
+        "reinforce": 0.15,
+        "decay": 0.01,
+        "pruneWeight": 0.05,
+        "reachedCapAt": 474,
+        "settleIterations": 1500,
+        "edgesFormedTotal": 3570,
+        "edgesPrunedTotal": 2504
+      }
+    },
+    "reading": {
+      "thinkerIds": ["barabasi", "mcculloch", "hopfield"],
+      "prose": [
+        "Tercer espécimen, y el primero que no tiene una forma final — es un sistema que nunca deja de reorganizarse. Cada nodo nace pegado al que ya tiene más conexiones, no al azar: apego preferencial, la misma regla que Barabási y Albert encontraron en redes reales (internet, citas académicas, vuelos) — \"el rico se hace más rico\", corriendo desde el primer nodo.",
+        "Lo que lo mantiene vivo es más simple todavía: cada tanto se dispara un nodo al azar y la activación salta a sus vecinos si la conexión es lo bastante fuerte. Es la neurona formal de McCulloch y Pitts (1943) — el primer plano de circuito que tuvo la mente, reducida a un interruptor que dispara o no dispara.",
+        "Y cada disparo deja huella: la sinapsis que participó se refuerza, la que no se usa decae y muere — el mismo principio hebbiano que actualiza los pesos en una red de Hopfield, 'no hay búsqueda, hay gravedad'. En esta corrida se formaron 3.570 sinapsis en total; 2.504 — el 70% — ya fueron podadas antes de este snapshot. Lo que ves acá no es lo que creció: es lo que sobrevivió."
+      ]
+    },
+    "createdAt": "2026-11-04T06:30:00.000Z"
   }
 ]
