@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { loadCuratedSpecimens, type CuratedSpecimen, type CuratedMode } from '@/components/proxygenesis/curated'
+import { clusters } from '@/components/knowledge/entries'
 
 const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenViewer'), { ssr: false })
 
@@ -10,13 +11,64 @@ const mono = "'Space Mono', monospace"
 const MODE_COLOR: Record<CuratedMode, string> = { coral: '#ff5e9e', arbol: '#00ff9d', concha: '#ffb800' }
 const MODE_LABEL: Record<CuratedMode, string> = { coral: 'CORAL', arbol: 'ÁRBOL', concha: 'CONCHA' }
 
+// Pensadores reales ya presentes en /knowledge (components/knowledge/entries.ts)
+// cuyas ideas describen, literalmente, lo que pasa acá — no una referencia
+// decorativa: runions-lane-prusinkiewicz es el algoritmo exacto que corre en
+// grow.ts, los otros dos describen la mecánica de "una forma que se hace a
+// sí misma" desde la biología y la termodinámica. Textos tomados tal cual
+// de entries.ts (resumidos a una línea), no reescritos.
+const CITED = [
+  {
+    id: 'runions-lane-prusinkiewicz',
+    name: 'Runions, Lane & Prusinkiewicz',
+    years: '2007',
+    line: 'La forma no está en la regla — emerge de competir por el mismo espacio.',
+  },
+  {
+    id: 'maturana_varela',
+    name: 'Maturana & Varela',
+    years: '1928– // 1946–2001',
+    line: 'El límite no viene de afuera — lo produce el mismo proceso que encierra.',
+  },
+  {
+    id: 'prigogine',
+    name: 'Ilya Prigogine',
+    years: '1917–2003',
+    line: 'El orden no es un objeto, es un proceso que hay que sostener activamente.',
+  },
+] as const
+
+const AUTOORG = clusters.autoorganizacion.color
+
+const Corner = ({ pos, color }: { pos: 'tl' | 'tr' | 'bl' | 'br'; color: string }) => {
+  const size = 14
+  const style: React.CSSProperties = {
+    position: 'absolute', width: size, height: size, borderColor: color, pointerEvents: 'none', zIndex: 2,
+    ...(pos === 'tl' && { top: 0, left: 0, borderTop: '2px solid', borderLeft: '2px solid' }),
+    ...(pos === 'tr' && { top: 0, right: 0, borderTop: '2px solid', borderRight: '2px solid' }),
+    ...(pos === 'bl' && { bottom: 0, left: 0, borderBottom: '2px solid', borderLeft: '2px solid' }),
+    ...(pos === 'br' && { bottom: 0, right: 0, borderBottom: '2px solid', borderRight: '2px solid' }),
+  }
+  return <div style={style} />
+}
+
 export default function EspecimenesPage() {
   const [specimens, setSpecimens] = useState<CuratedSpecimen[] | null>(null)
   const [open, setOpen] = useState<CuratedSpecimen | null>(null)
+  const [filter, setFilter] = useState<CuratedMode | 'all'>('all')
 
   useEffect(() => {
     loadCuratedSpecimens().then(setSpecimens)
   }, [])
+
+  const counts = useMemo(() => {
+    const c: Record<CuratedMode | 'all', number> = { all: specimens?.length ?? 0, arbol: 0, coral: 0, concha: 0 }
+    specimens?.forEach(s => { c[s.mode]++ })
+    return c
+  }, [specimens])
+
+  const totalNodes = useMemo(() => (specimens ?? []).reduce((acc, s) => acc + s.stats.nodeCount, 0), [specimens])
+  const filtered = useMemo(() => specimens?.filter(s => filter === 'all' || s.mode === filter) ?? [], [specimens, filter])
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
@@ -31,12 +83,12 @@ export default function EspecimenesPage() {
           ← VOLVER A FABRICACIÓN
         </Link>
 
-        <div style={{ fontSize: 9, color: '#00ff9d66', letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 9, color: `${AUTOORG}66`, letterSpacing: 6, marginBottom: 16 }}>
           // PROXYGENESIS — ORGANISMOS GENERADOS
         </div>
         <h1 style={{
-          fontSize: 40, fontWeight: 700, letterSpacing: 6, color: '#00ff9d',
-          textShadow: '0 0 40px #00ff9d44', marginBottom: 16, lineHeight: 1,
+          fontSize: 40, fontWeight: 700, letterSpacing: 6, color: AUTOORG,
+          textShadow: `0 0 40px ${AUTOORG}44`, marginBottom: 16, lineHeight: 1,
         }}>
           ESPECÍMENES
         </h1>
@@ -46,30 +98,96 @@ export default function EspecimenesPage() {
           crecer solo. Cada pieza acá es un STL real y persistido, con los datos exactos de su propia
           corrida: semilla, nodos, velocidad, parámetros.
         </p>
-        <Link href="/lab/proxygenesis" style={{ fontSize: 10, color: '#00ff9d', letterSpacing: 1 }}>
+        <Link href="/lab/proxygenesis" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
           → Generar los tuyos en el laboratorio
         </Link>
 
-        <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
-          {specimens === null && (
-            <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>CARGANDO...</div>
-          )}
+        {/* Lectura — por qué esto no es un modelo 3D cualquiera */}
+        <div style={{ marginTop: 48, padding: '24px 28px', border: `1px solid ${AUTOORG}2a`, background: `${AUTOORG}06`, maxWidth: 820 }}>
+          <div style={{ fontSize: 9, letterSpacing: 3, color: `${AUTOORG}aa`, marginBottom: 16 }}>
+            // POR QUÉ NADIE DISEÑÓ ESTAS FORMAS
+          </div>
+          <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 2, marginBottom: 14 }}>
+            Ninguna rama de acá sigue un plano. Cada nodo del esqueleto compite con sus vecinos por la misma
+            nube de puntos de atracción, y gana o pierde espacio según quién llega primero — exactamente el
+            algoritmo que describieron Runions, Lane y Prusinkiewicz en 2007. La forma final no estaba
+            escrita en ningún lado: es lo que queda después de esa competencia, iteración por iteración.
+          </p>
+          <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 2, marginBottom: 14 }}>
+            Eso es, en el sentido literal de Maturana y Varela, autopoiesis: un sistema que traza su propio
+            límite con sus propias operaciones. Nadie le dice a este árbol dónde termina una rama — lo decide
+            el mismo proceso que la hizo crecer.
+          </p>
+          <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 2, marginBottom: 20 }}>
+            Y ese orden no salió gratis. Prigogine mostró que las estructuras lejos del equilibrio —un
+            huracán, una célula, esto— se sostienen solo mientras algo sigue fluyendo a través de ellas.
+            Acá ese flujo fue horas de CPU en una máquina real. Apagalo y lo que queda no es la forma: es su
+            cadáver matemático, congelado para siempre en un archivo STL.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {CITED.map(c => (
+              <Link key={c.id} href={`/knowledge?entry=${c.id}`} style={{
+                display: 'block', fontSize: 9, letterSpacing: 0.5, color: `${AUTOORG}dd`, textDecoration: 'none',
+                border: `1px solid ${AUTOORG}33`, padding: '8px 12px', lineHeight: 1.6, maxWidth: 260,
+              }}>
+                <span style={{ color: AUTOORG, letterSpacing: 1 }}>{c.name}</span>
+                <span style={{ color: '#4a6080' }}> · {c.years}</span>
+                <br />
+                <span style={{ color: '#8fb8d6', fontStyle: 'italic' }}>&ldquo;{c.line}&rdquo;</span>
+              </Link>
+            ))}
+          </div>
+        </div>
 
-          {specimens !== null && specimens.length === 0 && (
+        {/* Stats bar + filtros */}
+        <div style={{
+          marginTop: 48, display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'center',
+          justifyContent: 'space-between', borderTop: `1px solid ${AUTOORG}22`, borderBottom: `1px solid ${AUTOORG}22`,
+          padding: '14px 0',
+        }}>
+          <div style={{ display: 'flex', gap: 24, fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>
+            <span><span style={{ color: AUTOORG }}>{counts.all}</span> ESPECÍMENES</span>
+            <span><span style={{ color: AUTOORG }}>{totalNodes.toLocaleString()}</span> NODOS TOTALES</span>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {(['all', 'arbol', 'coral', 'concha'] as const).map(m => {
+              const active = filter === m
+              const c = m === 'all' ? AUTOORG : MODE_COLOR[m]
+              const label = m === 'all' ? 'TODOS' : MODE_LABEL[m]
+              return (
+                <button key={m} onClick={() => setFilter(m)} style={{
+                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 12px', cursor: 'pointer',
+                  background: active ? `${c}22` : 'transparent', border: `1px solid ${active ? c : '#1a2b3f'}`,
+                  color: active ? c : '#4a6080',
+                }}>
+                  {label} ({counts[m]})
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
+          {specimens === null && Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} style={{ aspectRatio: '4 / 3', border: '1px solid #1a2b3f', background: 'linear-gradient(100deg, #0a1018 40%, #121b28 50%, #0a1018 60%)', backgroundSize: '200% 100%', animation: 'especimenes-shimmer 1.6s ease-in-out infinite' }} />
+          ))}
+
+          {specimens !== null && filtered.length === 0 && (
             <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1, lineHeight: 2, gridColumn: '1 / -1' }}>
-              TODAVÍA SIN ESPECÍMENES. Esta colección se llena a mano, con corridas locales reales
-              revisadas antes de subirlas.
+              {specimens.length === 0
+                ? 'TODAVÍA SIN ESPECÍMENES. Esta colección se llena a mano, con corridas locales reales revisadas antes de subirlas.'
+                : 'SIN ESPECÍMENES EN ESTE MODO TODAVÍA.'}
             </div>
           )}
 
-          {specimens?.map(s => {
+          {filtered.map(s => {
             const color = MODE_COLOR[s.mode]
             return (
-              <button key={s.id} onClick={() => setOpen(s)} className="artifact-card" style={{
+              <button key={s.id} onClick={() => setOpen(s)} className="specimen-card" style={{
                 overflow: 'hidden', textAlign: 'left', cursor: 'pointer', background: `${color}08`,
-                border: `1px solid ${color}33`, padding: 0, fontFamily: mono,
+                border: `1px solid ${color}33`, padding: 0, fontFamily: mono, position: 'relative',
               }}>
-                <div style={{ position: 'relative', aspectRatio: '4 / 3', background: `${color}10`, borderBottom: `1px solid ${color}33` }}>
+                <div className="specimen-thumb" style={{ position: 'relative', aspectRatio: '4 / 3', background: `${color}10`, borderBottom: `1px solid ${color}33`, overflow: 'hidden' }}>
                   {s.thumbnail ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={s.thumbnail} alt={s.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -78,7 +196,11 @@ export default function EspecimenesPage() {
                       <span style={{ fontSize: 9, color: `${color}aa`, letterSpacing: 2 }}>[+] VER EN 3D</span>
                     </div>
                   )}
-                  <span style={{
+                  <div className="specimen-scanlines" style={{
+                    position: 'absolute', inset: 0, pointerEvents: 'none', mixBlendMode: 'overlay',
+                    background: `repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, ${color}22 2px, transparent 3px)`,
+                  }} />
+                  <span className="specimen-tag" style={{
                     position: 'absolute', bottom: 8, right: 10, fontSize: 8, letterSpacing: 1, color,
                     background: 'rgba(0,4,10,0.75)', padding: '3px 7px', border: `1px solid ${color}44`,
                   }}>
@@ -114,9 +236,13 @@ export default function EspecimenesPage() {
             gridTemplateColumns: '1.4fr 1fr', border: `1px solid ${MODE_COLOR[open.mode]}44`, background: '#000205',
           }}>
             <div style={{ height: '72vh', position: 'relative' }}>
+              <Corner pos="tl" color={MODE_COLOR[open.mode]} />
+              <Corner pos="bl" color={MODE_COLOR[open.mode]} />
               <SpecimenViewer stlPath={open.stlPath} color={MODE_COLOR[open.mode]} />
             </div>
-            <div style={{ padding: 24, overflowY: 'auto', height: '72vh' }}>
+            <div style={{ padding: 24, overflowY: 'auto', height: '72vh', position: 'relative' }}>
+              <Corner pos="tr" color={MODE_COLOR[open.mode]} />
+              <Corner pos="br" color={MODE_COLOR[open.mode]} />
               <button onClick={() => setOpen(null)} style={{
                 fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#4a6080', background: 'transparent',
                 border: '1px solid #4a608044', padding: '4px 10px', cursor: 'pointer', marginBottom: 20,
@@ -135,18 +261,20 @@ export default function EspecimenesPage() {
               <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', marginBottom: 8, borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
                 DATOS DE LA CORRIDA
               </div>
-              {[
-                ['Semilla', open.stats.seed],
-                ['Nodos', open.stats.nodeCount.toLocaleString()],
-                ['Iteraciones', `${open.stats.iteration.toLocaleString()} / ${open.stats.maxIterations.toLocaleString()}`],
-                ['Tiempo', `${open.stats.elapsedSeconds}s`],
-                ['Velocidad', `${open.stats.iterationsPerSecond} iter/s`],
-              ].map(([label, value]) => (
-                <div key={label as string} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ color: '#4a6080' }}>{label}</span>
-                  <span style={{ color: '#c8daf0' }}>{value}</span>
-                </div>
-              ))}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px 16px', marginBottom: 8 }}>
+                {[
+                  ['Semilla', open.stats.seed],
+                  ['Nodos', open.stats.nodeCount.toLocaleString()],
+                  ['Iteraciones', `${open.stats.iteration.toLocaleString()} / ${open.stats.maxIterations.toLocaleString()}`],
+                  ['Tiempo', `${open.stats.elapsedSeconds}s`],
+                  ['Velocidad', `${open.stats.iterationsPerSecond} iter/s`],
+                ].map(([label, value]) => (
+                  <div key={label as string} style={{ fontSize: 10, padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ color: '#4a6080', fontSize: 8, letterSpacing: 1 }}>{label.toString().toUpperCase()}</div>
+                    <div style={{ color: '#c8daf0' }}>{value}</div>
+                  </div>
+                ))}
+              </div>
 
               <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', margin: '20px 0 8px', borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
                 PARÁMETROS
@@ -158,8 +286,14 @@ export default function EspecimenesPage() {
                 </div>
               ))}
 
+              <Link href={`/knowledge?entry=runions-lane-prusinkiewicz`} style={{
+                display: 'block', marginTop: 20, fontSize: 9, letterSpacing: 0.5, color: `${AUTOORG}cc`, textDecoration: 'none',
+              }}>
+                → El algoritmo: Runions, Lane & Prusinkiewicz (2007)
+              </Link>
+
               <a href={open.stlPath} download style={{
-                display: 'block', textAlign: 'center', marginTop: 24, fontSize: 10, letterSpacing: 1, padding: '10px 0',
+                display: 'block', textAlign: 'center', marginTop: 16, fontSize: 10, letterSpacing: 1, padding: '10px 0',
                 background: `${MODE_COLOR[open.mode]}15`, border: `1px solid ${MODE_COLOR[open.mode]}66`, color: MODE_COLOR[open.mode],
                 textDecoration: 'none',
               }}>
@@ -169,6 +303,22 @@ export default function EspecimenesPage() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes especimenes-shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        .specimen-card { transition: border-color 0.25s ease, transform 0.25s ease; }
+        .specimen-card:hover { transform: translateY(-3px); }
+        .specimen-thumb img { transition: transform 0.5s ease, filter 0.35s ease; filter: saturate(1.1) contrast(1.05); }
+        .specimen-card:hover .specimen-thumb img { transform: scale(1.06); filter: saturate(1.3) contrast(1.12) brightness(1.05); }
+        .specimen-tag { opacity: 0; transition: opacity 0.2s ease; }
+        .specimen-card:hover .specimen-tag { opacity: 1; }
+        @media (hover: none) {
+          .specimen-tag { opacity: 0.85; }
+        }
+      `}</style>
     </div>
   )
 }
