@@ -65,6 +65,14 @@ export const THINKERS: Record<string, { name: string; years: string; line: strin
     name: 'John Hopfield', years: '1933–',
     line: 'No hay búsqueda: hay gravedad.',
   },
+  'shannon': {
+    name: 'Claude Shannon', years: '1916–2001',
+    line: 'Un bit no dice nada — mide cuánto no sabías.',
+  },
+  'lorenz': {
+    name: 'Edward Lorenz', years: '1917–2008',
+    line: 'No hay azar en la ecuación: hay sensibilidad.',
+  },
 }
 
 export type CuratedReading = {
