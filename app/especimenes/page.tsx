@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { loadCuratedSpecimens, type CuratedSpecimen, type CuratedMode } from '@/components/proxygenesis/curated'
+import { loadCuratedSpecimens, THINKERS, type CuratedSpecimen, type CuratedMode } from '@/components/proxygenesis/curated'
 import { clusters } from '@/components/knowledge/entries'
 
 const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenViewer'), { ssr: false })
@@ -10,33 +10,6 @@ const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenV
 const mono = "'Space Mono', monospace"
 const MODE_COLOR: Record<CuratedMode, string> = { coral: '#ff5e9e', arbol: '#00ff9d', concha: '#ffb800' }
 const MODE_LABEL: Record<CuratedMode, string> = { coral: 'CORAL', arbol: 'ÁRBOL', concha: 'CONCHA' }
-
-// Pensadores reales ya presentes en /knowledge (components/knowledge/entries.ts)
-// cuyas ideas describen, literalmente, lo que pasa acá — no una referencia
-// decorativa: runions-lane-prusinkiewicz es el algoritmo exacto que corre en
-// grow.ts, los otros dos describen la mecánica de "una forma que se hace a
-// sí misma" desde la biología y la termodinámica. Textos tomados tal cual
-// de entries.ts (resumidos a una línea), no reescritos.
-const CITED = [
-  {
-    id: 'runions-lane-prusinkiewicz',
-    name: 'Runions, Lane & Prusinkiewicz',
-    years: '2007',
-    line: 'La forma no está en la regla — emerge de competir por el mismo espacio.',
-  },
-  {
-    id: 'maturana_varela',
-    name: 'Maturana & Varela',
-    years: '1928– // 1946–2001',
-    line: 'El límite no viene de afuera — lo produce el mismo proceso que encierra.',
-  },
-  {
-    id: 'prigogine',
-    name: 'Ilya Prigogine',
-    years: '1917–2003',
-    line: 'El orden no es un objeto, es un proceso que hay que sostener activamente.',
-  },
-] as const
 
 const AUTOORG = clusters.autoorganizacion.color
 
@@ -102,42 +75,10 @@ export default function EspecimenesPage() {
           → Generar los tuyos en el laboratorio
         </Link>
 
-        {/* Lectura — por qué esto no es un modelo 3D cualquiera */}
-        <div style={{ marginTop: 48, padding: '24px 28px', border: `1px solid ${AUTOORG}2a`, background: `${AUTOORG}06`, maxWidth: 820 }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${AUTOORG}aa`, marginBottom: 16 }}>
-            // POR QUÉ NADIE DISEÑÓ ESTAS FORMAS
-          </div>
-          <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 2, marginBottom: 14 }}>
-            Ninguna rama de acá sigue un plano. Cada nodo del esqueleto compite con sus vecinos por la misma
-            nube de puntos de atracción, y gana o pierde espacio según quién llega primero — exactamente el
-            algoritmo que describieron Runions, Lane y Prusinkiewicz en 2007. La forma final no estaba
-            escrita en ningún lado: es lo que queda después de esa competencia, iteración por iteración.
-          </p>
-          <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 2, marginBottom: 14 }}>
-            Eso es, en el sentido literal de Maturana y Varela, autopoiesis: un sistema que traza su propio
-            límite con sus propias operaciones. Nadie le dice a este árbol dónde termina una rama — lo decide
-            el mismo proceso que la hizo crecer.
-          </p>
-          <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 2, marginBottom: 20 }}>
-            Y ese orden no salió gratis. Prigogine mostró que las estructuras lejos del equilibrio —un
-            huracán, una célula, esto— se sostienen solo mientras algo sigue fluyendo a través de ellas.
-            Acá ese flujo fue horas de CPU en una máquina real. Apagalo y lo que queda no es la forma: es su
-            cadáver matemático, congelado para siempre en un archivo STL.
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            {CITED.map(c => (
-              <Link key={c.id} href={`/knowledge?entry=${c.id}`} style={{
-                display: 'block', fontSize: 9, letterSpacing: 0.5, color: `${AUTOORG}dd`, textDecoration: 'none',
-                border: `1px solid ${AUTOORG}33`, padding: '8px 12px', lineHeight: 1.6, maxWidth: 260,
-              }}>
-                <span style={{ color: AUTOORG, letterSpacing: 1 }}>{c.name}</span>
-                <span style={{ color: '#4a6080' }}> · {c.years}</span>
-                <br />
-                <span style={{ color: '#8fb8d6', fontStyle: 'italic' }}>&ldquo;{c.line}&rdquo;</span>
-              </Link>
-            ))}
-          </div>
-        </div>
+        <p style={{ fontSize: 10, color: `${AUTOORG}99`, letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 680, marginTop: 20, fontStyle: 'italic' }}>
+          Cada espécimen trae su propia lectura — qué pensador real conecta con el algoritmo y los
+          parámetros de ESA corrida en particular, no un texto genérico pegado a todos. Abrí uno para verla.
+        </p>
 
         {/* Stats bar + filtros */}
         <div style={{
@@ -213,9 +154,14 @@ export default function EspecimenesPage() {
                     <span style={{ fontSize: 8, color: '#4a6080' }}>{new Date(s.createdAt).toLocaleDateString('es-AR')}</span>
                   </div>
                   <div style={{ fontSize: 12, color: '#fff', marginBottom: 10 }}>{s.title}</div>
-                  <div style={{ fontSize: 9, color: '#4a6080' }}>
+                  <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 10 }}>
                     NODOS: {s.stats.nodeCount.toLocaleString()} // {s.stats.iterationsPerSecond} iter/s // {s.stats.elapsedSeconds}s
                   </div>
+                  {s.reading.thinkerIds.length > 0 && (
+                    <div style={{ fontSize: 8, letterSpacing: 0.5, color: `${color}99`, fontStyle: 'italic' }}>
+                      // lee: {s.reading.thinkerIds.map(id => THINKERS[id]?.name).filter(Boolean).join(' · ')}
+                    </div>
+                  )}
                 </div>
               </button>
             )
@@ -254,9 +200,27 @@ export default function EspecimenesPage() {
               </div>
               <div style={{ fontSize: 18, color: '#fff', marginBottom: 20 }}>{open.title}</div>
 
-              {open.note && (
-                <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 20 }}>{open.note}</p>
-              )}
+              <div style={{ fontSize: 9, letterSpacing: 3, color: `${MODE_COLOR[open.mode]}aa`, marginBottom: 12 }}>
+                // LECTURA
+              </div>
+              {open.reading.prose.map((p, i) => (
+                <p key={i} style={{ fontSize: 10, color: '#c8daf0', lineHeight: 1.9, marginBottom: 12 }}>{p}</p>
+              ))}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
+                {open.reading.thinkerIds.map(id => {
+                  const t = THINKERS[id]
+                  if (!t) return null
+                  return (
+                    <Link key={id} href={`/knowledge?entry=${id}`} style={{
+                      display: 'block', fontSize: 8, letterSpacing: 0.5, color: `${MODE_COLOR[open.mode]}dd`, textDecoration: 'none',
+                      border: `1px solid ${MODE_COLOR[open.mode]}33`, padding: '6px 10px', lineHeight: 1.5,
+                    }}>
+                      <span style={{ color: MODE_COLOR[open.mode], letterSpacing: 1 }}>{t.name}</span>
+                      <span style={{ color: '#4a6080' }}> · {t.years}</span>
+                    </Link>
+                  )
+                })}
+              </div>
 
               <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', marginBottom: 8, borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
                 DATOS DE LA CORRIDA
@@ -286,14 +250,8 @@ export default function EspecimenesPage() {
                 </div>
               ))}
 
-              <Link href={`/knowledge?entry=runions-lane-prusinkiewicz`} style={{
-                display: 'block', marginTop: 20, fontSize: 9, letterSpacing: 0.5, color: `${AUTOORG}cc`, textDecoration: 'none',
-              }}>
-                → El algoritmo: Runions, Lane & Prusinkiewicz (2007)
-              </Link>
-
               <a href={open.stlPath} download style={{
-                display: 'block', textAlign: 'center', marginTop: 16, fontSize: 10, letterSpacing: 1, padding: '10px 0',
+                display: 'block', textAlign: 'center', marginTop: 20, fontSize: 10, letterSpacing: 1, padding: '10px 0',
                 background: `${MODE_COLOR[open.mode]}15`, border: `1px solid ${MODE_COLOR[open.mode]}66`, color: MODE_COLOR[open.mode],
                 textDecoration: 'none',
               }}>
