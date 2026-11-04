@@ -7,7 +7,7 @@ import { runSpaceColonization, computeRadii, type SkeletonNode, type Vec3 as SkV
 import { generateShell, normalizeToViewSize } from './engine/shell'
 import { exportMeshToSTL } from './engine/stl'
 import { saveSpecimenToGallery, consumePendingLoad } from './engine/gallery'
-import { decodeAudioBlob, computeEnergyEnvelope, recordMicClip } from './engine/audioAnalysis'
+import { decodeAudioBlob, computeEnergyEnvelope, recordMicClip, analyzeAudioFull, AUDIO_BANDS, type AudioFullAnalysis } from './engine/audioAnalysis'
 
 type Mode = 'coral' | 'arbol' | 'concha'
 type Quality = 'baja' | 'media' | 'alta' | 'extrema'
@@ -58,6 +58,45 @@ const SHELL_PRESETS: Record<string, ShellParamsUI> = {
 const mono = "'Space Mono', monospace"
 const MODE_COLOR: Record<Mode, string> = { coral: '#ff5e9e', arbol: '#00ff9d', concha: '#ffb800' }
 
+// ---- color derivado de audio: dos conversores chicos, nada de lib externa ----
+function hexToHsl(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16)
+  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255
+  const max = Math.max(r, g, b), min = Math.min(r, g, b)
+  let h = 0, s = 0
+  const l = (max + min) / 2
+  const d = max - min
+  if (d > 1e-6) {
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+    else if (max === g) h = ((b - r) / d + 2) / 6
+    else h = ((r - g) / d + 4) / 6
+  }
+  return [h * 360, s, l]
+}
+function hslToHex(h: number, s: number, l: number): string {
+  h = ((h % 360) + 360) % 360
+  const c = (1 - Math.abs(2 * l - 1)) * s
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
+  const m = l - c / 2
+  let r = 0, g = 0, b = 0
+  if (h < 60) { r = c; g = x } else if (h < 120) { r = x; g = c }
+  else if (h < 180) { g = c; b = x } else if (h < 240) { g = x; b = c }
+  else if (h < 300) { r = x; b = c } else { r = c; b = x }
+  const toHex = (v: number) => Math.round((v + m) * 255).toString(16).padStart(2, '0')
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
+}
+// Centroide espectral (Hz, log-escalado 100-8000Hz) -> matiz, recorrido
+// verde->cian->violeta->rosa en vez de un arcoíris completo: se queda
+// dentro de la misma familia cromática que ya usa el resto del sitio.
+function centroidToHue(hz: number): number {
+  const t = Math.max(0, Math.min(1, Math.log(Math.max(100, hz) / 100) / Math.log(8000 / 100)))
+  return 140 + t * 200
+}
+
+type FormSource = 'rms' | 'onsets' | 'centroid'
+type ColorMode = 'brand' | 'fixed' | 'tempo' | 'gradient'
+
 export default function ProxygenesisPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sceneRef = useRef<BABYLON.Scene | null>(null)
@@ -78,8 +117,11 @@ export default function ProxygenesisPage() {
 
   const ENVELOPE_SEGMENTS = 32
   const [audioEnvelope, setAudioEnvelope] = useState<number[] | null>(null)
+  const [audioData, setAudioData] = useState<AudioFullAnalysis | null>(null)
   const [audioStatus, setAudioStatus] = useState<'idle' | 'loading' | 'recording' | 'ready' | 'error'>('idle')
   const [audioErrorMsg, setAudioErrorMsg] = useState('')
+  const [formSource, setFormSource] = useState<FormSource>('rms')
+  const [colorMode, setColorMode] = useState<ColorMode>('brand')
 
   const handleAudioFile = async (file: File) => {
     setAudioStatus('loading')
@@ -87,6 +129,7 @@ export default function ProxygenesisPage() {
     try {
       const buffer = await decodeAudioBlob(file)
       setAudioEnvelope(computeEnergyEnvelope(buffer, ENVELOPE_SEGMENTS))
+      setAudioData(analyzeAudioFull(buffer, ENVELOPE_SEGMENTS))
       setAudioStatus('ready')
     } catch (err) {
       console.error('No se pudo decodificar el audio:', err)
@@ -102,6 +145,7 @@ export default function ProxygenesisPage() {
       const blob = await recordMicClip(4)
       const buffer = await decodeAudioBlob(blob)
       setAudioEnvelope(computeEnergyEnvelope(buffer, ENVELOPE_SEGMENTS))
+      setAudioData(analyzeAudioFull(buffer, ENVELOPE_SEGMENTS))
       setAudioStatus('ready')
     } catch (err) {
       console.error('No se pudo grabar del micrófono:', err)
@@ -110,7 +154,7 @@ export default function ProxygenesisPage() {
     }
   }
 
-  const clearAudio = () => { setAudioEnvelope(null); setAudioStatus('idle') }
+  const clearAudio = () => { setAudioEnvelope(null); setAudioData(null); setAudioStatus('idle'); setFormSource('rms'); setColorMode('brand') }
   const generationToken = useRef(0)
 
   useEffect(() => {
@@ -185,11 +229,12 @@ export default function ProxygenesisPage() {
     if (old) old.dispose()
   }, [])
 
-  const buildSkeletonMesh = useCallback((nodes: SkeletonNode[], color: string) => {
+  const buildSkeletonMesh = useCallback((nodes: SkeletonNode[], colorOrColors: string | string[]) => {
     const scene = sceneRef.current
     if (!scene) return
     clearSpecimen()
 
+    const isGradient = Array.isArray(colorOrColors)
     const radii = computeRadii(nodes, { leafRadius: 0.025, exponent: 2.3, maxRadius: 0.5 })
     const up = new BABYLON.Vector3(0, 1, 0)
     const parts: BABYLON.Mesh[] = []
@@ -218,6 +263,21 @@ export default function ProxygenesisPage() {
         const axis = BABYLON.Vector3.Cross(up, dirN).normalize()
         cyl.rotationQuaternion = BABYLON.Quaternion.RotationAxis(axis, Math.acos(dot))
       }
+
+      // Gradiente real: cada tramo lleva el color de qué banda de frecuencia
+      // dominaba en el instante de la canción en que ESE nodo creció — por
+      // eso necesita vertex colors por segmento en vez de un material único,
+      // a diferencia de los otros modos (ahí un solo material alcanza).
+      if (isGradient) {
+        const segColor = BABYLON.Color3.FromHexString(colorOrColors[i] || colorOrColors[0])
+        const vertCount = cyl.getTotalVertices()
+        const colorBuf = new Float32Array(vertCount * 4)
+        for (let k = 0; k < vertCount; k++) {
+          colorBuf[k * 4] = segColor.r; colorBuf[k * 4 + 1] = segColor.g
+          colorBuf[k * 4 + 2] = segColor.b; colorBuf[k * 4 + 3] = 1
+        }
+        cyl.setVerticesData(BABYLON.VertexBuffer.ColorKind, colorBuf)
+      }
       parts.push(cyl)
     }
 
@@ -225,9 +285,18 @@ export default function ProxygenesisPage() {
     if (merged) {
       merged.name = 'Specimen_Core'
       const mat = new BABYLON.StandardMaterial('specimenMat', scene)
-      mat.diffuseColor = BABYLON.Color3.FromHexString(color).scale(0.25)
-      mat.emissiveColor = BABYLON.Color3.FromHexString(color).scale(0.35)
-      mat.specularColor = BABYLON.Color3.FromHexString(color)
+      if (isGradient) {
+        // el matiz real vive en el vertex color de cada tramo — el
+        // material queda neutro (casi blanco) para no teñir ese color
+        mat.diffuseColor = new BABYLON.Color3(0.85, 0.85, 0.85)
+        mat.emissiveColor = new BABYLON.Color3(0.3, 0.3, 0.3)
+        mat.specularColor = new BABYLON.Color3(0.25, 0.25, 0.25)
+      } else {
+        const color = colorOrColors as string
+        mat.diffuseColor = BABYLON.Color3.FromHexString(color).scale(0.25)
+        mat.emissiveColor = BABYLON.Color3.FromHexString(color).scale(0.35)
+        mat.specularColor = BABYLON.Color3.FromHexString(color)
+      }
       merged.material = mat
 
       const anim = new BABYLON.Animation('rot', 'rotation.y', 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE)
@@ -296,9 +365,16 @@ export default function ProxygenesisPage() {
       stepSize: Math.max(0.1, params.canopyWidth * 0.5 * 0.14),
       maxIterations,
       curl: params.curl,
-      // 0 (silencio) -> x0.2 de curl, 1 (pico del clip) -> x2.8 — incluso un
-      // tramo mudo deja algo de textura, el pico real empuja bien fuerte.
-      curlEnvelope: audioEnvelope ? audioEnvelope.map(e => 0.2 + e * 2.6) : undefined,
+      // 0 (silencio) -> x0.2 de curl, 1 (pico del tramo elegido) -> x2.8 —
+      // incluso un tramo mudo deja algo de textura, el pico real empuja
+      // bien fuerte. La fuente del envelope depende de formSource: RMS
+      // (volumen, el comportamiento de siempre), densidad de onsets
+      // (ritmo) o centroide espectral (brillo) — mismas 32 muestras, tres
+      // lecturas distintas del mismo clip.
+      curlEnvelope: audioData
+        ? (formSource === 'onsets' ? audioData.onsetDensity : formSource === 'centroid' ? audioData.centroid : audioData.rms)
+          .map(e => 0.2 + e * 2.6)
+        : (audioEnvelope ? audioEnvelope.map(e => 0.2 + e * 2.6) : undefined),
     })
 
     let result = gen.next()
@@ -314,13 +390,34 @@ export default function ProxygenesisPage() {
         setProgress(result.value.iteration / result.value.maxIterations)
         requestAnimationFrame(step)
       } else {
-        buildSkeletonMesh(result.value.nodes, MODE_COLOR[branchMode])
+        const nodes = result.value.nodes
+        let colorOrColors: string | string[] = MODE_COLOR[branchMode]
+        if (audioData && colorMode === 'fixed') {
+          const [, s, l] = hexToHsl(MODE_COLOR[branchMode])
+          colorOrColors = hslToHex(centroidToHue(audioData.centroidMeanHz), s, l)
+        } else if (audioData && colorMode === 'tempo') {
+          const [h, , l] = hexToHsl(MODE_COLOR[branchMode])
+          const bpm = audioData.bpm ?? 110
+          const sat = Math.max(0.25, Math.min(1, (bpm - 60) / (180 - 60)))
+          colorOrColors = hslToHex(h, sat, l)
+        } else if (audioData && colorMode === 'gradient') {
+          // cada nodo hereda la banda dominante del tramo de la canción que
+          // corresponde a su propio orden de aparición — el orden de
+          // crecimiento ES la línea de tiempo del clip, nodo por nodo.
+          const colors: string[] = new Array(nodes.length)
+          for (let i = 1; i < nodes.length; i++) {
+            const segIdx = Math.min(audioData.segments - 1, Math.floor((i / nodes.length) * audioData.segments))
+            colors[i] = AUDIO_BANDS[audioData.dominantBand[segIdx]].color
+          }
+          colorOrColors = colors
+        }
+        buildSkeletonMesh(nodes, colorOrColors)
         setIsGenerating(false)
         setProgress(1)
       }
     }
     requestAnimationFrame(step)
-  }, [sceneReady, buildSkeletonMesh, audioEnvelope])
+  }, [sceneReady, buildSkeletonMesh, audioEnvelope, audioData, formSource, colorMode])
 
   // regenerar cuando cambia de modo o (para coral/arbol) cuando se toca
   // "GENERAR" explícitamente -- la concha, al ser una fórmula cerrada
@@ -560,6 +657,49 @@ export default function ProxygenesisPage() {
                               <div key={i} style={{ flex: 1, height: `${Math.max(4, e * 100)}%`, background: accent, opacity: 0.4 + e * 0.6 }} />
                             ))}
                           </div>
+
+                          {audioData && (
+                            <>
+                              <div style={{ fontSize: 7, color: '#3a4a60', marginBottom: 8 }}>
+                                {audioData.bpm ? `${audioData.bpm} BPM` : 'tempo no detectado'} · brillo medio {Math.round(audioData.centroidMeanHz)}Hz
+                              </div>
+
+                              <div style={{ fontSize: 8, color: '#4a6080', marginBottom: 4, letterSpacing: 1 }}>FORMA SEGÚN</div>
+                              <div style={{ display: 'flex', gap: 3, marginBottom: 10 }}>
+                                {([['rms', 'VOLUMEN'], ['onsets', 'RITMO'], ['centroid', 'BRILLO']] as [FormSource, string][]).map(([v, label]) => (
+                                  <button key={v} onClick={() => setFormSource(v)} style={{
+                                    flex: 1, fontFamily: mono, fontSize: 7, padding: '5px 2px', cursor: 'pointer',
+                                    background: formSource === v ? `${accent}26` : 'transparent',
+                                    border: `1px solid ${formSource === v ? accent : '#2a3a50'}`,
+                                    color: formSource === v ? accent : '#4a6080',
+                                  }}>
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+
+                              <div style={{ fontSize: 8, color: '#4a6080', marginBottom: 4, letterSpacing: 1 }}>COLOR SEGÚN</div>
+                              <div style={{ display: 'flex', gap: 3, marginBottom: 10, flexWrap: 'wrap' }}>
+                                {([['brand', 'MARCA'], ['fixed', 'BRILLO'], ['tempo', 'TEMPO'], ['gradient', 'GRADIENTE']] as [ColorMode, string][]).map(([v, label]) => (
+                                  <button key={v} onClick={() => setColorMode(v)} style={{
+                                    flex: '1 1 45%', fontFamily: mono, fontSize: 7, padding: '5px 2px', cursor: 'pointer',
+                                    background: colorMode === v ? `${accent}26` : 'transparent',
+                                    border: `1px solid ${colorMode === v ? accent : '#2a3a50'}`,
+                                    color: colorMode === v ? accent : '#4a6080',
+                                  }}>
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+                              <button onClick={() => runGeneration(mode, branchParams)} disabled={isGenerating} style={{
+                                width: '100%', fontFamily: mono, fontSize: 8, padding: '7px 0', cursor: 'pointer', marginBottom: 6,
+                                background: `${accent}1a`, border: `1px solid ${accent}`, color: accent, opacity: isGenerating ? 0.5 : 1,
+                              }}>
+                                ↻ REGENERAR CON ESTA MEZCLA
+                              </button>
+                            </>
+                          )}
+
                           <button onClick={clearAudio} style={{
                             width: '100%', fontFamily: mono, fontSize: 8, padding: '6px 0', cursor: 'pointer',
                             background: 'transparent', border: '1px solid #ff444466', color: '#ff4444',
