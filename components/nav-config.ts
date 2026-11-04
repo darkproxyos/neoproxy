@@ -28,6 +28,7 @@ export const navConfig: NavEntry[] = [
       { label: 'Arsenal', href: '/arsenal', live: true },
     ],
   },
+  { label: 'ESPECÍMENES', href: '/especimenes', live: true },
   { label: 'PROXYGAMES', href: '/games', live: true },
   { label: 'AUDIO', href: '/audio', live: true },
   { label: 'REALIDAD AUMENTADA', href: '/realidad-aumentada', live: true },

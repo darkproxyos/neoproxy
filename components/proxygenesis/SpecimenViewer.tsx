@@ -12,6 +12,8 @@ import {
   Color4,
   StandardMaterial,
   SceneLoader,
+  VertexData,
+  VertexBuffer,
 } from '@babylonjs/core'
 import '@babylonjs/loaders/STL'
 
@@ -41,7 +43,13 @@ export default function SpecimenViewer({ stlPath, color }: { stlPath: string; co
     dir.intensity = 0.5
 
     let disposed = false
-    SceneLoader.ImportMeshAsync('', '', stlPath, scene)
+    // ImportMeshAsync espera rootUrl y sceneFilename separados — pasar la
+    // ruta completa como sceneFilename con rootUrl vacío rompe el loader
+    // ("Wrong sceneFilename parameter"), confirmado probándolo de verdad.
+    const slash = stlPath.lastIndexOf('/')
+    const rootUrl = stlPath.slice(0, slash + 1)
+    const filename = stlPath.slice(slash + 1)
+    SceneLoader.ImportMeshAsync('', rootUrl, filename, scene)
       .then((res) => {
         if (disposed) return
         const mat = new StandardMaterial('mat', scene)
@@ -49,7 +57,22 @@ export default function SpecimenViewer({ stlPath, color }: { stlPath: string; co
         mat.diffuseColor = c
         mat.emissiveColor = c.scale(0.3)
         mat.specularColor = new Color3(0.1, 0.1, 0.1)
-        res.meshes.forEach((m) => { m.material = mat })
+        res.meshes.forEach((m) => {
+          m.material = mat
+          // Los STL exportados por grow.ts escriben la normal de cada
+          // triángulo en cero ("un visor la recalcula" — ver stl.ts). El
+          // loader de Babylon las deja tal cual en vez de recalcularlas, y
+          // una normal (0,0,0) rompe el shader de iluminación (sale blanco
+          // lavado, confirmado probándolo). Las recomputamos acá siempre,
+          // sea cual sea el STL de origen.
+          const positions = m.getVerticesData(VertexBuffer.PositionKind)
+          const indices = m.getIndices()
+          if (positions && indices) {
+            const normals: number[] = []
+            VertexData.ComputeNormals(positions, indices, normals)
+            m.setVerticesData(VertexBuffer.NormalKind, normals)
+          }
+        })
 
         // Encuadre automático: cada espécimen trae su propia escala (copas
         // de distinto tamaño, distinta cantidad de iteraciones) — en vez de

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { loadCuratedSpecimens, type CuratedSpecimen, type CuratedMode } from '../engine/curated'
+import { loadCuratedSpecimens, type CuratedSpecimen, type CuratedMode } from '@/components/proxygenesis/curated'
 
 const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenViewer'), { ssr: false })
 
@@ -10,7 +10,7 @@ const mono = "'Space Mono', monospace"
 const MODE_COLOR: Record<CuratedMode, string> = { coral: '#ff5e9e', arbol: '#00ff9d', concha: '#ffb800' }
 const MODE_LABEL: Record<CuratedMode, string> = { coral: 'CORAL', arbol: 'ÁRBOL', concha: 'CONCHA' }
 
-export default function ProxygenesisColeccionPage() {
+export default function EspecimenesPage() {
   const [specimens, setSpecimens] = useState<CuratedSpecimen[] | null>(null)
   const [open, setOpen] = useState<CuratedSpecimen | null>(null)
 
@@ -19,56 +19,49 @@ export default function ProxygenesisColeccionPage() {
   }, [])
 
   return (
-    <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative' }}>
+    <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" />
       <div className="tech-grid" />
 
-      <div style={{
-        position: 'fixed', top: 0, left: 0, right: 0, height: 40, background: 'rgba(5,10,20,0.85)',
-        borderBottom: '1px solid #00ff9d44', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 20px', zIndex: 100, backdropFilter: 'blur(5px)',
-      }}>
-        <span style={{ fontSize: 11, letterSpacing: 2, color: '#00ff9d' }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
-        <div style={{ display: 'flex', gap: 16 }}>
-          <Link href="/lab/proxygenesis/galeria" style={{ color: '#4a6080', textDecoration: 'none', fontSize: 10, border: '1px solid #4a608044', padding: '2px 8px' }}>
-            GALERÍA LOCAL
-          </Link>
-          <Link href="/lab/proxygenesis" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 10, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
-            ← VOLVER AL GENERADOR
-          </Link>
-        </div>
-      </div>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '104px 32px 100px' }}>
+        <Link href="/fabrication" style={{
+          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          display: 'inline-block', marginBottom: 32,
+        }}>
+          ← VOLVER A FABRICACIÓN
+        </Link>
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '72px 24px 80px' }}>
         <div style={{ fontSize: 9, color: '#00ff9d66', letterSpacing: 6, marginBottom: 16 }}>
-          // PROXYGENESIS — COLECCIÓN CURADA
+          // PROXYGENESIS — ORGANISMOS GENERADOS
         </div>
         <h1 style={{
-          fontSize: 36, fontWeight: 700, letterSpacing: 6, color: '#00ff9d',
+          fontSize: 40, fontWeight: 700, letterSpacing: 6, color: '#00ff9d',
           textShadow: '0 0 40px #00ff9d44', marginBottom: 16, lineHeight: 1,
         }}>
-          COLECCIÓN
+          ESPECÍMENES
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 48 }}>
-          Especímenes reales, crecidos fuera del navegador — corridas largas del mismo motor de Space
-          Colonization, en una máquina dedicada, a veces horas de cómputo. A diferencia de la{' '}
-          <Link href="/lab/proxygenesis/galeria" style={{ color: '#00ff9d' }}>galería local</Link> (vive en
-          tu navegador, se regenera al instante desde su semilla), acá el STL final queda guardado tal cual
-          creció.
+        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 680, marginBottom: 20 }}>
+          Formas crecidas, no modeladas — árboles, corales y conchas generados con un algoritmo real de
+          colonización espacial, cada uno corrido horas en una máquina dedicada hasta que terminó de
+          crecer solo. Cada pieza acá es un STL real y persistido, con los datos exactos de su propia
+          corrida: semilla, nodos, velocidad, parámetros.
         </p>
+        <Link href="/lab/proxygenesis" style={{ fontSize: 10, color: '#00ff9d', letterSpacing: 1 }}>
+          → Generar los tuyos en el laboratorio
+        </Link>
 
-        {specimens === null && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>CARGANDO...</div>
-        )}
+        <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
+          {specimens === null && (
+            <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>CARGANDO...</div>
+          )}
 
-        {specimens !== null && specimens.length === 0 && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1, lineHeight: 2 }}>
-            TODAVÍA SIN ESPECÍMENES CURADOS. Esta sección se llena a mano, con corridas locales reales
-            revisadas antes de subirlas.
-          </div>
-        )}
+          {specimens !== null && specimens.length === 0 && (
+            <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1, lineHeight: 2, gridColumn: '1 / -1' }}>
+              TODAVÍA SIN ESPECÍMENES. Esta colección se llena a mano, con corridas locales reales
+              revisadas antes de subirlas.
+            </div>
+          )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18 }}>
           {specimens?.map(s => {
             const color = MODE_COLOR[s.mode]
             return (
@@ -76,15 +69,28 @@ export default function ProxygenesisColeccionPage() {
                 overflow: 'hidden', textAlign: 'left', cursor: 'pointer', background: `${color}08`,
                 border: `1px solid ${color}33`, padding: 0, fontFamily: mono,
               }}>
-                <div style={{ height: 130, background: `${color}10`, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: `1px solid ${color}33` }}>
-                  <span style={{ fontSize: 9, color: `${color}aa`, letterSpacing: 2 }}>[+] VER EN 3D</span>
+                <div style={{ position: 'relative', aspectRatio: '4 / 3', background: `${color}10`, borderBottom: `1px solid ${color}33` }}>
+                  {s.thumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={s.thumbnail} alt={s.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  ) : (
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ fontSize: 9, color: `${color}aa`, letterSpacing: 2 }}>[+] VER EN 3D</span>
+                    </div>
+                  )}
+                  <span style={{
+                    position: 'absolute', bottom: 8, right: 10, fontSize: 8, letterSpacing: 1, color,
+                    background: 'rgba(0,4,10,0.75)', padding: '3px 7px', border: `1px solid ${color}44`,
+                  }}>
+                    VER EN 3D →
+                  </span>
                 </div>
-                <div style={{ padding: 16 }}>
+                <div style={{ padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <span style={{ fontSize: 11, letterSpacing: 2, color }}>{MODE_LABEL[s.mode]}</span>
                     <span style={{ fontSize: 8, color: '#4a6080' }}>{new Date(s.createdAt).toLocaleDateString('es-AR')}</span>
                   </div>
-                  <div style={{ fontSize: 11, color: '#c8daf0', marginBottom: 10 }}>{s.title}</div>
+                  <div style={{ fontSize: 12, color: '#fff', marginBottom: 10 }}>{s.title}</div>
                   <div style={{ fontSize: 9, color: '#4a6080' }}>
                     NODOS: {s.stats.nodeCount.toLocaleString()} // {s.stats.iterationsPerSecond} iter/s // {s.stats.elapsedSeconds}s
                   </div>
@@ -104,13 +110,13 @@ export default function ProxygenesisColeccionPage() {
           }}
         >
           <div onClick={(e) => e.stopPropagation()} style={{
-            width: '100%', maxWidth: 1000, maxHeight: '88vh', display: 'grid',
+            width: '100%', maxWidth: 1100, maxHeight: '88vh', display: 'grid',
             gridTemplateColumns: '1.4fr 1fr', border: `1px solid ${MODE_COLOR[open.mode]}44`, background: '#000205',
           }}>
-            <div style={{ height: '70vh', position: 'relative' }}>
+            <div style={{ height: '72vh', position: 'relative' }}>
               <SpecimenViewer stlPath={open.stlPath} color={MODE_COLOR[open.mode]} />
             </div>
-            <div style={{ padding: 24, overflowY: 'auto', height: '70vh' }}>
+            <div style={{ padding: 24, overflowY: 'auto', height: '72vh' }}>
               <button onClick={() => setOpen(null)} style={{
                 fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#4a6080', background: 'transparent',
                 border: '1px solid #4a608044', padding: '4px 10px', cursor: 'pointer', marginBottom: 20,
