@@ -103,5 +103,42 @@
       ]
     },
     "createdAt": "2026-11-04T06:30:00.000Z"
+  },
+  {
+    "id": "caos-01",
+    "title": "Caos 01 — crecido al ritmo de una canción real",
+    "mode": "coral",
+    "stlPath": "/proxygenesis/stls/caos-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/caos-01.webp",
+    "stats": {
+      "seed": 1,
+      "nodeCount": 818,
+      "iteration": 550,
+      "maxIterations": 550,
+      "elapsedSeconds": 6.5,
+      "iterationsPerSecond": 84.6,
+      "params": {
+        "canopyWidth": 5,
+        "canopyHeight": 2.5,
+        "curl": 0.22,
+        "flat": 0.5,
+        "numAttractors": 1700,
+        "quality": "extrema",
+        "formaSegun": "ritmo (densidad de onsets)",
+        "colorSegun": "gradiente (banda dominante)",
+        "cancionFuente": "Caos (Suno, 3:29)",
+        "bpmDetectado": 144,
+        "brilloMedioHz": 2612
+      }
+    },
+    "reading": {
+      "thinkerIds": ["runions-lane-prusinkiewicz", "shannon", "lorenz"],
+      "prose": [
+        "El primero que no nace de un parámetro fijo — nace de una canción real. 'Caos', subida como archivo de audio: 3 minutos 29, generado con Suno. El motor siempre tuvo una entrada para esto (curlEnvelope existe en el código desde el principio) pero solo aceptaba volumen. Acá la curvatura de cada rama sigue, en cambio, la densidad de golpes del tema — cuándo aparece algo nuevo en la señal, no cuánto suena.",
+        "Esos golpes no son los más fuertes del audio: son los más sorprendentes. La detección mide flujo espectral — cuánta energía NUEVA aparece de un instante a otro, exactamente lo que Shannon definió como información: no el volumen, la sorpresa, cuánto no sabías todavía. 818 nodos después, la forma entera es un mapa de qué momentos de 'Caos' tenían más que contar.",
+        "El color tampoco es decoración: cada tramo del esqueleto está teñido según qué banda de frecuencia dominaba el instante exacto de la canción en que ese nodo creció — el orden de crecimiento ES la línea de tiempo del tema (salió casi todo oro y rojo: graves y medios-bajos, casi nada de agudo, un dato real del tema). Esa versión en vivo se renderiza con vertex colors en el navegador — el STL que descargás guarda la geometría exacta pero no ese gradiente (el formato no soporta color por vértice); la miniatura de acá es un screenshot real de la corrida, no una reconstrucción. Y el título no podía quedar más preciso: nada en esta pieza es aleatorio, apenas sensible — la misma idea que Lorenz encontró calculando el clima, no caos como ruido sino como dependencia brutal de la condición inicial exacta."
+      ]
+    },
+    "createdAt": "2026-11-04T23:20:00.000Z"
   }
 ]
