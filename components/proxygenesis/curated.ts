@@ -1,7 +1,8 @@
-// Colección curada: especímenes reales, generados en una máquina local
-// (corridas largas, de minutos a horas, con space colonization — ver
-// spaceColonization.ts) y subidos a mano al repo. A diferencia de
-// gallery.ts (localStorage, se regenera desde semilla+parámetros al
+// Galería de especímenes curados: piezas reales, generadas en una máquina
+// local (corridas largas, de minutos a horas, con el motor de space
+// colonization de app/lab/proxygenesis/engine/spaceColonization.ts) y
+// subidas a mano al repo tras revisión. A diferencia de la galería local
+// del generador (localStorage, se regenera desde semilla+parámetros al
 // instante), acá el STL final SÍ se persiste: estas corridas no son
 // instantáneas de reproducir.
 
@@ -22,6 +23,7 @@ export type CuratedSpecimen = {
   title: string
   mode: CuratedMode
   stlPath: string // relativo a /public, ej. /proxygenesis/stls/arbol-01.stl
+  thumbnail?: string // relativo a /public, screenshot real del espécimen; sin esto, la tarjeta cae a un placeholder
   stats: CuratedStats
   note?: string
   createdAt: string

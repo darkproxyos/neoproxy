@@ -4,6 +4,7 @@
     "title": "Árbol 01 — primera corrida local",
     "mode": "arbol",
     "stlPath": "/proxygenesis/stls/arbol-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/arbol-01.webp",
     "stats": {
       "seed": 1,
       "nodeCount": 6165,
