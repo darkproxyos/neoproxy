@@ -40,9 +40,14 @@ export default function ProxygenesisGaleriaPage() {
         padding: '0 20px', zIndex: 100, backdropFilter: 'blur(5px)',
       }}>
         <span style={{ fontSize: 11, letterSpacing: 2, color: '#00ff9d' }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
-        <Link href="/lab/proxygenesis" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 10, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
-          ← VOLVER AL GENERADOR
-        </Link>
+        <div style={{ display: 'flex', gap: 16 }}>
+          <Link href="/lab/proxygenesis/coleccion" style={{ color: '#4a6080', textDecoration: 'none', fontSize: 10, border: '1px solid #4a608044', padding: '2px 8px' }}>
+            COLECCIÓN CURADA
+          </Link>
+          <Link href="/lab/proxygenesis" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 10, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
+            ← VOLVER AL GENERADOR
+          </Link>
+        </div>
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '72px 24px 80px' }}>
