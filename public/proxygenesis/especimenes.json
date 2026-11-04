@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "id": "arbol-01",
+    "title": "Árbol 01 — primera corrida local",
+    "mode": "arbol",
+    "stlPath": "/proxygenesis/stls/arbol-01.stl",
+    "stats": {
+      "seed": 1,
+      "nodeCount": 6165,
+      "iteration": 55,
+      "maxIterations": 60000,
+      "elapsedSeconds": 64.2,
+      "iterationsPerSecond": 0.9,
+      "params": {
+        "canopyWidth": 8,
+        "canopyHeight": 12,
+        "curl": 0.06,
+        "flat": 0,
+        "numAttractors": 90000,
+        "influenceRadius": 4,
+        "killDistance": 0.8,
+        "stepSize": 0.56
+      }
+    },
+    "note": "Primer espécimen crecido fuera del navegador, en una máquina dedicada corriendo el motor real de space colonization. Terminó solo en la iteración 55 (no llegó al límite de 60.000): se quedó sin atractores capturables antes — la nube de 90.000 puntos se agotó más rápido de lo esperado para esta copa.",
+    "createdAt": "2026-11-04T03:51:00.000Z"
+  }
+]
