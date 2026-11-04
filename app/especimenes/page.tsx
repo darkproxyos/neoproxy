@@ -8,8 +8,8 @@ import { clusters } from '@/components/knowledge/entries'
 const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenViewer'), { ssr: false })
 
 const mono = "'Space Mono', monospace"
-const MODE_COLOR: Record<CuratedMode, string> = { coral: '#ff5e9e', arbol: '#00ff9d', concha: '#ffb800' }
-const MODE_LABEL: Record<CuratedMode, string> = { coral: 'CORAL', arbol: 'ÁRBOL', concha: 'CONCHA' }
+const MODE_COLOR: Record<CuratedMode, string> = { coral: '#ff5e9e', arbol: '#00ff9d', concha: '#ffb800', red: '#00d4ff' }
+const MODE_LABEL: Record<CuratedMode, string> = { coral: 'CORAL', arbol: 'ÁRBOL', concha: 'CONCHA', red: 'RED NEURONAL' }
 
 const AUTOORG = clusters.autoorganizacion.color
 
@@ -35,7 +35,7 @@ export default function EspecimenesPage() {
   }, [])
 
   const counts = useMemo(() => {
-    const c: Record<CuratedMode | 'all', number> = { all: specimens?.length ?? 0, arbol: 0, coral: 0, concha: 0 }
+    const c: Record<CuratedMode | 'all', number> = { all: specimens?.length ?? 0, arbol: 0, coral: 0, concha: 0, red: 0 }
     specimens?.forEach(s => { c[s.mode]++ })
     return c
   }, [specimens])
@@ -91,7 +91,7 @@ export default function EspecimenesPage() {
             <span><span style={{ color: AUTOORG }}>{totalNodes.toLocaleString()}</span> NODOS TOTALES</span>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            {(['all', 'arbol', 'coral', 'concha'] as const).map(m => {
+            {(['all', 'arbol', 'coral', 'concha', 'red'] as const).map(m => {
               const active = filter === m
               const c = m === 'all' ? AUTOORG : MODE_COLOR[m]
               const label = m === 'all' ? 'TODOS' : MODE_LABEL[m]
