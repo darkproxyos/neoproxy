@@ -23,7 +23,48 @@
         "stepSize": 0.56
       }
     },
-    "note": "Primer espécimen crecido fuera del navegador, en una máquina dedicada corriendo el motor real de space colonization. Terminó solo en la iteración 55 (no llegó al límite de 60.000): se quedó sin atractores capturables antes — la nube de 90.000 puntos se agotó más rápido de lo esperado para esta copa.",
+    "reading": {
+      "thinkerIds": ["runions-lane-prusinkiewicz", "maturana_varela", "prigogine"],
+      "prose": [
+        "El primero: semilla 1, copa 8×12, 90.000 atractores. El algoritmo es el mismo que describieron Runions, Lane y Prusinkiewicz en 2007 — cada nodo compite por la nube de puntos más cercana, y la forma final es lo que queda después de esa competencia, no una regla dibujada de antemano.",
+        "Terminó solo en la iteración 55 de 60.000 — no por un corte externo, se quedó sin atractores capturables antes de llegar al límite. Nadie le dijo dónde parar: en el sentido literal de Maturana y Varela, el límite lo trazó el mismo proceso que lo hizo crecer.",
+        "Y ese crecimiento no fue gratis: 64 segundos reales de CPU sostenidos, antes de que el flujo de atractores se agotara. Apagado el proceso, lo que queda ya no es la forma activa que describe Prigogine — es su huella, congelada para siempre en este STL."
+      ]
+    },
     "createdAt": "2026-11-04T03:51:00.000Z"
+  },
+  {
+    "id": "coral-01",
+    "title": "Coral 01 — preset Coral Cerebro",
+    "mode": "coral",
+    "stlPath": "/proxygenesis/stls/coral-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/coral-01.webp",
+    "stats": {
+      "seed": 2,
+      "nodeCount": 2698,
+      "iteration": 22,
+      "maxIterations": 20000,
+      "elapsedSeconds": 24.6,
+      "iterationsPerSecond": 0.9,
+      "params": {
+        "canopyWidth": 3.5,
+        "canopyHeight": 3,
+        "curl": 0.35,
+        "flat": 0.4,
+        "numAttractors": 60000,
+        "influenceRadius": 1.75,
+        "killDistance": 0.35,
+        "stepSize": 0.245
+      }
+    },
+    "reading": {
+      "thinkerIds": ["runions-lane-prusinkiewicz", "margulis", "kauffman"],
+      "prose": [
+        "Semilla 2, mismo motor que el árbol — pero con el preset real 'Coral Cerebro': copa compacta de 3.5×3, curl 0.35 (casi 6 veces más ruido direccional) y 40% más achatada. Sigue siendo la regla de Runions, Lane y Prusinkiewicz, pero el mismo algoritmo con otros números da una criatura completamente distinta.",
+        "Un coral de verdad no es un organismo — es una colonia: miles de pólipos genéticamente idénticos, fusionados en una sola estructura, en simbiosis permanente con algas que no podrían sobrevivir separadas. Margulis llamó a esa fusión irreversible simbiogénesis: la evolución no solo compite, también se funde.",
+        "Y pasó algo que no esperaba: subir los atractores de 15.000 a 60.000 —cuatro veces más 'alimento'— casi no cambió el resultado (2.215 nodos contra 2.698). El sistema encontró su propio tamaño estable mucho antes de agotar los recursos disponibles. Es lo que Kauffman llama orden gratis: no todo exceso de recursos se traduce en más complejidad — a veces el sistema ya encontró su forma, y ahí se queda."
+      ]
+    },
+    "createdAt": "2026-11-04T04:55:00.000Z"
   }
 ]
