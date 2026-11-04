@@ -17,6 +17,10 @@ import { SonifyEngine } from '../engine/audio'
 const mono = "'Space Mono', monospace"
 const RED = '#cc0000'
 const AMBER = '#ffb800'
+// Trickster, no un rojo genérico: reynolds (el autor real de boids, ver
+// AuthorCard más abajo) tiene relatedAgent: 'trickster' en entries.ts —
+// no es una elección estética suelta, es la conexión que el repo ya hace.
+const TRICKSTER = '#b400ff'
 
 type Mode = 'boids' | 'sandpile'
 
@@ -64,6 +68,7 @@ export default function EnjambrePage() {
   const boidsMeshRef = useRef<any>(null)
   const sandMeshRef = useRef<any>(null)
   const boidsRef = useRef<Boid[]>([])
+  const boidColorsRef = useRef<Float32Array>(new Float32Array(0))
   const sandGridRef = useRef<SandpileGrid | null>(null)
   const sandRandRef = useRef<() => number>(() => Math.random())
   const disposedRef = useRef(false)
@@ -134,6 +139,12 @@ export default function EnjambrePage() {
       m.copyToArray(matrices, i * 16)
     }
     mesh.thinInstanceSetBuffer('matrix', matrices, 16, false)
+    // color por instancia — arranca en el tono base, lo brillante/opaco lo
+    // decide la velocidad real cuadro a cuadro (ver registerBeforeRender)
+    const colors = new Float32Array(n * 4)
+    for (let i = 0; i < n; i++) { colors[i * 4] = colors[i * 4 + 1] = colors[i * 4 + 2] = 1; colors[i * 4 + 3] = 1 }
+    boidColorsRef.current = colors
+    mesh.thinInstanceSetBuffer('color', colors, 4, false)
   }
 
   const resetSandpile = () => {
@@ -175,12 +186,25 @@ export default function EnjambrePage() {
       const key = new B.PointLight('en-key', new B.Vector3(4, 5, -3), scene)
       key.intensity = 0.8
 
-      // --- Boids: cono base, orientado por defecto a +Y, cada thin
-      // instance lo reorienta hacia su propia velocidad ---
-      const boidBase = B.MeshBuilder.CreateCylinder('boidBase', { diameterTop: 0, diameterBottom: 0.2, height: 0.5, tessellation: 6 }, scene)
+      // --- Boids: cuerpo propio en vez del cono genérico de antes — un
+      // torpedo orgánico (esfera elongada, apunta a +Y) con dos aletas
+      // chicas atrás. Sigue orientándose a +Y por defecto, cada thin
+      // instance lo rota hacia su propia velocidad igual que antes — el
+      // body nuevo no cambia esa lógica, solo la silueta.
+      const body = B.MeshBuilder.CreateSphere('boidBody', { diameterX: 0.1, diameterY: 0.34, diameterZ: 0.1, segments: 6 }, scene)
+      body.position.y = 0.04 // la nariz (punta +Y) queda adelante del centro de rotación
+      const finL = B.MeshBuilder.CreateDisc('finL', { radius: 0.07, tessellation: 3 }, scene)
+      finL.rotation.set(0, 0, Math.PI / 2.4)
+      finL.position.set(0.05, -0.1, 0)
+      const finR = B.MeshBuilder.CreateDisc('finR', { radius: 0.07, tessellation: 3 }, scene)
+      finR.rotation.set(0, Math.PI, -Math.PI / 2.4)
+      finR.position.set(-0.05, -0.1, 0)
+      const boidBase = B.Mesh.MergeMeshes([body, finL, finR], true, true, undefined, false, true)!
+      boidBase.name = 'boidBase'
       const boidMat = new B.StandardMaterial('boidMat', scene)
-      boidMat.diffuseColor = B.Color3.FromHexString(RED)
-      boidMat.emissiveColor = B.Color3.FromHexString(RED).scale(0.4)
+      boidMat.diffuseColor = B.Color3.FromHexString(TRICKSTER)
+      boidMat.emissiveColor = B.Color3.FromHexString(TRICKSTER).scale(0.35)
+      boidMat.specularColor = new B.Color3(0.15, 0.1, 0.2)
       boidBase.material = boidMat
       // Sin esto, Babylon calcula el bounding box de la malla UNA sola vez
       // a partir del buffer de matrices inicial (todas estacionadas en
@@ -195,7 +219,7 @@ export default function EnjambrePage() {
       const boundsSphere = B.MeshBuilder.CreateSphere('bounds', { diameter: boundsRadius * 2, segments: 16 }, scene)
       const boundsMat = new B.StandardMaterial('boundsMat', scene)
       boundsMat.wireframe = true
-      boundsMat.emissiveColor = new B.Color3(0.3, 0.05, 0.05)
+      boundsMat.emissiveColor = B.Color3.FromHexString(TRICKSTER).scale(0.4)
       boundsMat.alpha = 0.25
       boundsSphere.material = boundsMat
 
@@ -234,6 +258,8 @@ export default function EnjambrePage() {
           boidsRef.current = stepBoids(boidsRef.current, boidsParamsRef.current, dt * 2)
           const mesh = boidsMeshRef.current
           const bArr = boidsRef.current
+          const colors = boidColorsRef.current
+          const maxSpd = Math.max(0.1, boidsParamsRef.current.maxSpeed)
           for (let i = 0; i < bArr.length; i++) {
             const b = bArr[i]
             const velLen = Math.hypot(b.vel[0], b.vel[1], b.vel[2])
@@ -246,8 +272,16 @@ export default function EnjambrePage() {
             else if (dot < 0.9999) rot = B.Quaternion.RotationAxis(B.Vector3.Cross(up, dirN).normalize(), Math.acos(dot))
             const m = B.Matrix.Compose(B.Vector3.One(), rot, new B.Vector3(b.pos[0], b.pos[1], b.pos[2]))
             mesh.thinInstanceSetMatrixAt(i, m, false)
+            // más rápido = más brillante — el color no es decorativo, lee
+            // la velocidad real de ESE boid en ESE cuadro, no un promedio
+            if (colors && i * 4 + 3 < colors.length) {
+              const t = Math.min(1, velLen / maxSpd)
+              const k = 0.55 + t * 0.9
+              colors[i * 4] = k; colors[i * 4 + 1] = k; colors[i * 4 + 2] = k
+            }
           }
           mesh.thinInstanceBufferUpdated('matrix')
+          if (colors.length) mesh.thinInstanceBufferUpdated('color')
 
           const sonify = sonifyRef.current
           if (sonify?.running) {
@@ -330,7 +364,7 @@ export default function EnjambrePage() {
     return () => { sonifyRef.current?.stop() }
   }, [])
 
-  const accent = mode === 'boids' ? RED : AMBER
+  const accent = mode === 'boids' ? TRICKSTER : AMBER
   const maxLog = Math.max(1, ...avalancheLog)
 
   return (
@@ -362,9 +396,9 @@ export default function EnjambrePage() {
           {(['boids', 'sandpile'] as Mode[]).map((m) => (
             <button key={m} onClick={() => setMode(m)} style={{
               flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
-              background: mode === m ? `${m === 'boids' ? RED : AMBER}22` : 'transparent',
-              border: `1px solid ${mode === m ? (m === 'boids' ? RED : AMBER) : '#2a3a50'}`,
-              color: mode === m ? (m === 'boids' ? RED : AMBER) : '#4a6080',
+              background: mode === m ? `${m === 'boids' ? TRICKSTER : AMBER}22` : 'transparent',
+              border: `1px solid ${mode === m ? (m === 'boids' ? TRICKSTER : AMBER) : '#2a3a50'}`,
+              color: mode === m ? (m === 'boids' ? TRICKSTER : AMBER) : '#4a6080',
             }}>
               {m === 'boids' ? 'BANDADA (BOIDS)' : 'MONTÍCULO (SANDPILE)'}
             </button>
@@ -373,7 +407,7 @@ export default function EnjambrePage() {
 
         {mode === 'boids' ? (
           <>
-            <div style={{ fontSize: 10, letterSpacing: 3, color: RED, marginBottom: 10 }}>REGLAS LOCALES</div>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: TRICKSTER, marginBottom: 10 }}>REGLAS LOCALES</div>
             <Slider label="PERCEPCIÓN" value={perception} min={0.3} max={3} step={0.05} onChange={setPerception} accent={accent} />
             <Slider label="SEPARACIÓN" value={separationWeight} min={0} max={3} step={0.05} onChange={setSeparationWeight} accent={accent} />
             <Slider label="ALINEACIÓN" value={alignmentWeight} min={0} max={3} step={0.05} onChange={setAlignmentWeight} accent={accent} />
