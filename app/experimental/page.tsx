@@ -287,6 +287,39 @@ export default function ExperimentalHubPage() {
           <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>MISMO TEXTO, MISMO SIGILO — SIEMPRE</div>
         </Link>
 
+        <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 10 }}>
+          ACECHO
+        </div>
+        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+          Tampoco es un séptimo modo — es la segunda criatura, cada una en su propio espacio con sus
+          propias reglas (el enjambre de Trickster fue la primera). Ahí era forrajeo activo; acá, D
+          se queda quieto y ataca una sola vez cuando algo entra en rango, con una predicción de
+          intercepción que no se corrige en el aire — sit-and-wait predation, no decoración.
+        </p>
+        <Link href="/experimental/acecho" className="fade-in artifact-card" style={{
+          display: 'block', textDecoration: 'none', color: 'inherit', padding: 24, marginBottom: 56,
+          background: 'rgba(2,4,8,0.8)', border: `1px solid ${RED}33`, borderLeft: `3px solid ${RED}`,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+            <span style={{ fontSize: 9, letterSpacing: 2, color: `${RED}aa` }}>NPX-XP-ACECHO</span>
+            <span style={{
+              fontSize: 9, letterSpacing: 1, color: RED, border: `1px solid ${RED}55`, padding: '2px 7px',
+            }}>
+              SEGUNDA CRIATURA
+            </span>
+          </div>
+          <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>ACECHO</div>
+          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            D acecha a procesos que vagan solos por su propio espacio — casi invisible, casi inmóvil,
+            hasta que uno entra en rango. Pursuit (Reynolds, 1999): predice dónde va a estar el objetivo,
+            no dónde está, y ataca una sola vez sin corregir el tiro.
+          </p>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: `${RED}cc`, marginBottom: 8 }}>
+            Craig Reynolds (Pursuit, 1999) · Huey & Pianka (Sit-and-wait predation, 1981)
+          </div>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>SIMULACIÓN EN VIVO — ESTADO DORMIDO/EMBESTIDA</div>
+        </Link>
+
         <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 22 }}>
           OTROS EXPERIMENTOS
         </div>

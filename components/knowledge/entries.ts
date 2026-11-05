@@ -669,6 +669,21 @@ export const entries: KnowledgeEntry[] = [
     relatedAgent: 'trickster',
   },
   {
+    id: 'reynolds-pursuit',
+    name: 'Craig Reynolds',
+    years: '1953–',
+    role: 'Vida Artificial // Pursuit',
+    cluster: 'autoorganizacion',
+    formula: 'objetivo_predicho = presa.pos + presa.vel · (distancia / velocidad)',
+    formulaLabel: 'Pursuit — Steering Behaviors (1999)',
+    formulaKind: 'concept',
+    summary:
+      'Mismo autor que boids (1987), paper distinto: "Steering Behaviors For Autonomous Characters" (GDC 1999) formaliza comportamientos individuales, no grupales — entre ellos, pursuit. La diferencia con perseguir sin más: en vez de apuntar a dónde está el objetivo, se predice dónde va a estar después de un tiempo de anticipación proporcional a la distancia, y se apunta ahí.',
+    example:
+      'Un gato no salta hacia donde está el ratón — salta hacia donde va a estar cuando termine de saltar. Esa predicción, no la velocidad, es lo que separa un ataque que conecta de uno que llega tarde.',
+    relatedAgent: 'd',
+  },
+  {
     id: 'dawkins',
     name: 'Richard Dawkins',
     years: '1941–',
