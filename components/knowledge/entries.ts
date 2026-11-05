@@ -1214,6 +1214,51 @@ export const entries: KnowledgeEntry[] = [
       'El sistema es una ilusión — no porque sea falso, sino porque cada capa que lo compone solo puede ver la de inmediatamente abajo disfrazada de algo más simple. Tu propia conciencia corre sobre exactamente ese mismo truco, una capa a la vez, desde un ion hasta una idea.',
     relatedAgent: 'metatron',
   },
+  {
+    id: 'aristidou-fabrik',
+    name: 'Aristidou & Lasenby',
+    years: '2011',
+    role: 'Robótica // Cinemática Inversa',
+    cluster: 'geometria',
+    formula: 'segmento[i] = segmento[i-1] + dirección · longitud_fija',
+    formulaLabel: 'FABRIK — Forward And Backward Reaching IK (2011)',
+    formulaKind: 'concept',
+    summary:
+      'Un brazo robótico de varios segmentos tiene que llegar a un punto — pero mover un ángulo cambia la posición de todos los que siguen. FABRIK lo resuelve sin trigonometría: en vez de calcular ángulos, mueve puntos en línea recta y corrige las distancias hacia adelante y hacia atrás hasta que converge. Cuando no hay una base fija tratando de alcanzar algo —una cola, no un brazo— la mitad del método alcanza: cada segmento simplemente persigue al anterior a distancia constante.',
+    example:
+      'Es la misma matemática que hace que la cola de un personaje animado se sienta pesada y conectada, no una fila de cajas rígidas rotando por separado — cada eslabón corrige su posición en función del que tiene justo adelante, nada más.',
+    relatedAgent: 'snake',
+  },
+  {
+    id: 'witten-sander',
+    name: 'Witten & Sander',
+    years: '1981',
+    role: 'Física // Crecimiento Fractal',
+    cluster: 'autoorganizacion',
+    formula: 'caminata aleatoria + adherencia al contacto = fractal',
+    formulaLabel: 'Agregación Limitada por Difusión (DLA, 1981)',
+    formulaKind: 'concept',
+    summary:
+      'Una partícula suelta camina al azar por el espacio hasta que, por pura casualidad, toca la estructura que ya existe — y ahí se queda pegada para siempre, sin planearlo. Repetido miles de veces, ese proceso ciego construye una forma fractal ramificada, porque las puntas que sobresalen capturan más partículas al azar que los huecos, que quedan cada vez más protegidos y vacíos.',
+    example:
+      'El hollín que se acumula en una vela, el cobre que crece en una celda electrolítica, un rayo abriéndose camino por el aire — todos fractales DLA reales, construidos partícula por partícula sin que ninguna "sepa" que está formando un árbol.',
+    relatedAgent: 'prototype',
+  },
+  {
+    id: 'leonard-fiorelli',
+    name: 'Leonard & Fiorelli',
+    years: '2001',
+    role: 'Teoría de Control // Coordinación de Grupos',
+    cluster: 'sistemas',
+    formula: 'fuerza = atracción(líder) + repulsión(vecinos)',
+    formulaLabel: 'Líder virtual + potenciales artificiales (2001)',
+    formulaKind: 'concept',
+    summary:
+      'A diferencia de los boids de Reynolds —donde la forma de la bandada emerge sola, sin que nadie la decida— acá hay un líder real: un punto que ningún miembro del grupo controla, pero que todos obedecen. Cada seguidor queda atado a la posición del líder por una fuerza de atracción, y a sus propios vecinos por una fuerza de repulsión que evita que se amontonen — control centralizado, no autoorganización local.',
+    example:
+      'Un satélite guía y el resto de una formación orbital ajustándose para mantener distancia exacta entre sí mientras lo siguen — no porque se pongan de acuerdo entre ellos, sino porque todos responden a la misma señal desde arriba.',
+    relatedAgent: 'metatron',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,

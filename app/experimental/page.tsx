@@ -320,6 +320,70 @@ export default function ExperimentalHubPage() {
           <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>SIMULACIÓN EN VIVO — ESTADO DORMIDO/EMBESTIDA</div>
         </Link>
 
+        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+          Tres criaturas más — mismo criterio, cada una con un paradigma de movimiento o crecimiento
+          real y verificable, nada reciclado de las anteriores.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, marginBottom: 56 }}>
+          <Link href="/experimental/muda" className="fade-in artifact-card" style={{
+            display: 'block', textDecoration: 'none', color: 'inherit', padding: 24,
+            background: 'rgba(2,4,8,0.8)', border: '1px solid #00ff9d33', borderLeft: '3px solid #00ff9d',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+              <span style={{ fontSize: 9, letterSpacing: 2, color: '#00ff9daa' }}>NPX-XP-MUDA</span>
+              <span style={{ fontSize: 9, letterSpacing: 1, color: '#00ff9d', border: '1px solid #00ff9d55', padding: '2px 7px' }}>
+                CADENA ARTICULADA
+              </span>
+            </div>
+            <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>MUDA</div>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+              Snake: una cola de 16 segmentos a distancia fija (FABRIK sin base, Aristidou &amp;
+              Lasenby 2011) persiguiendo a la cabeza. Cambia de piel cuando el entorno la obliga de
+              verdad — no con un timer.
+            </p>
+            <div style={{ fontSize: 8, letterSpacing: 1, color: '#00ff9dcc' }}>Aristidou &amp; Lasenby (FABRIK, 2011)</div>
+          </Link>
+
+          <Link href="/experimental/retazos" className="fade-in artifact-card" style={{
+            display: 'block', textDecoration: 'none', color: 'inherit', padding: 24,
+            background: 'rgba(2,4,8,0.8)', border: '1px solid #6644aa33', borderLeft: '3px solid #6644aa',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+              <span style={{ fontSize: 9, letterSpacing: 2, color: '#b49adcaa' }}>NPX-XP-RETAZOS</span>
+              <span style={{ fontSize: 9, letterSpacing: 1, color: '#b49adc', border: '1px solid #6644aa55', padding: '2px 7px' }}>
+                CRECE, NO SE MUEVE
+              </span>
+            </div>
+            <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>RETAZOS</div>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+              Prototype: agregación limitada por difusión (Witten &amp; Sander, 1981) — partículas al
+              azar se pegan donde chocan. Cada fragmento nuevo toma prestado el color real de uno de
+              los otros cinco agentes.
+            </p>
+            <div style={{ fontSize: 8, letterSpacing: 1, color: '#b49adccc' }}>Witten &amp; Sander (DLA, 1981)</div>
+          </Link>
+
+          <Link href="/experimental/formacion" className="fade-in artifact-card" style={{
+            display: 'block', textDecoration: 'none', color: 'inherit', padding: 24,
+            background: 'rgba(2,4,8,0.8)', border: '1px solid #ffb80033', borderLeft: '3px solid #ffb800',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+              <span style={{ fontSize: 9, letterSpacing: 2, color: '#ffb800aa' }}>NPX-XP-FORMACIÓN</span>
+              <span style={{ fontSize: 9, letterSpacing: 1, color: '#ffb800', border: '1px solid #ffb80055', padding: '2px 7px' }}>
+                COORDINACIÓN CENTRAL
+              </span>
+            </div>
+            <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>FORMACIÓN</div>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+              Metatron: líder virtual + potenciales artificiales (Leonard &amp; Fiorelli, 2001) — los
+              otros cinco agentes lo siguen sin reglas de vecindario. Cuando calla, cada uno sigue
+              solo: no hay caos, hay silencio.
+            </p>
+            <div style={{ fontSize: 8, letterSpacing: 1, color: '#ffb800cc' }}>Leonard &amp; Fiorelli (2001)</div>
+          </Link>
+        </div>
+
         <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 22 }}>
           OTROS EXPERIMENTOS
         </div>
