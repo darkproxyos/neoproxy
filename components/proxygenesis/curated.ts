@@ -86,6 +86,7 @@ export type CuratedSpecimen = {
   mode: CuratedMode
   stlPath: string // relativo a /public, ej. /proxygenesis/stls/arbol-01.stl
   thumbnail?: string // relativo a /public, screenshot real del espécimen; sin esto, la tarjeta cae a un placeholder
+  audioPath?: string // relativo a /public; si está, el visor muestra un reproductor y el espécimen reacciona en vivo (color + pulso) al audio real mientras suena
   stats: CuratedStats
   reading: CuratedReading
   createdAt: string

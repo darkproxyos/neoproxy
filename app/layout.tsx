@@ -42,7 +42,7 @@ export default function RootLayout({
         <Providers>
           <SiteNav />
           <SteganoNoise />
-          {children}
+          <div className="neo-organism-filter">{children}</div>
           <Chat />
           <ConsoleEasterEgg />
           <PresenceCounter />

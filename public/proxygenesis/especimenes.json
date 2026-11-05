@@ -110,6 +110,7 @@
     "mode": "coral",
     "stlPath": "/proxygenesis/stls/caos-01.stl",
     "thumbnail": "/proxygenesis/thumbs/caos-01.webp",
+    "audioPath": "/proxygenesis/audio/caos.mp3",
     "stats": {
       "seed": 1,
       "nodeCount": 818,
