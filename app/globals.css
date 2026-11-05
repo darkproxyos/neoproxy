@@ -63,10 +63,21 @@ body {
      títulos grandes de cada página fijan su propio letter-spacing inline a
      propósito (son identidad de marca, no deben respirar) y quedan afuera. */
   letter-spacing: calc(0.01em + var(--neo-entropy, 0) * 0.05em);
-  transition: letter-spacing 2.5s ease, filter 3s ease;
-  /* Compresión con pérdida: redundancia real (misma ruta visitada muchas
-     veces esta sesión) se vuelve menos detalle visual real — no es un
-     filtro decorativo fijo, depende de components/RepetitionCompression.tsx. */
+  transition: letter-spacing 2.5s ease;
+}
+
+/* Compresión con pérdida: redundancia real (misma ruta visitada muchas veces
+   esta sesión) se vuelve menos detalle visual real — no es un filtro
+   decorativo fijo, depende de components/RepetitionCompression.tsx.
+   Vive en un wrapper alrededor de {children} (ver app/layout.tsx), NO en
+   body directamente: cualquier filter (incluso contrast(1) saturate(1),
+   el valor neutro por defecto) convierte al elemento en containing block
+   de sus descendientes position:fixed — si estuviera en body, TODO fixed
+   del sitio (modales, Chat, overlays) quedaría anclado al scroll del
+   documento en vez de al viewport real. Confirmado con Playwright: un
+   modal fixed se iba fuera de pantalla al abrirlo después de scrollear. */
+.neo-organism-filter {
+  transition: filter 3s ease;
   filter: contrast(calc(1 + var(--repeat-compress, 0) * 0.35)) saturate(calc(1 - var(--repeat-compress, 0) * 0.45));
 }
 

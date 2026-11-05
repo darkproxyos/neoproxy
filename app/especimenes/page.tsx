@@ -1,9 +1,12 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { loadCuratedSpecimens, THINKERS, type CuratedSpecimen, type CuratedMode } from '@/components/proxygenesis/curated'
 import { clusters } from '@/components/knowledge/entries'
+import type { SpecimenViewerHandle } from '@/components/proxygenesis/SpecimenViewer'
+import AudioReactivePlayer from '@/components/proxygenesis/AudioReactivePlayer'
 
 const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenViewer'), { ssr: false })
 
@@ -29,6 +32,7 @@ export default function EspecimenesPage() {
   const [specimens, setSpecimens] = useState<CuratedSpecimen[] | null>(null)
   const [open, setOpen] = useState<CuratedSpecimen | null>(null)
   const [filter, setFilter] = useState<CuratedMode | 'all'>('all')
+  const viewerRef = useRef<SpecimenViewerHandle>(null)
 
   useEffect(() => {
     loadCuratedSpecimens().then(setSpecimens)
@@ -169,24 +173,24 @@ export default function EspecimenesPage() {
         </div>
       </div>
 
-      {open && (
+      {open && createPortal(
         <div
           onClick={() => setOpen(null)}
+          className="specimen-modal-overlay"
           style={{
             position: 'fixed', inset: 0, background: 'rgba(2,4,8,0.94)', zIndex: 1000,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <div onClick={(e) => e.stopPropagation()} style={{
-            width: '100%', maxWidth: 1100, maxHeight: '88vh', display: 'grid',
-            gridTemplateColumns: '1.4fr 1fr', border: `1px solid ${MODE_COLOR[open.mode]}44`, background: '#000205',
+          <div onClick={(e) => e.stopPropagation()} className="specimen-modal" style={{
+            width: '100%', maxWidth: 1100, border: `1px solid ${MODE_COLOR[open.mode]}44`, background: '#000205',
           }}>
-            <div style={{ height: '72vh', position: 'relative' }}>
+            <div className="specimen-modal-viewer" style={{ position: 'relative' }}>
               <Corner pos="tl" color={MODE_COLOR[open.mode]} />
               <Corner pos="bl" color={MODE_COLOR[open.mode]} />
-              <SpecimenViewer stlPath={open.stlPath} color={MODE_COLOR[open.mode]} />
+              <SpecimenViewer ref={viewerRef} stlPath={open.stlPath} color={MODE_COLOR[open.mode]} />
             </div>
-            <div style={{ padding: 24, overflowY: 'auto', height: '72vh', position: 'relative' }}>
+            <div className="specimen-modal-text" style={{ padding: 24, overflowY: 'auto', position: 'relative' }}>
               <Corner pos="tr" color={MODE_COLOR[open.mode]} />
               <Corner pos="br" color={MODE_COLOR[open.mode]} />
               <button onClick={() => setOpen(null)} style={{
@@ -200,11 +204,19 @@ export default function EspecimenesPage() {
               </div>
               <div style={{ fontSize: 18, color: '#fff', marginBottom: 20 }}>{open.title}</div>
 
+              {open.audioPath && (
+                <AudioReactivePlayer
+                  audioPath={open.audioPath}
+                  color={MODE_COLOR[open.mode]}
+                  onFrame={(frame) => viewerRef.current?.pushAudioFrame(frame)}
+                />
+              )}
+
               <div style={{ fontSize: 9, letterSpacing: 3, color: `${MODE_COLOR[open.mode]}aa`, marginBottom: 12 }}>
                 // LECTURA
               </div>
               {open.reading.prose.map((p, i) => (
-                <p key={i} style={{ fontSize: 10, color: '#c8daf0', lineHeight: 1.9, marginBottom: 12 }}>{p}</p>
+                <p key={i} className="reading-prose" style={{ color: '#c8daf0', marginBottom: 12 }}>{p}</p>
               ))}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
                 {open.reading.thinkerIds.map(id => {
@@ -259,7 +271,8 @@ export default function EspecimenesPage() {
               </a>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <style>{`
@@ -275,6 +288,28 @@ export default function EspecimenesPage() {
         .specimen-card:hover .specimen-tag { opacity: 1; }
         @media (hover: none) {
           .specimen-tag { opacity: 0.85; }
+        }
+
+        .specimen-modal-overlay { padding: 48px 24px; }
+        .specimen-modal {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr;
+          max-height: 88vh;
+        }
+        .specimen-modal-viewer { height: 72vh; }
+        .specimen-modal-text { height: 72vh; }
+        .reading-prose { font-size: 10px; line-height: 1.9; }
+
+        @media (max-width: 760px) {
+          .specimen-modal-overlay { padding: 10px; align-items: flex-start !important; }
+          .specimen-modal {
+            grid-template-columns: 1fr;
+            max-height: calc(100vh - 20px);
+            overflow-y: auto;
+          }
+          .specimen-modal-viewer { height: 48vh; }
+          .specimen-modal-text { height: auto; overflow-y: visible; padding: 16px !important; }
+          .reading-prose { font-size: 13px; line-height: 1.85; }
         }
       `}</style>
     </div>

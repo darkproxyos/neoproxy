@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import {
   Engine,
   Scene,
@@ -12,6 +12,7 @@ import {
   Color4,
   StandardMaterial,
   SceneLoader,
+  TransformNode,
   VertexData,
   VertexBuffer,
 } from '@babylonjs/core'
@@ -21,15 +22,27 @@ const mono = "'Space Mono', monospace"
 const PALETTE = ['#00d4ff', '#ff5e9e', '#00ff9d', '#ffb800', '#ffffff']
 type ViewPreset = 'iso' | 'frente' | 'lateral' | 'arriba'
 
+export type AudioFrame = { rms: number; bass: number; treble: number; hex: string }
+export type SpecimenViewerHandle = { pushAudioFrame: (frame: AudioFrame) => void }
+
 // Visor de un STL curado, cargado tal cual (sin reconstruir geometría —
 // a diferencia del generador en vivo de /lab/proxygenesis, acá el mesh
 // ya viene resuelto desde una corrida local, este componente solo lo
 // muestra). Mismo patrón de ArsenalGallery.tsx (@babylonjs/core + loader
 // plugin), no el babylonjs global que usa page.tsx.
-export default function SpecimenViewer({ stlPath, color }: { stlPath: string; color: string }) {
+//
+// pushAudioFrame (expuesto vía ref): si un espécimen trae audioPath, el
+// reproductor de arriba llama esto en cada frame de reproducción con la
+// energía real del audio (RMS + bandas graves/agudas + color de banda
+// dominante). El mesh ya está crecido y fijo — no se regenera geometría —
+// pero el pulso de escala y el color sí siguen el audio en vivo, frame a
+// frame, vía un TransformNode que envuelve el mesh cargado.
+const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color: string }>(
+  function SpecimenViewer({ stlPath, color }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const cameraRef = useRef<ArcRotateCamera | null>(null)
   const matRef = useRef<StandardMaterial | null>(null)
+  const rootNodeRef = useRef<TransformNode | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [view, setView] = useState<ViewPreset>('iso')
@@ -114,6 +127,14 @@ export default function SpecimenViewer({ stlPath, color }: { stlPath: string; co
           camera.lowerRadiusLimit = size * 0.1
           camera.upperRadiusLimit = size * 5
         }
+
+        // Parentamos todo a un TransformNode recién después de encuadrar la
+        // cámara (que lee bounding boxes en world space con escala 1) — así
+        // pushAudioFrame puede pulsar la escala sin desarmar el encuadre.
+        const root = new TransformNode('audioRoot', scene)
+        res.meshes.forEach((m) => m.setParent(root))
+        rootNodeRef.current = root
+
         setLoading(false)
       })
       .catch(() => { if (!disposed) { setError(true); setLoading(false) } })
@@ -127,9 +148,27 @@ export default function SpecimenViewer({ stlPath, color }: { stlPath: string; co
       window.removeEventListener('resize', onResize)
       cameraRef.current = null
       matRef.current = null
+      rootNodeRef.current = null
       engine.dispose()
     }
   }, [stlPath, color])
+
+  useImperativeHandle(ref, () => ({
+    pushAudioFrame(frame: AudioFrame) {
+      const root = rootNodeRef.current
+      if (root) {
+        const target = 1 + Math.min(0.35, frame.rms * 0.3 + frame.bass * 0.25)
+        const next = root.scaling.x + (target - root.scaling.x) * 0.25
+        root.scaling.set(next, next, next)
+      }
+      const mat = matRef.current
+      if (mat) {
+        const target = Color3.FromHexString(frame.hex)
+        mat.diffuseColor = Color3.Lerp(mat.diffuseColor, target, 0.12)
+        mat.emissiveColor = mat.diffuseColor.scale(0.3 + Math.min(0.55, frame.rms * 0.7 + frame.treble * 0.2))
+      }
+    },
+  }), [])
 
   // Vista: solo rota la cámara alrededor del target ya encuadrado — no
   // toca radio ni centro, esos los decide el bounding box real del mesh.
@@ -221,4 +260,6 @@ export default function SpecimenViewer({ stlPath, color }: { stlPath: string; co
       )}
     </div>
   )
-}
+})
+
+export default SpecimenViewer
