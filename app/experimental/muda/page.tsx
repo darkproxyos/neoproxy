@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { entries } from '@/components/knowledge/entries'
 import { initChain, stepChain, type ChainState, type ChainParams } from './engine/chain'
+import { exportMeshToSTL } from '@/app/lab/proxygenesis/engine/stl'
 
 // MUDA — tercera criatura. Enjambre (Trickster) fue forrajeo activo local,
 // Acecho (D) fue sit-and-wait + pursuit. Esta es un paradigma de movimiento
@@ -61,10 +62,36 @@ export default function MudaPage() {
   const disposedRef = useRef(false)
   const chainRef = useRef<ChainState>(initChain(SEGMENT_COUNT, 1, ARENA_HALF, SEGMENT_LENGTH))
   const clockRef = useRef(0)
+  const babylonRef = useRef<{ B: any; scene: any } | null>(null)
 
   const [moltCount, setMoltCount] = useState(0)
   const [hue, setHue] = useState(0)
   const [speed, setSpeed] = useState(0)
+
+  // Exporta la pose EXACTA del momento del click — no una reconstrucción
+  // offline: clona la geometría real de cada segmento con su posición y
+  // escala actuales, la funde en un solo mesh, y usa el mismo exportador
+  // binario que ya usa /lab/proxygenesis (engine/stl.ts).
+  const exportSTL = () => {
+    const bj = babylonRef.current
+    if (!bj) return
+    const { B, scene } = bj
+    const chain = chainRef.current
+    const parts: any[] = []
+    for (let i = 0; i < chain.segments.length; i++) {
+      const t = i / (chain.segments.length - 1)
+      const s = SEGMENT_LENGTH * (2.2 - t * 1.5)
+      const sph = B.MeshBuilder.CreateSphere(`exp${i}`, { diameter: s * 2, segments: 10 }, scene)
+      const pos = chain.segments[i]
+      sph.position.set(pos[0], pos[1], pos[2])
+      parts.push(sph)
+    }
+    const merged = B.Mesh.MergeMeshes(parts, true, true, undefined, false, true)
+    if (merged) {
+      exportMeshToSTL(merged, 'NeoProxy_muda_specimen.stl')
+      merged.dispose()
+    }
+  }
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -79,6 +106,7 @@ export default function MudaPage() {
       engine = new B.Engine(canvasRef.current!, true)
       const scene = new B.Scene(engine)
       scene.clearColor = new B.Color4(0.004, 0.008, 0.016, 1)
+      babylonRef.current = { B, scene }
 
       const camera = new B.ArcRotateCamera('mu-cam', -Math.PI / 2.6, 1.15, 12.5, new B.Vector3(0, 0, 0), scene)
       camera.attachControl(canvasRef.current, true)
@@ -156,6 +184,7 @@ export default function MudaPage() {
     return () => {
       disposedRef.current = true
       window.removeEventListener('resize', onResize)
+      babylonRef.current = null
       engine?.dispose()
     }
   }, [])
@@ -225,6 +254,18 @@ export default function MudaPage() {
               sin ángulos, sin trigonometría.
             </p>
             <AuthorCard entryId="aristidou-fabrik" accent={SNAKE_GREEN} />
+
+            <button onClick={exportSTL} style={{
+              display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 10,
+              letterSpacing: 1, padding: '10px 0', background: `${SNAKE_GREEN}15`,
+              border: `1px solid ${SNAKE_GREEN}66`, color: SNAKE_GREEN, cursor: 'pointer', fontFamily: mono,
+            }}>
+              ▽ DESCARGAR POSE ACTUAL (.STL)
+            </button>
+            <p style={{ fontSize: 8, color: '#3a4a60', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 6 }}>
+              Congela la pose exacta de este instante — no hay una "corrida terminada": la cadena
+              nunca deja de moverse.
+            </p>
           </div>
         </div>
       </div>

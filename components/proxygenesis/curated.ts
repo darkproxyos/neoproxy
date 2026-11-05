@@ -6,7 +6,11 @@
 // desde semilla+parámetros al instante), acá el STL final SÍ se persiste:
 // estas corridas no son instantáneas de reproducir.
 
-export type CuratedMode = 'arbol' | 'coral' | 'concha' | 'red'
+// 'muda' y 'retazos' no son corridas de proxygenesis — son capturas
+// reales de un proceso vivo de /experimental (ver reading.prose de esos
+// dos especímenes para la aclaración honesta de qué significa "captura"
+// ahí: una pose congelada de algo que nunca deja de moverse/crecer).
+export type CuratedMode = 'arbol' | 'coral' | 'concha' | 'red' | 'muda' | 'retazos'
 
 export type CuratedStats = {
   seed: number
@@ -72,6 +76,14 @@ export const THINKERS: Record<string, { name: string; years: string; line: strin
   'lorenz': {
     name: 'Edward Lorenz', years: '1917–2008',
     line: 'No hay azar en la ecuación: hay sensibilidad.',
+  },
+  'aristidou-fabrik': {
+    name: 'Aristidou & Lasenby', years: '2011',
+    line: 'No hay ángulos que calcular — solo distancias que corregir, una y otra vez.',
+  },
+  'witten-sander': {
+    name: 'Witten & Sander', years: '1981',
+    line: 'Nadie dibuja la forma — la deciden, acumuladas, miles de choques al azar.',
   },
 }
 

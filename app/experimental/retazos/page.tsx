@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { entries } from '@/components/knowledge/entries'
 import { initAggregate, stepAggregate, type AggregateState, type AggregateParams } from './engine/aggregate'
+import { exportMeshToSTL } from '@/app/lab/proxygenesis/engine/stl'
 
 // RETAZOS — cuarta criatura, y la primera que no es un cuerpo que se mueve
 // sino una forma que crece. Enjambre fue reglas locales sobre partículas
@@ -62,10 +63,33 @@ export default function RetazosPage() {
   const disposedRef = useRef(false)
   const aggRef = useRef<AggregateState>(initAggregate(WALKER_COUNT, 1, PARAMS))
   const clockRef = useRef(0)
+  const babylonRef = useRef<{ B: any; scene: any } | null>(null)
 
   const [fragments, setFragments] = useState(1)
   const [radius, setRadius] = useState(0)
   const [resets, setResets] = useState(0)
+
+  // Mismo criterio que MUDA: clona la geometría real de cada fragmento ya
+  // pegado (no los walkers sueltos) en su posición exacta y la funde en
+  // un solo mesh. El color por agente es solo de la escena en vivo — STL
+  // no soporta color por vértice, igual que ya se documentó en caos-01.
+  const exportSTL = () => {
+    const bj = babylonRef.current
+    if (!bj) return
+    const { B, scene } = bj
+    const agg = aggRef.current
+    const parts: any[] = []
+    for (const pt of agg.points) {
+      const box = B.MeshBuilder.CreateBox('exp', { size: 0.14 }, scene)
+      box.position.set(pt.pos[0], pt.pos[1], pt.pos[2])
+      parts.push(box)
+    }
+    const merged = B.Mesh.MergeMeshes(parts, true, true, undefined, false, true)
+    if (merged) {
+      exportMeshToSTL(merged, 'NeoProxy_retazos_specimen.stl')
+      merged.dispose()
+    }
+  }
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -80,6 +104,7 @@ export default function RetazosPage() {
       engine = new B.Engine(canvasRef.current!, true)
       const scene = new B.Scene(engine)
       scene.clearColor = new B.Color4(0.004, 0.008, 0.016, 1)
+      babylonRef.current = { B, scene }
 
       const camera = new B.ArcRotateCamera('rz-cam', -Math.PI / 2.6, 1.15, 10, new B.Vector3(0, 0, 0), scene)
       camera.attachControl(canvasRef.current, true)
@@ -182,6 +207,7 @@ export default function RetazosPage() {
     return () => {
       disposedRef.current = true
       window.removeEventListener('resize', onResize)
+      babylonRef.current = null
       engine?.dispose()
     }
   }, [])
@@ -248,6 +274,18 @@ export default function RetazosPage() {
               todavía si va a formar parte de algo.
             </p>
             <AuthorCard entryId="witten-sander" accent={PROTOTYPE_PURPLE} />
+
+            <button onClick={exportSTL} style={{
+              display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 10,
+              letterSpacing: 1, padding: '10px 0', background: `${PROTOTYPE_PURPLE}15`,
+              border: `1px solid ${PROTOTYPE_PURPLE}66`, color: '#b49adc', cursor: 'pointer', fontFamily: mono,
+            }}>
+              ▽ DESCARGAR AGREGADO ACTUAL (.STL)
+            </button>
+            <p style={{ fontSize: 8, color: '#3a4a60', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 6 }}>
+              Exporta solo los fragmentos ya pegados, no los walkers sueltos — y sin color (STL no
+              soporta color por vértice, igual que caos-01).
+            </p>
           </div>
         </div>
       </div>

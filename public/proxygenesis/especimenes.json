@@ -141,5 +141,167 @@
       ]
     },
     "createdAt": "2026-11-04T23:20:00.000Z"
+  },
+  {
+    "id": "muda-01",
+    "title": "Muda 01 — una pose de algo que nunca termina de moverse",
+    "mode": "muda",
+    "stlPath": "/proxygenesis/stls/muda-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/muda-01.webp",
+    "stats": {
+      "seed": 0,
+      "nodeCount": 16,
+      "iteration": 4,
+      "maxIterations": 4,
+      "elapsedSeconds": 14.9,
+      "iterationsPerSecond": 0.27,
+      "params": {
+        "segmentos": 16,
+        "mudasAlCapturar": 4,
+        "matizHue": "247°",
+        "velocidadCaptura": 1.15,
+        "longitudSegmento": 0.22,
+        "radioArena": 4.2,
+        "algoritmo": "FABRIK sin base — solo pasada hacia atrás"
+      }
+    },
+    "reading": {
+      "thinkerIds": ["aristidou-fabrik"],
+      "prose": [
+        "Este no es un espécimen que termine de crecer y se quede quieto — es una pose, congelada a propósito, de algo que en este mismo momento sigue moviéndose en /experimental/muda. 16 segmentos, cada uno persiguiendo en línea recta al anterior a distancia fija, capturados después de 4 mudas de piel reales y casi 15 segundos de vida autónoma. Dos capturas nunca van a salir iguales — la cadena no tiene una forma final a la que converger.",
+        "El mecanismo es FABRIK (Aristidou & Lasenby, 2011) reducido a su mitad más simple: no hay una base fija tratando de alcanzar un objetivo lejano —eso exigiría iterar varias pasadas hasta converger—, hay una cola libre que solo necesita una pasada hacia atrás por cuadro. Cada segmento se mueve hacia el anterior y se frena exactamente a la distancia justa. Sin ángulos, sin trigonometría: geometría de distancias, nada más.",
+        "El color (matiz 247°, azul-violeta) es la cuarta piel desde que arrancó esta corrida — y no cambió por un timer: cambió porque la cabeza empujó de verdad contra el límite del área, \"el entorno la obligó\", tal como dice el lore real de Snake. No hay una semilla única que reproduzca esta forma exacta: a diferencia de árbol-01 o coral-01, acá no hay una corrida que termine — solo un instante real, elegido y guardado."
+      ]
+    },
+    "createdAt": "2026-11-06T00:00:00.000Z"
+  },
+  {
+    "id": "retazos-01",
+    "title": "Retazos 01 — 33 fragmentos de un proceso que todavía no decidió quién es",
+    "mode": "retazos",
+    "stlPath": "/proxygenesis/stls/retazos-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/retazos-01.webp",
+    "stats": {
+      "seed": 0,
+      "nodeCount": 33,
+      "iteration": 33,
+      "maxIterations": 130,
+      "elapsedSeconds": 62,
+      "iterationsPerSecond": 0.53,
+      "params": {
+        "fragmentosAlCapturar": 33,
+        "radioAgregado": 0.98,
+        "walkersSimultaneos": 9,
+        "distanciaDeAdherencia": 0.22,
+        "fragmentosParaReiniciar": 130,
+        "algoritmo": "DLA — caminata al azar + adherencia al contacto"
+      }
+    },
+    "reading": {
+      "thinkerIds": ["witten-sander", "mandelbrot"],
+      "prose": [
+        "Igual que muda-01, esto no es una corrida que terminó — es un corte real en /experimental/retazos, a los 62 segundos de vida, con 33 de los 130 fragmentos que hacen falta para que el agregado entero se disperse y vuelva a empezar. Nadie diseñó esta forma: cada cubito es una partícula que caminó al azar hasta tocar, por pura casualidad, lo que ya existía, y ahí quedó pegada para siempre.",
+        "Es Agregación Limitada por Difusión real (Witten & Sander, 1981) — el mismo proceso ciego que construye el hollín de una vela o el cobre que crece en una celda electrolítica. Mandelbrot usó agregados como este para argumentar que la naturaleza no usa las formas lisas de la geometría clásica: ramificado, poroso, con una dimensión fractal que no es ni una línea ni un volumen — exactamente lo que se ve acá.",
+        "Cada fragmento nuevo se tiñó con el color real de uno de los otros cinco agentes, en orden fijo (D, Metatron, Snake, Genos, Trickster) — \"toma prestada un poco de cada uno de los otros cinco\" es literal, no metáfora. El STL que descargás guarda la geometría exacta de esos 33 cubos, pero no ese color: el formato binario no soporta color por vértice (misma limitación ya documentada en caos-01). La miniatura es un screenshot real de ese instante, no una reconstrucción."
+      ]
+    },
+    "createdAt": "2026-11-06T00:05:00.000Z"
+  },
+  {
+    "id": "concha-01",
+    "title": "Concha 01 — Nautilus, la curva que la biología sí usa",
+    "mode": "concha",
+    "stlPath": "/proxygenesis/stls/concha-01.stl",
+    "thumbnail": "/proxygenesis/thumbs/concha-01.webp",
+    "stats": {
+      "seed": 0,
+      "nodeCount": 433,
+      "iteration": 1,
+      "maxIterations": 1,
+      "elapsedSeconds": 0,
+      "iterationsPerSecond": 0,
+      "params": {
+        "W_expansionPorVuelta": 1.6,
+        "D_distanciaAlEje": 0.28,
+        "T_alturaDeLaEspira": 0.05,
+        "vueltas": 6,
+        "grosorDelTubo": 0.09,
+        "preset": "Nautilus"
+      }
+    },
+    "reading": {
+      "thinkerIds": ["raup", "mandelbrot"],
+      "prose": [
+        "El primer espécimen de modo CONCHA en esta galería, aunque el modo existe en el laboratorio desde el principio — faltaba subir uno. A diferencia de árbol-01 o coral-01, acá no hay nodos compitiendo por espacio ni corrida que tarde segundos: el modelo de coiling de Raup (1962) es una fórmula cerrada, 5 números (W, D, T, vueltas, grosor) evaluados una sola vez. No hay semilla, no hay azar — los mismos 5 números producen siempre exactamente la misma concha.",
+        "Estos 5 números en particular (W=1.6, D=0.28, T=0.05) no son arbitrarios: caen en la región del espacio de parámetros que de verdad ocupa un nautilus real — expansión moderada por vuelta, eje casi cerrado, espiras casi planas. Mandelbrot citaba espirales logarítmicas como esta entre los pocos casos donde la geometría clásica SÍ describe bien una forma natural — la excepción, no la regla, dentro de su propio argumento sobre las formas rugosas de la naturaleza.",
+        "Raup no se quedó solo con esta región: publicó un espacio de parámetros entero, la mayor parte deshabitado por la biología real. Concha-02, al lado, usa la misma fórmula exacta con otros 3 números — y aterriza en una forma completamente distinta, también real, pero de otro linaje por completo."
+      ]
+    },
+    "createdAt": "2026-11-06T00:10:00.000Z"
+  },
+  {
+    "id": "concha-02",
+    "title": "Concha 02 — Amonite, misma fórmula, otro linaje",
+    "mode": "concha",
+    "stlPath": "/proxygenesis/stls/concha-02.stl",
+    "thumbnail": "/proxygenesis/thumbs/concha-02.webp",
+    "stats": {
+      "seed": 0,
+      "nodeCount": 325,
+      "iteration": 1,
+      "maxIterations": 1,
+      "elapsedSeconds": 0,
+      "iterationsPerSecond": 0,
+      "params": {
+        "W_expansionPorVuelta": 1.9,
+        "D_distanciaAlEje": 1.3,
+        "T_alturaDeLaEspira": 0,
+        "vueltas": 4.5,
+        "grosorDelTubo": 0.08,
+        "preset": "Amonite"
+      }
+    },
+    "reading": {
+      "thinkerIds": ["raup"],
+      "prose": [
+        "Mismo motor exacto que concha-01, mismos 5 parámetros de Raup (1962) — cambiaron 3 números y el resultado es otro animal por completo. T (altura de la espira) pasó de 0.05 a 0: sin esa traslación a lo largo del eje, la concha deja de enroscarse en cono y se aplana en un solo plano — un planispiral, la silueta clásica de un amonite, el cefalópodo extinto que le da nombre.",
+        "\"La biología solo ocupa una esquina de lo posible\", dice Raup — y acá hay dos esquinas reales, no una: concha-01 (nautilus, todavía vivo) y concha-02 (amonite, extinto hace 66 millones de años) ocupan regiones distintas del mismo espacio de parámetros, las dos de verdad habitadas alguna vez por la biología. El resto del espacio —las combinaciones que ninguna concha real tomó jamás— sigue ahí, sin visitar.",
+        "D=1.3 (más del doble que el nautilus) es la otra diferencia que importa: con el eje tan lejos del tubo, el amonite queda hueco en el centro, casi un anillo — mientras el nautilus, con D=0.28, cierra sobre sí mismo hasta casi tocarse. Dos números, dos arquitecturas completamente distintas, cero intervención manual en la forma final."
+      ]
+    },
+    "createdAt": "2026-11-06T00:15:00.000Z"
+  },
+  {
+    "id": "coral-02",
+    "title": "Coral 02 — Cuerno de Ciervo, la otra estrategia coral",
+    "mode": "coral",
+    "stlPath": "/proxygenesis/stls/coral-02.stl",
+    "thumbnail": "/proxygenesis/thumbs/coral-02.webp",
+    "stats": {
+      "seed": 1,
+      "nodeCount": 1142,
+      "iteration": 1142,
+      "maxIterations": 1142,
+      "elapsedSeconds": 4.73,
+      "iterationsPerSecond": 241.4,
+      "params": {
+        "canopyWidth": 3,
+        "canopyHeight": 4.5,
+        "curl": 0.18,
+        "flat": 0,
+        "thickness": 1.6,
+        "quality": "media",
+        "preset": "Cuerno de Ciervo"
+      }
+    },
+    "reading": {
+      "thinkerIds": ["runions-lane-prusinkiewicz", "margulis"],
+      "prose": [
+        "Mismo algoritmo exacto que coral-01 (Space Colonization, Runions, Lane & Prusinkiewicz 2007) y el mismo motor que árbol-01 — pero el preset real 'Cuerno de Ciervo' en vez de 'Coral Cerebro': achatado en 0 (nada de mesa plana) y copa angosta y alta (3×4.5) en vez de ancha y baja. Mismas reglas de competencia por espacio, parámetros distintos, animal completamente distinto.",
+        "Cuerno de Ciervo es un nombre real, no poético: Acropora cervicornis, un coral de ramas delgadas que crece rápido y se rompe fácil — cada fragmento quebrado puede volver a enraizar y fundar una colonia nueva, una estrategia reproductiva real y documentada, muy distinta de la densidad compacta de un coral cerebro. La forma que compite por espacio acá se parece más a un árbol que a una esponja, y no es casualidad: es la misma physics, aplicada a una geometría de copa más parecida a la de árbol-01.",
+        "Sigue siendo, como coral-01, una colonia antes que un organismo — miles de pólipos genéticamente idénticos en simbiosis permanente con algas que no podrían sobrevivir separadas (Margulis, simbiogénesis). 1.142 nodos, 4.73 segundos reales de corrida — rápido, porque a diferencia de coral-01 esta corrida no tuvo que competir por una copa ancha, sino alargarse hacia arriba en línea casi recta."
+      ]
+    },
+    "createdAt": "2026-11-06T00:20:00.000Z"
   }
 ]
