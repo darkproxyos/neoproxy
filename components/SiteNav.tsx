@@ -48,6 +48,60 @@ function NavLink({ item, pathname, onClick, style, activeColor = '#00d4ff' }: {
   return <Link href={item.href} onClick={onClick} style={{ ...style, color }}>{item.label}</Link>
 }
 
+// Nodo + axón — indicador orgánico de vida, no solo un cambio de color.
+// Un ítem activo "respira" (pulsa) en vez de quedarse plano.
+function LifeNode({ color, active, size = 6 }: { color: string; active: boolean; size?: number }) {
+  return (
+    <span
+      aria-hidden
+      className={active ? 'nav-node nav-node-active' : 'nav-node'}
+      style={{
+        width: size, height: size, borderRadius: '50%', background: color,
+        boxShadow: active ? `0 0 8px ${color}, 0 0 2px ${color}` : 'none',
+        flexShrink: 0, opacity: active ? 1 : 0.45,
+      }}
+    />
+  )
+}
+
+// Reemplaza el "▼ / ▲" de texto: una sinapsis chica cuyo axón gira 180°
+// al abrir — mitad orgánico (soma + axón), mitad esquema de circuito.
+function SynapseChevron({ color, open }: { color: string; open: boolean }) {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden style={{ flexShrink: 0 }}>
+      <circle cx="5" cy="3" r="1.6" fill={color} style={{ transition: 'fill 0.25s ease' }} />
+      <line
+        x1="5" y1="4.6" x2="5" y2="8.4" stroke={color} strokeWidth="1.1" strokeLinecap="round"
+        style={{
+          transformOrigin: '5px 4.6px',
+          transform: open ? 'rotate(180deg) scaleY(1.15)' : 'rotate(0deg)',
+          transition: 'transform 0.3s cubic-bezier(.4,1.6,.4,1), stroke 0.25s ease',
+        }}
+      />
+    </svg>
+  )
+}
+
+// Reemplaza "☰ / ✕": tres trazos que se funden en una X — morph real, no
+// un glifo de fuente que cambia.
+function HamburgerIcon({ color, open }: { color: string; open: boolean }) {
+  const bar = (yClosed: number, rotate: number, yOpen: number): React.CSSProperties => ({
+    position: 'absolute', left: 3, right: 3, height: 1.6, background: color, borderRadius: 1,
+    top: open ? yOpen : yClosed,
+    transform: open ? `rotate(${rotate}deg)` : 'rotate(0deg)',
+    transformOrigin: 'center',
+    transition: 'top 0.25s cubic-bezier(.4,1.6,.4,1), transform 0.25s cubic-bezier(.4,1.6,.4,1), opacity 0.2s ease',
+    opacity: open && rotate === 0 ? 0 : 1,
+  })
+  return (
+    <span style={{ position: 'relative', width: 16, height: 16, display: 'inline-block' }}>
+      <span style={bar(4, 45, 7)} />
+      <span style={bar(7.5, 0, 7.5)} />
+      <span style={bar(11, -45, 7)} />
+    </span>
+  )
+}
+
 function SessionBlock({ compact }: { compact?: boolean }) {
   const { data: session } = useSession()
 
@@ -119,9 +173,15 @@ export default function SiteNav() {
     <nav ref={navRef as any} className="site-nav" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '16px 32px',
       display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
-      background: 'rgba(0, 2, 5, 0.85)', backdropFilter: 'blur(6px)', borderBottom: '1px solid rgba(0, 212, 255, 0.15)'
+      background: 'rgba(0, 2, 5, 0.85)', backdropFilter: 'blur(6px)',
     }}>
-      <Link href="/" style={{ fontFamily: mono, fontSize: 13, color: '#00d4ff', letterSpacing: 4, textDecoration: 'none', flexShrink: 0 }}>
+      <div className="nav-pulse-line" aria-hidden style={{ ['--pulse-color' as any]: accent }} />
+
+      <Link href="/" style={{
+        fontFamily: mono, fontSize: 13, color: '#00d4ff', letterSpacing: 4, textDecoration: 'none',
+        flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <LifeNode color={accent} active size={7} />
         NEO·PROXY
       </Link>
 
@@ -130,6 +190,7 @@ export default function SiteNav() {
           if (isGroup(entry)) {
             const active = groupActive(pathname, entry)
             const open = openGroup === entry.label
+            const groupColor = NAV_COLORS[entry.label] ?? '#00d4ff'
             return (
               <div key={entry.label} style={{ position: 'relative' }}>
                 <button
@@ -139,54 +200,66 @@ export default function SiteNav() {
                   style={{
                     fontFamily: mono, fontSize: 11, letterSpacing: 2, whiteSpace: 'nowrap',
                     background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0',
-                    color: active ? '#00d4ff' : '#8fb8d6',
+                    color: active ? groupColor : '#8fb8d6',
+                    display: 'flex', alignItems: 'center', gap: 7,
                   }}
                 >
-                  {entry.label} {open ? '▲' : '▼'}
+                  <LifeNode color={groupColor} active={active} />
+                  {entry.label}
+                  <SynapseChevron color={active || open ? groupColor : '#8fb8d6'} open={open} />
                 </button>
                 {open && (
-                  <div style={{
-                    position: 'absolute', top: '100%', left: 0, marginTop: 8, minWidth: 220,
-                    background: 'rgba(0, 4, 10, 0.96)', border: '1px solid rgba(0, 212, 255, 0.2)',
-                    backdropFilter: 'blur(10px)', display: 'flex', flexDirection: 'column', padding: '6px 0',
+                  <div className="nav-dropdown" style={{
+                    position: 'absolute', top: '100%', left: 0, marginTop: 10, minWidth: 230,
+                    borderColor: `${groupColor}55`,
+                    ['--dd-color' as any]: groupColor,
                   }}>
-                    {entry.items.map((item) => (
-                      isGroup(item) ? (
-                        <div key={item.label} style={{ padding: '6px 0' }}>
-                          <div style={{
-                            fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080',
-                            padding: '6px 18px', whiteSpace: 'nowrap',
-                          }}>
-                            {item.label}
+                    <span className="nav-corner nav-corner-tl" />
+                    <span className="nav-corner nav-corner-br" />
+                    <div className="nav-dropdown-texture" aria-hidden />
+                    <div style={{ position: 'relative', padding: '8px 0' }}>
+                      {entry.items.map((item) => (
+                        isGroup(item) ? (
+                          <div key={item.label} style={{ padding: '6px 0' }}>
+                            <div style={{
+                              fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080',
+                              padding: '6px 18px', whiteSpace: 'nowrap',
+                            }}>
+                              {item.label}
+                            </div>
+                            {item.items.map((sub) => (
+                              isGroup(sub) ? null : (
+                                <div key={sub.href} className="nav-dropdown-item">
+                                  <NavLink
+                                    item={sub}
+                                    pathname={pathname}
+                                    activeColor={groupColor}
+                                    style={{
+                                      fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
+                                      padding: '10px 18px 10px 30px', minHeight: 44, display: 'flex', alignItems: 'center',
+                                      whiteSpace: 'nowrap', position: 'relative',
+                                    }}
+                                  />
+                                </div>
+                              )
+                            ))}
                           </div>
-                          {item.items.map((sub) => (
-                            isGroup(sub) ? null : (
-                              <NavLink
-                                key={sub.href}
-                                item={sub}
-                                pathname={pathname}
-                                style={{
-                                  fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
-                                  padding: '10px 18px 10px 30px', minHeight: 44, display: 'flex', alignItems: 'center',
-                                  whiteSpace: 'nowrap',
-                                }}
-                              />
-                            )
-                          ))}
-                        </div>
-                      ) : (
-                        <NavLink
-                          key={item.href}
-                          item={item}
-                          pathname={pathname}
-                          style={{
-                            fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
-                            padding: '10px 18px', minHeight: 44, display: 'flex', alignItems: 'center',
-                            whiteSpace: 'nowrap',
-                          }}
-                        />
-                      )
-                    ))}
+                        ) : (
+                          <div key={item.href} className="nav-dropdown-item">
+                            <NavLink
+                              item={item}
+                              pathname={pathname}
+                              activeColor={groupColor}
+                              style={{
+                                fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
+                                padding: '10px 18px', minHeight: 44, display: 'flex', alignItems: 'center',
+                                whiteSpace: 'nowrap', position: 'relative',
+                              }}
+                            />
+                          </div>
+                        )
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -203,11 +276,14 @@ export default function SiteNav() {
             )
           }
 
+          const entryColor = NAV_COLORS[entry.label] ?? '#00d4ff'
+          const active = isActive(pathname, entry.href)
           return (
             <Link key={entry.href} href={entry.href} className="site-nav-link" style={{
               fontFamily: mono, fontSize: 11, letterSpacing: 2, textDecoration: 'none', whiteSpace: 'nowrap',
-              color: isActive(pathname, entry.href) ? '#00d4ff' : '#8fb8d6',
+              color: active ? entryColor : '#8fb8d6', display: 'flex', alignItems: 'center', gap: 7,
             }}>
+              <LifeNode color={entryColor} active={active} />
               {entry.label}
             </Link>
           )
@@ -233,9 +309,10 @@ export default function SiteNav() {
           style={{
             display: 'none', background: 'none', border: '1px solid #00d4ff44', color: '#00d4ff',
             width: 44, height: 44, cursor: 'pointer', fontFamily: mono, fontSize: 16,
+            alignItems: 'center', justifyContent: 'center',
           }}
         >
-          ☰
+          <HamburgerIcon color="#00d4ff" open={false} />
         </button>
       </div>
     </nav>
@@ -250,6 +327,7 @@ export default function SiteNav() {
           borderLeft: `1px solid ${accent}55`, boxShadow: `-20px 0 60px -20px ${accent}33 inset`,
         }}>
           <div className="tech-grid" style={{ opacity: 0.4 }} />
+          <div className="nav-dropdown-texture" aria-hidden style={{ position: 'fixed', inset: 0 }} />
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
             <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080' }}>
@@ -268,9 +346,10 @@ export default function SiteNav() {
               style={{
                 background: 'none', border: `1px solid ${accent}66`, color: accent,
                 width: 44, height: 44, cursor: 'pointer', fontFamily: mono, fontSize: 16,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              ✕
+              <HamburgerIcon color={accent} open />
             </button>
           </div>
 
@@ -284,110 +363,106 @@ export default function SiteNav() {
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24, flexGrow: 1, position: 'relative', zIndex: 1 }}>
-            {navConfig.map((entry) => {
-              const sectionColor = NAV_COLORS[entry.label] ?? accent
+          <div className="nav-spine" style={{ ['--spine-color' as any]: accent }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24, flexGrow: 1, position: 'relative', zIndex: 1 }}>
+              {navConfig.map((entry) => {
+                const sectionColor = NAV_COLORS[entry.label] ?? accent
 
-              if (isGroup(entry)) {
-                return (
-                  <div
-                    key={entry.label}
-                    className="nav-item-in"
-                    style={{ marginBottom: 12, animationDelay: delay() }}
-                  >
-                    <div style={{
-                      fontFamily: mono, fontSize: 11, letterSpacing: 2, color: sectionColor, padding: '10px 4px',
-                      display: 'flex', alignItems: 'center', gap: 8,
-                    }}>
-                      <span style={{
-                        width: 6, height: 6, borderRadius: '50%', background: sectionColor,
-                        boxShadow: `0 0 8px ${sectionColor}`, flexShrink: 0,
-                      }} />
-                      {entry.label}
-                    </div>
-                    {entry.items.map((item) => (
-                      isGroup(item) ? (
-                        <div key={item.label} className="nav-item-in" style={{ marginBottom: 8, animationDelay: delay() }}>
-                          <div style={{
-                            fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#4a6080', padding: '8px 20px',
-                          }}>
-                            {item.label}
+                if (isGroup(entry)) {
+                  return (
+                    <div
+                      key={entry.label}
+                      className="nav-item-in"
+                      style={{ marginBottom: 12, animationDelay: delay() }}
+                    >
+                      <div style={{
+                        fontFamily: mono, fontSize: 11, letterSpacing: 2, color: sectionColor, padding: '10px 4px',
+                        display: 'flex', alignItems: 'center', gap: 8,
+                      }}>
+                        <LifeNode color={sectionColor} active />
+                        {entry.label}
+                      </div>
+                      {entry.items.map((item) => (
+                        isGroup(item) ? (
+                          <div key={item.label} className="nav-item-in" style={{ marginBottom: 8, animationDelay: delay() }}>
+                            <div style={{
+                              fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#4a6080', padding: '8px 20px',
+                            }}>
+                              {item.label}
+                            </div>
+                            {item.items.map((sub) => (
+                              isGroup(sub) ? null : (
+                                <div key={sub.href} className="nav-item-in" style={{ animationDelay: delay() }}>
+                                  <NavLink
+                                    item={sub}
+                                    pathname={pathname}
+                                    onClick={() => setMobileOpen(false)}
+                                    activeColor={sectionColor}
+                                    style={{
+                                      fontFamily: mono, fontSize: 13, letterSpacing: 1.5, textDecoration: 'none',
+                                      padding: '12px 20px 12px 36px', minHeight: 44, display: 'flex', alignItems: 'center',
+                                    }}
+                                  />
+                                </div>
+                              )
+                            ))}
                           </div>
-                          {item.items.map((sub) => (
-                            isGroup(sub) ? null : (
-                              <div key={sub.href} className="nav-item-in" style={{ animationDelay: delay() }}>
-                                <NavLink
-                                  item={sub}
-                                  pathname={pathname}
-                                  onClick={() => setMobileOpen(false)}
-                                  activeColor={sectionColor}
-                                  style={{
-                                    fontFamily: mono, fontSize: 13, letterSpacing: 1.5, textDecoration: 'none',
-                                    padding: '12px 20px 12px 36px', minHeight: 44, display: 'flex', alignItems: 'center',
-                                  }}
-                                />
-                              </div>
-                            )
-                          ))}
-                        </div>
-                      ) : (
-                        <div key={item.href} className="nav-item-in" style={{ animationDelay: delay() }}>
-                          <NavLink
-                            item={item}
-                            pathname={pathname}
-                            onClick={() => setMobileOpen(false)}
-                            activeColor={sectionColor}
-                            style={{
-                              fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
-                              padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
-                            }}
-                          />
-                        </div>
-                      )
-                    ))}
-                  </div>
-                )
-              }
+                        ) : (
+                          <div key={item.href} className="nav-item-in" style={{ animationDelay: delay() }}>
+                            <NavLink
+                              item={item}
+                              pathname={pathname}
+                              onClick={() => setMobileOpen(false)}
+                              activeColor={sectionColor}
+                              style={{
+                                fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
+                                padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
+                              }}
+                            />
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  )
+                }
 
-              if (!entry.live) {
+                if (!entry.live) {
+                  return (
+                    <div
+                      key={entry.label}
+                      className="nav-item-in"
+                      style={{
+                        fontFamily: mono, fontSize: 14, letterSpacing: 2, color: '#4a6080',
+                        padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center',
+                        animationDelay: delay(),
+                      }}
+                    >
+                      {entry.label} <span style={{ fontSize: 9, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
+                    </div>
+                  )
+                }
+
+                const active = isActive(pathname, entry.href)
                 return (
-                  <div
-                    key={entry.label}
-                    className="nav-item-in"
-                    style={{
-                      fontFamily: mono, fontSize: 14, letterSpacing: 2, color: '#4a6080',
-                      padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center',
-                      animationDelay: delay(),
-                    }}
-                  >
-                    {entry.label} <span style={{ fontSize: 9, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
+                  <div key={entry.href} className="nav-item-in" style={{ animationDelay: delay() }}>
+                    <Link
+                      href={entry.href}
+                      onClick={() => setMobileOpen(false)}
+                      style={{
+                        fontFamily: mono, fontSize: 14, letterSpacing: 2, textDecoration: 'none',
+                        padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
+                        color: sectionColor,
+                        textShadow: active ? `0 0 10px ${sectionColor}` : 'none',
+                        opacity: active ? 1 : 0.8,
+                      }}
+                    >
+                      <LifeNode color={sectionColor} active />
+                      {entry.label}
+                    </Link>
                   </div>
                 )
-              }
-
-              const active = isActive(pathname, entry.href)
-              return (
-                <div key={entry.href} className="nav-item-in" style={{ animationDelay: delay() }}>
-                  <Link
-                    href={entry.href}
-                    onClick={() => setMobileOpen(false)}
-                    style={{
-                      fontFamily: mono, fontSize: 14, letterSpacing: 2, textDecoration: 'none',
-                      padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
-                      color: sectionColor,
-                      textShadow: active ? `0 0 10px ${sectionColor}` : 'none',
-                      opacity: active ? 1 : 0.8,
-                    }}
-                  >
-                    <span style={{
-                      width: 6, height: 6, borderRadius: '50%', background: sectionColor,
-                      boxShadow: `0 0 8px ${sectionColor}`, flexShrink: 0,
-                    }} />
-                    {entry.label}
-                  </Link>
-                </div>
-              )
-            })}
+              })}
+            </div>
           </div>
 
           <div style={{
@@ -420,6 +495,72 @@ export default function SiteNav() {
         </div>
         )
       })()}
+
+      <style>{`
+        /* Línea de pulso bajo la barra — un trazo que recorre el borde en
+           vez de un borde estático: la barra "late" en lugar de solo estar. */
+        .nav-pulse-line {
+          position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, var(--pulse-color, #00d4ff) 20%, var(--pulse-color, #00d4ff) 80%, transparent);
+          opacity: 0.35;
+          background-size: 200% 100%;
+          animation: nav-pulse-travel 6s ease-in-out infinite;
+        }
+        @keyframes nav-pulse-travel {
+          0%, 100% { background-position: 100% 0; opacity: 0.2; }
+          50% { background-position: 0% 0; opacity: 0.55; }
+        }
+
+        .nav-node { transition: opacity 0.3s ease, box-shadow 0.3s ease; }
+        .nav-node-active { animation: nav-node-breathe 2.6s ease-in-out infinite; }
+        @keyframes nav-node-breathe {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.35); }
+        }
+
+        /* Panel desplegable: crece desde el trigger como una raíz, no
+           aparece de golpe. */
+        .nav-dropdown {
+          background: rgba(0, 4, 10, 0.97);
+          border: 1px solid;
+          backdrop-filter: blur(10px);
+          transform-origin: top center;
+          animation: nav-dropdown-grow 0.3s cubic-bezier(.3,1.4,.4,1) backwards;
+          overflow: hidden;
+        }
+        @keyframes nav-dropdown-grow {
+          0% { opacity: 0; transform: scaleY(0.4) translateY(-6px); }
+          60% { opacity: 1; }
+          100% { opacity: 1; transform: scaleY(1) translateY(0); }
+        }
+        .nav-dropdown-texture {
+          position: absolute; inset: 0; pointer-events: none; z-index: 0;
+          background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 7px);
+        }
+        .nav-corner {
+          position: absolute; width: 9px; height: 9px; pointer-events: none; z-index: 1;
+          border-color: var(--dd-color, #00d4ff);
+        }
+        .nav-corner-tl { top: -1px; left: -1px; border-top: 2px solid; border-left: 2px solid; }
+        .nav-corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid; border-right: 2px solid; }
+
+        .nav-dropdown-item { position: relative; }
+        .nav-dropdown-item::before {
+          content: ''; position: absolute; left: 6px; top: 50%; bottom: 50%; width: 1.5px;
+          background: var(--dd-color, #00d4ff); opacity: 0;
+          transition: top 0.2s ease, bottom 0.2s ease, opacity 0.2s ease;
+        }
+        .nav-dropdown-item:hover::before { top: 22%; bottom: 22%; opacity: 0.8; }
+        .nav-dropdown-item:hover a { color: var(--dd-color, #00d4ff) !important; }
+
+        /* Columna vertebral del panel mobile: une los nodos como una
+           espina/raíz en vez de dejarlos sueltos. */
+        .nav-spine { position: relative; }
+        .nav-spine::before {
+          content: ''; position: absolute; left: 7px; top: 34px; bottom: 60px; width: 1px;
+          background: linear-gradient(to bottom, transparent, var(--spine-color, #00d4ff)44, var(--spine-color, #00d4ff)22, transparent);
+        }
+      `}</style>
     </>
   )
 }
