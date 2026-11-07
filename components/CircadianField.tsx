@@ -11,11 +11,15 @@ function daypart(hour: number): Daypart {
   return 'ocaso'
 }
 
+// Los valores de gridColor subieron (antes ~0.03-0.04) al pasar .tech-grid
+// de grilla plana a máscara con el tile de circuito (ver globals.css): la
+// forma de ese tile ya absorbe parte de la intensidad, así que con el alpha
+// viejo el circuito quedaba casi invisible.
 const PALETTE: Record<Daypart, { scanlineRgb: string; gridColor: string }> = {
-  noche: { scanlineRgb: '10, 5, 30', gridColor: 'rgba(106, 92, 255, 0.035)' },
-  alba: { scanlineRgb: '15, 25, 45', gridColor: 'rgba(143, 184, 214, 0.03)' },
-  dia: { scanlineRgb: '0, 25, 20', gridColor: 'rgba(0, 255, 204, 0.035)' },
-  ocaso: { scanlineRgb: '40, 10, 20', gridColor: 'rgba(255, 120, 70, 0.04)' },
+  noche: { scanlineRgb: '10, 5, 30', gridColor: 'rgba(106, 92, 255, 0.14)' },
+  alba: { scanlineRgb: '15, 25, 45', gridColor: 'rgba(143, 184, 214, 0.12)' },
+  dia: { scanlineRgb: '0, 25, 20', gridColor: 'rgba(0, 255, 204, 0.14)' },
+  ocaso: { scanlineRgb: '40, 10, 20', gridColor: 'rgba(255, 120, 70, 0.15)' },
 }
 
 const RECHECK_MS = 10 * 60 * 1000
