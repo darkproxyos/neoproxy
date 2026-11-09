@@ -196,7 +196,7 @@ export default function EspecimenesPage() {
             <div className="specimen-modal-viewer" style={{ position: 'relative' }}>
               <Corner pos="tl" color={MODE_COLOR[open.mode]} />
               <Corner pos="bl" color={MODE_COLOR[open.mode]} />
-              <SpecimenViewer ref={viewerRef} stlPath={open.stlPath} color={MODE_COLOR[open.mode]} />
+              <SpecimenViewer ref={viewerRef} stlPath={open.stlPath} color={MODE_COLOR[open.mode]} mode={open.mode} />
             </div>
             <div className="specimen-modal-text" style={{ padding: 24, overflowY: 'auto', position: 'relative' }}>
               <Corner pos="tr" color={MODE_COLOR[open.mode]} />
