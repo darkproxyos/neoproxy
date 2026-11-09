@@ -15,12 +15,66 @@ import {
   TransformNode,
   VertexData,
   VertexBuffer,
+  type Mesh,
 } from '@babylonjs/core'
 import '@babylonjs/loaders/STL'
+import type { CuratedMode } from './curated'
 
 const mono = "'Space Mono', monospace"
 const PALETTE = ['#00d4ff', '#ff5e9e', '#00ff9d', '#ffb800', '#ffffff']
 type ViewPreset = 'iso' | 'frente' | 'lateral' | 'arriba'
+
+// muda y retazos (y red, nunca "resuelta" — ver su propia lectura en
+// especimenes.json) son procesos que la propia lectura de cada espécimen
+// describe como sin forma final ("no hay una corrida que termine"). Los
+// demás (arbol, coral, concha) sí llegan a una forma asentada, aunque
+// algunos corten antes del límite de iteraciones. Esta distinción decide
+// si el visor, una vez crecido del todo, se queda quieto o vuelve a
+// encogerse y crecer — no es un adorno, viene de lo que el propio dato
+// de cada espécimen ya afirma sobre sí mismo.
+const NEVER_SETTLES = new Set<CuratedMode>(['muda', 'retazos', 'red'])
+
+const GROW_MS = 4200
+const HOLD_MS = 1400
+const SHRINK_MS = 1100
+
+function smoothstep(t: number) {
+  const c = Math.max(0, Math.min(1, t))
+  return c * c * (3 - 2 * c)
+}
+
+type GrowthPhase = 'growing' | 'holding' | 'shrinking' | 'done'
+
+type GrowthState = {
+  meshes: Mesh[]
+  totals: number[]
+  elapsed: number
+  phase: GrowthPhase
+  neverSettles: boolean
+  lastPct: number
+}
+
+// Revela los meshes en el mismo orden en que sus triángulos quedaron
+// escritos en el índice — y ese orden no es arbitrario: tanto el
+// constructor de árbol/coral (nodos empujados al array en el orden real
+// en que el algoritmo de colonización espacial los fue agregando) como el
+// de concha (barrido de ángulo creciente), muda (segmento a segmento por
+// índice de cadena) y retazos (fragmento a fragmento por orden de
+// adherencia) hacen merge de las piezas en ese mismo orden de
+// construcción — confirmado leyendo cada exportador. Truncar el índice
+// prefijo a prefijo reproduce, literalmente, el orden real de
+// crecimiento, no una animación inventada encima de la forma final.
+function applyGrowth(state: GrowthState, progress: number) {
+  const totalAll = state.totals.reduce((a, b) => a + b, 0)
+  let remaining = Math.floor(totalAll * progress)
+  for (let i = 0; i < state.meshes.length; i++) {
+    const total = state.totals[i]
+    const reveal = Math.max(0, Math.min(total, remaining))
+    const sub = state.meshes[i].subMeshes?.[0]
+    if (sub) sub.indexCount = reveal - (reveal % 3)
+    remaining -= total
+  }
+}
 
 export type AudioFrame = { rms: number; bass: number; treble: number; hex: string }
 export type SpecimenViewerHandle = { pushAudioFrame: (frame: AudioFrame) => void }
@@ -31,23 +85,33 @@ export type SpecimenViewerHandle = { pushAudioFrame: (frame: AudioFrame) => void
 // muestra). Mismo patrón de ArsenalGallery.tsx (@babylonjs/core + loader
 // plugin), no el babylonjs global que usa page.tsx.
 //
+// El mesh llega completo pero no se muestra así de una: arranca en 0
+// triángulos y se revela prefijo a prefijo del buffer de índices (ver
+// applyGrowth) hasta formarse del todo — y como ese orden de índice ES el
+// orden real de construcción de cada exportador, no es una animación
+// inventada. Los modos sin forma final (NEVER_SETTLES) después se
+// encogen y vuelven a crecer en loop; el resto se queda formado.
+//
 // pushAudioFrame (expuesto vía ref): si un espécimen trae audioPath, el
 // reproductor de arriba llama esto en cada frame de reproducción con la
 // energía real del audio (RMS + bandas graves/agudas + color de banda
-// dominante). El mesh ya está crecido y fijo — no se regenera geometría —
-// pero el pulso de escala y el color sí siguen el audio en vivo, frame a
-// frame, vía un TransformNode que envuelve el mesh cargado.
-const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color: string }>(
-  function SpecimenViewer({ stlPath, color }, ref) {
+// dominante). El pulso de escala y el color siguen el audio en vivo,
+// frame a frame, vía un TransformNode que envuelve el mesh cargado —
+// independiente del crecimiento, que actúa sobre el índice del mesh.
+const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color: string; mode: CuratedMode }>(
+  function SpecimenViewer({ stlPath, color, mode }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const cameraRef = useRef<ArcRotateCamera | null>(null)
   const matRef = useRef<StandardMaterial | null>(null)
   const rootNodeRef = useRef<TransformNode | null>(null)
+  const growthRef = useRef<GrowthState | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [view, setView] = useState<ViewPreset>('iso')
   const [wireframe, setWireframe] = useState(false)
   const [autoRotate, setAutoRotate] = useState(false)
+  const [growthPhase, setGrowthPhase] = useState<GrowthPhase>('growing')
+  const [growthPct, setGrowthPct] = useState(0)
   const [activeColor, setActiveColor] = useState(color)
 
   // Nuevo espécimen: reseteá los controles a su estado por defecto en vez
@@ -135,11 +199,62 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
         res.meshes.forEach((m) => m.setParent(root))
         rootNodeRef.current = root
 
+        // Arranca en 0 triángulos — el primer frame ya sale así, nunca se
+        // llega a pintar la forma completa antes de que el loop de abajo
+        // empiece a revelarla.
+        const totals = res.meshes.map((m) => m.getTotalIndices())
+        const state: GrowthState = {
+          meshes: res.meshes as Mesh[],
+          totals,
+          elapsed: 0,
+          phase: 'growing',
+          neverSettles: NEVER_SETTLES.has(mode),
+          lastPct: -1,
+        }
+        applyGrowth(state, 0)
+        growthRef.current = state
+        setGrowthPhase('growing')
+        setGrowthPct(0)
+
         setLoading(false)
       })
       .catch(() => { if (!disposed) { setError(true); setLoading(false) } })
 
-    engine.runRenderLoop(() => scene.render())
+    engine.runRenderLoop(() => {
+      const g = growthRef.current
+      if (g && g.phase !== 'done') {
+        g.elapsed += engine.getDeltaTime()
+        let progress = 1
+        if (g.phase === 'growing') {
+          progress = smoothstep(g.elapsed / GROW_MS)
+          if (g.elapsed >= GROW_MS) {
+            g.phase = g.neverSettles ? 'holding' : 'done'
+            g.elapsed = 0
+            progress = 1
+            setGrowthPhase(g.phase)
+          }
+        } else if (g.phase === 'holding') {
+          progress = 1
+          if (g.elapsed >= HOLD_MS) {
+            g.phase = 'shrinking'
+            g.elapsed = 0
+            setGrowthPhase('shrinking')
+          }
+        } else if (g.phase === 'shrinking') {
+          progress = 1 - smoothstep(g.elapsed / SHRINK_MS)
+          if (g.elapsed >= SHRINK_MS) {
+            g.phase = 'growing'
+            g.elapsed = 0
+            progress = 0
+            setGrowthPhase('growing')
+          }
+        }
+        applyGrowth(g, progress)
+        const pct = Math.round(progress * 100)
+        if (pct !== g.lastPct) { g.lastPct = pct; setGrowthPct(pct) }
+      }
+      scene.render()
+    })
     const onResize = () => engine.resize()
     window.addEventListener('resize', onResize)
 
@@ -149,9 +264,10 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
       cameraRef.current = null
       matRef.current = null
       rootNodeRef.current = null
+      growthRef.current = null
       engine.dispose()
     }
-  }, [stlPath, color])
+  }, [stlPath, color, mode])
 
   useImperativeHandle(ref, () => ({
     pushAudioFrame(frame: AudioFrame) {
@@ -202,6 +318,27 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
     matRef.current.emissiveColor = c.scale(0.3)
   }, [activeColor, loading])
 
+  // Volver a crecer desde 0 a pedido — no reinicia el engine ni recarga
+  // el STL, solo el estado de revelación. Sirve tanto para los que se
+  // quedan formados (volver a ver el crecimiento) como para los que
+  // nunca se asientan (saltar directo a otro ciclo).
+  const replayGrowth = () => {
+    const g = growthRef.current
+    if (!g) return
+    g.phase = 'growing'
+    g.elapsed = 0
+    g.lastPct = -1
+    setGrowthPhase('growing')
+  }
+
+  const growthLabel = (() => {
+    const neverSettles = growthRef.current?.neverSettles ?? false
+    if (growthPhase === 'growing') return `CRECIENDO://${String(growthPct).padStart(2, '0')}%`
+    if (growthPhase === 'shrinking') return 'DISOLVIÉNDOSE://'
+    if (growthPhase === 'holding') return 'FORMADO — PROCESO SIN FIN'
+    return neverSettles ? 'FORMADO' : 'FORMADO POR COMPLETO'
+  })()
+
   const btnStyle = (active: boolean) => ({
     fontFamily: mono, fontSize: 8, letterSpacing: 1, padding: '5px 9px', cursor: 'pointer',
     background: active ? `${color}26` : 'rgba(0,4,10,0.7)',
@@ -222,6 +359,7 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
           ))}
           <button onClick={() => setWireframe(w => !w)} style={btnStyle(wireframe)}>WIREFRAME</button>
           <button onClick={() => setAutoRotate(r => !r)} style={btnStyle(autoRotate)}>GIRO AUTO</button>
+          <button onClick={replayGrowth} style={btnStyle(false)} title="Volver a crecer desde 0">⟲ CRECER</button>
         </div>
       )}
 
@@ -239,6 +377,16 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
               }}
             />
           ))}
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div style={{
+          position: 'absolute', bottom: 12, right: 12, zIndex: 3,
+          fontFamily: mono, fontSize: 8, letterSpacing: 1.5, padding: '5px 9px',
+          color, background: 'rgba(0,4,10,0.7)', border: `1px solid ${color}44`,
+        }}>
+          {growthLabel}
         </div>
       )}
 
