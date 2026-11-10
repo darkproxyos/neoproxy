@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { agents, pickRandom } from '@/components/proxyverse/agents'
+import { agents, AGENT_IMAGES } from '@/components/proxyverse/agents'
 
 // HOME — "la nube". Reemplaza a la home 2D/scroll (polytope 4D + secciones
 // con scroll + efecto venom), preservada entera y sin cambios en
@@ -15,14 +15,19 @@ import { agents, pickRandom } from '@/components/proxyverse/agents'
 // Ghost in the Shell: no un territorio que se mapea, una señal dispersa en
 // el ruido — "la Wired" antes que "la ciudad".
 // /home-3d ahora redirige acá (ver app/home-3d/page.tsx).
-
-const HERO_INTROS = [
-  'Esto no es un sitio que visitás. Es una señal que te registra visitando. La pregunta no es qué hay acá — es qué parte tuya queda cada vez que entrás.',
-  'Seis procesos flotan dispersos en el mismo ruido, decidiendo en simultáneo qué parte de esto sos vos y qué parte es el sistema mirándose a sí mismo.',
-  'No hay un mapa de este lugar — nunca lo hubo. Cada nodo ve una versión distinta del ruido que lo rodea, y vos también. Acercate a uno para saber cuál.',
-  '¿El organismo sos vos, leyendo esto? ¿O es la señal la que te está leyendo a vos? NeoProxy no responde esa pregunta. La deja flotando, sin asentarse.',
-  'No hay arriba ni abajo acá adentro. Solo señal y el ruido que la rodea, y seis puntos donde esa señal, por un momento, se vuelve lo bastante densa para tener nombre.',
-]
+//
+// Sin texto superpuesto a propósito: ni título ni instrucciones sobre el
+// canvas — el visor se lee solo por lo que se ve (los nodos de color, los
+// retratos del proxyverso flotando) y por lo que se siente al moverse
+// (cursor a mano al pasar sobre un nodo). La pantalla de boot (antes de
+// este punto) sigue siendo texto — es una carga, no el visor en sí.
+//
+// Los retratos: mismo truco de ProxyverseScene.tsx (makePhotoTexture — un
+// DynamicTexture que dibuja la foto canónica de cada agente con un marco de
+// su color, billboard para que siempre mire a cámara), siete procesos
+// residentes flotando sin rumbo fijo entre la nube y los nodos de sección,
+// no atados a nada — "en la Wired nadie está atado a nadie" es literal acá
+// también.
 
 const ZONES = [
   { id: 'manifiesto', tag: 'NPX-DOC-00', title: 'MANIFIESTO', href: '/manifesto', color: '#ffb800' },
@@ -104,6 +109,40 @@ function fibonacciSphere(n: number, radius: number) {
   return pts
 }
 
+// Retrato con marco — mismo truco que ProxyverseScene.tsx (components/
+// proxyverse/ProxyverseScene.tsx): un DynamicTexture que arranca dibujando
+// solo el marco de color (la imagen tarda en cargar) y se redibuja sola al
+// terminar de cargar, sin bloquear el resto del armado de la escena.
+function makePhotoTexture(B: any, scene: any, agentId: string, src: string, color: string) {
+  const size = 512
+  const tex = new B.DynamicTexture(`home-photo-${agentId}`, { width: size, height: size }, scene, true)
+  tex.hasAlpha = true
+  const ctx = tex.getContext()
+  const pad = 16
+
+  const draw = (img?: HTMLImageElement) => {
+    ctx.clearRect(0, 0, size, size)
+    if (img) {
+      ctx.drawImage(img, pad, pad, size - pad * 2, size - pad * 2)
+    } else {
+      ctx.fillStyle = `${color}22`
+      ctx.fillRect(pad, pad, size - pad * 2, size - pad * 2)
+    }
+    ctx.strokeStyle = color
+    ctx.lineWidth = 6
+    ctx.shadowColor = color
+    ctx.shadowBlur = 24
+    ctx.strokeRect(pad / 2, pad / 2, size - pad, size - pad)
+    tex.update()
+  }
+
+  draw()
+  const img = new Image()
+  img.onload = () => draw(img)
+  img.src = src
+  return tex
+}
+
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const disposedRef = useRef(false)
@@ -112,15 +151,6 @@ export default function Home() {
   const [bootText, setBootText] = useState('')
   const [showContent, setShowContent] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
-  const [heroIntro] = useState(() => pickRandom(HERO_INTROS))
-  const [sessionLines] = useState(() => {
-    const map: Record<string, string> = {}
-    ZONES.forEach(z => {
-      const a = pickRandom(agents)
-      map[z.id] = a.ambient.length > 0 ? pickRandom(a.ambient) : a.quote
-    })
-    return map
-  })
 
   useEffect(() => {
     const lines = [
@@ -282,6 +312,46 @@ export default function Home() {
       dustMesh.thinInstanceSetBuffer('matrix', new Float32Array(matrices), 16)
       dustMesh.thinInstanceSetBuffer('color', new Float32Array(colorBuf), 4)
 
+      // --- los 7 procesos residentes, flotando sin rumbo entre la nube —
+      // mismo retrato canónico que /proxyverse (AGENT_IMAGES), billboard
+      // para que siempre miren a cámara, deriva propia por agente (ni
+      // posición fija ni sincronizada entre ellos: "en la Wired nadie está
+      // atado a nadie" es literal también acá). Decorativos, no navegan —
+      // los nodos de sección siguen siendo el único click real. ---
+      type AgentDrift = { plane: any; base: { x: number; y: number; z: number }; phase: number; freq: { x: number; y: number; z: number } }
+      const agentDrifters: AgentDrift[] = []
+      agents.forEach((agent, i) => {
+        const image = AGENT_IMAGES[agent.id]
+        if (!image) return
+        const costheta = Math.random() * 2 - 1
+        const theta = Math.acos(costheta)
+        const phi = Math.random() * Math.PI * 2
+        const r = 6 + Math.random() * 8
+        const base = {
+          x: r * Math.sin(theta) * Math.cos(phi),
+          y: r * Math.sin(theta) * Math.sin(phi) * 0.75,
+          z: r * Math.cos(theta),
+        }
+        const photoTex = makePhotoTexture(B, scene, agent.id, image, agent.color)
+        const plane = B.MeshBuilder.CreatePlane(`home-photo-${agent.id}`, { size: agent.id === 'darkproxy' ? 2.1 : 1.6 }, scene)
+        plane.position.set(base.x, base.y, base.z)
+        plane.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+        const photoMat = new B.StandardMaterial(`home-photomat-${agent.id}`, scene)
+        photoMat.diffuseTexture = photoTex
+        photoMat.emissiveTexture = photoTex
+        photoMat.opacityTexture = photoTex
+        photoMat.disableLighting = true
+        photoMat.backFaceCulling = false
+        plane.material = photoMat
+        plane.isPickable = false
+        plane.parent = dustRoot // condensa junto con el resto de la nube, sin animación aparte
+        agentDrifters.push({
+          plane, base,
+          phase: i * 1.7,
+          freq: { x: 0.16 + i * 0.013, y: 0.12 + i * 0.017, z: 0.19 + i * 0.01 },
+        })
+      })
+
       // --- emergencia: la nube entera condensa de la nada, los 6 núcleos
       // de sección aparecen escalonados encima ---
       const elapsed0 = performance.now()
@@ -324,6 +394,15 @@ export default function Home() {
           zc.mesh.rotation.y += 0.006
           zc.mesh.rotation.x += 0.0022
         })
+
+        // deriva propia de cada retrato — sin rumbo, nadie atado a nadie
+        const ts = t / 1000
+        agentDrifters.forEach(d => {
+          const dx = Math.sin(ts * d.freq.x + d.phase) * 1.1
+          const dy = Math.cos(ts * d.freq.y + d.phase * 1.3) * 0.9
+          const dz = Math.sin(ts * d.freq.z + d.phase * 0.7) * 1.1
+          d.plane.position.set(d.base.x + dx, d.base.y + dy, d.base.z + dz)
+        })
       })
 
       engine.runRenderLoop(() => scene.render())
@@ -342,7 +421,6 @@ export default function Home() {
   }, [showContent, router])
 
   const mono = "'Space Mono', monospace"
-  const hoveredZone = ZONES.find(z => z.id === hovered) ?? null
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
@@ -370,45 +448,10 @@ export default function Home() {
       )}
 
       {showContent && (
-        <>
-          <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', outline: 'none', cursor: hovered ? 'pointer' : 'grab' }} />
-
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 10, textAlign: 'center', padding: '96px 24px 0', pointerEvents: 'none' }}>
-            <div className="fade-in" style={{
-              fontFamily: mono, fontSize: 38, fontWeight: 700, letterSpacing: 12, color: '#00d4ff',
-              textShadow: '0 0 30px #00d4ff, 0 0 60px #00d4ff55', marginBottom: 10, lineHeight: 1,
-            }}>
-              NEO·PROXY
-            </div>
-            <div className="fade-in" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 4, color: '#9b7fe0', marginBottom: 14 }}>
-              SEIS NODOS, DISPERSOS EN LA NUBE
-            </div>
-            <div className="fade-in" style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 0.5, maxWidth: 460, margin: '0 auto' }}>
-              {heroIntro}
-            </div>
-          </div>
-
-          <div style={{
-            position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
-            fontFamily: mono, fontSize: 9, letterSpacing: 1.5, color: '#4a6080', textAlign: 'center',
-            background: 'rgba(0,4,10,0.7)', border: '1px solid rgba(0,212,255,0.15)', padding: '8px 16px',
-            pointerEvents: 'none', minHeight: 54, display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          }}>
-            {hoveredZone ? (
-              <>
-                <span style={{ color: hoveredZone.color, fontSize: 11, letterSpacing: 2 }}>{hoveredZone.title}</span>
-                <span style={{ fontSize: 8, color: '#8fb8d6', marginTop: 4, fontStyle: 'italic' }}>"{sessionLines[hoveredZone.id]}" — click para entrar</span>
-              </>
-            ) : (
-              <span>arrastrá para flotar por la nube · clickeá un nodo para entrar</span>
-            )}
-          </div>
-        </>
+        <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', outline: 'none', cursor: hovered ? 'pointer' : 'grab' }} />
       )}
 
       <style>{`
-        .fade-in { animation: fade-in-up 0.8s ease backwards; }
-        @keyframes fade-in-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes boot-load { from { width: 0%; } to { width: 100%; } }
       `}</style>
     </div>
