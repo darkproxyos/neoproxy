@@ -382,12 +382,12 @@ export default function Home() {
       // angostas (celular en vertical) arranca más lejos — con más nodos y
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
-      const startRadius = aspect < 0.75 ? 26 : 22
+      const startRadius = aspect < 0.75 ? 29 : 25
       const camera = new B.ArcRotateCamera('cloud-cam', -Math.PI / 2.4, 1.15, startRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
-      camera.lowerRadiusLimit = 12
-      camera.upperRadiusLimit = 42
+      camera.lowerRadiusLimit = 14
+      camera.upperRadiusLimit = 46
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
@@ -397,9 +397,18 @@ export default function Home() {
         camera.autoRotationBehavior.idleRotationWaitTime = 1100
       }
 
-      new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.5
+      new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.62
       const sun = new B.DirectionalLight('cloud-sun', new B.Vector3(-0.3, -0.8, -0.4), scene)
-      sun.intensity = 0.55
+      sun.intensity = 0.65
+
+      // Glow real (bloom) sobre lo emisivo — nodos, paneles HUD y
+      // sinapsis quedan "bien definidos e iluminados" en vez de planos.
+      // El polvo (ya satura blanco/color por sí solo con miles de
+      // instancias) y las fotos de los agentes (su propia imagen hace de
+      // emissive, no algo que deba brillar como un HUD) quedan afuera —
+      // si no, todo el fondo se lava en un halo parejo.
+      const glow = new B.GlowLayer('cloud-glow', scene, { mainTextureFixedSize: 1024, blurKernelSize: 48 })
+      glow.intensity = 0.7
 
       // --- núcleo central: home ---
       const core = B.MeshBuilder.CreatePolyhedron('core', { type: 3, size: 0.6 }, scene)
@@ -419,7 +428,7 @@ export default function Home() {
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
 
       // --- nodos primarios, dispersos sobre una esfera (sin eje "arriba") ---
-      const LAYOUT_RADIUS = 10
+      const LAYOUT_RADIUS = 11.5
       const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
       const zoneRoot = new B.TransformNode('zoneRoot', scene)
 
@@ -488,7 +497,11 @@ export default function Home() {
         // a contenido" del pedido original. ---
         if (zone.subs && zone.subs.length) {
           const { t1, t2 } = tangentBasis({ x, y, z })
-          const SUB_RING = 2.4
+          // más separados que la primera pasada — con paneles grandes y
+          // opacos (legibilidad real pedida antes), 2.4 los hacía chocar
+          // entre sí y con el panel del propio primario (caso LABORATORIO,
+          // el peor: 3 subs apretados contra un panel grande al lado)
+          const SUB_RING = 3.7
           zone.subs.forEach((sub, j) => {
             const a = (Math.PI * 2 * j) / zone.subs!.length + i * 0.6
             const sx = x + (t1.x * Math.cos(a) + t2.x * Math.sin(a)) * SUB_RING
@@ -508,7 +521,10 @@ export default function Home() {
             subMesh.metadata = { id: sub.id, href: sub.href }
             subMesh.scaling.set(0.001, 0.001, 0.001)
 
-            const subLabelY = sy + 1.0
+            // leve escalonado extra por índice — con 3 subs apretados en
+            // el mismo anillo, un ángulo de cámara desfavorable todavía
+            // podía proyectar dos paneles casi uno encima del otro
+            const subLabelY = sy + 1.0 + (j % 2 === 0 ? 0 : 0.3)
             const subLabelTex = makeZoneLabelTexture(B, scene, sub.id, sub.title, sub.tag, zone.color)
             const subLabel = B.MeshBuilder.CreatePlane(`sublabel-${sub.id}`, { width: 2.9, height: 0.85 }, scene)
             subLabel.position.set(sx, subLabelY, sz)
@@ -544,6 +560,22 @@ export default function Home() {
             linkEntries.push({ line: subLink, aId: zone.id, bId: sub.id, baseDelay: subDelay })
           })
         }
+      })
+
+      // --- una luz de color por zona, suave, iluminando su propio
+      // cluster desde adentro — refuerza "esto es un grupo" por
+      // proximidad Y color (gestalt) además de la pura cercanía
+      // geométrica, y le da a cada nodo sólido variación real de luz en
+      // vez de depender solo del material emissive plano. ---
+      ZONES.forEach(zone => {
+        const p = zonePos[zone.id]
+        if (!p) return
+        const zoneLight = new B.PointLight(`zonelight-${zone.id}`, new B.Vector3(p.x, p.y, p.z), scene)
+        const zc = B.Color3.FromHexString(zone.color)
+        zoneLight.diffuse = zc
+        zoneLight.specular = new B.Color3(0, 0, 0)
+        zoneLight.intensity = 0.55
+        zoneLight.range = 8
       })
 
       // --- uniones entre zonas primarias relacionadas por contenido real —
@@ -609,13 +641,14 @@ export default function Home() {
       dustMat.alpha = 0.85
       dustMesh.material = dustMat
       dustMesh.isPickable = false
+      glow.addExcludedMesh(dustMesh)
 
       const dustRoot = new B.TransformNode('dustRoot', scene)
       dustMesh.parent = dustRoot
 
       const noise3 = makeSimplex(17)
       const CANDIDATES = 5200
-      const CLOUD_RADIUS = 16
+      const CLOUD_RADIUS = 17.5
       const matrices: number[] = []
       const colorBuf: number[] = []
       let kept = 0
@@ -708,6 +741,7 @@ export default function Home() {
         plane.material = photoMat
         plane.isPickable = false
         plane.parent = dustRoot // condensa junto con el resto de la nube, sin animación aparte
+        glow.addExcludedMesh(plane)
         agentDrifters.push({
           plane, base,
           phase: i * 1.7,
