@@ -367,6 +367,14 @@ export default function Home() {
       const scene = new B.Scene(engine)
       scene.clearColor = new B.Color4(0.001, 0.002, 0.005, 1)
 
+      // Niebla por distancia a cámara — el polvo lejano se hunde en el
+      // negro de fondo en vez de leer todo a la misma densidad pareja;
+      // da profundidad real (lo que queda cerca de cámara se separa de lo
+      // que queda atrás) sin necesitar un blur de post-proceso.
+      scene.fogMode = B.Scene.FOGMODE_EXP2
+      scene.fogColor = new B.Color3(0.001, 0.002, 0.005)
+      scene.fogDensity = 0.028
+
       // Cámara libre, no cenital: flotando a la altura de la nube, mirando
       // de frente — inmersiva, no un mapa visto desde afuera. En pantallas
       // angostas (celular en vertical) arranca más lejos — con más nodos y
@@ -541,19 +549,38 @@ export default function Home() {
       // sino "esto se relaciona con aquello": líneas rectas, más tarde en
       // la secuencia de aparición (primero se resuelve el árbol, después
       // la red), con un pulso recorriendo cada una. ---
-      const crossLinks: { line: any; dot: any; aId: string; bId: string; color: string }[] = []
+      const crossLinks: { line: any; glowA: any; glowB: any; dot: any; dotMat: any; dotColor: [number, number, number]; aId: string; bId: string; color: string }[] = []
       const CROSS_LINK_DELAY = 2000
       ZONE_LINKS.forEach(([aId, bId], idx) => {
         const a = zonePos[aId], b = zonePos[bId]
         if (!a || !b) return
         const zoneA = ZONES.find(z => z.id === aId)!, zoneB = ZONES.find(z => z.id === bId)!
         const blended = mixHex(zoneA.color, zoneB.color)
+        const blendedColor = B.Color3.FromHexString(blended)
         const line = B.MeshBuilder.CreateLines(`crosslink-${idx}`, {
           points: [new B.Vector3(a.x, a.y, a.z), new B.Vector3(b.x, b.y, b.z)],
         }, scene)
-        line.color = B.Color3.FromHexString(blended)
+        line.color = blendedColor
         line.alpha = 0
         line.isPickable = false
+
+        // par de líneas paralelas, invisibles en reposo — al pasar el
+        // mouse por un nodo de la unión se encienden junto a la línea
+        // central, leyendo como un haz más grueso en vez de una recta fina
+        const perp = tangentBasis(a).t1
+        const OFF = 0.1
+        const glowA = B.MeshBuilder.CreateLines(`crosslink-glow-a-${idx}`, {
+          points: [new B.Vector3(a.x + perp.x * OFF, a.y + perp.y * OFF, a.z + perp.z * OFF), new B.Vector3(b.x + perp.x * OFF, b.y + perp.y * OFF, b.z + perp.z * OFF)],
+        }, scene)
+        glowA.color = blendedColor
+        glowA.alpha = 0
+        glowA.isPickable = false
+        const glowB = B.MeshBuilder.CreateLines(`crosslink-glow-b-${idx}`, {
+          points: [new B.Vector3(a.x - perp.x * OFF, a.y - perp.y * OFF, a.z - perp.z * OFF), new B.Vector3(b.x - perp.x * OFF, b.y - perp.y * OFF, b.z - perp.z * OFF)],
+        }, scene)
+        glowB.color = blendedColor
+        glowB.alpha = 0
+        glowB.isPickable = false
 
         const dot = B.MeshBuilder.CreateSphere(`crossdot-${idx}`, { diameter: 0.22 }, scene)
         const dotMat = new B.StandardMaterial(`crossdotmat-${idx}`, scene)
@@ -565,7 +592,7 @@ export default function Home() {
         dot.isPickable = false
         dot.position.set(a.x, a.y, a.z)
 
-        crossLinks.push({ line, dot, aId, bId, color: blended })
+        crossLinks.push({ line, glowA, glowB, dot, dotMat, dotColor: hex3(blended), aId, bId, color: blended })
       })
 
       // --- la nube: miles de motas en una sola malla con thin instances,
@@ -755,13 +782,24 @@ export default function Home() {
         const crossP = smoothstep(Math.max(0, Math.min(1, (t - elapsed0 - CROSS_LINK_DELAY) / LINK_FADE_MS)))
         crossLinks.forEach((cl, idx) => {
           const related = cl.aId === hoveredId || cl.bId === hoveredId
-          cl.line.alpha = 0.22 * crossP * (related ? 1.9 : 1)
+          cl.line.alpha = Math.min(1, 0.22 * crossP * (related ? 2.8 : 1))
+          // el haz paralelo solo se enciende activado — en reposo queda
+          // en 0, la unión se lee como una línea fina normal
+          const glowAlpha = related ? 0.32 * crossP : 0
+          cl.glowA.alpha = glowAlpha
+          cl.glowB.alpha = glowAlpha
+
           const a = zonePos[cl.aId], b = zonePos[cl.bId]
           const phase = (Math.sin(t * 0.00055 + idx * 1.3) + 1) / 2
           cl.dot.position.set(a.x + (b.x - a.x) * phase, a.y + (b.y - a.y) * phase, a.z + (b.z - a.z) * phase)
-          const dotMat = cl.dot.material
-          dotMat.alpha = crossP * (related ? 1 : 0.75)
-          cl.dot.scaling.set(crossP, crossP, crossP)
+          // más grande y más brillante (mezclado hacia blanco) cuando la
+          // unión está activa — el "pulso de datos" se nota mucho más
+          const [dr, dg, db] = cl.dotColor
+          const boost = related ? 0.6 : 0
+          cl.dotMat.emissiveColor.set(dr + (1 - dr) * boost, dg + (1 - dg) * boost, db + (1 - db) * boost)
+          cl.dotMat.alpha = crossP * (related ? 1 : 0.75)
+          const dotScale = crossP * (related ? 1.9 : 1)
+          cl.dot.scaling.set(dotScale, dotScale, dotScale)
         })
 
         // deriva propia de cada retrato — sin rumbo, nadie atado a nadie
