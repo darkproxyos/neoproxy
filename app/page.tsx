@@ -205,6 +205,15 @@ export default function Home() {
     const pointerTarget = { x: 0, y: 0 }
     const pointerCurrent = { x: 0, y: 0 }
 
+    // "Venom": los títulos de sección (.venom-title) leen --venom-stretch/
+    // --venom-skew por CSS y el atributo scale de #venom-displace por SVG —
+    // los tres derivan de la velocidad real de scroll acá, no de un loop
+    // decorativo aparte. Reutiliza el mismo rAF del polytope en vez de abrir
+    // un segundo loop.
+    let lastScrollY = window.scrollY
+    let scrollVelocity = 0
+    const venomDisplace = document.getElementById('venom-displace')
+
     const updateScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight
       scrollNorm = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
@@ -227,6 +236,20 @@ export default function Home() {
     }
 
     const animate = (t: number) => {
+      if (!reducedMotion) {
+        const currentScrollY = window.scrollY
+        const rawVelocity = currentScrollY - lastScrollY
+        lastScrollY = currentScrollY
+        scrollVelocity = scrollVelocity * 0.85 + rawVelocity * 0.15
+        const v = Math.max(-60, Math.min(60, scrollVelocity))
+        const stretch = Math.min(0.5, Math.abs(v) / 45)
+        const skew = Math.max(-6, Math.min(6, v * 0.12))
+        const root = document.documentElement.style
+        root.setProperty('--venom-stretch', stretch.toFixed(3))
+        root.setProperty('--venom-skew', skew.toFixed(2))
+        venomDisplace?.setAttribute('scale', Math.min(16, Math.abs(v) * 0.45).toFixed(2))
+      }
+
       pointerCurrent.x += (pointerTarget.x - pointerCurrent.x) * 0.06
       pointerCurrent.y += (pointerTarget.y - pointerCurrent.y) * 0.06
       const parallaxX = pointerCurrent.x * 14
@@ -326,45 +349,52 @@ export default function Home() {
 
   const mono = "'Space Mono', monospace"
 
+  // Nombres alineados con los reales del nav (components/nav-config.ts) —
+  // antes mezclaban inglés y español sin criterio (MANIFESTO/FABRICATION/
+  // ARTIFACTS en inglés, CONOCIMIENTO/PROXYVERSE en español) y "EXPERIMENTAL"
+  // acá apuntaba a /lab mientras el nav ya usa ese mismo nombre para la ruta
+  // real /experimental — dos cosas distintas con el mismo rótulo. /lab no
+  // tiene entrada propia en el nav; su propio <title> es "LABORATORIO", así
+  // que es el nombre que le corresponde acá también.
   const sections = [
     {
-      id: 'manifesto',
+      id: 'manifiesto',
       tag: 'NPX-DOC-00',
-      title: 'MANIFESTO',
+      title: 'MANIFIESTO',
       copy: 'Rechazamos la copia infinita y la conveniencia que no pregunta. Cada artefacto es evidencia de un proceso que no se puede automatizar del todo — ni domesticar.',
-      cta: 'READ MANIFESTO',
+      cta: 'LEER MANIFIESTO',
       href: '/manifesto',
     },
     {
-      id: 'fabrication',
+      id: 'fabricacion',
       tag: 'NPX-LAB-00',
-      title: 'FABRICATION',
+      title: 'FABRICACIÓN',
       copy: 'Impresoras activas. Resina, PLA, PETG. Cada pieza pasa por concepto, modelo 3D, prototipo, impresión y acabado.',
-      cta: 'VIEW FABRICATION',
+      cta: 'VER FABRICACIÓN',
       href: '/fabrication',
     },
     {
-      id: 'artifacts',
+      id: 'artefactos',
       tag: 'NPX-REL-00',
-      title: 'ARTIFACTS',
+      title: 'ARTEFACTOS',
       copy: 'El catálogo completo. Piezas únicas o de producción limitada, cada una documentada desde el concepto hasta la extracción física.',
-      cta: 'VIEW ALL ARTIFACTS',
+      cta: 'VER ARTEFACTOS',
       href: '/artifacts',
     },
     {
-      id: 'experimental',
-      tag: 'NPX-EXP-00',
-      title: 'EXPERIMENTAL',
+      id: 'laboratorio',
+      tag: 'NPX-LAB-01',
+      title: 'LABORATORIO',
       copy: 'Laboratorio generativo, simulaciones, tracking facial, síntesis de sonido. La zona donde el sistema todavía no decide qué es.',
-      cta: 'ENTER EXPERIMENTAL',
+      cta: 'ENTRAR AL LABORATORIO',
       href: '/lab',
     },
     {
-      id: 'knowledge',
+      id: 'conocimiento',
       tag: 'NPX-KNW-00',
       title: 'CONOCIMIENTO',
       copy: 'Shannon, Tononi, Turing, Kauffman y catorce más — la red de quienes midieron la información, la mente, el orden espontáneo.',
-      cta: 'ENTER KNOWLEDGE',
+      cta: 'ENTRAR A CONOCIMIENTO',
       href: '/knowledge',
     },
     {
@@ -372,7 +402,7 @@ export default function Home() {
       tag: 'NPX-PXV-00',
       title: 'PROXYVERSE',
       copy: 'Seis procesos residentes, cada uno con su propia voz. No son personajes — son la arquitectura interna hablando en primera persona.',
-      cta: 'ENTER PROXYVERSE',
+      cta: 'ENTRAR AL PROXYVERSE',
       href: '/proxyverse',
     },
   ]
@@ -421,6 +451,20 @@ export default function Home() {
       {showContent && (
         <>
           <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 1, pointerEvents: 'none' }} />
+
+          {/* Filtro "venom" — el título de cada sección lo referencia por CSS
+              (filter: url(#venom-goo)). El scroll real empuja el atributo
+              `scale` de feDisplacementMap vía JS (ver updateVenom más abajo),
+              así que el tironeo orgánico de las letras es proporcional a la
+              velocidad real de scroll, no un loop decorativo desconectado. */}
+          <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+            <defs>
+              <filter id="venom-goo" x="-30%" y="-60%" width="160%" height="260%">
+                <feTurbulence id="venom-turbulence" type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="noise" />
+                <feDisplacementMap id="venom-displace" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+            </defs>
+          </svg>
 
           <section style={{
             position: 'relative', zIndex: 10, minHeight: '100vh', display: 'flex', flexDirection: 'column',
@@ -472,7 +516,10 @@ export default function Home() {
                 <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, opacity: 0.75, marginBottom: 18 }}>
                   PROCESO RESIDENTE // {agent.name}
                 </div>
-                <div style={{ fontFamily: mono, fontSize: 32, letterSpacing: 8, color: agent.color, marginBottom: 20, textShadow: `0 0 24px ${agent.color}59` }}>
+                <div className="venom-title" style={{
+                  fontFamily: mono, fontSize: 32, letterSpacing: 8, color: agent.color, marginBottom: 20,
+                  textShadow: `0 0 24px ${agent.color}59`, display: 'inline-block', willChange: 'transform, filter',
+                }}>
                   {s.title}
                 </div>
                 <div style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.8, letterSpacing: 0.5, color: '#9fc4e0', maxWidth: 520, marginBottom: 20 }}>
@@ -510,6 +557,14 @@ export default function Home() {
       <style>{`
         .scroll-cue {
           animation: pulse-cue 2s ease-in-out infinite;
+        }
+        .venom-title {
+          transform-origin: top center;
+          transform: scaleY(calc(1 + var(--venom-stretch, 0))) skewY(calc(var(--venom-skew, 0) * 1deg));
+          filter: url(#venom-goo);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .venom-title { transform: none; filter: none; }
         }
         @keyframes pulse-cue {
           0%, 100% { opacity: 0.3; }
