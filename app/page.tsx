@@ -43,6 +43,17 @@ function hex3(hex: string): [number, number, number] {
   return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
 }
 
+// Algunos colores de zona (el azul acero de FABRICACIÓN, por ejemplo) leen
+// bien como acento/borde pero quedan opacos como texto sobre fondo negro.
+// Mezcla hacia blanco solo para el relleno del título — el borde y las
+// esquinas HUD se quedan con el color real, así no se pierde identidad.
+function lightenHex(hex: string, amount: number): string {
+  const n = parseInt(hex.slice(1), 16)
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255
+  const mix = (c: number) => Math.round(c + (255 - c) * amount)
+  return `#${[mix(r), mix(g), mix(b)].map(c => c.toString(16).padStart(2, '0')).join('')}`
+}
+
 // Gustavson simplex 3D (dominio público) — misma implementación ya usada
 // en Torbellino y en el mapa v2, reutilizada acá para darle a la nube
 // zonas de densidad real en vez de un ruido uniforme tipo "televisor sin
@@ -143,6 +154,75 @@ function makePhotoTexture(B: any, scene: any, agentId: string, src: string, colo
   return tex
 }
 
+// Panel HUD para el nombre de cada sección — mismo lenguaje visual que ya
+// usa el resto del sitio (las esquinas tipo <Corner> de /especimenes, el
+// marco de color de las fotos de arriba, el formato NPX-XXX-00 de los
+// tags): no texto HTML flotando sobre el canvas, un objeto más de la
+// escena 3D, con billboard para mirar siempre a cámara. Vive en la textura,
+// no en el DOM — coherente con cómo ya se resuelve todo lo demás acá.
+function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag: string, color: string) {
+  const W = 1024, H = 300
+  const tex = new B.DynamicTexture(`home-label-${id}`, { width: W, height: H }, scene, true)
+  tex.hasAlpha = true
+  const ctx = tex.getContext()
+  const pad = 18
+
+  ctx.clearRect(0, 0, W, H)
+
+  // panel de vidrio — separa el texto del ruido de la nube atrás
+  ctx.fillStyle = 'rgba(0, 4, 10, 0.6)'
+  ctx.fillRect(pad, pad, W - pad * 2, H - pad * 2)
+  ctx.strokeStyle = `${color}55`
+  ctx.lineWidth = 2
+  ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2)
+
+  // esquinas HUD, mismo gesto que <Corner> en /especimenes
+  const cl = 42
+  ctx.strokeStyle = color
+  ctx.lineWidth = 4
+  ctx.shadowColor = color
+  ctx.shadowBlur = 14
+  const corners: [number, number, number, number][] = [
+    [pad, pad, pad + cl, pad], [pad, pad, pad, pad + cl],
+    [W - pad, pad, W - pad - cl, pad], [W - pad, pad, W - pad, pad + cl],
+    [pad, H - pad, pad + cl, H - pad], [pad, H - pad, pad, H - pad - cl],
+    [W - pad, H - pad, W - pad - cl, H - pad], [W - pad, H - pad, W - pad, H - pad - cl],
+  ]
+  corners.forEach(([x1, y1, x2, y2]) => {
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke()
+  })
+
+  // título — letter-spacing simulado insertando espacios, mismo truco que
+  // el CSS letter-spacing que usa el resto de la tipografía del sitio
+  const spaced = (s: string) => s.split('').join('  ')
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.font = 'bold 66px "Space Mono", monospace'
+  ctx.fillStyle = lightenHex(color, 0.4)
+  ctx.shadowColor = color
+  ctx.shadowBlur = 22
+  ctx.fillText(spaced(title), W / 2, 118)
+
+  // separador
+  ctx.shadowBlur = 8
+  ctx.strokeStyle = `${color}99`
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(pad + 50, 160)
+  ctx.lineTo(W - pad - 50, 160)
+  ctx.stroke()
+
+  // tag — más chico y más opaco, el mismo formato NPX-XXX-00 que usa cada
+  // sección en su propia página
+  ctx.font = '26px "Space Mono", monospace'
+  ctx.fillStyle = `${color}cc`
+  ctx.shadowBlur = 6
+  ctx.fillText(spaced(tag), W / 2, 212)
+
+  tex.update()
+  return tex
+}
+
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const disposedRef = useRef(false)
@@ -219,7 +299,7 @@ export default function Home() {
       // --- nodos de sección, dispersos sobre una esfera (sin eje "arriba") ---
       const LAYOUT_RADIUS = 10.5
       const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
-      const zoneCores: { mesh: any; color: [number, number, number] }[] = []
+      const zoneCores: { id: string; mesh: any; label: any; stem: any; color: [number, number, number] }[] = []
       const zoneRoot = new B.TransformNode('zoneRoot', scene)
 
       ZONES.forEach((zone, i) => {
@@ -236,7 +316,36 @@ export default function Home() {
         mesh.metadata = { zoneId: zone.id }
         mesh.parent = zoneRoot
         mesh.scaling.set(0.001, 0.001, 0.001)
-        zoneCores.push({ mesh, color: hex3(zone.color) })
+
+        // nombre de la sección — panel HUD en la propia escena 3D, no texto
+        // flotando encima en HTML (ver makeZoneLabelTexture). Billboard,
+        // siempre mirando a cámara; posición fija (no parentada al núcleo,
+        // que gira) para no arrastrar el panel en la rotación del nodo.
+        const labelY = y + 1.45
+        const labelTex = makeZoneLabelTexture(B, scene, zone.id, zone.title, zone.tag, zone.color)
+        const label = B.MeshBuilder.CreatePlane(`label-${zone.id}`, { width: 3.4, height: 1 }, scene)
+        label.position.set(x, labelY, z)
+        label.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+        const labelMat = new B.StandardMaterial(`labelMat-${zone.id}`, scene)
+        labelMat.diffuseTexture = labelTex
+        labelMat.emissiveTexture = labelTex
+        labelMat.opacityTexture = labelTex
+        labelMat.disableLighting = true
+        labelMat.backFaceCulling = false
+        label.material = labelMat
+        label.isPickable = false
+        label.scaling.set(0.001, 0.001, 0.001)
+
+        // un tic corto conectando nodo y panel — el gesto de "callout", no
+        // el panel flotando suelto sin relación visual con lo que nombra
+        const stem = B.MeshBuilder.CreateLines(`stem-${zone.id}`, {
+          points: [new B.Vector3(x, y, z), new B.Vector3(x, labelY - 0.42, z)],
+        }, scene)
+        stem.color = c
+        stem.alpha = 0.35
+        stem.isPickable = false
+
+        zoneCores.push({ id: zone.id, mesh, label, stem, color: hex3(zone.color) })
 
         // sinapsis del núcleo al nodo — con una leve curva orgánica, no una
         // recta digital pura: la señal no viaja en línea derecha acá adentro.
@@ -320,17 +429,30 @@ export default function Home() {
       // los nodos de sección siguen siendo el único click real. ---
       type AgentDrift = { plane: any; base: { x: number; y: number; z: number }; phase: number; freq: { x: number; y: number; z: number } }
       const agentDrifters: AgentDrift[] = []
+      // separación mínima a cualquier nodo de sección — sin esto, un
+      // retrato puede terminar flotando justo delante del panel con su
+      // nombre y taparlo (pasó en la primera pasada: nada "claro" en eso).
+      const MIN_SEP_TO_ZONE = 5.6
       agents.forEach((agent, i) => {
         const image = AGENT_IMAGES[agent.id]
         if (!image) return
-        const costheta = Math.random() * 2 - 1
-        const theta = Math.acos(costheta)
-        const phi = Math.random() * Math.PI * 2
-        const r = 6 + Math.random() * 8
-        const base = {
-          x: r * Math.sin(theta) * Math.cos(phi),
-          y: r * Math.sin(theta) * Math.sin(phi) * 0.75,
-          z: r * Math.cos(theta),
+        let base = { x: 0, y: 0, z: 0 }
+        for (let attempt = 0; attempt < 30; attempt++) {
+          const costheta = Math.random() * 2 - 1
+          const theta = Math.acos(costheta)
+          const phi = Math.random() * Math.PI * 2
+          const r = 6 + Math.random() * 8
+          const candidate = {
+            x: r * Math.sin(theta) * Math.cos(phi),
+            y: r * Math.sin(theta) * Math.sin(phi) * 0.75,
+            z: r * Math.cos(theta),
+          }
+          const tooClose = anchors.some(a => {
+            const d2 = (candidate.x - a.x) ** 2 + (candidate.y - a.y) ** 2 + (candidate.z - a.z) ** 2
+            return d2 < MIN_SEP_TO_ZONE * MIN_SEP_TO_ZONE
+          })
+          base = candidate
+          if (!tooClose) break
         }
         const photoTex = makePhotoTexture(B, scene, agent.id, image, agent.color)
         const plane = B.MeshBuilder.CreatePlane(`home-photo-${agent.id}`, { size: agent.id === 'darkproxy' ? 2.1 : 1.6 }, scene)
@@ -357,6 +479,7 @@ export default function Home() {
       const elapsed0 = performance.now()
       const CLOUD_EMERGE_MS = 1400
       const NODE_EMERGE_MS = 700, NODE_STAGGER_MS = 130
+      let hoveredZoneId: string | null = null
 
       scene.onPointerObservable.add((info: any) => {
         if (info.type === B.PointerEventTypes.POINTERPICK) {
@@ -370,6 +493,7 @@ export default function Home() {
         if (info.type === B.PointerEventTypes.POINTERMOVE) {
           const picked = scene.pick(scene.pointerX, scene.pointerY)
           const zoneId = picked?.pickedMesh?.metadata?.zoneId ?? null
+          hoveredZoneId = zoneId
           setHovered(zoneId)
         }
       })
@@ -393,6 +517,17 @@ export default function Home() {
           zc.mesh.scaling.set(s, s, s)
           zc.mesh.rotation.y += 0.006
           zc.mesh.rotation.x += 0.0022
+
+          // el nombre resuelve un poco después que el nodo — primero
+          // aparece la forma, recién después se identifica qué es, sin
+          // el bamboleo del nodo (el texto se queda quieto para leerse)
+          const labelElapsed = localElapsed - 220
+          const labelBase = smoothstep(Math.max(0, Math.min(1, labelElapsed / NODE_EMERGE_MS)))
+          const isHovered = zc.id === hoveredZoneId
+          const hoverBoost = isHovered ? 1.12 : 1
+          const labelS = labelBase * hoverBoost
+          zc.label.scaling.set(labelS, labelS, labelS)
+          zc.stem.alpha = (isHovered ? 0.7 : 0.35) * labelBase
         })
 
         // deriva propia de cada retrato — sin rumbo, nadie atado a nadie
