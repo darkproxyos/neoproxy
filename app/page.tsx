@@ -123,54 +123,6 @@ function lightenHex(hex: string, amount: number): string {
   return `#${[mix(r), mix(g), mix(b)].map(c => c.toString(16).padStart(2, '0')).join('')}`
 }
 
-// Gustavson simplex 3D (dominio público) — misma implementación ya usada
-// en Torbellino y en el mapa v2, reutilizada acá para darle a la nube
-// zonas de densidad real en vez de un ruido uniforme tipo "televisor sin
-// señal".
-function makeSimplex(seed: number) {
-  function mulberry32(a: number) {
-    return function () {
-      let t = (a += 0x6d2b79f5)
-      t = Math.imul(t ^ (t >>> 15), t | 1)
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-    }
-  }
-  const rand = mulberry32(seed)
-  const p = new Uint8Array(256)
-  for (let i = 0; i < 256; i++) p[i] = i
-  for (let i = 255; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); const tmp = p[i]; p[i] = p[j]; p[j] = tmp }
-  const perm = new Uint8Array(512)
-  for (let i = 0; i < 512; i++) perm[i] = p[i & 255]
-  const grad3 = [[1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0], [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1], [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]]
-  const F3 = 1 / 3, G3 = 1 / 6
-  const dot = (g: number[], x: number, y: number, z: number) => g[0] * x + g[1] * y + g[2] * z
-  return function noise3(xin: number, yin: number, zin: number) {
-    let n0, n1, n2, n3
-    const s = (xin + yin + zin) * F3
-    const i = Math.floor(xin + s), j = Math.floor(yin + s), k = Math.floor(zin + s)
-    const t = (i + j + k) * G3
-    const X0 = i - t, Y0 = j - t, Z0 = k - t
-    const x0 = xin - X0, y0 = yin - Y0, z0 = zin - Z0
-    let i1, j1, k1, i2, j2, k2
-    if (x0 >= y0) { if (y0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 1; k2 = 0 } else if (x0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 0; k2 = 1 } else { i1 = 0; j1 = 0; k1 = 1; i2 = 1; j2 = 0; k2 = 1 } }
-    else { if (y0 < z0) { i1 = 0; j1 = 0; k1 = 1; i2 = 0; j2 = 1; k2 = 1 } else if (x0 < z0) { i1 = 0; j1 = 1; k1 = 0; i2 = 0; j2 = 1; k2 = 1 } else { i1 = 0; j1 = 1; k1 = 0; i2 = 1; j2 = 1; k2 = 0 } }
-    const x1 = x0 - i1 + G3, y1 = y0 - j1 + G3, z1 = z0 - k1 + G3
-    const x2 = x0 - i2 + 2 * G3, y2 = y0 - j2 + 2 * G3, z2 = z0 - k2 + 2 * G3
-    const x3 = x0 - 1 + 3 * G3, y3 = y0 - 1 + 3 * G3, z3 = z0 - 1 + 3 * G3
-    const ii = i & 255, jj = j & 255, kk = k & 255
-    let t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0
-    if (t0 < 0) n0 = 0; else { t0 *= t0; const gi0 = grad3[perm[ii + perm[jj + perm[kk]]] % 12]; n0 = t0 * t0 * dot(gi0, x0, y0, z0) }
-    let t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1
-    if (t1 < 0) n1 = 0; else { t1 *= t1; const gi1 = grad3[perm[ii + i1 + perm[jj + j1 + perm[kk + k1]]] % 12]; n1 = t1 * t1 * dot(gi1, x1, y1, z1) }
-    let t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2
-    if (t2 < 0) n2 = 0; else { t2 *= t2; const gi2 = grad3[perm[ii + i2 + perm[jj + j2 + perm[kk + k2]]] % 12]; n2 = t2 * t2 * dot(gi2, x2, y2, z2) }
-    let t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3
-    if (t3 < 0) n3 = 0; else { t3 *= t3; const gi3 = grad3[perm[ii + 1 + perm[jj + 1 + perm[kk + 1]]] % 12]; n3 = t3 * t3 * dot(gi3, x3, y3, z3) }
-    return 32 * (n0 + n1 + n2 + n3)
-  }
-}
-
 function smoothstep(t: number) { const c = Math.max(0, Math.min(1, t)); return c * c * (3 - 2 * c) }
 
 // Distribución de Fibonacci sobre una esfera — misma técnica ya usada para
@@ -239,47 +191,63 @@ function makePhotoTexture(B: any, scene: any, agentId: string, src: string, colo
   return tex
 }
 
-// Panel HUD para el nombre de cada sección/sub-sección — mismo lenguaje
-// visual que ya usa el resto del sitio (las esquinas tipo <Corner> de
-// /especimenes, el marco de color de las fotos de arriba, el formato
-// NPX-XXX-00 de los tags): no texto HTML flotando sobre el canvas, un
-// objeto más de la escena 3D, con billboard para mirar siempre a cámara.
-// Vive en la textura, no en el DOM. Los nodos satélite reusan esta misma
-// función con un plano más chico (ver abajo) — no hace falta una textura
-// de menor resolución, el texto ya lee más chico al encoger el plano.
+function roundRectPath(ctx: any, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.arcTo(x + w, y, x + w, y + h, r)
+  ctx.arcTo(x + w, y + h, x, y + h, r)
+  ctx.arcTo(x, y + h, x, y, r)
+  ctx.arcTo(x, y, x + w, y, r)
+  ctx.closePath()
+}
+
+// Mancha de nebulosa de fondo — un gradiente radial suave, muy grande y
+// muy lejos de la cámara, billboard. No es "partícula decorativa" (eso
+// se sacó a pedido): es una sola mancha de atmósfera fija, el gesto
+// mínimo para que el fondo no sea vacío absoluto, acercándose al fondo
+// con nubes de la referencia visual.
+function makeNebulaTexture(B: any, scene: any, id: string, color: string) {
+  const size = 512
+  const tex = new B.DynamicTexture(`nebula-${id}`, { width: size, height: size }, scene, true)
+  tex.hasAlpha = true
+  const ctx = tex.getContext()
+  const c = size / 2
+  const grad = ctx.createRadialGradient(c, c, 0, c, c, c)
+  grad.addColorStop(0, `${color}66`)
+  grad.addColorStop(0.5, `${color}2a`)
+  grad.addColorStop(1, `${color}00`)
+  ctx.fillStyle = grad
+  ctx.fillRect(0, 0, size, size)
+  tex.update()
+  return tex
+}
+
+// Panel "ventana" para el nombre de cada sección/sub-sección — tarjeta de
+// vidrio esquinas redondeadas (look más suave, menos HUD militar que la
+// primera pasada de esquinas tipo <Corner>), pedido explícitamente para
+// acercarse al estilo de referencia. Sigue siendo textura, no DOM — un
+// objeto más de la escena 3D con billboard. Los nodos satélite reusan
+// esta misma función con un plano más chico (ver abajo).
 function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag: string, color: string) {
-  const W = 1024, H = 300
+  const W = 1024, H = 230
   const tex = new B.DynamicTexture(`home-label-${id}`, { width: W, height: H }, scene, true)
   tex.hasAlpha = true
   const ctx = tex.getContext()
   const pad = 18
+  const radius = 34
 
   ctx.clearRect(0, 0, W, H)
 
-  // panel de vidrio — separa el texto del ruido de la nube atrás. Más
-  // opaco que la primera pasada: con más nodos y fotos flotando detrás,
-  // un 60% de opacidad no alcanzaba para leer el texto con claridad.
-  ctx.fillStyle = 'rgba(0, 5, 11, 0.92)'
-  ctx.fillRect(pad, pad, W - pad * 2, H - pad * 2)
-  ctx.strokeStyle = `${color}cc`
-  ctx.lineWidth = 3
-  ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2)
-
-  // esquinas HUD, mismo gesto que <Corner> en /especimenes
-  const cl = 42
-  ctx.strokeStyle = color
-  ctx.lineWidth = 4
+  // tarjeta de vidrio — tinte índigo en vez de negro puro, consistente
+  // con el fondo tipo nebulosa en vez de "espacio vacío"
+  roundRectPath(ctx, pad, pad, W - pad * 2, H - pad * 2, radius)
+  ctx.fillStyle = 'rgba(12, 10, 26, 0.88)'
+  ctx.fill()
+  ctx.lineWidth = 2.5
+  ctx.strokeStyle = `${color}bb`
   ctx.shadowColor = color
-  ctx.shadowBlur = 14
-  const corners: [number, number, number, number][] = [
-    [pad, pad, pad + cl, pad], [pad, pad, pad, pad + cl],
-    [W - pad, pad, W - pad - cl, pad], [W - pad, pad, W - pad, pad + cl],
-    [pad, H - pad, pad + cl, H - pad], [pad, H - pad, pad, H - pad - cl],
-    [W - pad, H - pad, W - pad - cl, H - pad], [W - pad, H - pad, W - pad, H - pad - cl],
-  ]
-  corners.forEach(([x1, y1, x2, y2]) => {
-    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke()
-  })
+  ctx.shadowBlur = 16
+  ctx.stroke()
 
   // título — letter-spacing simulado insertando espacios, mismo truco que
   // el CSS letter-spacing que usa el resto de la tipografía del sitio.
@@ -301,23 +269,14 @@ function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag
   ctx.fillStyle = lightenHex(color, 0.4)
   ctx.shadowColor = color
   ctx.shadowBlur = 22
-  ctx.fillText(titleStr, W / 2, 118)
-
-  // separador
-  ctx.shadowBlur = 8
-  ctx.strokeStyle = `${color}99`
-  ctx.lineWidth = 2
-  ctx.beginPath()
-  ctx.moveTo(pad + 50, 160)
-  ctx.lineTo(W - pad - 50, 160)
-  ctx.stroke()
+  ctx.fillText(titleStr, W / 2, 98)
 
   // tag — más chico y más opaco, el mismo formato NPX-XXX-00 que usa cada
   // sección en su propia página
   ctx.font = '30px "Space Mono", monospace'
   ctx.fillStyle = `${color}ee`
   ctx.shadowBlur = 6
-  ctx.fillText(spaced(tag), W / 2, 212)
+  ctx.fillText(spaced(tag), W / 2, 158)
 
   tex.update()
   return tex
@@ -367,14 +326,17 @@ export default function Home() {
 
       engine = new B.Engine(canvasRef.current!, true, { preserveDrawingBuffer: true, stencil: true })
       const scene = new B.Scene(engine)
-      scene.clearColor = new B.Color4(0.001, 0.002, 0.005, 1)
+      // Fondo tinte índigo oscuro en vez de negro puro — sin polvo
+      // decorativo (sacado a pedido) hacía falta algo que diera atmósfera
+      // de todos modos; un "espacio" con algo de color de fondo en vez
+      // de vacío absoluto, acercándose a la referencia de nebulosa.
+      scene.clearColor = new B.Color4(0.015, 0.012, 0.03, 1)
 
-      // Niebla por distancia a cámara — el polvo lejano se hunde en el
-      // negro de fondo en vez de leer todo a la misma densidad pareja;
-      // da profundidad real (lo que queda cerca de cámara se separa de lo
-      // que queda atrás) sin necesitar un blur de post-proceso.
+      // Niebla por distancia a cámara — lo lejano se hunde en ese mismo
+      // índigo en vez de leer todo a la misma densidad pareja; da
+      // profundidad real sin necesitar un blur de post-proceso.
       scene.fogMode = B.Scene.FOGMODE_EXP2
-      scene.fogColor = new B.Color3(0.001, 0.002, 0.005)
+      scene.fogColor = new B.Color3(0.015, 0.012, 0.03)
       scene.fogDensity = 0.028
 
       // Cámara libre, no cenital: flotando a la altura de la nube, mirando
@@ -403,12 +365,33 @@ export default function Home() {
 
       // Glow real (bloom) sobre lo emisivo — nodos, paneles HUD y
       // sinapsis quedan "bien definidos e iluminados" en vez de planos.
-      // El polvo (ya satura blanco/color por sí solo con miles de
-      // instancias) y las fotos de los agentes (su propia imagen hace de
-      // emissive, no algo que deba brillar como un HUD) quedan afuera —
-      // si no, todo el fondo se lava en un halo parejo.
+      // Las fotos de los agentes (su propia imagen hace de emissive, no
+      // algo que deba brillar como un HUD) quedan afuera explícitamente.
       const glow = new B.GlowLayer('cloud-glow', scene, { mainTextureFixedSize: 1024, blurKernelSize: 48 })
       glow.intensity = 0.7
+
+      // Un par de manchas de nebulosa muy lejos, de fondo — atmósfera sin
+      // partículas (sacadas a pedido), acercándose al fondo con nubes de
+      // la referencia visual.
+      ;[
+        { color: '#6644aa', pos: new B.Vector3(-30, 14, -38) },
+        { color: '#2a5f9e', pos: new B.Vector3(32, -10, -42) },
+      ].forEach(({ color, pos }, i) => {
+        const nebTex = makeNebulaTexture(B, scene, `${i}`, color)
+        const neb = B.MeshBuilder.CreatePlane(`nebula-${i}`, { size: 70 }, scene)
+        neb.position.copyFrom(pos)
+        neb.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+        const nebMat = new B.StandardMaterial(`nebulaMat-${i}`, scene)
+        nebMat.diffuseTexture = nebTex
+        nebMat.emissiveTexture = nebTex
+        nebMat.opacityTexture = nebTex
+        nebMat.disableLighting = true
+        nebMat.backFaceCulling = false
+        nebMat.fogEnabled = false // es el telón de fondo, no se hunde con la niebla de profundidad
+        neb.material = nebMat
+        neb.isPickable = false
+        glow.addExcludedMesh(neb)
+      })
 
       // --- núcleo central: home ---
       const core = B.MeshBuilder.CreatePolyhedron('core', { type: 3, size: 0.6 }, scene)
@@ -457,7 +440,7 @@ export default function Home() {
         // que gira) para no arrastrar el panel en la rotación del nodo.
         const labelY = y + 1.6
         const labelTex = makeZoneLabelTexture(B, scene, zone.id, zone.title, zone.tag, zone.color)
-        const label = B.MeshBuilder.CreatePlane(`label-${zone.id}`, { width: 4.3, height: 1.26 }, scene)
+        const label = B.MeshBuilder.CreatePlane(`label-${zone.id}`, { width: 4.3, height: 0.97 }, scene)
         label.position.set(x, labelY, z)
         label.billboardMode = B.Mesh.BILLBOARDMODE_ALL
         const labelMat = new B.StandardMaterial(`labelMat-${zone.id}`, scene)
@@ -526,7 +509,7 @@ export default function Home() {
             // podía proyectar dos paneles casi uno encima del otro
             const subLabelY = sy + 1.0 + (j % 2 === 0 ? 0 : 0.3)
             const subLabelTex = makeZoneLabelTexture(B, scene, sub.id, sub.title, sub.tag, zone.color)
-            const subLabel = B.MeshBuilder.CreatePlane(`sublabel-${sub.id}`, { width: 2.9, height: 0.85 }, scene)
+            const subLabel = B.MeshBuilder.CreatePlane(`sublabel-${sub.id}`, { width: 2.9, height: 0.65 }, scene)
             subLabel.position.set(sx, subLabelY, sz)
             subLabel.billboardMode = B.Mesh.BILLBOARDMODE_ALL
             const subLabelMat = new B.StandardMaterial(`sublabelMat-${sub.id}`, scene)
@@ -629,69 +612,12 @@ export default function Home() {
         crossLinks.push({ line, glowA, glowB, dot, dotMat, dotColor: hex3(blended), aId, bId, color: blended })
       })
 
-      // --- la nube: miles de motas en una sola malla con thin instances,
-      // un solo draw call. Densidad real por ruido simplex (no uniforme —
-      // se nota el gradiente de "señal" que sube cerca de cada nodo de
-      // sección y cae al vacío entre ellos), tiñendo cada mota hacia el
-      // color de la sección más cercana en vez de un cian parejo. ---
-      const dustMesh = B.MeshBuilder.CreateBox('dust', { size: 1 }, scene)
-      const dustMat = new B.StandardMaterial('dustMat', scene)
-      dustMat.disableLighting = true
-      dustMat.emissiveColor = new B.Color3(1, 1, 1)
-      dustMat.alpha = 0.85
-      dustMesh.material = dustMat
-      dustMesh.isPickable = false
-      glow.addExcludedMesh(dustMesh)
-
+      // Sin polvo decorativo — pedido explícito: solo nodos reales (zonas
+      // y sub-secciones) y lo que ya era contenido real (retratos del
+      // proxyverso). `dustRoot` se queda únicamente como contenedor de
+      // animación para esos retratos (condensan igual al aparecer), ya
+      // no tiene ninguna malla de partículas adentro.
       const dustRoot = new B.TransformNode('dustRoot', scene)
-      dustMesh.parent = dustRoot
-
-      const noise3 = makeSimplex(17)
-      const CANDIDATES = 5200
-      const CLOUD_RADIUS = 17.5
-      const matrices: number[] = []
-      const colorBuf: number[] = []
-      let kept = 0
-      for (let i = 0; i < CANDIDATES; i++) {
-        const costheta = Math.random() * 2 - 1
-        const theta = Math.acos(costheta)
-        const phi = Math.random() * Math.PI * 2
-        const rNorm = 0.18 + 0.82 * Math.random()
-        const r = CLOUD_RADIUS * rNorm
-        const x = r * Math.sin(theta) * Math.cos(phi)
-        const y = r * Math.sin(theta) * Math.sin(phi) * 0.75
-        const z = r * Math.cos(theta)
-
-        const n = (noise3(x * 0.09, y * 0.09, z * 0.09) + 1) / 2
-        // zona más cercana — tiñe la mota hacia ese color si está cerca,
-        // si no queda neutra (cian/blanco tenue, el "ruido de fondo").
-        let nearest = -1, nearestD = Infinity
-        for (let zi = 0; zi < anchors.length; zi++) {
-          const a = anchors[zi]
-          const d = (x - a.x) ** 2 + (y - a.y) ** 2 + (z - a.z) ** 2
-          if (d < nearestD) { nearestD = d; nearest = zi }
-        }
-        const proximity = Math.max(0, 1 - Math.sqrt(nearestD) / 6.5)
-        const density = n * 0.6 + proximity * 0.4
-        if (density < 0.42) continue
-        kept++
-
-        const size = 0.045 + density * 0.1
-        const m = B.Matrix.Scaling(size, size, size).multiply(B.Matrix.Translation(x, y, z))
-        matrices.push(...m.asArray())
-
-        const zoneRGB = hex3(ZONES[nearest].color)
-        const tint = Math.min(1, proximity * 1.4)
-        const base = 0.55 + n * 0.35
-        colorBuf.push(
-          base * (1 - tint) + zoneRGB[0] * tint,
-          base * (1 - tint) + zoneRGB[1] * tint,
-          (base + 0.1) * (1 - tint) + zoneRGB[2] * tint,
-          0.35 + density * 0.55,
-        )
-      }
-      dustMesh.thinInstanceSetBuffer('matrix', new Float32Array(matrices), 16)
-      dustMesh.thinInstanceSetBuffer('color', new Float32Array(colorBuf), 4)
 
       // --- los 7 procesos residentes, flotando sin rumbo entre la nube —
       // mismo retrato canónico que /proxyverse (AGENT_IMAGES), billboard
