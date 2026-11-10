@@ -256,11 +256,13 @@ function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag
 
   ctx.clearRect(0, 0, W, H)
 
-  // panel de vidrio — separa el texto del ruido de la nube atrás
-  ctx.fillStyle = 'rgba(0, 4, 10, 0.6)'
+  // panel de vidrio — separa el texto del ruido de la nube atrás. Más
+  // opaco que la primera pasada: con más nodos y fotos flotando detrás,
+  // un 60% de opacidad no alcanzaba para leer el texto con claridad.
+  ctx.fillStyle = 'rgba(0, 5, 11, 0.92)'
   ctx.fillRect(pad, pad, W - pad * 2, H - pad * 2)
-  ctx.strokeStyle = `${color}55`
-  ctx.lineWidth = 2
+  ctx.strokeStyle = `${color}cc`
+  ctx.lineWidth = 3
   ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2)
 
   // esquinas HUD, mismo gesto que <Corner> en /especimenes
@@ -289,10 +291,10 @@ function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   const maxTitleWidth = W - pad * 2 - 60
-  let titleSize = 66
+  let titleSize = 74
   ctx.font = `bold ${titleSize}px "Space Mono", monospace`
   const titleStr = spaced(title)
-  while (ctx.measureText(titleStr).width > maxTitleWidth && titleSize > 26) {
+  while (ctx.measureText(titleStr).width > maxTitleWidth && titleSize > 38) {
     titleSize -= 2
     ctx.font = `bold ${titleSize}px "Space Mono", monospace`
   }
@@ -312,8 +314,8 @@ function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag
 
   // tag — más chico y más opaco, el mismo formato NPX-XXX-00 que usa cada
   // sección en su propia página
-  ctx.font = '26px "Space Mono", monospace'
-  ctx.fillStyle = `${color}cc`
+  ctx.font = '30px "Space Mono", monospace'
+  ctx.fillStyle = `${color}ee`
   ctx.shadowBlur = 6
   ctx.fillText(spaced(tag), W / 2, 212)
 
@@ -380,12 +382,12 @@ export default function Home() {
       // angostas (celular en vertical) arranca más lejos — con más nodos y
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
-      const startRadius = aspect < 0.75 ? 34 : 28
+      const startRadius = aspect < 0.75 ? 26 : 22
       const camera = new B.ArcRotateCamera('cloud-cam', -Math.PI / 2.4, 1.15, startRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
-      camera.lowerRadiusLimit = 15
-      camera.upperRadiusLimit = 48
+      camera.lowerRadiusLimit = 12
+      camera.upperRadiusLimit = 42
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
@@ -417,7 +419,7 @@ export default function Home() {
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
 
       // --- nodos primarios, dispersos sobre una esfera (sin eje "arriba") ---
-      const LAYOUT_RADIUS = 11.5
+      const LAYOUT_RADIUS = 10
       const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
       const zoneRoot = new B.TransformNode('zoneRoot', scene)
 
@@ -444,9 +446,9 @@ export default function Home() {
         // flotando encima en HTML (ver makeZoneLabelTexture). Billboard,
         // siempre mirando a cámara; posición fija (no parentada al núcleo,
         // que gira) para no arrastrar el panel en la rotación del nodo.
-        const labelY = y + 1.45
+        const labelY = y + 1.6
         const labelTex = makeZoneLabelTexture(B, scene, zone.id, zone.title, zone.tag, zone.color)
-        const label = B.MeshBuilder.CreatePlane(`label-${zone.id}`, { width: 3.4, height: 1 }, scene)
+        const label = B.MeshBuilder.CreatePlane(`label-${zone.id}`, { width: 4.3, height: 1.26 }, scene)
         label.position.set(x, labelY, z)
         label.billboardMode = B.Mesh.BILLBOARDMODE_ALL
         const labelMat = new B.StandardMaterial(`labelMat-${zone.id}`, scene)
@@ -506,9 +508,9 @@ export default function Home() {
             subMesh.metadata = { id: sub.id, href: sub.href }
             subMesh.scaling.set(0.001, 0.001, 0.001)
 
-            const subLabelY = sy + 0.86
+            const subLabelY = sy + 1.0
             const subLabelTex = makeZoneLabelTexture(B, scene, sub.id, sub.title, sub.tag, zone.color)
-            const subLabel = B.MeshBuilder.CreatePlane(`sublabel-${sub.id}`, { width: 2.3, height: 0.68 }, scene)
+            const subLabel = B.MeshBuilder.CreatePlane(`sublabel-${sub.id}`, { width: 2.9, height: 0.85 }, scene)
             subLabel.position.set(sx, subLabelY, sz)
             subLabel.billboardMode = B.Mesh.BILLBOARDMODE_ALL
             const subLabelMat = new B.StandardMaterial(`sublabelMat-${sub.id}`, scene)
@@ -613,7 +615,7 @@ export default function Home() {
 
       const noise3 = makeSimplex(17)
       const CANDIDATES = 5200
-      const CLOUD_RADIUS = 18
+      const CLOUD_RADIUS = 16
       const matrices: number[] = []
       const colorBuf: number[] = []
       let kept = 0
