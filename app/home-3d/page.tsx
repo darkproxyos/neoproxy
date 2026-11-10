@@ -3,35 +3,34 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { agents, pickRandom } from '@/components/proxyverse/agents'
 
-// HOME-3D v2 — "el mapa". Pivote total respecto a la v1 (que era un hero
-// 3D arriba de las mismas secciones de scroll de siempre): acá NO hay
-// scroll, la home ENTERA es un mapa visto desde arriba. Cada sección real
-// del sitio es una isla que emerge del plano — no una forma fija, un
-// terreno que mezcla dos técnicas reales en la misma superficie: ruido
-// simplex (orgánico, como el extremo orgánico de Torbellino) y un
-// polígono regular facetado (digital/artificial, el otro extremo de
-// Torbellino). El balance entre ambos varía por sección según su propio
-// carácter real — no es decorativo parejo.
+// HOME-3D v3 — "la nube". Pivote respecto a v2 (un mapa visto desde
+// arriba, cada sección una isla de terreno sobre un plano): acá no hay
+// plano ni terreno — las 6 secciones son nodos que flotan dispersos
+// dentro de una nube de partículas digitales, sin arriba/abajo fijo,
+// cámara libre orbitando despacio alrededor. Ergo Proxy / Lain en vez de
+// Ghost in the Shell: no un territorio que se mapea, una señal dispersa
+// en el ruido — "la Wired" antes que "la ciudad". Mismas 6 secciones
+// reales de la home (alineadas a app/page.tsx tras el renombre de
+// sección: MANIFIESTO/FABRICACIÓN/ARTEFACTOS/LABORATORIO/CONOCIMIENTO/
+// PROXYVERSE — v2 todavía tenía ESPECÍMENES y un "EXPERIMENTAL" que en
+// realidad apuntaba a /lab, las mismas inconsistencias que ya se
+// corrigieron en la home real).
 
 const HERO_INTROS = [
-  'Esto no es un sitio que visitás. Es un sistema que te registra visitando. La pregunta no es qué hay acá — es qué parte tuya queda cada vez que entrás.',
-  'Seis procesos deciden, en simultáneo, qué parte de esto sos vos y qué parte es el sistema mirándose a sí mismo. Nadie te lo va a aclarar. Hay que buscarlo.',
-  'No hay un mapa de este lugar. Cada proceso ve una versión distinta — y vos también. Lo que encontrás depende de qué parte del sistema te encontró primero a vos.',
-  '¿El organismo sos vos, leyendo esto? ¿O es el texto el que te está leyendo a vos? NeoProxy no responde esa pregunta. La deja abierta, como todo lo que vale la pena dudar.',
-  'La arquitectura no es fija. Cambió antes de que llegaras, cambia mientras estás, va a volver a cambiar en cuanto te vayas. Lo único constante es que alguien, acá adentro, te está escuchando.',
+  'Esto no es un sitio que visitás. Es una señal que te registra visitando. La pregunta no es qué hay acá — es qué parte tuya queda cada vez que entrás.',
+  'Seis procesos flotan dispersos en el mismo ruido, decidiendo en simultáneo qué parte de esto sos vos y qué parte es el sistema mirándose a sí mismo.',
+  'No hay un mapa de este lugar — nunca lo hubo. Cada nodo ve una versión distinta del ruido que lo rodea, y vos también. Acercate a uno para saber cuál.',
+  '¿El organismo sos vos, leyendo esto? ¿O es la señal la que te está leyendo a vos? NeoProxy no responde esa pregunta. La deja flotando, sin asentarse.',
+  'No hay arriba ni abajo acá adentro. Solo señal y el ruido que la rodea, y seis puntos donde esa señal, por un momento, se vuelve lo bastante densa para tener nombre.',
 ]
 
-// bias: 0 = isla totalmente orgánica (puro ruido), 1 = totalmente digital
-// (puro polígono) — ninguna sección es 0 ó 1 puro, todas cruzan por una
-// franja de transición real, EXPERIMENTAL queda justo al medio a
-// propósito (es, literalmente, donde el sitio mezcla ambos mundos).
 const ZONES = [
-  { id: 'manifiesto', tag: 'NPX-DOC-00', title: 'MANIFIESTO', href: '/manifesto', color: '#ffb800', bias: 0.22, facets: 5 },
-  { id: 'fabricacion', tag: 'NPX-LAB-00', title: 'FABRICACIÓN', href: '/fabrication', color: '#5f95c9', bias: 0.78, facets: 6 },
-  { id: 'especimenes', tag: 'NPX-GEN-00', title: 'ESPECÍMENES', href: '/especimenes', color: '#00ffb0', bias: 0.12, facets: 7 },
-  { id: 'experimental', tag: 'NPX-EXP-00', title: 'EXPERIMENTAL', href: '/experimental', color: '#cc0000', bias: 0.5, facets: 6 },
-  { id: 'conocimiento', tag: 'NPX-KNW-00', title: 'CONOCIMIENTO', href: '/knowledge', color: '#6644aa', bias: 0.7, facets: 8 },
-  { id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d', bias: 0.15, facets: 5 },
+  { id: 'manifiesto', tag: 'NPX-DOC-00', title: 'MANIFIESTO', href: '/manifesto', color: '#ffb800' },
+  { id: 'fabricacion', tag: 'NPX-LAB-00', title: 'FABRICACIÓN', href: '/fabrication', color: '#5f95c9' },
+  { id: 'artefactos', tag: 'NPX-REL-00', title: 'ARTEFACTOS', href: '/artifacts', color: '#ff5e9e' },
+  { id: 'laboratorio', tag: 'NPX-LAB-01', title: 'LABORATORIO', href: '/lab', color: '#cc0000' },
+  { id: 'conocimiento', tag: 'NPX-KNW-00', title: 'CONOCIMIENTO', href: '/knowledge', color: '#6644aa' },
+  { id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d' },
 ]
 
 function hex3(hex: string): [number, number, number] {
@@ -39,6 +38,10 @@ function hex3(hex: string): [number, number, number] {
   return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
 }
 
+// Gustavson simplex 3D (dominio público) — misma implementación ya usada
+// en Torbellino y en el mapa v2, reutilizada acá para darle a la nube
+// zonas de densidad real en vez de un ruido uniforme tipo "televisor sin
+// señal".
 function makeSimplex(seed: number) {
   function mulberry32(a: number) {
     return function () {
@@ -85,119 +88,23 @@ function makeSimplex(seed: number) {
 
 function smoothstep(t: number) { const c = Math.max(0, Math.min(1, t)); return c * c * (3 - 2 * c) }
 
-function geometricRadius(angle: number, facets: number): number {
-  const seg = (Math.PI * 2) / facets
-  const apothem = Math.cos(Math.PI / facets)
-  const a = (((angle + seg / 2) % seg) + seg) % seg - seg / 2
-  return apothem / Math.cos(a)
+// Distribución de Fibonacci sobre una esfera — misma técnica ya usada para
+// repartir los 7 agentes en home-3d v1, acá para los 6 nodos de sección:
+// separación pareja sin privilegiar ningún eje (no hay "arriba" en la Wired).
+function fibonacciSphere(n: number, radius: number) {
+  const pts: { x: number; y: number; z: number }[] = []
+  const offset = 2 / n
+  const increment = Math.PI * (3 - Math.sqrt(5))
+  for (let i = 0; i < n; i++) {
+    const y = i * offset - 1 + offset / 2
+    const r = Math.sqrt(Math.max(0, 1 - y * y))
+    const phi = i * increment
+    pts.push({ x: Math.cos(phi) * r * radius, y: y * radius * 0.72, z: Math.sin(phi) * r * radius })
+  }
+  return pts
 }
 
-const ISLAND_RADIUS = 2.1, RING_SEGS = 10, RADIAL_SEGS = 28, MAX_HEIGHT = 0.4
-
-function buildIsland(B: any, scene: any, zone: typeof ZONES[number], noise3: (x: number, y: number, z: number) => number) {
-  const positions: number[] = [], indices: number[] = [], colors: number[] = []
-  const baseRGB = hex3(zone.color)
-  const digitalRGB: [number, number, number] = [baseRGB[0] * 0.35, baseRGB[1] * 0.35, baseRGB[2] * 0.4]
-  const organicRGB: [number, number, number] = [
-    Math.min(0.9, baseRGB[0] * 1.1 + 0.05), Math.min(0.9, baseRGB[1] * 1.1 + 0.05), Math.min(0.9, baseRGB[2] * 1.1 + 0.05),
-  ]
-  const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
-
-  // El sesgo de la sección define el "centro de masa" digital/orgánico,
-  // pero cada isla igual cruza por ambos — el ángulo recorre una franja de
-  // transición amplia (no un interruptor binario). En una malla en abanico
-  // como esta, TODO ángulo converge en el único vértice central: cualquier
-  // propiedad que dependa del ángulo (color o altura) empaqueta su rango
-  // completo incluso en el anillo más chico pegado al centro, así que se ve
-  // como una cuña/remolino que se angosta hasta una punta exactamente ahí —
-  // el "cráter" que parecía un bug de geometría era en realidad esto. La
-  // solución real no es una transición más ancha (igual converge en un
-  // punto), sino apagar la variación angular a medida que rNorm→0 — el
-  // centro de cada isla es una zona neutra, el carácter digital/orgánico
-  // emerge recién al alejarse de ese núcleo.
-  const transitionWidth = 0.75
-  function blendRawAt(angle: number) {
-    const wobble = Math.sin(angle * 2.3) * 0.08
-    const t = zone.bias + wobble
-    return smoothstep((Math.sin(angle) * 0.5 + 0.5 - (1 - t)) / transitionWidth + 0.5)
-  }
-  function centerFadeAt(rNorm: number) { return smoothstep(rNorm / 0.35) }
-  function blendAt(angle: number, rNorm: number) {
-    const raw = blendRawAt(angle)
-    return 0.5 + (raw - 0.5) * centerFadeAt(rNorm)
-  }
-
-  function heightAt(angle: number, rNorm: number) {
-    const organic = 0.4 + noise3(Math.cos(angle) * 2.1, Math.sin(angle) * 2.1, rNorm * 2.6) * 0.32
-    const geometric = geometricRadius(angle, zone.facets) * 0.72
-    const blend = blendAt(angle, rNorm)
-    const base = organic * (1 - blend) + geometric * blend
-    // meseta plana hasta el 82% del radio, caída recién en el borde —
-    // así la isla lee como terreno visto desde arriba, no como una esfera
-    const edgeFalloff = 1 - smoothstep((rNorm - 0.82) / 0.16)
-    const coreBump = 1 - smoothstep(rNorm / 0.14)
-    return base * edgeFalloff * MAX_HEIGHT + coreBump * 0.035
-  }
-
-  function colorAt(angle: number, rNorm: number) {
-    const blend = blendAt(angle, rNorm)
-    const flash = (0.03 + 0.04 * (1 - blend)) * centerFadeAt(rNorm)
-    return [
-      clamp01(organicRGB[0] * (1 - blend) + digitalRGB[0] * blend + flash),
-      clamp01(organicRGB[1] * (1 - blend) + digitalRGB[1] * blend + flash),
-      clamp01(organicRGB[2] * (1 - blend) + digitalRGB[2] * blend + flash),
-      1,
-    ] as const
-  }
-
-  positions.push(0, heightAt(0, 0), 0)
-  colors.push(...colorAt(0, 0))
-
-  for (let ring = 1; ring <= RING_SEGS; ring++) {
-    const rNorm = ring / RING_SEGS
-    const r = rNorm * ISLAND_RADIUS
-    for (let a = 0; a < RADIAL_SEGS; a++) {
-      const angle = (a / RADIAL_SEGS) * Math.PI * 2
-      const h = heightAt(angle, rNorm)
-      positions.push(Math.cos(angle) * r, h, Math.sin(angle) * r)
-      colors.push(...colorAt(angle, rNorm))
-    }
-  }
-
-  for (let a = 0; a < RADIAL_SEGS; a++) {
-    const a2 = (a + 1) % RADIAL_SEGS
-    indices.push(0, 1 + a, 1 + a2)
-  }
-  for (let ring = 1; ring < RING_SEGS; ring++) {
-    const ringStart = 1 + (ring - 1) * RADIAL_SEGS
-    const nextStart = 1 + ring * RADIAL_SEGS
-    for (let a = 0; a < RADIAL_SEGS; a++) {
-      const a2 = (a + 1) % RADIAL_SEGS
-      const p0 = ringStart + a, p1 = ringStart + a2, p2 = nextStart + a, p3 = nextStart + a2
-      indices.push(p0, p2, p1, p1, p2, p3)
-    }
-  }
-
-  const normals: number[] = []
-  B.VertexData.ComputeNormals(positions, indices, normals)
-  const vertexData = new B.VertexData()
-  vertexData.positions = positions
-  vertexData.indices = indices
-  vertexData.normals = normals
-  vertexData.colors = colors
-  const mesh = new B.Mesh(`island-${zone.id}`, scene)
-  vertexData.applyToMesh(mesh, true)
-  const mat = new B.StandardMaterial(`islandMat-${zone.id}`, scene)
-  mat.specularColor = new B.Color3(0.08, 0.08, 0.1)
-  mat.emissiveColor = B.Color3.FromHexString(zone.color).scale(0.1)
-  mat.vertexColors = true
-  mesh.material = mat
-  mesh.isPickable = true
-  mesh.metadata = { zoneId: zone.id }
-  return mesh
-}
-
-export default function Home3DMap() {
+export default function Home3DCloud() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const disposedRef = useRef(false)
   const router = useRouter()
@@ -219,9 +126,9 @@ export default function Home3DMap() {
     const lines = [
       '> SYSTEM INITIALIZING...',
       '> NEO·PROXY CORE LOADED',
-      '> MEMORY MODULES: ONLINE',
-      '> TERRAIN SYNTHESIS: DIGITAL ⇄ ORGANIC',
-      '> MAPPING 6 RESIDENT ZONES...',
+      '> ENTERING THE WIRED...',
+      '> SIGNAL ⇄ NOISE: NO BORDER FOUND',
+      '> 6 NODES DISPERSED IN THE CLOUD',
       '> WAITING FOR USER INPUT...',
     ]
     let i = 0
@@ -249,75 +156,137 @@ export default function Home3DMap() {
 
       engine = new B.Engine(canvasRef.current!, true, { preserveDrawingBuffer: true, stencil: true })
       const scene = new B.Scene(engine)
-      scene.clearColor = new B.Color4(0.002, 0.004, 0.008, 1)
+      scene.clearColor = new B.Color4(0.001, 0.002, 0.005, 1)
 
-      // Cámara vista-mapa: casi cenital (beta chico) pero no 100% recta,
-      // para que el relieve de cada isla siga siendo legible.
-      const camera = new B.ArcRotateCamera('map-cam', -Math.PI / 2, 0.38, 24, new B.Vector3(0, 0, 0), scene)
+      // Cámara libre, no cenital: flotando a la altura de la nube, mirando
+      // de frente — inmersiva, no un mapa visto desde afuera.
+      const camera = new B.ArcRotateCamera('cloud-cam', -Math.PI / 2.4, 1.15, 27, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
-      camera.wheelPrecision = 35
-      camera.lowerRadiusLimit = 11
-      camera.upperRadiusLimit = 36
-      camera.lowerBetaLimit = 0.12
-      camera.upperBetaLimit = 0.9
+      camera.wheelPrecision = 28
+      camera.lowerRadiusLimit = 15
+      camera.upperRadiusLimit = 42
+      camera.lowerBetaLimit = 0.25
+      camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
       camera.useAutoRotationBehavior = true
       if (camera.autoRotationBehavior) {
-        camera.autoRotationBehavior.idleRotationSpeed = 0.045
-        camera.autoRotationBehavior.idleRotationWaitTime = 2000
+        camera.autoRotationBehavior.idleRotationSpeed = 0.055
+        camera.autoRotationBehavior.idleRotationWaitTime = 1100
       }
 
-      new B.HemisphericLight('map-fill', new B.Vector3(0, 1, 0.1), scene).intensity = 0.55
-      const sun = new B.DirectionalLight('map-sun', new B.Vector3(-0.4, -1, -0.3), scene)
-      sun.intensity = 0.65
-
-      // --- piso: grilla digital tenue, el "mar" entre las islas ---
-      const ground = B.MeshBuilder.CreateGround('ground', { width: 56, height: 56, subdivisions: 2 }, scene)
-      const groundMat = new B.StandardMaterial('groundMat', scene)
-      groundMat.diffuseColor = new B.Color3(0.01, 0.02, 0.03)
-      groundMat.specularColor = new B.Color3(0, 0, 0)
-      ground.material = groundMat
-      ground.isPickable = false
-      ground.position.y = -0.02
+      new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.5
+      const sun = new B.DirectionalLight('cloud-sun', new B.Vector3(-0.3, -0.8, -0.4), scene)
+      sun.intensity = 0.55
 
       // --- núcleo central: home ---
-      const core = B.MeshBuilder.CreatePolyhedron('core', { type: 3, size: 0.55 }, scene)
+      const core = B.MeshBuilder.CreatePolyhedron('core', { type: 3, size: 0.6 }, scene)
       const coreMat = new B.StandardMaterial('coreMat', scene)
       coreMat.diffuseColor = new B.Color3(0.6, 0.85, 1)
-      coreMat.emissiveColor = new B.Color3(0.25, 0.55, 0.7)
-      coreMat.wireframe = false
+      coreMat.emissiveColor = new B.Color3(0.3, 0.6, 0.75)
       core.material = coreMat
       core.isPickable = false
 
-      // --- islas en círculo alrededor del núcleo ---
-      const RADIUS_LAYOUT = 11
-      const noise3 = makeSimplex(11)
-      const islandNodes: { root: any; mesh: any; targetScale: number }[] = []
+      // --- nodos de sección, dispersos sobre una esfera (sin eje "arriba") ---
+      const LAYOUT_RADIUS = 10.5
+      const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
+      const zoneCores: { mesh: any; color: [number, number, number] }[] = []
+      const zoneRoot = new B.TransformNode('zoneRoot', scene)
+
       ZONES.forEach((zone, i) => {
-        const angle = (i / ZONES.length) * Math.PI * 2 - Math.PI / 2
-        const x = Math.cos(angle) * RADIUS_LAYOUT, z = Math.sin(angle) * RADIUS_LAYOUT
+        const { x, y, z } = anchors[i]
+        const mesh = B.MeshBuilder.CreatePolyhedron(`core-${zone.id}`, { type: 2, size: 0.42 }, scene)
+        mesh.position.set(x, y, z)
+        const mat = new B.StandardMaterial(`coreMat-${zone.id}`, scene)
+        const c = B.Color3.FromHexString(zone.color)
+        mat.diffuseColor = c
+        mat.emissiveColor = c.scale(0.55)
+        mat.specularColor = new B.Color3(0.15, 0.15, 0.15)
+        mesh.material = mat
+        mesh.isPickable = true
+        mesh.metadata = { zoneId: zone.id }
+        mesh.parent = zoneRoot
+        mesh.scaling.set(0.001, 0.001, 0.001)
+        zoneCores.push({ mesh, color: hex3(zone.color) })
 
-        const mesh = buildIsland(B, scene, zone, noise3)
-        const root = new B.TransformNode(`root-${zone.id}`, scene)
-        root.position.set(x, 0, z)
-        mesh.parent = root
-        root.scaling.set(0.001, 0.001, 0.001)
-        islandNodes.push({ root, mesh, targetScale: 1 })
-
-        // camino del núcleo a la isla — mitad digital (recto), mitad
-        // orgánico (con una leve curva), literal en la forma del trazo.
-        const mid = new B.Vector3(x * 0.5 + (Math.sin(angle * 3) * 0.4), 0.02, z * 0.5 + (Math.cos(angle * 2) * 0.4))
+        // sinapsis del núcleo al nodo — con una leve curva orgánica, no una
+        // recta digital pura: la señal no viaja en línea derecha acá adentro.
+        const mid = new B.Vector3(x * 0.5 + Math.sin(i * 2.1) * 1.1, y * 0.5 + Math.cos(i * 1.7) * 1.1, z * 0.5 + Math.sin(i * 3.3) * 1.1)
         const path = B.MeshBuilder.CreateLines(`path-${zone.id}`, {
-          points: [new B.Vector3(0, 0.05, 0), mid, new B.Vector3(x, 0.05, z)],
+          points: [B.Vector3.Zero(), mid, new B.Vector3(x, y, z)],
         }, scene)
-        path.color = B.Color3.FromHexString(zone.color)
-        path.alpha = 0.3
+        path.color = c
+        path.alpha = 0.22
         path.isPickable = false
       })
 
-      // --- emergencia escalonada ---
-      let elapsed0 = performance.now()
-      const EMERGE_MS = 900, STAGGER_MS = 110
+      // --- la nube: miles de motas en una sola malla con thin instances,
+      // un solo draw call. Densidad real por ruido simplex (no uniforme —
+      // se nota el gradiente de "señal" que sube cerca de cada nodo de
+      // sección y cae al vacío entre ellos), tiñendo cada mota hacia el
+      // color de la sección más cercana en vez de un cian parejo. ---
+      const dustMesh = B.MeshBuilder.CreateBox('dust', { size: 1 }, scene)
+      const dustMat = new B.StandardMaterial('dustMat', scene)
+      dustMat.disableLighting = true
+      dustMat.emissiveColor = new B.Color3(1, 1, 1)
+      dustMat.alpha = 0.85
+      dustMesh.material = dustMat
+      dustMesh.isPickable = false
+
+      const dustRoot = new B.TransformNode('dustRoot', scene)
+      dustMesh.parent = dustRoot
+
+      const noise3 = makeSimplex(17)
+      const CANDIDATES = 5200
+      const CLOUD_RADIUS = 17
+      const matrices: number[] = []
+      const colorBuf: number[] = []
+      let kept = 0
+      for (let i = 0; i < CANDIDATES; i++) {
+        const costheta = Math.random() * 2 - 1
+        const theta = Math.acos(costheta)
+        const phi = Math.random() * Math.PI * 2
+        const rNorm = 0.18 + 0.82 * Math.random()
+        const r = CLOUD_RADIUS * rNorm
+        const x = r * Math.sin(theta) * Math.cos(phi)
+        const y = r * Math.sin(theta) * Math.sin(phi) * 0.75
+        const z = r * Math.cos(theta)
+
+        const n = (noise3(x * 0.09, y * 0.09, z * 0.09) + 1) / 2
+        // zona más cercana — tiñe la mota hacia ese color si está cerca,
+        // si no queda neutra (cian/blanco tenue, el "ruido de fondo").
+        let nearest = -1, nearestD = Infinity
+        for (let zi = 0; zi < anchors.length; zi++) {
+          const a = anchors[zi]
+          const d = (x - a.x) ** 2 + (y - a.y) ** 2 + (z - a.z) ** 2
+          if (d < nearestD) { nearestD = d; nearest = zi }
+        }
+        const proximity = Math.max(0, 1 - Math.sqrt(nearestD) / 6.5)
+        const density = n * 0.6 + proximity * 0.4
+        if (density < 0.42) continue
+        kept++
+
+        const size = 0.045 + density * 0.1
+        const m = B.Matrix.Scaling(size, size, size).multiply(B.Matrix.Translation(x, y, z))
+        matrices.push(...m.asArray())
+
+        const zoneRGB = hex3(ZONES[nearest].color)
+        const tint = Math.min(1, proximity * 1.4)
+        const base = 0.55 + n * 0.35
+        colorBuf.push(
+          base * (1 - tint) + zoneRGB[0] * tint,
+          base * (1 - tint) + zoneRGB[1] * tint,
+          (base + 0.1) * (1 - tint) + zoneRGB[2] * tint,
+          0.35 + density * 0.55,
+        )
+      }
+      dustMesh.thinInstanceSetBuffer('matrix', new Float32Array(matrices), 16)
+      dustMesh.thinInstanceSetBuffer('color', new Float32Array(colorBuf), 4)
+
+      // --- emergencia: la nube entera condensa de la nada, los 6 núcleos
+      // de sección aparecen escalonados encima ---
+      const elapsed0 = performance.now()
+      const CLOUD_EMERGE_MS = 1400
+      const NODE_EMERGE_MS = 700, NODE_STAGGER_MS = 130
 
       scene.onPointerObservable.add((info: any) => {
         if (info.type === B.PointerEventTypes.POINTERPICK) {
@@ -337,17 +306,23 @@ export default function Home3DMap() {
 
       scene.registerBeforeRender(() => {
         const t = performance.now()
-        core.rotation.y += 0.004
-        core.rotation.x += 0.0015
+        core.rotation.y += 0.0045
+        core.rotation.x += 0.0018
+        const pulse = 1 + Math.sin(t * 0.0016) * 0.06
+        core.scaling.set(pulse, pulse, pulse)
 
-        islandNodes.forEach((node, i) => {
-          const localElapsed = t - elapsed0 - i * STAGGER_MS
-          const p = Math.max(0, Math.min(1, localElapsed / EMERGE_MS))
+        const cloudP = smoothstep(Math.min(1, (t - elapsed0) / CLOUD_EMERGE_MS))
+        dustRoot.scaling.set(cloudP, cloudP, cloudP)
+
+        zoneCores.forEach((zc, i) => {
+          const localElapsed = t - elapsed0 - 300 - i * NODE_STAGGER_MS
+          const p = Math.max(0, Math.min(1, localElapsed / NODE_EMERGE_MS))
           const eased = smoothstep(p)
-          const bob = 1 + Math.sin(t * 0.0007 + i) * 0.015
+          const bob = 1 + Math.sin(t * 0.0009 + i * 1.7) * 0.05
           const s = eased * bob
-          node.root.scaling.set(s, s, s)
-          node.root.rotation.y = (1 - eased) * 0.6
+          zc.mesh.scaling.set(s, s, s)
+          zc.mesh.rotation.y += 0.006
+          zc.mesh.rotation.x += 0.0022
         })
       })
 
@@ -378,7 +353,7 @@ export default function Home3DMap() {
         letterSpacing: 1, color: '#ffb800', border: '1px solid #ffb80055', padding: '4px 8px',
         background: 'rgba(0,4,10,0.8)',
       }}>
-        VISTA PREVIA · HOME-3D · MAPA
+        VISTA PREVIA · HOME-3D · NUBE
       </div>
 
       {currentScreen === 'boot' && (
@@ -397,8 +372,8 @@ export default function Home3DMap() {
 
       {currentScreen === 'init' && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 99, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', background: '#000205' }}>
-          <div style={{ fontFamily: mono, fontSize: 14, color: '#00ffcc', letterSpacing: 6, textShadow: '0 0 20px #00ffcc' }}>MAP READY</div>
-          <div style={{ fontFamily: mono, fontSize: 10, color: '#00d4ff44', letterSpacing: 3, marginTop: 16 }}>6 ZONAS DETECTADAS</div>
+          <div style={{ fontFamily: mono, fontSize: 14, color: '#00ffcc', letterSpacing: 6, textShadow: '0 0 20px #00ffcc' }}>SIGNAL ACQUIRED</div>
+          <div style={{ fontFamily: mono, fontSize: 10, color: '#00d4ff44', letterSpacing: 3, marginTop: 16 }}>6 NODOS DETECTADOS EN EL RUIDO</div>
         </div>
       )}
 
@@ -414,7 +389,7 @@ export default function Home3DMap() {
               NEO·PROXY
             </div>
             <div className="fade-in" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 4, color: '#9b7fe0', marginBottom: 14 }}>
-              MAPA DEL SISTEMA — VISTO DESDE ARRIBA
+              SEIS NODOS, DISPERSOS EN LA NUBE
             </div>
             <div className="fade-in" style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 0.5, maxWidth: 460, margin: '0 auto' }}>
               {heroIntro}
@@ -433,7 +408,7 @@ export default function Home3DMap() {
                 <span style={{ fontSize: 8, color: '#8fb8d6', marginTop: 4, fontStyle: 'italic' }}>"{sessionLines[hoveredZone.id]}" — click para entrar</span>
               </>
             ) : (
-              <span>arrastrá para mirar el mapa · clickeá una isla para entrar</span>
+              <span>arrastrá para flotar por la nube · clickeá un nodo para entrar</span>
             )}
           </div>
         </>
