@@ -205,13 +205,20 @@ export default function Home() {
     const pointerTarget = { x: 0, y: 0 }
     const pointerCurrent = { x: 0, y: 0 }
 
-    // "Venom": los títulos de sección (.venom-title) leen --venom-stretch/
-    // --venom-skew por CSS y el atributo scale de #venom-displace por SVG —
-    // los tres derivan de la velocidad real de scroll acá, no de un loop
-    // decorativo aparte. Reutiliza el mismo rAF del polytope en vez de abrir
-    // un segundo loop.
+    // "Venom": todo texto con la clase venom-fx (títulos, tags, copy, citas,
+    // botones — grandes y chicos) lee --venom-stretch/--venom-skew por CSS y
+    // el atributo scale de #venom-displace por SVG, los tres derivados de la
+    // velocidad real de scroll acá — no un loop decorativo aparte. El glitch
+    // RGB (--glitch-x/--glitch-opacity, pseudo-elementos ::before/::after
+    // sobre data-text) corre como ráfagas cortas y discretas en vez de un
+    // valor continuo: más frecuentes y más intensas cuanto más rápido se
+    // scrollea, pero con un tic ambiente ocasional incluso en reposo — el
+    // "organismo" nunca está del todo quieto. Reutiliza el mismo rAF del
+    // polytope en vez de abrir un segundo loop.
     let lastScrollY = window.scrollY
     let scrollVelocity = 0
+    let nextGlitchAt = 0
+    let glitchUntil = 0
     const venomDisplace = document.getElementById('venom-displace')
 
     const updateScroll = () => {
@@ -241,13 +248,32 @@ export default function Home() {
         const rawVelocity = currentScrollY - lastScrollY
         lastScrollY = currentScrollY
         scrollVelocity = scrollVelocity * 0.85 + rawVelocity * 0.15
-        const v = Math.max(-60, Math.min(60, scrollVelocity))
-        const stretch = Math.min(0.5, Math.abs(v) / 45)
-        const skew = Math.max(-6, Math.min(6, v * 0.12))
+        const v = Math.max(-100, Math.min(100, scrollVelocity))
+        const absV = Math.abs(v)
+        const stretch = Math.min(1.15, absV / 26)
+        const skew = Math.max(-18, Math.min(18, v * 0.22))
         const root = document.documentElement.style
         root.setProperty('--venom-stretch', stretch.toFixed(3))
         root.setProperty('--venom-skew', skew.toFixed(2))
-        venomDisplace?.setAttribute('scale', Math.min(16, Math.abs(v) * 0.45).toFixed(2))
+        venomDisplace?.setAttribute('scale', Math.min(34, absV * 0.85).toFixed(2))
+
+        // Glitch: ráfagas discretas, no un valor continuo — más seguido y
+        // más fuerte cuanto más rápido se scrollea; en reposo, un tic raro
+        // cada tanto para que nunca se sienta del todo apagado.
+        if (t > nextGlitchAt) {
+          const willGlitch = absV > 3 || Math.random() < 0.1
+          if (willGlitch) {
+            const burstX = (Math.random() * 2 - 1) * (8 + absV * 0.9)
+            root.setProperty('--glitch-x', burstX.toFixed(1))
+            root.setProperty('--glitch-opacity', '1')
+            glitchUntil = t + 50 + Math.random() * 90
+          }
+          const baseInterval = absV > 12 ? 70 : 1400
+          nextGlitchAt = t + baseInterval + Math.random() * baseInterval
+        }
+        if (t > glitchUntil) {
+          root.setProperty('--glitch-opacity', '0')
+        }
       }
 
       pointerCurrent.x += (pointerTarget.x - pointerCurrent.x) * 0.06
@@ -452,14 +478,17 @@ export default function Home() {
         <>
           <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 1, pointerEvents: 'none' }} />
 
-          {/* Filtro "venom" — el título de cada sección lo referencia por CSS
-              (filter: url(#venom-goo)). El scroll real empuja el atributo
-              `scale` de feDisplacementMap vía JS (ver updateVenom más abajo),
-              así que el tironeo orgánico de las letras es proporcional a la
-              velocidad real de scroll, no un loop decorativo desconectado. */}
+          {/* Filtro "venom" — cualquier texto con la clase venom-fx lo
+              referencia por CSS (filter: url(#venom-goo)). El scroll real
+              empuja el atributo `scale` de feDisplacementMap vía JS (en el
+              mismo rAF del polytope), así que el tironeo orgánico de las
+              letras — grandes o chicas — es proporcional a la velocidad real
+              de scroll, no un loop decorativo desconectado. data-text en cada
+              elemento duplica el contenido para el glitch RGB de ::before/
+              ::after (ver updateVenom y el <style> más abajo). */}
           <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
             <defs>
-              <filter id="venom-goo" x="-30%" y="-60%" width="160%" height="260%">
+              <filter id="venom-goo" x="-60%" y="-120%" width="220%" height="340%">
                 <feTurbulence id="venom-turbulence" type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="noise" />
                 <feDisplacementMap id="venom-displace" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
               </filter>
@@ -470,18 +499,24 @@ export default function Home() {
             position: 'relative', zIndex: 10, minHeight: '100vh', display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '100px 24px 60px', boxSizing: 'border-box'
           }}>
-            <div className="fade-in hero-title" style={{
+            <div className="fade-in hero-title venom-fx" data-text="NEO·PROXY" style={{
               fontFamily: mono, fontSize: 56, fontWeight: 700, letterSpacing: 16, color: heroAgent.color,
-              textShadow: `0 0 40px ${heroAgent.color}, 0 0 80px ${heroAgent.color}66`, marginBottom: 16, lineHeight: 1
+              textShadow: `0 0 40px ${heroAgent.color}, 0 0 80px ${heroAgent.color}66`, marginBottom: 16, lineHeight: 1,
+              position: 'relative', display: 'inline-block',
             }}>
               NEO·PROXY
             </div>
 
-            <div className="fade-in hero-tagline" style={{ fontFamily: mono, fontSize: 13, letterSpacing: 8, color: '#9b7fe0', marginBottom: 24 }}>
+            <div className="fade-in hero-tagline venom-fx" data-text="ORGANISMO · PROXYVERSO · FABRICACIÓN" style={{
+              fontFamily: mono, fontSize: 13, letterSpacing: 8, color: '#9b7fe0', marginBottom: 24, position: 'relative', display: 'inline-block',
+            }}>
               ORGANISMO · PROXYVERSO · FABRICACIÓN
             </div>
 
-            <div className="fade-in hero-sub" style={{ fontFamily: mono, fontSize: 13, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 1, marginBottom: 48, maxWidth: 480 }}>
+            <div className="fade-in hero-sub venom-fx" data-text={heroIntro} style={{
+              fontFamily: mono, fontSize: 13, lineHeight: 1.7, color: '#8fb8d6', letterSpacing: 1, marginBottom: 48, maxWidth: 480,
+              position: 'relative', display: 'inline-block',
+            }}>
               {heroIntro}
             </div>
 
@@ -490,9 +525,9 @@ export default function Home() {
               <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> PROXYVERSE: 7 ONLINE</div>
             </div>
 
-            <div className="fade-in" style={{
+            <div className="fade-in venom-fx" data-text={`${heroAgent.name} // "${heroLine}"`} style={{
               fontFamily: mono, fontSize: 9, letterSpacing: 1, color: heroAgent.color, opacity: 0.8,
-              fontStyle: 'italic', marginBottom: 32, maxWidth: 460
+              fontStyle: 'italic', marginBottom: 32, maxWidth: 460, position: 'relative', display: 'inline-block',
             }}>
               {heroAgent.name} // "{heroLine}"
             </div>
@@ -510,26 +545,36 @@ export default function Home() {
                 alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '80px 24px', boxSizing: 'border-box',
                 borderTop: `1px solid ${agent.color}22`, background: idx % 2 === 1 ? `${agent.color}08` : 'transparent'
               }}>
-                <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#7a9cc0', marginBottom: 6 }}>
+                <div className="venom-fx" data-text={s.tag} style={{
+                  fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#7a9cc0', marginBottom: 6, position: 'relative', display: 'inline-block',
+                }}>
                   {s.tag}
                 </div>
-                <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, opacity: 0.75, marginBottom: 18 }}>
+                <div className="venom-fx" data-text={`PROCESO RESIDENTE // ${agent.name}`} style={{
+                  fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, opacity: 0.75, marginBottom: 18, position: 'relative', display: 'inline-block',
+                }}>
                   PROCESO RESIDENTE // {agent.name}
                 </div>
-                <div className="venom-title" style={{
+                <div className="venom-fx" data-text={s.title} style={{
                   fontFamily: mono, fontSize: 32, letterSpacing: 8, color: agent.color, marginBottom: 20,
-                  textShadow: `0 0 24px ${agent.color}59`, display: 'inline-block', willChange: 'transform, filter',
+                  textShadow: `0 0 24px ${agent.color}59`, display: 'inline-block', position: 'relative', willChange: 'transform, filter',
                 }}>
                   {s.title}
                 </div>
-                <div style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.8, letterSpacing: 0.5, color: '#9fc4e0', maxWidth: 520, marginBottom: 20 }}>
+                <div className="venom-fx" data-text={s.copy} style={{
+                  fontFamily: mono, fontSize: 12, lineHeight: 1.8, letterSpacing: 0.5, color: '#9fc4e0', maxWidth: 520, marginBottom: 20,
+                  position: 'relative', display: 'inline-block',
+                }}>
                   {s.copy}
                 </div>
-                <div style={{ fontFamily: mono, fontSize: 10, lineHeight: 1.7, letterSpacing: 0.3, color: agent.color, opacity: 0.75, fontStyle: 'italic', maxWidth: 440, marginBottom: 36 }}>
+                <div className="venom-fx" data-text={`"${line}"`} style={{
+                  fontFamily: mono, fontSize: 10, lineHeight: 1.7, letterSpacing: 0.3, color: agent.color, opacity: 0.75, fontStyle: 'italic', maxWidth: 440, marginBottom: 36,
+                  position: 'relative', display: 'inline-block',
+                }}>
                   "{line}"
                 </div>
-                <Link href={s.href} className="cyber-btn" style={{
-                  display: 'inline-block', fontFamily: mono, fontSize: 10, letterSpacing: 3, color: agent.color, textDecoration: 'none',
+                <Link href={s.href} className="cyber-btn venom-fx" data-text={`[ ${s.cta} ]`} style={{
+                  display: 'inline-block', position: 'relative', fontFamily: mono, fontSize: 10, letterSpacing: 3, color: agent.color, textDecoration: 'none',
                   border: `1px solid ${agent.color}44`, padding: '12px 32px', background: `${agent.color}0d`, cursor: 'pointer'
                 }}>
                   [ {s.cta} ]
@@ -538,9 +583,9 @@ export default function Home() {
             )
           })}
 
-          <div style={{
+          <div className="venom-fx" data-text="DUDÁ DE TODO LO QUE NO TE DEJA DUDAR." style={{
             position: 'relative', zIndex: 10, textAlign: 'center', padding: '32px 24px 8px', fontFamily: mono,
-            fontSize: 9, letterSpacing: 2, color: '#00d4ff55'
+            fontSize: 9, letterSpacing: 2, color: '#00d4ff55', display: 'block',
           }}>
             DUDÁ DE TODO LO QUE NO TE DEJA DUDAR.
           </div>
@@ -558,13 +603,34 @@ export default function Home() {
         .scroll-cue {
           animation: pulse-cue 2s ease-in-out infinite;
         }
-        .venom-title {
+        .venom-fx {
           transform-origin: top center;
           transform: scaleY(calc(1 + var(--venom-stretch, 0))) skewY(calc(var(--venom-skew, 0) * 1deg));
           filter: url(#venom-goo);
         }
+        .venom-fx::before, .venom-fx::after {
+          content: attr(data-text);
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: var(--glitch-opacity, 0);
+          white-space: inherit;
+        }
+        .venom-fx::before {
+          color: #ff1f6d;
+          mix-blend-mode: screen;
+          transform: translateX(calc(var(--glitch-x, 0) * 1px)) skewX(calc(var(--glitch-x, 0) * 0.4deg));
+          clip-path: inset(0 0 55% 0);
+        }
+        .venom-fx::after {
+          color: #00f0ff;
+          mix-blend-mode: screen;
+          transform: translateX(calc(var(--glitch-x, 0) * -1px)) skewX(calc(var(--glitch-x, 0) * -0.4deg));
+          clip-path: inset(45% 0 0 0);
+        }
         @media (prefers-reduced-motion: reduce) {
-          .venom-title { transform: none; filter: none; }
+          .venom-fx { transform: none; filter: none; }
+          .venom-fx::before, .venom-fx::after { display: none; }
         }
         @keyframes pulse-cue {
           0%, 100% { opacity: 0.3; }
