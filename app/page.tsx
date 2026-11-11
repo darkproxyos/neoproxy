@@ -375,7 +375,8 @@ export default function Home() {
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
       const startRadius = aspect < 0.75 ? 29 : 25
-      const camera = new B.ArcRotateCamera('cloud-cam', -Math.PI / 2.4, 1.15, startRadius, B.Vector3.Zero(), scene)
+      const initialAlpha = -Math.PI / 2.4, initialBeta = 1.15
+      const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, startRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
       camera.lowerRadiusLimit = 14
@@ -383,10 +384,15 @@ export default function Home() {
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
-      camera.useAutoRotationBehavior = true
-      if (camera.autoRotationBehavior) {
-        camera.autoRotationBehavior.idleRotationSpeed = 0.05
-        camera.autoRotationBehavior.idleRotationWaitTime = 1100
+      // el auto-orbit de reposo arranca recién después del recorrido guiado
+      // (ver más abajo) — si quedara prendido desde ya, pelearía con la
+      // animación del tour apenas pasa el primer idleRotationWaitTime.
+      const enableIdleOrbit = () => {
+        camera.useAutoRotationBehavior = true
+        if (camera.autoRotationBehavior) {
+          camera.autoRotationBehavior.idleRotationSpeed = 0.05
+          camera.autoRotationBehavior.idleRotationWaitTime = 1100
+        }
       }
 
       new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.62
@@ -596,6 +602,56 @@ export default function Home() {
         }
       })
 
+      // --- recorrido guiado al cargar: la cámara visita unas pocas zonas
+      // antes de soltar el control libre — en vez de dejar que el usuario
+      // tenga que arrastrar a ciegas para descubrir que hay algo acá
+      // (en celular, de entrada, la nube se ve casi vacía). Cualquier
+      // interacción real (arrastrar, zoom) cancela el recorrido al toque
+      // y entrega el control normal de inmediato. ---
+      type CamPose = { alpha: number; beta: number; radius: number }
+      // alpha/beta para que la cámara, mirando siempre al origen, quede
+      // del lado opuesto a la zona — así lo que ve al frente es la zona,
+      // no su propia espalda (ver la derivación en la verificación de
+      // home-3d: el punto queda "delante" solo si la cámara se para del
+      // lado contrario respecto al origen).
+      const lookAtZone = (p: { x: number; y: number; z: number }): CamPose => {
+        const len = Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z) || 1
+        const alpha = Math.atan2(-p.z, -p.x)
+        const betaRaw = Math.acos(Math.max(-1, Math.min(1, -p.y / len)))
+        const beta = Math.max(0.25, Math.min(Math.PI - 0.25, betaRaw))
+        return { alpha, beta, radius: 18 }
+      }
+      const TOUR_ZONE_IDS = ['proxyverse', 'laboratorio', 'conocimiento']
+      const initialPose: CamPose = { alpha: initialAlpha, beta: initialBeta, radius: startRadius }
+      const waypoints: CamPose[] = [
+        initialPose,
+        ...TOUR_ZONE_IDS.map(id => lookAtZone(zonePos[id])).filter(Boolean),
+        initialPose,
+      ]
+      const TOUR_START = 2600, STOP_TRAVEL = 2300, STOP_HOLD = 1700
+      const tourSegments: { from: CamPose; to: CamPose; start: number; end: number }[] = []
+      {
+        let cursor = TOUR_START
+        for (let i = 0; i < waypoints.length - 1; i++) {
+          const start = cursor
+          const end = start + STOP_TRAVEL
+          tourSegments.push({ from: waypoints[i], to: waypoints[i + 1], start, end })
+          cursor = end + (i < waypoints.length - 2 ? STOP_HOLD : 0)
+        }
+      }
+      const tourEndsAt = tourSegments.length ? tourSegments[tourSegments.length - 1].end : 0
+      let tourCancelled = false
+      let idleOrbitEnabled = false
+      // Solo marca la bandera acá — nada de tocar comportamientos de la
+      // cámara en el propio handler de pointerdown. Attachear/soltar un
+      // Behavior en medio de un gesto de puntero en curso confundía la
+      // detección de click-vs-drag de Babylon (el picking dejaba de
+      // disparar en ese mismo click). El cambio real de comportamiento
+      // pasa al loop de render, un frame después, ya afuera del gesto.
+      const cancelTour = () => { tourCancelled = true }
+      canvasRef.current?.addEventListener('pointerdown', cancelTour, { passive: true })
+      canvasRef.current?.addEventListener('wheel', cancelTour, { passive: true })
+
       // --- una luz de color por zona, suave, iluminando su propio
       // cluster desde adentro — refuerza "esto es un grupo" por
       // proximidad Y color (gestalt) además de la pura cercanía
@@ -758,6 +814,42 @@ export default function Home() {
 
       scene.registerBeforeRender(() => {
         const t = performance.now()
+
+        // recorrido guiado — ver el bloque que arma tourSegments más
+        // arriba. Mientras dura, pisa alpha/beta/radius directamente;
+        // apenas el usuario toca el canvas, cancelTour() ya cortó esto.
+        const tourElapsed = t - elapsed0
+        if (tourCancelled || tourElapsed >= tourEndsAt) {
+          // tanto si terminó solo como si lo cortó el usuario, el cambio
+          // de comportamiento de la cámara pasa acá — un frame del render
+          // loop, nunca directo adentro del handler de pointerdown (eso
+          // confundía la detección de click-vs-drag de Babylon y el
+          // picking dejaba de disparar en ese mismo click).
+          if (!idleOrbitEnabled) {
+            enableIdleOrbit()
+            idleOrbitEnabled = true
+          }
+        } else {
+          const seg = tourSegments.find(s => tourElapsed >= s.start && tourElapsed < s.end)
+          if (seg) {
+            const p = smoothstep(Math.max(0, Math.min(1, (tourElapsed - seg.start) / (seg.end - seg.start))))
+            let dA = seg.to.alpha - seg.from.alpha
+            dA = ((dA + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI
+            camera.alpha = seg.from.alpha + dA * p
+            camera.beta = seg.from.beta + (seg.to.beta - seg.from.beta) * p
+            camera.radius = seg.from.radius + (seg.to.radius - seg.from.radius) * p
+            // sin esto, cualquier offset inercial residual (por ej. de
+            // un primer pointermove espurio al cargar) se suma encima
+            // del valor que acabamos de fijar y la cámara termina en
+            // otro lado del calculado acá arriba.
+            camera.inertialAlphaOffset = 0
+            camera.inertialBetaOffset = 0
+            camera.inertialRadiusOffset = 0
+          }
+          // entre segmentos (en la pausa sobre una zona) no se toca nada
+          // — la cámara se queda exactamente donde llegó
+        }
+
         core.rotation.y += 0.0045
         core.rotation.x += 0.0018
         const pulse = 1 + Math.sin(t * 0.0016) * 0.06
@@ -882,7 +974,11 @@ export default function Home() {
       engine.runRenderLoop(() => scene.render())
       const onResize = () => engine.resize()
       window.addEventListener('resize', onResize)
-      return () => window.removeEventListener('resize', onResize)
+      return () => {
+        window.removeEventListener('resize', onResize)
+        canvasRef.current?.removeEventListener('pointerdown', cancelTour)
+        canvasRef.current?.removeEventListener('wheel', cancelTour)
+      }
     }
 
     let cleanupFn: (() => void) | undefined
@@ -941,18 +1037,18 @@ export default function Home() {
               <div key={i} style={{ position: 'absolute', width: 26, height: 26, ...s }} />
             ))}
 
-            <div style={{ position: 'absolute', top: 88, left: 30, fontFamily: mono, fontSize: 10, color: '#00d4ffaa', letterSpacing: 2, lineHeight: 1.9 }}>
+            <div style={{ position: 'absolute', top: 106, left: 30, fontFamily: mono, fontSize: 10, color: '#00d4ffaa', letterSpacing: 2, lineHeight: 1.9 }}>
               <div>NODES // {TOTAL_NODE_COUNT}</div>
               <div>UNIONS // {ZONE_LINKS.length}</div>
               <div>SIGNAL // ONLINE</div>
             </div>
 
-            <div style={{ position: 'absolute', top: 88, right: 30, fontFamily: mono, fontSize: 10, color: '#00d4ffaa', letterSpacing: 2, textAlign: 'right' }}>
+            <div style={{ position: 'absolute', top: 106, right: 30, fontFamily: mono, fontSize: 10, color: '#00d4ffaa', letterSpacing: 2, textAlign: 'right' }}>
               {clock}
             </div>
 
             {hovered && ALL_NODE_META[hovered] && (
-              <div style={{ position: 'absolute', top: 150, left: 30, fontFamily: mono, fontSize: 10, color: '#00ffccdd', letterSpacing: 2, textShadow: '0 0 10px #00ffcc55' }}>
+              <div style={{ position: 'absolute', top: 168, left: 30, fontFamily: mono, fontSize: 10, color: '#00ffccdd', letterSpacing: 2, textShadow: '0 0 10px #00ffcc55' }}>
                 FOCUS // {ALL_NODE_META[hovered].tag}
               </div>
             )}
