@@ -462,6 +462,12 @@ export default function Home() {
   const [currentScreen, setCurrentScreen] = useState<'boot' | 'init' | 'content'>('boot')
   const [bootText, setBootText] = useState('')
   const [showContent, setShowContent] = useState(false)
+  // marco de cine (barras + flash de corte) — pedido explícito: "esto es
+  // cine". Las barras encuadran todo el arranque y el recorrido guiado;
+  // se retiran recién cuando el usuario recupera el control libre, el
+  // gesto de "termina la película, empieza el juego".
+  const [cinematic, setCinematic] = useState(true)
+  const [flashCut, setFlashCut] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
   const [clock, setClock] = useState('')
 
@@ -491,7 +497,14 @@ export default function Home() {
         clearInterval(interval)
         setTimeout(() => {
           setCurrentScreen('init')
-          setTimeout(() => { setCurrentScreen('content'); setShowContent(true) }, 1300)
+          setTimeout(() => {
+            // corte de cine — un flash breve justo antes del "corte" a la
+            // nube, en vez de que el canvas aparezca sin más
+            setFlashCut(true)
+            setCurrentScreen('content')
+            setShowContent(true)
+            setTimeout(() => setFlashCut(false), 260)
+          }, 1300)
         }, 700)
       }
     }, 340)
@@ -528,12 +541,19 @@ export default function Home() {
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
       const startRadius = aspect < 0.75 ? 48 : 41
+      // plano general: el arranque ya no aparece quieto a startRadius —
+      // la cámara nace mucho más lejos, casi perdida en la oscuridad, y
+      // hace un travelling de acercamiento hasta el plano "normal" (ver
+      // el segmento de apertura en tourSegments más abajo) — el "esto es
+      // cine" pedido explícito, un plano de establecimiento real en vez
+      // de simplemente aparecer ya encuadrado.
+      const openRadius = startRadius * 1.75
       const initialAlpha = -Math.PI / 2.4, initialBeta = 1.15
-      const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, startRadius, B.Vector3.Zero(), scene)
+      const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, openRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
       camera.lowerRadiusLimit = 22
-      camera.upperRadiusLimit = 76
+      camera.upperRadiusLimit = openRadius + 6
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
@@ -546,6 +566,9 @@ export default function Home() {
           camera.autoRotationBehavior.idleRotationSpeed = 0.05
           camera.autoRotationBehavior.idleRotationWaitTime = 1100
         }
+        // termina la película, el marco de cine se retira — recién acá
+        // el usuario tiene de verdad el control libre
+        setCinematic(false)
       }
 
       new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.85
@@ -557,7 +580,8 @@ export default function Home() {
       // Las fotos de los agentes (su propia imagen hace de emissive, no
       // algo que deba brillar como un HUD) quedan afuera explícitamente.
       const glow = new B.GlowLayer('cloud-glow', scene, { mainTextureFixedSize: 1024, blurKernelSize: 48 })
-      glow.intensity = 0.85
+      const GLOW_BASE = 0.85
+      glow.intensity = GLOW_BASE
 
       // Un par de manchas de nebulosa muy lejos, de fondo — atmósfera sin
       // partículas (sacadas a pedido), acercándose al fondo con nubes de
@@ -856,6 +880,11 @@ export default function Home() {
       // solo una cámara que salta de punto a punto
       const TOUR_START = 2800, STOP_TRAVEL = 3200, STOP_HOLD = 2200
       const tourSegments: { from: CamPose; to: CamPose; start: number; end: number }[] = []
+      // plano de apertura: travelling de acercamiento desde la oscuridad
+      // (openRadius) hasta el plano normal — ocupa el mismo tramo que antes
+      // quedaba estático (0 → TOUR_START), no suma duración extra
+      const openingPose: CamPose = { alpha: initialAlpha, beta: initialBeta, radius: openRadius }
+      tourSegments.push({ from: openingPose, to: initialPose, start: 0, end: TOUR_START })
       {
         let cursor = TOUR_START
         for (let i = 0; i < waypoints.length - 1; i++) {
@@ -1146,6 +1175,14 @@ export default function Home() {
         const cloudP = smoothstep(Math.min(1, (t - elapsed0) / CLOUD_EMERGE_MS))
         dustRoot.scaling.set(cloudP, cloudP, cloudP)
 
+        // ignición: apenas termina de condensar la nube, un sobre-brillo
+        // breve que decae — el "big bang" del arranque, no un fade-in
+        // liso. Coincide con la mitad del travelling de apertura: la
+        // cámara todavía se está acercando cuando el núcleo estalla.
+        const sinceEmerge = t - elapsed0 - CLOUD_EMERGE_MS
+        const ignitionDecay = sinceEmerge >= 0 ? Math.max(0, 1 - sinceEmerge / 750) : 0
+        glow.intensity = GLOW_BASE + 1.4 * ignitionDecay * ignitionDecay
+
         // paleta restringida: "familia" activa = la zona en foco (si el
         // mouse está sobre un sub-nodo, su familia es la zona padre) —
         // todo lo que pertenece a esa familia se enciende a su color
@@ -1330,6 +1367,35 @@ export default function Home() {
     <div style={{ background: '#000205', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <div className="crt-scanlines" />
 
+      {/* marco de cine — barras arriba/abajo desde el arranque, se
+          retiran recién cuando termina el recorrido guiado (o el usuario
+          lo corta) y pasa a control libre: "termina la película, empieza
+          el juego". Línea de borde en vez de negro liso, para que lea
+          como encuadre diseñado y no como una barra de carga rota. */}
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40,
+        height: cinematic ? 'clamp(26px, 8vh, 120px)' : '0px',
+        background: '#000205', borderBottom: cinematic ? '1px solid #00d4ff33' : 'none',
+        transition: 'height 1.4s cubic-bezier(0.65,0,0.35,1), border-color 1.4s ease',
+        pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 40,
+        height: cinematic ? 'clamp(26px, 8vh, 120px)' : '0px',
+        background: '#000205', borderTop: cinematic ? '1px solid #00d4ff33' : 'none',
+        transition: 'height 1.4s cubic-bezier(0.65,0,0.35,1), border-color 1.4s ease',
+        pointerEvents: 'none',
+      }} />
+
+      {/* corte de cine — flash breve justo al cortar de "SIGNAL ACQUIRED"
+          a la nube 3D, en vez de que el canvas aparezca sin más */}
+      {flashCut && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 150, background: '#eafcff',
+          animation: 'cinema-flash 260ms ease-out forwards', pointerEvents: 'none',
+        }} />
+      )}
+
       {currentScreen === 'boot' && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1392,6 +1458,7 @@ export default function Home() {
 
       <style>{`
         @keyframes boot-load { from { width: 0%; } to { width: 100%; } }
+        @keyframes cinema-flash { from { opacity: 0.92; } to { opacity: 0; } }
       `}</style>
     </div>
   )
