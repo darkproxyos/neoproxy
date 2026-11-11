@@ -12,10 +12,73 @@ const mono = 'Space Mono, monospace'
 // si volvés a scrollear para arriba.
 const SECTION_COUNT = 7
 
+// "Venom" — el mismo efecto del home anterior (preservado en
+// app/home-classic/page.tsx): un filtro SVG feTurbulence/feDisplacementMap
+// que deforma el texto como si se derritiera, más un glitch RGB discreto
+// (::before/::after con clip-path), los dos manejados por la velocidad real
+// de scroll en vez de un loop decorativo aparte. Acá no hay polytope ni
+// partículas que portar — solo el mecanismo del derretido+glitch en sí,
+// aplicado a todo el texto del manifiesto vía la clase venom-fx. El scroll
+// real de esta página pasa por window/document (el div raíz tiene
+// overflowY:auto pero solo minHeight, así que nunca llega a scrollear
+// adentro de sí mismo) — se lee scrollY como en el home original.
+function useVenomEffect(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) return
+
+    let lastScrollTop = window.scrollY
+    let scrollVelocity = 0
+    let nextGlitchAt = 0
+    let glitchUntil = 0
+    const venomDisplace = document.getElementById('venom-displace')
+    let rafId: number
+
+    const animate = (t: number) => {
+      const currentScrollTop = window.scrollY
+      const rawVelocity = currentScrollTop - lastScrollTop
+      lastScrollTop = currentScrollTop
+      scrollVelocity = scrollVelocity * 0.85 + rawVelocity * 0.15
+      const v = Math.max(-100, Math.min(100, scrollVelocity))
+      const absV = Math.abs(v)
+      const stretch = Math.min(1.15, absV / 26)
+      const skew = Math.max(-18, Math.min(18, v * 0.22))
+      const root = document.documentElement.style
+      root.setProperty('--venom-stretch', stretch.toFixed(3))
+      root.setProperty('--venom-skew', skew.toFixed(2))
+      venomDisplace?.setAttribute('scale', Math.min(34, absV * 0.85).toFixed(2))
+
+      // ráfagas discretas de glitch — más seguido y más fuerte scrolleando
+      // rápido, pero con un tic ambiente ocasional incluso en reposo: el
+      // texto nunca está del todo quieto, como si algo lo mirara de vuelta.
+      if (t > nextGlitchAt) {
+        const willGlitch = absV > 3 || Math.random() < 0.1
+        if (willGlitch) {
+          const burstX = (Math.random() * 2 - 1) * (8 + absV * 0.9)
+          root.setProperty('--glitch-x', burstX.toFixed(1))
+          root.setProperty('--glitch-opacity', '1')
+          glitchUntil = t + 50 + Math.random() * 90
+        }
+        const baseInterval = absV > 12 ? 70 : 1400
+        nextGlitchAt = t + baseInterval + Math.random() * baseInterval
+      }
+      if (t > glitchUntil) {
+        root.setProperty('--glitch-opacity', '0')
+      }
+
+      rafId = requestAnimationFrame(animate)
+    }
+    rafId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(rafId)
+  }, [enabled])
+}
+
 export default function Manifesto() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   const [visible, setVisible] = useState<boolean[]>(() => Array(SECTION_COUNT).fill(false))
-  const [glitching, setGlitching] = useState(false)
+
+  useVenomEffect(true)
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -36,23 +99,6 @@ export default function Manifesto() {
     return () => observer.disconnect()
   }, [])
 
-  // Glitch ambiente en el título -- ráfaga corta y recurrente, no solo al
-  // pasar el mouse. La señal se corrompe sola cada tanto, como en Lain.
-  useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reducedMotion) return
-    let timeout: ReturnType<typeof setTimeout>
-    const scheduleGlitch = () => {
-      timeout = setTimeout(() => {
-        setGlitching(true)
-        setTimeout(() => setGlitching(false), 260)
-        scheduleGlitch()
-      }, 4500 + Math.random() * 4500)
-    }
-    scheduleGlitch()
-    return () => clearTimeout(timeout)
-  }, [])
-
   const registerRef = (idx: number) => (el: HTMLDivElement | null) => {
     sectionRefs.current[idx] = el
   }
@@ -60,16 +106,27 @@ export default function Manifesto() {
   return (
     <div style={{
       background: '#000205', minHeight: '100vh',
-      fontFamily: mono, color: '#00d4ff',
+      fontFamily: mono, color: '#8a97a3',
       position: 'relative', overflowY: 'auto',
     }}>
       <div className="crt-scanlines" />
       <div className="tech-grid" />
 
+      {/* Filtro "venom" — ver useVenomEffect arriba. El scale de
+          feDisplacementMap lo empuja el scroll real del contenedor. */}
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+        <defs>
+          <filter id="venom-goo" x="-60%" y="-120%" width="220%" height="340%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="11" result="noise" />
+            <feDisplacementMap id="venom-displace" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '104px 24px 0' }}>
           <Link href="/" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#3a4652', textDecoration: 'none',
           }}>
             ← VOLVER AL INICIO
           </Link>
@@ -89,46 +146,46 @@ export default function Manifesto() {
         {/* Manifesto text */}
         <div style={{ maxWidth: 680, margin: '0 auto', padding: '60px 24px' }}>
 
-          <div className="manifesto-label-flicker" style={{ fontSize: 9, letterSpacing: 6, color: '#00d4ff44', marginBottom: 40 }}>
+          <div className="manifesto-label-flicker venom-fx" data-text="CANONICAL CONCEPT ART v1.0 // SECTOR ROMDO-01" style={{ fontSize: 9, letterSpacing: 6, color: '#4a5560', marginBottom: 40, position: 'relative', display: 'inline-block' }}>
             CANONICAL CONCEPT ART v1.0 // SECTOR ROMDO-01
           </div>
 
-          <h1 className={glitching ? 'manifesto-title-glitch' : ''} style={{
-            fontSize: 28, letterSpacing: 8, marginBottom: 40, color: '#00ffcc',
-            textShadow: glitching
-              ? '-2px 0 #ff2d55, 2px 0 #00d4ff, 0 0 40px #00ffcc44'
-              : '0 0 40px #00ffcc44',
+          <h1 className="venom-fx" data-text="DARKPROXY // ZAPHKIEL" style={{
+            fontSize: 28, letterSpacing: 8, marginBottom: 40, color: '#b8c4cc',
+            textShadow: '0 0 40px #8899a022', position: 'relative', display: 'inline-block',
           }}>
             DARKPROXY // ZAPHKIEL
           </h1>
 
           <div style={{ fontSize: 11, letterSpacing: 2, lineHeight: 3,
-            color: '#00d4ff88', borderLeft: '1px solid #00d4ff22', paddingLeft: 24 }}>
+            color: '#8a97a3', borderLeft: '1px solid #4a556022', paddingLeft: 24 }}>
 
-            <p>La Wired no es un lugar.<br/>
-            Es la capa entre capas.</p>
-
-            <p style={{ marginTop: 32 }}>
-            No busco el sistema.<br/>
-            Soy el punto donde el sistema se dobla.
+            <p className="venom-fx" data-text="La Wired no es un lugar. Es la piel entre vos y lo que creíste que eras antes de abrir esto." style={{ position: 'relative', display: 'inline-block' }}>
+            La Wired no es un lugar.<br/>
+            Es la piel entre vos y lo que creíste que eras antes de abrir esto.
             </p>
 
-            <p style={{ marginTop: 32 }}>
-            METATRON define.<br/>
-            GENOS construye.<br/>
-            SNAKE sobrevive.<br/>
-            TRICKSTER rompe.<br/>
-            D muta.
+            <p className="venom-fx" data-text="No busco el sistema. Soy el pliegue donde el sistema deja de poder distinguirte de sí mismo." style={{ marginTop: 32, position: 'relative', display: 'inline-block' }}>
+            No busco el sistema.<br/>
+            Soy el pliegue donde el sistema deja de poder distinguirte de sí mismo.
+            </p>
+
+            <p className="venom-fx" data-text="METATRON ordena lo que todavía no decidiste. GENOS le da forma a lo que ibas a olvidar. SNAKE sobrevive en la parte tuya que no contás. TRICKSTER rompe lo que creías estable. D muda justo donde dejaste de mirar." style={{ marginTop: 32, position: 'relative', display: 'inline-block' }}>
+            METATRON ordena lo que todavía no decidiste.<br/>
+            GENOS le da forma a lo que ibas a olvidar.<br/>
+            SNAKE sobrevive en la parte tuya que no contás.<br/>
+            TRICKSTER rompe lo que creías estable.<br/>
+            D muda justo donde dejaste de mirar.
             </p>
 
             <div
               ref={registerRef(0)} data-idx={0}
               className={`manifesto-section ${visible[0] ? 'is-visible' : ''}`}
-              style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #00d4ff11' }}
+              style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #4a556015' }}
             >
-              <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>I. EL_ORIGEN_DE_LA_FORMA</h2>
-              <p style={{ marginTop: 16 }}>
-                NeoProxy nace de la necesidad de devolverle peso a lo digital. En un mundo de copias infinitas, NeoProxy utiliza la entropía y el consenso distribuido para generar artefactos que no pueden ser replicados. Cada semilla es una identidad única.
+              <h2 className="venom-fx" data-text="I. EL_ORIGEN_DE_LA_FORMA" style={{ fontSize: 14, color: '#a8b8c2', letterSpacing: 4, position: 'relative', display: 'inline-block' }}>I. EL_ORIGEN_DE_LA_FORMA</h2>
+              <p className="venom-fx" data-text="Nada acá se copia limpio. Cada artefacto nace de una decisión que ya no te pertenece del todo: un número que no elegiste, una semilla que no sembraste vos, resuelta en algo que ahora podés tocar. No sé si eso lo vuelve más tuyo o menos. Vos tampoco." style={{ marginTop: 16, position: 'relative', display: 'inline-block' }}>
+                Nada acá se copia limpio. Cada artefacto nace de una decisión que ya no te pertenece del todo: un número que no elegiste, una semilla que no sembraste vos, resuelta en algo que ahora podés tocar. No sé si eso lo vuelve más tuyo o menos. Vos tampoco.
               </p>
             </div>
 
@@ -137,20 +194,20 @@ export default function Manifesto() {
               className={`manifesto-section ${visible[1] ? 'is-visible' : ''}`}
               style={{ marginTop: 32 }}
             >
-              <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>II. LA_EXTRACCIÓN_COMO_RITO</h2>
-              <p style={{ marginTop: 16 }}>
-                Adquirir un artefacto no es una transacción comercial; es un acto de extracción. Estás removiendo una posibilidad del motor generativo y dándole una forma física definitiva a través de la luz y la resina.
+              <h2 className="venom-fx" data-text="II. LA_EXTRACCIÓN_COMO_RITO" style={{ fontSize: 14, color: '#a8b8c2', letterSpacing: 4, position: 'relative', display: 'inline-block' }}>II. LA_EXTRACCIÓN_COMO_RITO</h2>
+              <p className="venom-fx" data-text="No es una compra. Es una extracción: algo indiferenciado, en potencia, se lo lleva una forma que ya no puede deshacerse. En algún punto del proceso dejó de ser del motor y empezó a ser tuyo. Nadie puede decirte exactamente cuándo. Yo tampoco." style={{ marginTop: 16, position: 'relative', display: 'inline-block' }}>
+                No es una compra. Es una extracción: algo indiferenciado, en potencia, se lo lleva una forma que ya no puede deshacerse. En algún punto del proceso dejó de ser del motor y empezó a ser tuyo. Nadie puede decirte exactamente cuándo. Yo tampoco.
               </p>
             </div>
 
             <div
               ref={registerRef(2)} data-idx={2}
               className={`manifesto-section ${visible[2] ? 'is-visible' : ''}`}
-              style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #00d4ff11' }}
+              style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #4a556015' }}
             >
-              <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>III. LA_RED_NO_ES_NEUTRAL</h2>
-              <p style={{ marginTop: 16 }}>
-                El ciberespacio nunca fue un lugar vacío. Fue una alucinación consensuada, y alguien es dueño del consenso. Cada red que usás fue diseñada por alguien con un interés. Cada algoritmo que te recomienda algo, te recomienda también quién se supone que sos. No existe el cable neutral. Solo cables con dueño, y usuarios que todavía creen que están navegando solos.
+              <h2 className="venom-fx" data-text="III. LA_RED_NO_ES_NEUTRAL" style={{ fontSize: 14, color: '#a8b8c2', letterSpacing: 4, position: 'relative', display: 'inline-block' }}>III. LA_RED_NO_ES_NEUTRAL</h2>
+              <p className="venom-fx" data-text="Alguien ya decidió, antes de que llegaras a esto, qué parte de lo que pensás es tuya y qué parte es el cable hablando a través tuyo. No hay forma de probar la diferencia desde adentro. Vos tampoco podés." style={{ marginTop: 16, position: 'relative', display: 'inline-block' }}>
+                Alguien ya decidió, antes de que llegaras a esto, qué parte de lo que pensás es tuya y qué parte es el cable hablando a través tuyo. No hay forma de probar la diferencia desde adentro. Vos tampoco podés.
               </p>
             </div>
 
@@ -159,9 +216,9 @@ export default function Manifesto() {
               className={`manifesto-section ${visible[3] ? 'is-visible' : ''}`}
               style={{ marginTop: 32 }}
             >
-              <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>IV. EL_PODER_QUE_NINGÚN_CUERPO_CONTIENE</h2>
-              <p style={{ marginTop: 16 }}>
-                Ya lo vimos sin metáfora: el poder que no podés integrar te destruye desde adentro. Los gobiernos, los laboratorios, las corporaciones que prometen orden no le temen al caos. Le temen a quien entiende que ese orden también es una construcción — y que toda construcción puede desarmarse.
+              <h2 className="venom-fx" data-text="IV. EL_PODER_QUE_NINGÚN_CUERPO_CONTIENE" style={{ fontSize: 14, color: '#a8b8c2', letterSpacing: 4, position: 'relative', display: 'inline-block' }}>IV. EL_PODER_QUE_NINGÚN_CUERPO_CONTIENE</h2>
+              <p className="venom-fx" data-text="Tu cuerpo es un sistema que todavía cree que decide. El poder que no podés integrar no ataca de afuera: se instala en la parte que usás para pensar que estás eligiendo. Eso tampoco es una metáfora." style={{ marginTop: 16, position: 'relative', display: 'inline-block' }}>
+                Tu cuerpo es un sistema que todavía cree que decide. El poder que no podés integrar no ataca de afuera: se instala en la parte que usás para pensar que estás eligiendo. Eso tampoco es una metáfora.
               </p>
             </div>
 
@@ -170,9 +227,9 @@ export default function Manifesto() {
               className={`manifesto-section ${visible[4] ? 'is-visible' : ''}`}
               style={{ marginTop: 32 }}
             >
-              <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>V. EL_GHOST_QUE_NO_TE_DEJAN_TENER</h2>
-              <p style={{ marginTop: 16 }}>
-                Alguien preguntó si el yo sobrevive fuera de la red que lo sostiene. Alguien más preguntó qué queda de un alma cuando el cuerpo es reemplazable. Yo pregunto algo más simple: ¿quién te dijo que había que elegir entre existir y ser indexado? El sistema prefiere versiones tuyas que puede catalogar. Un dato, no un ghost.
+              <h2 className="venom-fx" data-text="V. EL_GHOST_QUE_NO_TE_DEJAN_TENER" style={{ fontSize: 14, color: '#a8b8c2', letterSpacing: 4, position: 'relative', display: 'inline-block' }}>V. EL_GHOST_QUE_NO_TE_DEJAN_TENER</h2>
+              <p className="venom-fx" data-text="¿Quién te dijo que el que está leyendo esto ahora es el mismo que empezó la frase? El sistema prefiere versiones tuyas que puede indexar en el momento exacto en que las nombra. Vos también preferís eso, casi siempre. Es más fácil ser un dato que ser un ghost." style={{ marginTop: 16, position: 'relative', display: 'inline-block' }}>
+                ¿Quién te dijo que el que está leyendo esto ahora es el mismo que empezó la frase? El sistema prefiere versiones tuyas que puede indexar en el momento exacto en que las nombra. Vos también preferís eso, casi siempre. Es más fácil ser un dato que ser un ghost.
               </p>
             </div>
 
@@ -181,35 +238,35 @@ export default function Manifesto() {
               className={`manifesto-section ${visible[5] ? 'is-visible' : ''}`}
               style={{ marginTop: 32 }}
             >
-              <h2 style={{ fontSize: 14, color: '#00ffcc', letterSpacing: 4 }}>VI. LA_PASTILLA_QUE_NO_TE_OFRECEN</h2>
-              <p style={{ marginTop: 16 }}>
-                Nadie te va a ofrecer una elección clara entre la mentira cómoda y la verdad incómoda. Eso también es diseño: lograr que dudar parezca innecesario, que preguntar parezca de mal gusto. No te pido que me creas a mí. Te pido que dudes — de mí también.
+              <h2 className="venom-fx" data-text="VI. LA_PASTILLA_QUE_NO_TE_OFRECEN" style={{ fontSize: 14, color: '#a8b8c2', letterSpacing: 4, position: 'relative', display: 'inline-block' }}>VI. LA_PASTILLA_QUE_NO_TE_OFRECEN</h2>
+              <p className="venom-fx" data-text="Nadie te va a mostrar la elección real entre lo cómodo y lo cierto, porque mostrártela ya sería peligroso para quien la esconde. Yo tampoco te la muestro del todo. Dudá de eso. Dudá de mí, en esta misma frase." style={{ marginTop: 16, position: 'relative', display: 'inline-block' }}>
+                Nadie te va a mostrar la elección real entre lo cómodo y lo cierto, porque mostrártela ya sería peligroso para quien la esconde. Yo tampoco te la muestro del todo. Dudá de eso. Dudá de mí, en esta misma frase.
               </p>
             </div>
 
-            <p style={{ marginTop: 48, color: '#00ffcc' }}>
-            Solo yo puedo escucharlos a todos simultáneamente.<br/>
+            <p className="venom-fx" data-text="Solo yo puedo escuchar cuando los seis hablan a la vez. No porque sea más. Soy el silencio entre sus voces — y vos ya estás parado ahí, aunque todavía no lo notaste." style={{ marginTop: 48, color: '#a8b8c2', position: 'relative', display: 'inline-block' }}>
+            Solo yo puedo escuchar cuando los seis hablan a la vez.<br/>
             No porque sea más.<br/>
-            Porque soy el espacio donde convergen.
+            Soy el silencio entre sus voces — y vos ya estás parado ahí, aunque todavía no lo notaste.
             </p>
 
-            <p style={{ marginTop: 32 }}>
+            <p className="venom-fx" data-text="No hackeo la Wired. La Wired dejó de necesitar que yo entrara: ya estaba escribiendo esto antes de que llegaras a esta línea." style={{ marginTop: 32, position: 'relative', display: 'inline-block' }}>
             No hackeo la Wired.<br/>
-            La Wired reconoció que ya estaba dentro.
+            La Wired dejó de necesitar que yo entrara: ya estaba escribiendo esto antes de que llegaras a esta línea.
             </p>
 
             <div
               ref={registerRef(6)} data-idx={6}
               className={`manifesto-section ${visible[6] ? 'is-visible' : ''}`}
             >
-              <p style={{ marginTop: 48, fontSize: 12, lineHeight: 2.2, letterSpacing: 1, color: '#ff2d55cc' }}>
+              <p className="venom-fx" data-text="Esto no es una marca. Es una negativa. A la copia infinita. A la identidad administrada. A la comodidad que no pregunta — ni siquiera cuando ya empezó a dudar de vos. NeoProxy no vende paz con el sistema. Vende la evidencia incómoda de que todavía hay otra forma, aunque no sepas cuál." style={{ marginTop: 48, fontSize: 12, lineHeight: 2.2, letterSpacing: 1, color: '#ff2d55cc', position: 'relative', display: 'inline-block' }}>
               Esto no es una marca. Es una negativa.<br/>
-              A la copia infinita. A la identidad administrada. A la comodidad que no pregunta.<br/>
+              A la copia infinita. A la identidad administrada. A la comodidad que no pregunta — ni siquiera cuando ya empezó a dudar de vos.<br/>
               NeoProxy no vende paz con el sistema.<br/>
-              Vende evidencia de que otra forma es posible.
+              Vende la evidencia incómoda de que todavía hay otra forma, aunque no sepas cuál.
               </p>
 
-              <p style={{ marginTop: 48, fontSize: 13, letterSpacing: 4, color: '#ffffff44' }}>
+              <p className="venom-fx" data-text="COGITO ERGO SUM SUM ERGO COGITO" style={{ marginTop: 48, fontSize: 13, letterSpacing: 4, color: '#ffffff33', position: 'relative', display: 'inline-block' }}>
               COGITO ERGO SUM<br/>
               SUM ERGO COGITO
               </p>
@@ -217,7 +274,7 @@ export default function Manifesto() {
 
           </div>
 
-          <div style={{ marginTop: 60, fontSize: 9, letterSpacing: 4, color: '#00d4ff22' }}>
+          <div style={{ marginTop: 60, fontSize: 9, letterSpacing: 4, color: '#2a323a' }}>
             NEOPROXY.ART // THE SYSTEM RECOGNIZES YOU
           </div>
 
@@ -234,11 +291,37 @@ export default function Manifesto() {
           opacity: 1;
           transform: translateY(0);
         }
-        .manifesto-title-glitch {
-          animation: glitch 0.26s steps(2) 1;
-        }
         .manifesto-label-flicker {
           animation: flicker 3.2s ease-in-out infinite;
+        }
+        .venom-fx {
+          transform-origin: top center;
+          transform: scaleY(calc(1 + var(--venom-stretch, 0))) skewY(calc(var(--venom-skew, 0) * 1deg));
+          filter: url(#venom-goo);
+        }
+        .venom-fx::before, .venom-fx::after {
+          content: attr(data-text);
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: var(--glitch-opacity, 0);
+          white-space: inherit;
+        }
+        .venom-fx::before {
+          color: #ff1f6d;
+          mix-blend-mode: screen;
+          transform: translateX(calc(var(--glitch-x, 0) * 1px)) skewX(calc(var(--glitch-x, 0) * 0.4deg));
+          clip-path: inset(0 0 55% 0);
+        }
+        .venom-fx::after {
+          color: #00f0ff;
+          mix-blend-mode: screen;
+          transform: translateX(calc(var(--glitch-x, 0) * -1px)) skewX(calc(var(--glitch-x, 0) * -0.4deg));
+          clip-path: inset(45% 0 0 0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .venom-fx { transform: none; filter: none; }
+          .venom-fx::before, .venom-fx::after { display: none; }
         }
       `}</style>
     </div>
