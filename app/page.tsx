@@ -497,13 +497,13 @@ export default function Home() {
       // angostas (celular en vertical) arranca más lejos — con más nodos y
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
-      const startRadius = aspect < 0.75 ? 34 : 29
+      const startRadius = aspect < 0.75 ? 41 : 35
       const initialAlpha = -Math.PI / 2.4, initialBeta = 1.15
       const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, startRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
-      camera.lowerRadiusLimit = 16
-      camera.upperRadiusLimit = 54
+      camera.lowerRadiusLimit = 19
+      camera.upperRadiusLimit = 64
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
@@ -555,7 +555,7 @@ export default function Home() {
       // --- núcleo central: home — hexacosichoron dorado (ver
       // hexacosichoron() arriba), pedido explícito en vez del
       // poliedro simple que había antes. ---
-      const CORE_SCALE = 1.7
+      const CORE_SCALE = 2.1
       const coreEdges = hexacosichoron()
       const coreLines = coreEdges.map(([p1, p2]) => [
         new B.Vector3(p1.x * CORE_SCALE, p1.y * CORE_SCALE, p1.z * CORE_SCALE),
@@ -573,14 +573,14 @@ export default function Home() {
         litT: number; labelTexDim: any; labelTexBright: any; wasBright: boolean
       }
       const nodes: NodeEntry[] = []
-      const linkEntries: { line: any; aId: string; bId: string; baseDelay: number; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
-      const pathLines: { line: any; zoneId: string; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
+      const linkEntries: { mesh: any; mat: any; aId: string; bId: string; baseDelay: number; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
+      const pathLines: { mesh: any; mat: any; zoneId: string; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
       const zoneIcons: { mesh: any; baseDelay: number }[] = []
       const zonePos: Record<string, { x: number; y: number; z: number }> = {}
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
 
       // --- nodos primarios, dispersos sobre una esfera (sin eje "arriba") ---
-      const LAYOUT_RADIUS = 14.5
+      const LAYOUT_RADIUS = 18
       const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
       const zoneRoot = new B.TransformNode('zoneRoot', scene)
 
@@ -634,11 +634,15 @@ export default function Home() {
 
         // un tic corto conectando nodo y panel — el gesto de "callout", no
         // el panel flotando suelto sin relación visual con lo que nombra
-        const stem = B.MeshBuilder.CreateLines(`stem-${zone.id}`, {
-          points: [new B.Vector3(x, y, z), new B.Vector3(x, labelY - 0.42, z)],
+        const stem = B.MeshBuilder.CreateTube(`stem-${zone.id}`, {
+          path: [new B.Vector3(x, y, z), new B.Vector3(x, labelY - 0.42, z)],
+          radius: 0.02, tessellation: 5,
         }, scene)
-        stem.color = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
-        stem.alpha = 0.35
+        const stemMat = new B.StandardMaterial(`stemMat-${zone.id}`, scene)
+        stemMat.disableLighting = true
+        stemMat.emissiveColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
+        stemMat.alpha = 0.55
+        stem.material = stemMat
         stem.isPickable = false
 
         nodes.push({
@@ -648,14 +652,21 @@ export default function Home() {
 
         // sinapsis del núcleo al nodo — con una leve curva orgánica, no una
         // recta digital pura: la señal no viaja en línea derecha acá adentro.
+        // Tubo real (no una línea GL_LINES de 1px) para el look "láser de
+        // neón" pedido — con ancho de verdad, responde mucho mejor al
+        // glow que una LinesMesh.
         const mid = new B.Vector3(x * 0.5 + Math.sin(i * 2.1) * 1.1, y * 0.5 + Math.cos(i * 1.7) * 1.1, z * 0.5 + Math.sin(i * 3.3) * 1.1)
-        const path = B.MeshBuilder.CreateLines(`path-${zone.id}`, {
-          points: [B.Vector3.Zero(), mid, new B.Vector3(x, y, z)],
+        const path = B.MeshBuilder.CreateTube(`path-${zone.id}`, {
+          path: [B.Vector3.Zero(), mid, new B.Vector3(x, y, z)],
+          radius: 0.035, tessellation: 6,
         }, scene)
-        path.color = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
-        path.alpha = 0.14
+        const pathMat = new B.StandardMaterial(`pathMat-${zone.id}`, scene)
+        pathMat.disableLighting = true
+        pathMat.emissiveColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
+        pathMat.alpha = 0.32
+        path.material = pathMat
         path.isPickable = false
-        pathLines.push({ line: path, zoneId: zone.id, dimRGB, fullRGB, litT: 0 })
+        pathLines.push({ mesh: path, mat: pathMat, zoneId: zone.id, dimRGB, fullRGB, litT: 0 })
 
         // --- panel enmarcado por sección (ver makeZoneIconTexture) —
         // pedido explícito, "un canvas enmarcado en cada sección". Cerca
@@ -687,7 +698,7 @@ export default function Home() {
           // opacos (legibilidad real pedida antes), 2.4 los hacía chocar
           // entre sí y con el panel del propio primario (caso LABORATORIO,
           // el peor: 3 subs apretados contra un panel grande al lado)
-          const SUB_RING = 4.6
+          const SUB_RING = 5.6
           zone.subs.forEach((sub, j) => {
             const a = (Math.PI * 2 * j) / zone.subs!.length + i * 0.6
             const sx = x + (t1.x * Math.cos(a) + t2.x * Math.sin(a)) * SUB_RING
@@ -726,11 +737,15 @@ export default function Home() {
             subLabel.isPickable = false
             subLabel.scaling.set(0.001, 0.001, 0.001)
 
-            const subStem = B.MeshBuilder.CreateLines(`substem-${sub.id}`, {
-              points: [new B.Vector3(sx, sy, sz), new B.Vector3(sx, subLabelY - 0.3, sz)],
+            const subStem = B.MeshBuilder.CreateTube(`substem-${sub.id}`, {
+              path: [new B.Vector3(sx, sy, sz), new B.Vector3(sx, subLabelY - 0.3, sz)],
+              radius: 0.016, tessellation: 5,
             }, scene)
-            subStem.color = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
-            subStem.alpha = 0.3
+            const subStemMat = new B.StandardMaterial(`substemMat-${sub.id}`, scene)
+            subStemMat.disableLighting = true
+            subStemMat.emissiveColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
+            subStemMat.alpha = 0.48
+            subStem.material = subStemMat
             subStem.isPickable = false
 
             nodes.push({
@@ -741,13 +756,17 @@ export default function Home() {
             // unión sub → primario — la relación de jerarquía en sí misma,
             // una línea corta y constante en vez de la curva orgánica
             // (esa queda reservada a núcleo→primario)
-            const subLink = B.MeshBuilder.CreateLines(`sublink-${sub.id}`, {
-              points: [new B.Vector3(x, y, z), new B.Vector3(sx, sy, sz)],
+            const subLink = B.MeshBuilder.CreateTube(`sublink-${sub.id}`, {
+              path: [new B.Vector3(x, y, z), new B.Vector3(sx, sy, sz)],
+              radius: 0.028, tessellation: 6,
             }, scene)
-            subLink.color = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
-            subLink.alpha = 0
+            const subLinkMat = new B.StandardMaterial(`sublinkMat-${sub.id}`, scene)
+            subLinkMat.disableLighting = true
+            subLinkMat.emissiveColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
+            subLinkMat.alpha = 0
+            subLink.material = subLinkMat
             subLink.isPickable = false
-            linkEntries.push({ line: subLink, aId: zone.id, bId: sub.id, baseDelay: subDelay, dimRGB, fullRGB, litT: 0 })
+            linkEntries.push({ mesh: subLink, mat: subLinkMat, aId: zone.id, bId: sub.id, baseDelay: subDelay, dimRGB, fullRGB, litT: 0 })
           })
         }
       })
@@ -769,16 +788,20 @@ export default function Home() {
         const alpha = Math.atan2(-p.z, -p.x)
         const betaRaw = Math.acos(Math.max(-1, Math.min(1, -p.y / len)))
         const beta = Math.max(0.25, Math.min(Math.PI - 0.25, betaRaw))
-        return { alpha, beta, radius: 18 }
+        return { alpha, beta, radius: 22 }
       }
-      const TOUR_ZONE_IDS = ['proxyverse', 'laboratorio', 'conocimiento']
+      // empieza en FABRICACIÓN (pedido explícito) y de ahí recorre el resto
+      // — un recorrido más completo, no solo 3 paradas
+      const TOUR_ZONE_IDS = ['fabricacion', 'laboratorio', 'experimental', 'conocimiento', 'proxyverse']
       const initialPose: CamPose = { alpha: initialAlpha, beta: initialBeta, radius: startRadius }
       const waypoints: CamPose[] = [
         initialPose,
         ...TOUR_ZONE_IDS.map(id => lookAtZone(zonePos[id])).filter(Boolean),
         initialPose,
       ]
-      const TOUR_START = 2600, STOP_TRAVEL = 2300, STOP_HOLD = 1700
+      // más lento y pausado — "más cinematográfico" pedido explícito, no
+      // solo una cámara que salta de punto a punto
+      const TOUR_START = 2800, STOP_TRAVEL = 3200, STOP_HOLD = 2200
       const tourSegments: { from: CamPose; to: CamPose; start: number; end: number }[] = []
       {
         let cursor = TOUR_START
@@ -826,7 +849,7 @@ export default function Home() {
       // sino "esto se relaciona con aquello": líneas rectas, más tarde en
       // la secuencia de aparición (primero se resuelve el árbol, después
       // la red), con un pulso recorriendo cada una. ---
-      const crossLinks: { line: any; glowA: any; glowB: any; dot: any; dotMat: any; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number; aId: string; bId: string; color: string }[] = []
+      const crossLinks: { mesh: any; mat: any; glowA: any; glowB: any; dot: any; dotMat: any; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number; aId: string; bId: string; color: string }[] = []
       const CROSS_LINK_DELAY = 2000
       ZONE_LINKS.forEach(([aId, bId], idx) => {
         const a = zonePos[aId], b = zonePos[bId]
@@ -836,11 +859,18 @@ export default function Home() {
         const dimBlended = mixHexAmount(blended, NEUTRAL_HEX, 0.72)
         const dimRGB = hex3(dimBlended)
         const dimColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
-        const line = B.MeshBuilder.CreateLines(`crosslink-${idx}`, {
-          points: [new B.Vector3(a.x, a.y, a.z), new B.Vector3(b.x, b.y, b.z)],
+        // tubo real, no una línea GL_LINES de 1px — el "láser de neón"
+        // pedido para las uniones, que son la conexión más importante
+        // del grafo (zona↔zona, no jerarquía).
+        const line = B.MeshBuilder.CreateTube(`crosslink-${idx}`, {
+          path: [new B.Vector3(a.x, a.y, a.z), new B.Vector3(b.x, b.y, b.z)],
+          radius: 0.045, tessellation: 6,
         }, scene)
-        line.color = dimColor
-        line.alpha = 0
+        const lineMat = new B.StandardMaterial(`crosslinkMat-${idx}`, scene)
+        lineMat.disableLighting = true
+        lineMat.emissiveColor = dimColor
+        lineMat.alpha = 0
+        line.material = lineMat
         line.isPickable = false
 
         // par de líneas paralelas, invisibles en reposo — al pasar el
@@ -870,7 +900,7 @@ export default function Home() {
         dot.isPickable = false
         dot.position.set(a.x, a.y, a.z)
 
-        crossLinks.push({ line, glowA, glowB, dot, dotMat, dimRGB, fullRGB: hex3(blended), litT: 0, aId, bId, color: blended })
+        crossLinks.push({ mesh: line, mat: lineMat, glowA, glowB, dot, dotMat, dimRGB, fullRGB: hex3(blended), litT: 0, aId, bId, color: blended })
       })
 
       // Sin polvo decorativo — pedido explícito: solo nodos reales (zonas
@@ -893,7 +923,7 @@ export default function Home() {
       // esto, un retrato puede terminar flotando justo delante del panel
       // con su nombre y taparlo (pasó en la primera pasada: nada "claro"
       // en eso).
-      const MIN_SEP_TO_ZONE = 7
+      const MIN_SEP_TO_ZONE = 8.5
       agents.forEach((agent, i) => {
         const image = AGENT_IMAGES[agent.id]
         if (!image) return
@@ -902,7 +932,7 @@ export default function Home() {
           const costheta = Math.random() * 2 - 1
           const theta = Math.acos(costheta)
           const phi = Math.random() * Math.PI * 2
-          const r = 7.5 + Math.random() * 10
+          const r = 9 + Math.random() * 12
           const candidate = {
             x: r * Math.sin(theta) * Math.cos(phi),
             y: r * Math.sin(theta) * Math.sin(phi) * 0.75,
@@ -942,13 +972,17 @@ export default function Home() {
       // retrato en su deriva real cuadro a cuadro, no un punto fijo. ---
       const metatronDrift = agentDrifters.find(d => d.agentId === 'metatron')
       let coreMetatronLink: any = null
+      let coreMetatronMat: any = null
       if (metatronDrift) {
-        coreMetatronLink = B.MeshBuilder.CreateLines('core-metatron-link', {
-          points: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
-          updatable: true,
+        coreMetatronLink = B.MeshBuilder.CreateTube('core-metatron-link', {
+          path: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
+          radius: 0.03, tessellation: 6, updatable: true,
         }, scene)
-        coreMetatronLink.color = B.Color3.FromHexString('#f0c05a')
-        coreMetatronLink.alpha = 0.4
+        coreMetatronMat = new B.StandardMaterial('core-metatron-mat', scene)
+        coreMetatronMat.disableLighting = true
+        coreMetatronMat.emissiveColor = B.Color3.FromHexString('#f0c05a')
+        coreMetatronMat.alpha = 0.6
+        coreMetatronLink.material = coreMetatronMat
         coreMetatronLink.isPickable = false
       }
 
@@ -1053,13 +1087,13 @@ export default function Home() {
           const hoverBoost = isHovered ? 1.12 : 1
           const labelS = labelBase * hoverBoost
           n.label.scaling.set(labelS, labelS, labelS)
-          n.stem.alpha = ((n.tier === 'primary' ? 0.35 : 0.3) * (isFamilyActive ? 2 : 1)) * labelBase
+          n.stem.material.alpha = ((n.tier === 'primary' ? 0.55 : 0.48) * (isFamilyActive ? 1.8 : 1)) * labelBase
 
           n.litT += ((isFamilyActive ? 1 : 0) - n.litT) * LIT_RATE
           const rgb = lerp3(n.dimRGB, n.fullRGB, n.litT)
           n.mat.diffuseColor.set(rgb[0], rgb[1], rgb[2])
           n.mat.emissiveColor.set(rgb[0] * 0.55, rgb[1] * 0.55, rgb[2] * 0.55)
-          n.stem.color.set(rgb[0], rgb[1], rgb[2])
+          n.stem.material.emissiveColor.set(rgb[0], rgb[1], rgb[2])
           // la etiqueta cambia de textura entera (apagada/a color) en vez
           // de reconstruir el canvas cada frame — solo al cruzar el medio
           // del fundido, para no parpadear yendo y viniendo justo en 0.5
@@ -1076,8 +1110,8 @@ export default function Home() {
           const active = hoveredFamily !== null && pl.zoneId === hoveredFamily
           pl.litT += ((active ? 1 : 0) - pl.litT) * LIT_RATE
           const rgb = lerp3(pl.dimRGB, pl.fullRGB, pl.litT)
-          pl.line.color.set(rgb[0], rgb[1], rgb[2])
-          pl.line.alpha = 0.14 + 0.22 * pl.litT
+          pl.mat.emissiveColor.set(rgb[0], rgb[1], rgb[2])
+          pl.mat.alpha = 0.32 + 0.4 * pl.litT
         })
 
         zoneIcons.forEach(zi => {
@@ -1099,8 +1133,8 @@ export default function Home() {
           const active = hoveredFamily !== null && le.aId === hoveredFamily
           le.litT += ((active ? 1 : 0) - le.litT) * LIT_RATE
           const rgb = lerp3(le.dimRGB, le.fullRGB, le.litT)
-          le.line.color.set(rgb[0], rgb[1], rgb[2])
-          le.line.alpha = (0.3 + 0.24 * le.litT) * p
+          le.mat.emissiveColor.set(rgb[0], rgb[1], rgb[2])
+          le.mat.alpha = (0.5 + 0.4 * le.litT) * p
         })
 
         // uniones entre zonas primarias — resueltas al final, con un pulso
@@ -1112,11 +1146,11 @@ export default function Home() {
           const active = hoveredFamily !== null && (cl.aId === hoveredFamily || cl.bId === hoveredFamily)
           cl.litT += ((active ? 1 : 0) - cl.litT) * LIT_RATE
           const rgb = lerp3(cl.dimRGB, cl.fullRGB, cl.litT)
-          cl.line.color.set(rgb[0], rgb[1], rgb[2])
-          cl.line.alpha = Math.min(1, (0.14 + 0.5 * cl.litT) * crossP)
-          // el haz paralelo solo se enciende activado — en reposo queda
-          // en 0, la unión se lee como una línea fina normal
-          const glowAlpha = cl.litT > 0.3 ? 0.32 * crossP * cl.litT : 0
+          cl.mat.emissiveColor.set(rgb[0], rgb[1], rgb[2])
+          cl.mat.alpha = Math.min(1, (0.34 + 0.55 * cl.litT) * crossP)
+          // el haz paralelo ya tiene un piso visible en reposo (no parte
+          // de cero) — más marcado, no solo al activarse
+          const glowAlpha = (0.12 + 0.32 * cl.litT) * crossP
           cl.glowA.color.set(rgb[0], rgb[1], rgb[2])
           cl.glowB.color.set(rgb[0], rgb[1], rgb[2])
           cl.glowA.alpha = glowAlpha
@@ -1143,8 +1177,8 @@ export default function Home() {
           d.plane.position.set(d.base.x + dx, d.base.y + dy, d.base.z + dz)
         })
         if (coreMetatronLink && metatronDrift) {
-          B.MeshBuilder.CreateLines('core-metatron-link', {
-            points: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
+          B.MeshBuilder.CreateTube('core-metatron-link', {
+            path: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
             instance: coreMetatronLink,
           }, scene)
         }
