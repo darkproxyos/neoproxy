@@ -392,6 +392,23 @@ function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag
   ctx.shadowBlur = 16
   ctx.stroke()
 
+  // ticks de esquina — el mismo gesto de "corner bracket" del chrome HUD
+  // 2D (ver overlay del header), para que el panel 3D lea como parte del
+  // mismo sistema técnico en vez de una tarjeta de UI genérica aparte
+  ctx.lineWidth = 3
+  ctx.shadowBlur = 10
+  ctx.strokeStyle = color
+  const tickLen = 46, tickPad = 30
+  ;[[1, 1], [-1, 1]].forEach(([sx, sy]) => {
+    const cx = sx > 0 ? tickPad : W - tickPad
+    const cy = tickPad
+    ctx.beginPath()
+    ctx.moveTo(cx + sx * tickLen, cy)
+    ctx.lineTo(cx, cy)
+    ctx.lineTo(cx, cy + tickLen * 0.55)
+    ctx.stroke()
+  })
+
   // título — letter-spacing simulado insertando espacios, mismo truco que
   // el CSS letter-spacing que usa el resto de la tipografía del sitio.
   // Títulos largos (CONOCIMIENTO, PROXYVERSE, LABORATORIO...) con ese
@@ -414,12 +431,23 @@ function makeZoneLabelTexture(B: any, scene: any, id: string, title: string, tag
   ctx.shadowBlur = 22
   ctx.fillText(titleStr, W / 2, 98)
 
+  // divisor fino entre título y tag — separa las dos jerarquías de texto
+  // en vez de dejarlas flotando una encima de la otra sin ancla visual
+  ctx.shadowBlur = 0
+  ctx.strokeStyle = `${color}55`
+  ctx.lineWidth = 1.5
+  ctx.beginPath()
+  ctx.moveTo(W / 2 - 90, 126)
+  ctx.lineTo(W / 2 + 90, 126)
+  ctx.stroke()
+
   // tag — más chico y más opaco, el mismo formato NPX-XXX-00 que usa cada
-  // sección en su propia página
+  // sección en su propia página, con el prefijo "//" de lectura técnica
+  // que ya usa el resto del HUD del sitio
   ctx.font = '30px "Space Mono", monospace'
   ctx.fillStyle = `${color}ee`
   ctx.shadowBlur = 6
-  ctx.fillText(spaced(tag), W / 2, 158)
+  ctx.fillText(`// ${spaced(tag)}`, W / 2, 158)
 
   tex.update()
   return tex
@@ -497,13 +525,13 @@ export default function Home() {
       // angostas (celular en vertical) arranca más lejos — con más nodos y
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
-      const startRadius = aspect < 0.75 ? 41 : 35
+      const startRadius = aspect < 0.75 ? 48 : 41
       const initialAlpha = -Math.PI / 2.4, initialBeta = 1.15
       const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, startRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
-      camera.lowerRadiusLimit = 19
-      camera.upperRadiusLimit = 64
+      camera.lowerRadiusLimit = 22
+      camera.upperRadiusLimit = 76
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
@@ -552,9 +580,15 @@ export default function Home() {
         glow.addExcludedMesh(neb)
       })
 
-      // --- núcleo central: home — hexacosichoron dorado (ver
-      // hexacosichoron() arriba), pedido explícito en vez del
-      // poliedro simple que había antes. ---
+      // --- núcleo central: ya no es "el home" genérico — es METATRON
+      // mismo, literal (pedido explícito: "quiero que metatron sea el
+      // exacosichoron real"). Color canónico del agente (agents.ts:
+      // '#ffb800'), no el dorado neutro que había antes. Un proxy
+      // invisible más grande lo hace clickeable de verdad — las líneas
+      // finas del wireframe son un target de click poco confiable — y
+      // así "aporta algo más que estar en medio": es el único retrato
+      // del proxyverso al que se navega directo desde el núcleo. ---
+      const METATRON_COLOR = '#ffb800'
       const CORE_SCALE = 2.1
       const coreEdges = hexacosichoron()
       const coreLines = coreEdges.map(([p1, p2]) => [
@@ -562,9 +596,16 @@ export default function Home() {
         new B.Vector3(p2.x * CORE_SCALE, p2.y * CORE_SCALE, p2.z * CORE_SCALE),
       ])
       const core = B.MeshBuilder.CreateLineSystem('core', { lines: coreLines }, scene)
-      core.color = B.Color3.FromHexString('#f0c05a')
+      core.color = B.Color3.FromHexString(METATRON_COLOR)
       core.alpha = 0.65
       core.isPickable = false
+
+      const coreClickProxy = B.MeshBuilder.CreateSphere('core-click-proxy', { diameter: CORE_SCALE * 2.3 }, scene)
+      const coreProxyMat = new B.StandardMaterial('core-click-proxy-mat', scene)
+      coreProxyMat.alpha = 0 // invisible pero "visible" para Babylon — isVisible=false saca la malla del picking por defecto
+      coreClickProxy.material = coreProxyMat
+      coreClickProxy.isPickable = true
+      coreClickProxy.metadata = { id: 'metatron', href: '/proxyverse/metatron' }
 
       type NodeEntry = {
         id: string; mesh: any; label: any; stem: any; href: string; tier: 'primary' | 'sub'
@@ -574,7 +615,7 @@ export default function Home() {
       }
       const nodes: NodeEntry[] = []
       const linkEntries: { mesh: any; mat: any; aId: string; bId: string; baseDelay: number; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
-      const pathLines: { mesh: any; mat: any; zoneId: string; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
+      const pathLines: { mesh: any; mat: any; zoneId: string; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number; dot: any; dotMat: any }[] = []
       const zoneIcons: { mesh: any; baseDelay: number }[] = []
       const zonePos: Record<string, { x: number; y: number; z: number }> = {}
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
@@ -658,15 +699,25 @@ export default function Home() {
         const mid = new B.Vector3(x * 0.5 + Math.sin(i * 2.1) * 1.1, y * 0.5 + Math.cos(i * 1.7) * 1.1, z * 0.5 + Math.sin(i * 3.3) * 1.1)
         const path = B.MeshBuilder.CreateTube(`path-${zone.id}`, {
           path: [B.Vector3.Zero(), mid, new B.Vector3(x, y, z)],
-          radius: 0.035, tessellation: 6,
+          radius: 0.045, tessellation: 6,
         }, scene)
         const pathMat = new B.StandardMaterial(`pathMat-${zone.id}`, scene)
         pathMat.disableLighting = true
         pathMat.emissiveColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
-        pathMat.alpha = 0.32
+        pathMat.alpha = 0.42
         path.material = pathMat
         path.isPickable = false
-        pathLines.push({ mesh: path, mat: pathMat, zoneId: zone.id, dimRGB, fullRGB, litT: 0 })
+
+        // pulso que viaja núcleo → zona todo el tiempo, no solo al activarse
+        // — Metatron "aporta algo más que estar en medio": transmite señal
+        // a cada sección de forma continua, el gesto de orquestador vivo
+        const pulseDot = B.MeshBuilder.CreateSphere(`pathpulse-${zone.id}`, { diameter: 0.16 }, scene)
+        const pulseDotMat = new B.StandardMaterial(`pathpulsemat-${zone.id}`, scene)
+        pulseDotMat.disableLighting = true
+        pulseDotMat.emissiveColor = B.Color3.FromHexString(METATRON_COLOR)
+        pulseDot.material = pulseDotMat
+        pulseDot.isPickable = false
+        pathLines.push({ mesh: path, mat: pathMat, zoneId: zone.id, dimRGB, fullRGB, litT: 0, dot: pulseDot, dotMat: pulseDotMat })
 
         // --- panel enmarcado por sección (ver makeZoneIconTexture) —
         // pedido explícito, "un canvas enmarcado en cada sección". Cerca
@@ -788,7 +839,7 @@ export default function Home() {
         const alpha = Math.atan2(-p.z, -p.x)
         const betaRaw = Math.acos(Math.max(-1, Math.min(1, -p.y / len)))
         const beta = Math.max(0.25, Math.min(Math.PI - 0.25, betaRaw))
-        return { alpha, beta, radius: 22 }
+        return { alpha, beta, radius: 27 }
       }
       // empieza en FABRICACIÓN (pedido explícito) y de ahí recorre el resto
       // — un recorrido más completo, no solo 3 paradas
@@ -925,6 +976,7 @@ export default function Home() {
       // en eso).
       const MIN_SEP_TO_ZONE = 8.5
       agents.forEach((agent, i) => {
+        if (agent.id === 'metatron') return // tiene su propio lugar, ver más abajo: orbita el núcleo, no deriva suelto
         const image = AGENT_IMAGES[agent.id]
         if (!image) return
         let base = { x: 0, y: 0, z: 0 }
@@ -966,22 +1018,54 @@ export default function Home() {
         })
       })
 
-      // --- unión núcleo → METATRON, pedida explícitamente — el único
-      // proceso con una línea propia desde el centro, coherente con su
-      // rol de orquestador (ver CLAUDE.md: "Metatron define"). Sigue el
-      // retrato en su deriva real cuadro a cuadro, no un punto fijo. ---
-      const metatronDrift = agentDrifters.find(d => d.agentId === 'metatron')
+      // --- METATRON: no es un retrato más derivando por la nube, es el
+      // núcleo mismo — orbita pegado al hexacosichoron en vez de flotar
+      // suelto por el espacio como los otros seis procesos, y es el único
+      // retrato clickeable desde el home (ver coreClickProxy arriba): el
+      // gesto es "el centro de la escena ES Metatron", no "hay una línea
+      // que lo conecta con el centro". ---
+      const metatronOrbitRadius = CORE_SCALE * 1.75
+      const metatronImage = AGENT_IMAGES['metatron']
+      let metatronPlane: any = null
+      let metatronLabel: any = null
       let coreMetatronLink: any = null
       let coreMetatronMat: any = null
-      if (metatronDrift) {
+      if (metatronImage) {
+        const metatronPhotoTex = makePhotoTexture(B, scene, 'metatron', metatronImage, METATRON_COLOR)
+        metatronPlane = B.MeshBuilder.CreatePlane('home-photo-metatron', { size: 1.9 }, scene)
+        metatronPlane.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+        const metatronPhotoMat = new B.StandardMaterial('home-photomat-metatron', scene)
+        metatronPhotoMat.diffuseTexture = metatronPhotoTex
+        metatronPhotoMat.emissiveTexture = metatronPhotoTex
+        metatronPhotoMat.opacityTexture = metatronPhotoTex
+        metatronPhotoMat.disableLighting = true
+        metatronPhotoMat.backFaceCulling = false
+        metatronPlane.material = metatronPhotoMat
+        metatronPlane.isPickable = true
+        metatronPlane.metadata = { id: 'metatron', href: '/proxyverse/metatron' }
+        metatronPlane.position.set(metatronOrbitRadius, 0, 0)
+        glow.addExcludedMesh(metatronPlane)
+
+        const metatronLabelTex = makeZoneLabelTexture(B, scene, 'metatron', 'METATRON', 'EL ORQUESTADOR', METATRON_COLOR)
+        metatronLabel = B.MeshBuilder.CreatePlane('metatron-label', { width: 3.6, height: 0.81 }, scene)
+        metatronLabel.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+        const metatronLabelMat = new B.StandardMaterial('metatron-labelmat', scene)
+        metatronLabelMat.diffuseTexture = metatronLabelTex
+        metatronLabelMat.emissiveTexture = metatronLabelTex
+        metatronLabelMat.opacityTexture = metatronLabelTex
+        metatronLabelMat.disableLighting = true
+        metatronLabelMat.backFaceCulling = false
+        metatronLabel.material = metatronLabelMat
+        metatronLabel.isPickable = false
+
         coreMetatronLink = B.MeshBuilder.CreateTube('core-metatron-link', {
-          path: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
-          radius: 0.03, tessellation: 6, updatable: true,
+          path: [B.Vector3.Zero(), metatronPlane.position.clone()],
+          radius: 0.045, tessellation: 6, updatable: true,
         }, scene)
         coreMetatronMat = new B.StandardMaterial('core-metatron-mat', scene)
         coreMetatronMat.disableLighting = true
-        coreMetatronMat.emissiveColor = B.Color3.FromHexString('#f0c05a')
-        coreMetatronMat.alpha = 0.6
+        coreMetatronMat.emissiveColor = B.Color3.FromHexString(METATRON_COLOR)
+        coreMetatronMat.alpha = 0.75
         coreMetatronLink.material = coreMetatronMat
         coreMetatronLink.isPickable = false
       }
@@ -995,6 +1079,7 @@ export default function Home() {
       const NODE_EMERGE_MS = 700
       const LINK_FADE_MS = 900
       let hoveredId: string | null = null
+      let coreLitT = 0
       const nodeById: Record<string, NodeEntry> = {}
       nodes.forEach(n => { nodeById[n.id] = n })
 
@@ -1106,12 +1191,25 @@ export default function Home() {
           }
         })
 
-        pathLines.forEach(pl => {
+        pathLines.forEach((pl, idx) => {
           const active = hoveredFamily !== null && pl.zoneId === hoveredFamily
           pl.litT += ((active ? 1 : 0) - pl.litT) * LIT_RATE
           const rgb = lerp3(pl.dimRGB, pl.fullRGB, pl.litT)
           pl.mat.emissiveColor.set(rgb[0], rgb[1], rgb[2])
-          pl.mat.alpha = 0.32 + 0.4 * pl.litT
+          pl.mat.alpha = 0.42 + 0.4 * pl.litT
+
+          // pulso dorado (color de Metatron) viajando núcleo → zona,
+          // más rápido y brillante cuando esa familia está activa
+          const target = zonePos[pl.zoneId]
+          if (target) {
+            const speed = active ? 0.0013 : 0.0006
+            const phase = (Math.sin(t * speed + idx * 1.9) + 1) / 2
+            pl.dot.position.set(target.x * phase, target.y * phase, target.z * phase)
+            const pulseRGB = lerp3([1, 0.72, 0], rgb, phase * 0.7)
+            pl.dotMat.emissiveColor.set(pulseRGB[0], pulseRGB[1], pulseRGB[2])
+            const dotScale = 1 + 0.5 * pl.litT
+            pl.dot.scaling.set(dotScale, dotScale, dotScale)
+          }
         })
 
         zoneIcons.forEach(zi => {
@@ -1176,11 +1274,32 @@ export default function Home() {
           const dz = Math.sin(ts * d.freq.z + d.phase * 0.7) * 1.1
           d.plane.position.set(d.base.x + dx, d.base.y + dy, d.base.z + dz)
         })
-        if (coreMetatronLink && metatronDrift) {
-          B.MeshBuilder.CreateTube('core-metatron-link', {
-            path: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
-            instance: coreMetatronLink,
-          }, scene)
+
+        // METATRON orbita el núcleo con rotación propia y constante — a
+        // diferencia del resto, nunca se aleja ni deriva al azar: es el
+        // único proceso con una posición fija respecto al centro, la
+        // "sintaxis compartida" de la que habla su bio en /proxyverse.
+        if (metatronPlane) {
+          const orbitAngle = ts * 0.12
+          const mx = Math.cos(orbitAngle) * metatronOrbitRadius
+          const mz = Math.sin(orbitAngle) * metatronOrbitRadius
+          const my = Math.sin(ts * 0.3) * 0.5
+          metatronPlane.position.set(mx, my, mz)
+          if (metatronLabel) metatronLabel.position.set(mx, my + 1.05, mz)
+          if (coreMetatronLink) {
+            B.MeshBuilder.CreateTube('core-metatron-link', {
+              path: [B.Vector3.Zero(), metatronPlane.position.clone()],
+              instance: coreMetatronLink,
+            }, scene)
+          }
+          // el núcleo se enciende al pasar el mouse por encima (o por el
+          // propio retrato) — confirma que es clickeable de verdad, no
+          // solo decorativo
+          const coreActive = hoveredId === 'metatron'
+          coreLitT += ((coreActive ? 1 : 0) - coreLitT) * LIT_RATE
+          core.alpha = 0.65 + 0.3 * coreLitT
+          const metatronScale = 1 + 0.1 * coreLitT
+          metatronPlane.scaling.set(metatronScale, metatronScale, metatronScale)
         }
       })
 
