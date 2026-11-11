@@ -25,12 +25,14 @@ export const navConfig: NavEntry[] = [
     items: [
       { label: 'Impresión 3D', href: '/fabrication', live: true },
       { label: 'Artefactos', href: '/artifacts', live: true },
-      { label: 'Arsenal', href: '/arsenal', live: true },
+      // Arsenal: oculto del menú a pedido explícito — la página sigue viva
+      // en /arsenal, se vuelve a listar acá cuando esté lista para mostrarse.
     ],
   },
   { label: 'ESPECÍMENES', href: '/especimenes', live: true },
   { label: 'PROXYGAMES', href: '/games', live: true },
-  { label: 'AUDIO', href: '/audio', live: true },
+  // AUDIO: oculto del menú a pedido explícito — la página sigue viva en
+  // /audio, se vuelve a agregar acá cuando esté lista para mostrarse.
   { label: 'REALIDAD AUMENTADA', href: '/realidad-aumentada', live: true },
   { label: 'EXPERIMENTAL', href: '/experimental', live: true },
   { label: 'CONOCIMIENTO', href: '/knowledge', live: true },

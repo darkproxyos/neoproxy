@@ -59,7 +59,9 @@ const ZONES: Zone[] = [
     subs: [
       { id: 'impresion3d', tag: 'NPX-LAB-00a', title: 'IMPRESIÓN 3D', href: '/fabrication' },
       { id: 'artefactos', tag: 'NPX-REL-00', title: 'ARTEFACTOS', href: '/artifacts' },
-      { id: 'arsenal', tag: 'NPX-LAB-00c', title: 'ARSENAL', href: '/arsenal' },
+      // Arsenal: oculto a pedido explícito (igual que en nav-config.ts) —
+      // la página sigue viva en /arsenal, se vuelve a listar acá cuando
+      // esté lista para mostrarse.
     ],
   },
   {
