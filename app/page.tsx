@@ -127,7 +127,7 @@ function mixHex(a: string, b: string): string { return mixHexAmount(a, b, 0.5) }
 // neutro (la misma familia del núcleo central) — el color saturado de
 // cada zona solo aparece cuando esa zona (o algo de su familia) está en
 // foco. Menos "todo grita a la vez", más "el color es señal".
-const NEUTRAL_HEX = '#4a6a78'
+const NEUTRAL_HEX = '#5e8595'
 function lerp3(a: [number, number, number], b: [number, number, number], t: number): [number, number, number] {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
 }
@@ -162,6 +162,82 @@ function fibonacciSphere(n: number, radius: number) {
   return pts
 }
 
+// Hexacosichoron (600-cell, el politopo regular de 4D con más celdas) —
+// 120 vértices en construcción estándar: 16 de (±½,±½,±½,±½), 8 de
+// permutaciones de (±1,0,0,0), y 96 de permutaciones PARES de
+// (±φ/2, ±½, ±1/2φ, 0). Las 720 aristas son los pares a distancia
+// mínima (el politopo vive en la 3-esfera unitaria en 4D). Se proyecta
+// una sola vez a 3D con un pliegue en perspectiva sobre W (la misma
+// técnica que ya usa el home anterior para tesseract/24-cell/etc. en
+// home-classic, parado acá un paso antes de la proyección final a 2D)
+// — esto es el núcleo central, dorado, pedido explícitamente.
+type Vec4 = [number, number, number, number]
+function hexacosichoron(): { x: number; y: number; z: number }[][] {
+  const PHI = (1 + Math.sqrt(5)) / 2
+  const verts: Vec4[] = []
+  for (let a = -1; a <= 1; a += 2) for (let b = -1; b <= 1; b += 2) for (let c = -1; c <= 1; c += 2) for (let d = -1; d <= 1; d += 2) {
+    verts.push([a * 0.5, b * 0.5, c * 0.5, d * 0.5])
+  }
+  for (let axis = 0; axis < 4; axis++) for (const s of [1, -1]) {
+    const v: Vec4 = [0, 0, 0, 0]
+    v[axis] = s
+    verts.push(v)
+  }
+  const permutations = (arr: number[]): number[][] => {
+    if (arr.length <= 1) return [arr]
+    const out: number[][] = []
+    for (let i = 0; i < arr.length; i++) {
+      const rest = [...arr.slice(0, i), ...arr.slice(i + 1)]
+      for (const p of permutations(rest)) out.push([arr[i], ...p])
+    }
+    return out
+  }
+  const parity = (idx: number[]): number => {
+    let inv = 0
+    for (let i = 0; i < idx.length; i++) for (let j = i + 1; j < idx.length; j++) if (idx[i] > idx[j]) inv++
+    return inv % 2
+  }
+  const idxPerms = permutations([0, 1, 2, 3]).filter(p => parity(p) === 0)
+  const base = [PHI / 2, 0.5, 1 / (2 * PHI)]
+  for (const sA of [1, -1]) for (const sB of [1, -1]) for (const sC of [1, -1]) {
+    const vals = [sA * base[0], sB * base[1], sC * base[2], 0]
+    for (const perm of idxPerms) {
+      verts.push([vals[perm[0]], vals[perm[1]], vals[perm[2]], vals[perm[3]]])
+    }
+  }
+
+  let minD2 = Infinity
+  for (let a = 0; a < verts.length; a++) for (let b = a + 1; b < verts.length; b++) {
+    const d2 = verts[a].reduce((s, c, k) => s + (c - verts[b][k]) ** 2, 0)
+    if (d2 > 1e-9 && d2 < minD2) minD2 = d2
+  }
+  const edges: [number, number][] = []
+  for (let a = 0; a < verts.length; a++) for (let b = a + 1; b < verts.length; b++) {
+    const d2 = verts[a].reduce((s, c, k) => s + (c - verts[b][k]) ** 2, 0)
+    if (Math.abs(d2 - minD2) < 1e-6) edges.push([a, b])
+  }
+
+  // rotación 4D fija (orientación estática, elegida para que no quede
+  // simétrica/plana al proyectar) + pliegue en perspectiva sobre W
+  const aXY = 0.5, aZW = 0.85, aXW = 0.35
+  const rotate4D = (v: Vec4): Vec4 => {
+    let [x, y, z, w] = v
+    let cs = Math.cos(aXY), sn = Math.sin(aXY)
+    ;[x, y] = [x * cs - y * sn, x * sn + y * cs]
+    cs = Math.cos(aZW); sn = Math.sin(aZW)
+    ;[z, w] = [z * cs - w * sn, z * sn + w * cs]
+    cs = Math.cos(aXW); sn = Math.sin(aXW)
+    ;[x, w] = [x * cs - w * sn, x * sn + w * cs]
+    return [x, y, z, w]
+  }
+  const wDist = 2.4
+  const projected = verts.map(rotate4D).map(([x, y, z, w]) => {
+    const wFactor = wDist / (wDist - w)
+    return { x: x * wFactor, y: y * wFactor, z: z * wFactor }
+  })
+  return edges.map(([ai, bi]) => [projected[ai], projected[bi]])
+}
+
 // Base tangente al radio desde el origen hasta `pos` — para repartir los
 // nodos satélite en un anillo alrededor de su nodo primario sin que ese
 // anillo quede alineado con la sinapsis núcleo→zona (que viaja en la
@@ -181,6 +257,53 @@ function tangentBasis(pos: { x: number; y: number; z: number }) {
 // proxyverse/ProxyverseScene.tsx): un DynamicTexture que arranca dibujando
 // solo el marco de color (la imagen tarda en cargar) y se redibuja sola al
 // terminar de cargar, sin bloquear el resto del armado de la escena.
+// Panel chico enmarcado por sección — mismo gesto visual que los
+// retratos de abajo (marco de color + glow), pero con un glifo
+// abstracto en vez de una foto: cada zona no tiene un "retrato" propio,
+// así que en vez de inventar una imagen, es un ícono de sistema (nodo
+// hexagonal con sus conexiones) — el "canvas enmarcado por sección"
+// pedido explícitamente, sin fabricar contenido falso.
+function makeZoneIconTexture(B: any, scene: any, id: string, color: string) {
+  const size = 320
+  const tex = new B.DynamicTexture(`zone-icon-${id}`, { width: size, height: size }, scene, true)
+  tex.hasAlpha = true
+  const ctx = tex.getContext()
+  const pad = 14
+  const cx = size / 2, cy = size / 2
+
+  ctx.clearRect(0, 0, size, size)
+  ctx.fillStyle = `${color}18`
+  ctx.fillRect(pad, pad, size - pad * 2, size - pad * 2)
+
+  const R = size * 0.28
+  ctx.strokeStyle = color
+  ctx.lineWidth = 3
+  ctx.shadowColor = color
+  ctx.shadowBlur = 14
+  ctx.beginPath()
+  for (let i = 0; i <= 6; i++) {
+    const a = (Math.PI * 2 * i) / 6 - Math.PI / 2
+    const px = cx + Math.cos(a) * R, py = cy + Math.sin(a) * R
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py)
+  }
+  ctx.stroke()
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI * 2 * i) / 6 - Math.PI / 2
+    const px = cx + Math.cos(a) * R, py = cy + Math.sin(a) * R
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke()
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill()
+  }
+  ctx.beginPath(); ctx.arc(cx, cy, 8, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill()
+
+  ctx.strokeStyle = color
+  ctx.lineWidth = 5
+  ctx.shadowBlur = 20
+  ctx.strokeRect(pad / 2, pad / 2, size - pad, size - pad)
+
+  tex.update()
+  return tex
+}
+
 function makePhotoTexture(B: any, scene: any, agentId: string, src: string, color: string) {
   const size = 512
   const tex = new B.DynamicTexture(`home-photo-${agentId}`, { width: size, height: size }, scene, true)
@@ -367,20 +490,20 @@ export default function Home() {
       // profundidad real sin necesitar un blur de post-proceso.
       scene.fogMode = B.Scene.FOGMODE_EXP2
       scene.fogColor = new B.Color3(0.015, 0.012, 0.03)
-      scene.fogDensity = 0.028
+      scene.fogDensity = 0.02
 
       // Cámara libre, no cenital: flotando a la altura de la nube, mirando
       // de frente — inmersiva, no un mapa visto desde afuera. En pantallas
       // angostas (celular en vertical) arranca más lejos — con más nodos y
       // sub-nodos que antes, de cerca y en portrait quedaba todo cortado.
       const aspect = canvasRef.current!.clientWidth / Math.max(1, canvasRef.current!.clientHeight)
-      const startRadius = aspect < 0.75 ? 29 : 25
+      const startRadius = aspect < 0.75 ? 34 : 29
       const initialAlpha = -Math.PI / 2.4, initialBeta = 1.15
       const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, startRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
-      camera.lowerRadiusLimit = 14
-      camera.upperRadiusLimit = 46
+      camera.lowerRadiusLimit = 16
+      camera.upperRadiusLimit = 54
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
       camera.panningSensibility = 0
@@ -395,26 +518,26 @@ export default function Home() {
         }
       }
 
-      new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.62
+      new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.85
       const sun = new B.DirectionalLight('cloud-sun', new B.Vector3(-0.3, -0.8, -0.4), scene)
-      sun.intensity = 0.65
+      sun.intensity = 0.9
 
       // Glow real (bloom) sobre lo emisivo — nodos, paneles HUD y
       // sinapsis quedan "bien definidos e iluminados" en vez de planos.
       // Las fotos de los agentes (su propia imagen hace de emissive, no
       // algo que deba brillar como un HUD) quedan afuera explícitamente.
       const glow = new B.GlowLayer('cloud-glow', scene, { mainTextureFixedSize: 1024, blurKernelSize: 48 })
-      glow.intensity = 0.7
+      glow.intensity = 0.85
 
       // Un par de manchas de nebulosa muy lejos, de fondo — atmósfera sin
       // partículas (sacadas a pedido), acercándose al fondo con nubes de
       // la referencia visual.
       ;[
-        { color: '#6644aa', pos: new B.Vector3(-30, 14, -38) },
-        { color: '#2a5f9e', pos: new B.Vector3(32, -10, -42) },
+        { color: '#6644aa', pos: new B.Vector3(-40, 18, -50) },
+        { color: '#2a5f9e', pos: new B.Vector3(42, -13, -55) },
       ].forEach(({ color, pos }, i) => {
         const nebTex = makeNebulaTexture(B, scene, `${i}`, color)
-        const neb = B.MeshBuilder.CreatePlane(`nebula-${i}`, { size: 70 }, scene)
+        const neb = B.MeshBuilder.CreatePlane(`nebula-${i}`, { size: 92 }, scene)
         neb.position.copyFrom(pos)
         neb.billboardMode = B.Mesh.BILLBOARDMODE_ALL
         const nebMat = new B.StandardMaterial(`nebulaMat-${i}`, scene)
@@ -429,12 +552,18 @@ export default function Home() {
         glow.addExcludedMesh(neb)
       })
 
-      // --- núcleo central: home ---
-      const core = B.MeshBuilder.CreatePolyhedron('core', { type: 3, size: 0.6 }, scene)
-      const coreMat = new B.StandardMaterial('coreMat', scene)
-      coreMat.diffuseColor = new B.Color3(0.6, 0.85, 1)
-      coreMat.emissiveColor = new B.Color3(0.3, 0.6, 0.75)
-      core.material = coreMat
+      // --- núcleo central: home — hexacosichoron dorado (ver
+      // hexacosichoron() arriba), pedido explícito en vez del
+      // poliedro simple que había antes. ---
+      const CORE_SCALE = 1.7
+      const coreEdges = hexacosichoron()
+      const coreLines = coreEdges.map(([p1, p2]) => [
+        new B.Vector3(p1.x * CORE_SCALE, p1.y * CORE_SCALE, p1.z * CORE_SCALE),
+        new B.Vector3(p2.x * CORE_SCALE, p2.y * CORE_SCALE, p2.z * CORE_SCALE),
+      ])
+      const core = B.MeshBuilder.CreateLineSystem('core', { lines: coreLines }, scene)
+      core.color = B.Color3.FromHexString('#f0c05a')
+      core.alpha = 0.65
       core.isPickable = false
 
       type NodeEntry = {
@@ -446,11 +575,12 @@ export default function Home() {
       const nodes: NodeEntry[] = []
       const linkEntries: { line: any; aId: string; bId: string; baseDelay: number; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
       const pathLines: { line: any; zoneId: string; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
+      const zoneIcons: { mesh: any; baseDelay: number }[] = []
       const zonePos: Record<string, { x: number; y: number; z: number }> = {}
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
 
       // --- nodos primarios, dispersos sobre una esfera (sin eje "arriba") ---
-      const LAYOUT_RADIUS = 11.5
+      const LAYOUT_RADIUS = 14.5
       const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
       const zoneRoot = new B.TransformNode('zoneRoot', scene)
 
@@ -464,7 +594,7 @@ export default function Home() {
         // neutro, el color saturado real de la zona solo aparece cuando
         // esa familia (ella o alguno de sus sub-nodos) está en foco —
         // "el color es señal", no ruido parejo en las nueve zonas a la vez.
-        const dimHex = mixHexAmount(zone.color, NEUTRAL_HEX, 0.82)
+        const dimHex = mixHexAmount(zone.color, NEUTRAL_HEX, 0.72)
         const dimRGB = hex3(dimHex)
         const fullRGB = hex3(zone.color)
 
@@ -527,6 +657,26 @@ export default function Home() {
         path.isPickable = false
         pathLines.push({ line: path, zoneId: zone.id, dimRGB, fullRGB, litT: 0 })
 
+        // --- panel enmarcado por sección (ver makeZoneIconTexture) —
+        // pedido explícito, "un canvas enmarcado en cada sección". Cerca
+        // del propio nodo (no en el anillo de subs), billboard, decorativo
+        // — el click real sigue siendo solo el nodo. ---
+        const iconTex = makeZoneIconTexture(B, scene, zone.id, zone.color)
+        const iconPlane = B.MeshBuilder.CreatePlane(`zoneicon-${zone.id}`, { size: 1.3 }, scene)
+        const iconOffset = tangentBasis({ x, y, z }).t1
+        iconPlane.position.set(x + iconOffset.x * 2.1, y + iconOffset.y * 2.1 - 0.3, z + iconOffset.z * 2.1)
+        iconPlane.billboardMode = B.Mesh.BILLBOARDMODE_ALL
+        const iconMat = new B.StandardMaterial(`zoneiconmat-${zone.id}`, scene)
+        iconMat.diffuseTexture = iconTex
+        iconMat.emissiveTexture = iconTex
+        iconMat.opacityTexture = iconTex
+        iconMat.disableLighting = true
+        iconMat.backFaceCulling = false
+        iconPlane.material = iconMat
+        iconPlane.isPickable = false
+        iconPlane.scaling.set(0.001, 0.001, 0.001)
+        zoneIcons.push({ mesh: iconPlane, baseDelay })
+
         // --- sub-secciones: nodos satélite más chicos en anillo alrededor
         // del nodo primario, cada uno linkeando a una ruta real del sitio
         // (no decorativos) — el "quiero que se vean sub secciones ligadas
@@ -537,7 +687,7 @@ export default function Home() {
           // opacos (legibilidad real pedida antes), 2.4 los hacía chocar
           // entre sí y con el panel del propio primario (caso LABORATORIO,
           // el peor: 3 subs apretados contra un panel grande al lado)
-          const SUB_RING = 3.7
+          const SUB_RING = 4.6
           zone.subs.forEach((sub, j) => {
             const a = (Math.PI * 2 * j) / zone.subs!.length + i * 0.6
             const sx = x + (t1.x * Math.cos(a) + t2.x * Math.sin(a)) * SUB_RING
@@ -661,7 +811,7 @@ export default function Home() {
       ZONES.forEach(zone => {
         const p = zonePos[zone.id]
         if (!p) return
-        const dimRGB = hex3(mixHexAmount(zone.color, NEUTRAL_HEX, 0.82))
+        const dimRGB = hex3(mixHexAmount(zone.color, NEUTRAL_HEX, 0.72))
         const fullRGB = hex3(zone.color)
         const zoneLight = new B.PointLight(`zonelight-${zone.id}`, new B.Vector3(p.x, p.y, p.z), scene)
         zoneLight.diffuse = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
@@ -683,7 +833,7 @@ export default function Home() {
         if (!a || !b) return
         const zoneA = ZONES.find(z => z.id === aId)!, zoneB = ZONES.find(z => z.id === bId)!
         const blended = mixHex(zoneA.color, zoneB.color)
-        const dimBlended = mixHexAmount(blended, NEUTRAL_HEX, 0.82)
+        const dimBlended = mixHexAmount(blended, NEUTRAL_HEX, 0.72)
         const dimRGB = hex3(dimBlended)
         const dimColor = new B.Color3(dimRGB[0], dimRGB[1], dimRGB[2])
         const line = B.MeshBuilder.CreateLines(`crosslink-${idx}`, {
@@ -737,13 +887,13 @@ export default function Home() {
       // atado a nadie" es literal acá también). Decorativos, no navegan —
       // los nodos de sección (primarios y satélite) siguen siendo el
       // único click real. ---
-      type AgentDrift = { plane: any; base: { x: number; y: number; z: number }; phase: number; freq: { x: number; y: number; z: number } }
+      type AgentDrift = { plane: any; agentId: string; base: { x: number; y: number; z: number }; phase: number; freq: { x: number; y: number; z: number } }
       const agentDrifters: AgentDrift[] = []
       // separación mínima a cualquier nodo (primario o satélite) — sin
       // esto, un retrato puede terminar flotando justo delante del panel
       // con su nombre y taparlo (pasó en la primera pasada: nada "claro"
       // en eso).
-      const MIN_SEP_TO_ZONE = 5.6
+      const MIN_SEP_TO_ZONE = 7
       agents.forEach((agent, i) => {
         const image = AGENT_IMAGES[agent.id]
         if (!image) return
@@ -752,7 +902,7 @@ export default function Home() {
           const costheta = Math.random() * 2 - 1
           const theta = Math.acos(costheta)
           const phi = Math.random() * Math.PI * 2
-          const r = 6 + Math.random() * 8
+          const r = 7.5 + Math.random() * 10
           const candidate = {
             x: r * Math.sin(theta) * Math.cos(phi),
             y: r * Math.sin(theta) * Math.sin(phi) * 0.75,
@@ -780,11 +930,27 @@ export default function Home() {
         plane.parent = dustRoot // condensa junto con el resto de la nube, sin animación aparte
         glow.addExcludedMesh(plane)
         agentDrifters.push({
-          plane, base,
+          plane, agentId: agent.id, base,
           phase: i * 1.7,
           freq: { x: 0.16 + i * 0.013, y: 0.12 + i * 0.017, z: 0.19 + i * 0.01 },
         })
       })
+
+      // --- unión núcleo → METATRON, pedida explícitamente — el único
+      // proceso con una línea propia desde el centro, coherente con su
+      // rol de orquestador (ver CLAUDE.md: "Metatron define"). Sigue el
+      // retrato en su deriva real cuadro a cuadro, no un punto fijo. ---
+      const metatronDrift = agentDrifters.find(d => d.agentId === 'metatron')
+      let coreMetatronLink: any = null
+      if (metatronDrift) {
+        coreMetatronLink = B.MeshBuilder.CreateLines('core-metatron-link', {
+          points: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
+          updatable: true,
+        }, scene)
+        coreMetatronLink.color = B.Color3.FromHexString('#f0c05a')
+        coreMetatronLink.alpha = 0.4
+        coreMetatronLink.isPickable = false
+      }
 
       // --- emergencia: la nube entera condensa de la nada, los nodos de
       // sección aparecen escalonados encima, y recién al final se
@@ -850,8 +1016,9 @@ export default function Home() {
           // — la cámara se queda exactamente donde llegó
         }
 
-        core.rotation.y += 0.0045
-        core.rotation.x += 0.0018
+        core.rotation.y += 0.0028
+        core.rotation.x += 0.0011
+        core.rotation.z += 0.0007
         const pulse = 1 + Math.sin(t * 0.0016) * 0.06
         core.scaling.set(pulse, pulse, pulse)
 
@@ -913,6 +1080,12 @@ export default function Home() {
           pl.line.alpha = 0.14 + 0.22 * pl.litT
         })
 
+        zoneIcons.forEach(zi => {
+          const localElapsed = t - elapsed0 - zi.baseDelay - 150
+          const p = smoothstep(Math.max(0, Math.min(1, localElapsed / NODE_EMERGE_MS)))
+          zi.mesh.scaling.set(p, p, p)
+        })
+
         zoneLights.forEach(zl => {
           const active = hoveredFamily !== null && zl.zoneId === hoveredFamily
           zl.litT += ((active ? 1 : 0) - zl.litT) * LIT_RATE
@@ -969,6 +1142,12 @@ export default function Home() {
           const dz = Math.sin(ts * d.freq.z + d.phase * 0.7) * 1.1
           d.plane.position.set(d.base.x + dx, d.base.y + dy, d.base.z + dz)
         })
+        if (coreMetatronLink && metatronDrift) {
+          B.MeshBuilder.CreateLines('core-metatron-link', {
+            points: [B.Vector3.Zero(), metatronDrift.plane.getAbsolutePosition()],
+            instance: coreMetatronLink,
+          }, scene)
+        }
       })
 
       engine.runRenderLoop(() => scene.render())
