@@ -50,12 +50,21 @@ import { agents, AGENT_IMAGES } from '@/components/proxyverse/agents'
 // también.
 
 type SubZone = { id: string; tag: string; title: string; href: string }
-type Zone = { id: string; tag: string; title: string; href: string; color: string; subs?: SubZone[] }
+type Zone = {
+  id: string; tag: string; title: string; href: string; color: string; subs?: SubZone[]
+  description: string; cta: string
+}
 
 const ZONES: Zone[] = [
-  { id: 'manifiesto', tag: 'NPX-DOC-00', title: 'MANIFIESTO', href: '/manifesto', color: '#ffb800' },
+  {
+    id: 'manifiesto', tag: 'NPX-DOC-00', title: 'MANIFIESTO', href: '/manifesto', color: '#ffb800',
+    description: 'El documento fundacional del ecosistema — la premisa de que el software se comporta como un organismo vivo, no como una herramienta.',
+    cta: 'LEER MANIFIESTO',
+  },
   {
     id: 'fabricacion', tag: 'NPX-LAB-00', title: 'FABRICACIÓN', href: '/fabrication', color: '#5f95c9',
+    description: 'Impresión 3D y artefactos físicos reales — la cadena completa de archivo digital a objeto en resina, en la mano.',
+    cta: 'VER FABRICACIÓN',
     subs: [
       { id: 'impresion3d', tag: 'NPX-LAB-00a', title: 'IMPRESIÓN 3D', href: '/fabrication' },
       { id: 'artefactos', tag: 'NPX-REL-00', title: 'ARTEFACTOS', href: '/artifacts' },
@@ -66,6 +75,8 @@ const ZONES: Zone[] = [
   },
   {
     id: 'laboratorio', tag: 'NPX-LAB-01', title: 'LABORATORIO', href: '/lab', color: '#ff8c1a',
+    description: 'Generadores y visualizaciones corriendo en vivo — Proxygenesis, atractores extraños, el mapa del Hemibrain.',
+    cta: 'ENTRAR AL LABORATORIO',
     subs: [
       { id: 'proxygenesis', tag: 'NPX-LAB-01a', title: 'PROXYGENESIS', href: '/lab/proxygenesis' },
       { id: 'atractores', tag: 'NPX-LAB-01b', title: 'ATRACTORES', href: '/lab/atractores' },
@@ -74,6 +85,8 @@ const ZONES: Zone[] = [
   },
   {
     id: 'experimental', tag: 'NPX-EXP-00', title: 'EXPERIMENTAL', href: '/experimental', color: '#cc0000',
+    description: 'Modos interactivos fuera del canon fijo — oráculo, sigilos, enjambre. Terreno de prueba, no documentación.',
+    cta: 'EXPLORAR MODOS',
     subs: [
       { id: 'oraculo', tag: 'NPX-EXP-00a', title: 'ORÁCULO', href: '/experimental/oraculo' },
       { id: 'sigilo', tag: 'NPX-EXP-00b', title: 'SIGILO', href: '/experimental/sigilo' },
@@ -82,11 +95,17 @@ const ZONES: Zone[] = [
   },
   {
     id: 'conocimiento', tag: 'NPX-KNW-00', title: 'CONOCIMIENTO', href: '/knowledge', color: '#6644aa',
+    description: 'Filosofía y fundamentos del proyecto — los textos detrás del lore de los siete agentes residentes.',
+    cta: 'VER CONOCIMIENTO',
     subs: [
       { id: 'filosofia', tag: 'NPX-KNW-00a', title: 'FILOSOFÍA', href: '/knowledge/filosofia' },
     ],
   },
-  { id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d' },
+  {
+    id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d',
+    description: 'Los siete procesos residentes — DarkProxy, Metatron, D, Snake, Genos, Trickster, Prototype. Lore completo, perfil propio.',
+    cta: 'IR AL PROXYVERSE',
+  },
 ]
 
 // Uniones entre zonas primarias — no decorativas: cada par comparte algo
@@ -110,6 +129,8 @@ ZONES.forEach(zone => {
   zone.subs?.forEach(sub => { ALL_NODE_META[sub.id] = { title: sub.title, tag: sub.tag } })
 })
 const TOTAL_NODE_COUNT = ZONES.length + ZONES.reduce((a, z) => a + (z.subs?.length ?? 0), 0)
+const ZONE_BY_ID: Record<string, Zone> = {}
+ZONES.forEach(zone => { ZONE_BY_ID[zone.id] = zone })
 
 function hex3(hex: string): [number, number, number] {
   const n = parseInt(hex.slice(1), 16)
@@ -468,6 +489,12 @@ export default function Home() {
   // gesto de "termina la película, empieza el juego".
   const [cinematic, setCinematic] = useState(true)
   const [flashCut, setFlashCut] = useState(false)
+  // qué zona muestra su panel de información durante la pausa del
+  // recorrido guiado — "en cada pausa que se vea información", pedido
+  // explícito. tourStopRef evita pedir un re-render en cada frame: solo
+  // se llama a setTourStop cuando el valor realmente cambia.
+  const [tourStop, setTourStop] = useState<string | null>(null)
+  const tourStopRef = useRef<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
   const [clock, setClock] = useState('')
 
@@ -569,6 +596,8 @@ export default function Home() {
         // termina la película, el marco de cine se retira — recién acá
         // el usuario tiene de verdad el control libre
         setCinematic(false)
+        tourStopRef.current = null
+        setTourStop(null)
       }
 
       new B.HemisphericLight('cloud-fill', new B.Vector3(0, 1, 0.2), scene).intensity = 0.85
@@ -879,18 +908,22 @@ export default function Home() {
       // más lento y pausado — "más cinematográfico" pedido explícito, no
       // solo una cámara que salta de punto a punto
       const TOUR_START = 2800, STOP_TRAVEL = 3200, STOP_HOLD = 2200
-      const tourSegments: { from: CamPose; to: CamPose; start: number; end: number }[] = []
+      // zoneId: la zona en la que se queda la cámara durante la pausa
+      // INMEDIATAMENTE DESPUÉS de este segmento (null = plano de apertura
+      // o el tramo final que vuelve al plano general, sin panel de info)
+      const tourSegments: { from: CamPose; to: CamPose; start: number; end: number; zoneId: string | null }[] = []
       // plano de apertura: travelling de acercamiento desde la oscuridad
       // (openRadius) hasta el plano normal — ocupa el mismo tramo que antes
       // quedaba estático (0 → TOUR_START), no suma duración extra
       const openingPose: CamPose = { alpha: initialAlpha, beta: initialBeta, radius: openRadius }
-      tourSegments.push({ from: openingPose, to: initialPose, start: 0, end: TOUR_START })
+      tourSegments.push({ from: openingPose, to: initialPose, start: 0, end: TOUR_START, zoneId: null })
       {
         let cursor = TOUR_START
         for (let i = 0; i < waypoints.length - 1; i++) {
           const start = cursor
           const end = start + STOP_TRAVEL
-          tourSegments.push({ from: waypoints[i], to: waypoints[i + 1], start, end })
+          const zoneId = i < TOUR_ZONE_IDS.length ? TOUR_ZONE_IDS[i] : null
+          tourSegments.push({ from: waypoints[i], to: waypoints[i + 1], start, end, zoneId })
           cursor = end + (i < waypoints.length - 2 ? STOP_HOLD : 0)
         }
       }
@@ -1148,6 +1181,10 @@ export default function Home() {
         } else {
           const seg = tourSegments.find(s => tourElapsed >= s.start && tourElapsed < s.end)
           if (seg) {
+            // viajando — sin panel de info, "se ve viajando hacia ningún
+            // lado" era justamente esto: info solo cuando llega y se
+            // queda quieta sobre una zona real
+            if (tourStopRef.current !== null) { tourStopRef.current = null; setTourStop(null) }
             const p = smoothstep(Math.max(0, Math.min(1, (tourElapsed - seg.start) / (seg.end - seg.start))))
             let dA = seg.to.alpha - seg.from.alpha
             dA = ((dA + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI
@@ -1163,7 +1200,12 @@ export default function Home() {
             camera.inertialRadiusOffset = 0
           }
           // entre segmentos (en la pausa sobre una zona) no se toca nada
-          // — la cámara se queda exactamente donde llegó
+          // — la cámara se queda exactamente donde llegó. Acá sí se
+          // muestra el panel: cuál zona es la del segmento que acaba de
+          // terminar justo antes de este hueco.
+          const justArrived = [...tourSegments].reverse().find(s => s.end <= tourElapsed)
+          const stopId = justArrived?.zoneId ?? null
+          if (tourStopRef.current !== stopId) { tourStopRef.current = stopId; setTourStop(stopId) }
         }
 
         core.rotation.y += 0.0028
@@ -1362,6 +1404,7 @@ export default function Home() {
   }, [showContent, router])
 
   const mono = "'Space Mono', monospace"
+  const tourStopZone = tourStop ? ZONE_BY_ID[tourStop] : undefined
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
@@ -1453,12 +1496,52 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {/* panel de información en cada pausa del recorrido guiado —
+              pedido explícito: "se ve viajando hacia ningún lado y no
+              aporta información". Contenido real de cada zona (no texto
+              de relleno), con la estética de panel recortado + CTA real
+              a la ruta de esa zona — el mismo gesto que un click directo
+              sobre el nodo, no una ventana modal aparte. */}
+          {tourStopZone && (
+            <div key={tourStop} style={{
+              position: 'fixed', top: 'calc(8vh + 28px)', left: '50%', transform: 'translateX(-50%)',
+              width: 'min(420px, calc(100vw - 48px))', zIndex: 45, pointerEvents: 'auto',
+              background: 'rgba(8, 12, 22, 0.86)', backdropFilter: 'blur(6px)',
+              border: `1px solid ${tourStopZone.color}99`,
+              boxShadow: `0 0 36px ${tourStopZone.color}2e, inset 0 0 24px rgba(0,0,0,0.3)`,
+              clipPath: 'polygon(0 16px, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)',
+              padding: '22px 24px 20px',
+              animation: 'panel-in 520ms cubic-bezier(0.2,0.8,0.2,1) forwards',
+            }}>
+              <div style={{ fontFamily: mono, fontSize: 10, color: tourStopZone.color, letterSpacing: 3 }}>
+                {tourStopZone.tag}
+              </div>
+              <div style={{ fontFamily: mono, fontSize: 19, fontWeight: 700, color: '#eaf4fb', letterSpacing: 2.5, marginTop: 6, marginBottom: 12, textShadow: `0 0 14px ${tourStopZone.color}66` }}>
+                {tourStopZone.title}
+              </div>
+              <div style={{ fontFamily: mono, fontSize: 12.5, color: '#b7c6d4', lineHeight: 1.65, letterSpacing: 0.3 }}>
+                {tourStopZone.description}
+              </div>
+              <button
+                onClick={() => router.push(tourStopZone.href)}
+                style={{
+                  marginTop: 18, width: '100%', padding: '11px 0', background: 'transparent',
+                  border: `1px solid ${tourStopZone.color}aa`, color: tourStopZone.color,
+                  fontFamily: mono, fontSize: 11, letterSpacing: 2.5, cursor: 'pointer',
+                }}
+              >
+                {tourStopZone.cta}
+              </button>
+            </div>
+          )}
         </>
       )}
 
       <style>{`
         @keyframes boot-load { from { width: 0%; } to { width: 100%; } }
         @keyframes cinema-flash { from { opacity: 0.92; } to { opacity: 0; } }
+        @keyframes panel-in { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
       `}</style>
     </div>
   )
