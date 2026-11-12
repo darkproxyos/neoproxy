@@ -383,6 +383,142 @@ const NEUROTRANSMITTERS: NTRow[] = [
     funcion: 'Alerta, respuesta de lucha o huida.',
     origen: 'Locus coeruleus. (También llamada norepinefrina.)',
   },
+  {
+    nombre: 'Endorfinas',
+    tipo: 'Modulador (péptido opioide)',
+    funcion: 'Analgesia natural, sensación de bienestar — se unen a los mismos receptores que la morfina.',
+    origen: 'Liberadas durante el ejercicio intenso, el dolor y el estrés.',
+  },
+  {
+    nombre: 'Glicina',
+    tipo: 'Inhibidor',
+    funcion: 'Principal inhibidor en la médula espinal y el tronco encefálico.',
+    origen: 'Complementa a GABA como el otro gran freno inhibidor del sistema nervioso.',
+  },
+]
+
+// ---------------------------------------------------------------------
+// Datos — línea de tiempo de descubrimientos en neurociencia
+// ---------------------------------------------------------------------
+type TimelineEntry = { year: string; title: string; detail: string }
+const DISCOVERY_TIMELINE: TimelineEntry[] = [
+  { year: '1791', title: 'Electricidad animal', detail: 'Luigi Galvani observa que la estimulación eléctrica contrae el músculo de una rana disecada — primera evidencia de que el sistema nervioso opera por señales eléctricas' },
+  { year: '1873', title: 'Tinción de Golgi', detail: 'Camillo Golgi desarrolla la "reazione nera", una tinción de plata que por azar impregna solo una fracción de las neuronas — por primera vez se las puede ver individualmente bajo el microscopio' },
+  { year: '1887–1906', title: 'Doctrina de la neurona', detail: 'Santiago Ramón y Cajal usa la tinción de Golgi para proponer que el sistema nervioso está hecho de células discretas, no de una red continua — Golgi y Cajal comparten el Nobel 1906 pese a defender teorías opuestas' },
+  { year: '1897', title: '"Sinapsis"', detail: 'Charles Sherrington acuña el término para el punto de contacto entre dos neuronas' },
+  { year: '1921', title: 'Transmisión química', detail: 'Otto Loewi demuestra con el experimento del "Vagusstoff" que las neuronas se comunican con moléculas (acetilcolina), no solo con electricidad — Nobel 1936' },
+  { year: '1952', title: 'Modelo de Hodgkin-Huxley', detail: 'Alan Hodgkin y Andrew Huxley describen matemáticamente el potencial de acción usando el axón gigante de calamar — Nobel de Fisiología o Medicina 1963' },
+  { year: '1957', title: 'Caso H.M.', detail: 'La remoción bilateral del hipocampo de Henry Molaison (cirugía de Scoville) produce amnesia anterógrada profunda — Brenda Milner establece el rol central del hipocampo en la memoria declarativa' },
+  { year: '1960s–1981', title: 'Cerebro dividido', detail: 'Roger Sperry y Michael Gazzaniga estudian pacientes con el cuerpo calloso seccionado — evidencia directa de la lateralización hemisférica — Nobel 1981' },
+  { year: '1991', title: 'fMRI funcional', detail: 'Seiji Ogawa describe el efecto BOLD (dependiente del nivel de oxígeno en sangre), la base de la resonancia magnética funcional moderna' },
+  { year: '2000', title: 'Plasticidad sináptica', detail: 'Eric Kandel recibe el Nobel por describir el mecanismo molecular del aprendizaje y la memoria estudiando el reflejo de retracción branquial de Aplysia (un caracol marino)' },
+  { year: '2005', title: 'Optogenética', detail: 'Karl Deisseroth y Ed Boyden desarrollan la técnica de activar o silenciar neuronas específicas con pulsos de luz, insertando opsinas sensibles a la luz vía ingeniería genética' },
+  { year: '2013', title: 'Grandes iniciativas cerebrales', detail: 'Lanzamiento casi simultáneo del BRAIN Initiative (EE.UU.) y el Human Brain Project (UE) — mapear y simular la actividad cerebral a gran escala' },
+  { year: '2021', title: 'Atlas celular de la corteza', detail: 'El Allen Institute for Brain Science publica el primer atlas comprehensivo de tipos celulares de la corteza cerebral humana' },
+]
+
+function TimelineRow({ entry, isLast }: { entry: TimelineEntry; isLast: boolean }) {
+  return (
+    <div style={{ display: 'flex', gap: 20 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 14, flexShrink: 0 }}>
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: ACCENT, boxShadow: `0 0 10px ${ACCENT}aa`, flexShrink: 0, marginTop: 4 }} />
+        {!isLast && <div style={{ width: 1, flexGrow: 1, background: `${ACCENT}33`, marginTop: 4 }} />}
+      </div>
+      <div style={{ paddingBottom: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: ACCENT, letterSpacing: 1, textShadow: `0 0 10px ${ACCENT}55` }}>{entry.year}</span>
+          <span style={{ fontSize: 11, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
+        </div>
+        <div style={{ fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------
+// Datos — técnicas de neuroimagen y registro
+// ---------------------------------------------------------------------
+type ImagingRow = { tecnica: string; espacial: string; temporal: string; mide: string; invasividad: string }
+const IMAGING_TECHNIQUES: ImagingRow[] = [
+  { tecnica: 'EEG (electroencefalografía)', espacial: 'Baja (cm)', temporal: 'Muy alta (ms)', mide: 'Actividad eléctrica cortical agregada', invasividad: 'No invasiva' },
+  { tecnica: 'MEG (magnetoencefalografía)', espacial: 'Media', temporal: 'Muy alta (ms)', mide: 'Campos magnéticos de la actividad neuronal', invasividad: 'No invasiva' },
+  { tecnica: 'fMRI (resonancia funcional)', espacial: 'Alta (mm)', temporal: 'Baja (segundos)', mide: 'Efecto BOLD — oxigenación sanguínea, proxy indirecto', invasividad: 'No invasiva' },
+  { tecnica: 'PET (tomografía por emisión de positrones)', espacial: 'Media', temporal: 'Baja (minutos)', mide: 'Metabolismo o receptores específicos vía trazador radioactivo', invasividad: 'Mínimamente invasiva' },
+  { tecnica: 'Registro unicelular (electrodos implantados)', espacial: 'Altísima (neurona individual)', temporal: 'Altísima (ms)', mide: 'Potenciales de acción de neuronas individuales', invasividad: 'Invasiva (requiere cirugía)' },
+  { tecnica: 'Optogenética', espacial: 'Alta (tipo celular específico)', temporal: 'Altísima (ms)', mide: 'No registra — manipula: activa/inhibe poblaciones neuronales con luz', invasividad: 'Invasiva (ingeniería genética + fibra óptica)' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — bandas de frecuencia EEG
+// ---------------------------------------------------------------------
+type WaveBand = { nombre: string; rango: string; estado: string }
+const WAVE_BANDS: WaveBand[] = [
+  { nombre: 'Delta', rango: '0.5–4 Hz', estado: 'Sueño profundo (NREM 3), muy baja frecuencia y alta amplitud' },
+  { nombre: 'Theta', rango: '4–8 Hz', estado: 'Somnolencia, meditación profunda, codificación de memoria en el hipocampo' },
+  { nombre: 'Alfa', rango: '8–13 Hz', estado: 'Relajación con ojos cerrados, vigilia tranquila' },
+  { nombre: 'Beta', rango: '13–30 Hz', estado: 'Vigilia activa, concentración, ansiedad' },
+  { nombre: 'Gamma', rango: '30–100+ Hz', estado: 'Procesamiento cognitivo de alto nivel, "binding" perceptual' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — etapas del sueño
+// ---------------------------------------------------------------------
+type SleepStage = { nombre: string; detail: string }
+const SLEEP_STAGES: SleepStage[] = [
+  { nombre: 'NREM 1', detail: 'Transición vigilia-sueño, predominan ondas theta — el sueño más ligero' },
+  { nombre: 'NREM 2', detail: 'Husos de sueño (sleep spindles) y complejos K — la mayor parte del tiempo total de sueño' },
+  { nombre: 'NREM 3 (sueño de ondas lentas)', detail: 'Predominan ondas delta — sueño profundo, reparador, consolidación de memoria declarativa' },
+  { nombre: 'REM (movimiento ocular rápido)', detail: 'Actividad cortical similar a la vigilia con atonía muscular — la mayoría de los sueños narrativos, consolidación de memoria procedural y emocional' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — casos clínicos históricos
+// ---------------------------------------------------------------------
+type ClinicalCase = { title: string; year: string; detail: string }
+const CLINICAL_CASES: ClinicalCase[] = [
+  {
+    title: 'PHINEAS GAGE',
+    year: '1848',
+    detail: 'Una barra de hierro atraviesa su lóbulo frontal en un accidente ferroviario. Sobrevive, pero su personalidad cambia radicalmente — de responsable y sociable a impulsivo e irritable. Primera evidencia de que regiones frontales específicas regulan la personalidad y el control de impulsos, no solo funciones motoras básicas.',
+  },
+  {
+    title: 'PACIENTE "TAN" (Louis Victor Leborgne)',
+    year: '1861',
+    detail: 'Paciente de Paul Broca que solo podía pronunciar la sílaba "tan". La autopsia reveló daño en el lóbulo frontal izquierdo — hoy "área de Broca" — primera evidencia de que el lenguaje depende de una región cerebral localizada.',
+  },
+  {
+    title: 'H.M. (Henry Molaison)',
+    year: '1957',
+    detail: 'Remoción bilateral del hipocampo para tratar epilepsia severa. Resultó en amnesia anterógrada profunda — no podía formar nuevos recuerdos declarativos — pero su memoria procedural quedó intacta: podía aprender habilidades motoras nuevas sin recordar haberlas practicado. Estudiado durante décadas por Brenda Milner, estableció que memoria declarativa y procedural dependen de sistemas cerebrales distintos.',
+  },
+  {
+    title: 'PACIENTES DE CEREBRO DIVIDIDO',
+    year: 'años 60–70',
+    detail: 'Roger Sperry y Michael Gazzaniga estudian pacientes con el cuerpo calloso seccionado quirúrgicamente (para tratar epilepsia). Cada hemisferio puede procesar información de forma relativamente independiente — evidencia directa de la lateralización hemisférica: en la mayoría de las personas diestras, el lenguaje depende fuertemente del hemisferio izquierdo.',
+  },
+]
+
+// ---------------------------------------------------------------------
+// Datos — psicofarmacología básica
+// ---------------------------------------------------------------------
+type PharmTopic = { title: string; detail: string }
+const PHARM_TOPICS: PharmTopic[] = [
+  { title: 'BARRERA HEMATOENCEFÁLICA', detail: 'Filtro selectivo de vasos sanguíneos que protege al cerebro — solo moléculas pequeñas y liposolubles la cruzan con facilidad. Determina, en gran medida, qué fármacos pueden llegar a actuar sobre el sistema nervioso central.' },
+  { title: 'AGONISTAS Y ANTAGONISTAS', detail: 'Un agonista activa un receptor imitando al neurotransmisor natural; un antagonista se une al receptor sin activarlo, bloqueando su acción. La mayoría de los fármacos psicoactivos actúan sobre uno de estos dos mecanismos, o sobre la recaptación del neurotransmisor.' },
+  { title: 'ISRS (inhibidores selectivos de la recaptación de serotonina)', detail: 'Bloquean el transportador que recicla la serotonina de vuelta a la neurona presináptica, aumentando su disponibilidad en la hendidura sináptica. Mecanismo principal de los antidepresivos más recetados (ej. fluoxetina) — aunque por qué el efecto clínico tarda semanas en aparecer, pese a que el bloqueo es inmediato, sigue sin explicación completa.' },
+  { title: 'AGONISTAS DOPAMINÉRGICOS', detail: 'Reponen o imitan la dopamina en vías donde su producción está reducida — ej. L-DOPA (precursor de dopamina) en la enfermedad de Parkinson, donde mueren las neuronas dopaminérgicas de la sustancia negra.' },
+  { title: 'BENZODIACEPINAS', detail: 'Potencian el efecto inhibidor del GABA sobre su receptor — de ahí su efecto ansiolítico y sedante.' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — la consciencia, terreno abierto
+// ---------------------------------------------------------------------
+type MindFrontier = { title: string; detail: string }
+const CONSCIOUSNESS_TOPICS: MindFrontier[] = [
+  { title: 'EL PROBLEMA DIFÍCIL', detail: 'David Chalmers (1995) distingue los "problemas fáciles" de la consciencia (explicar funciones cognitivas específicas: atención, reporte verbal, integración sensorial) del "problema difícil": por qué el procesamiento de información físico viene acompañado de experiencia subjetiva (qualia) en absoluto. Ninguna teoría actual lo resuelve de forma consensuada.' },
+  { title: 'CORRELATOS NEURONALES DE LA CONSCIENCIA (NCC)', detail: 'Programa de investigación impulsado por Francis Crick y Christof Koch desde los años 90: buscar los mecanismos neuronales mínimos suficientes para cualquier experiencia consciente específica. Un programa empírico activo, distinto de responder el problema difícil en sí.' },
+  { title: 'TEORÍA DE LA INFORMACIÓN INTEGRADA (IIT)', detail: 'Giulio Tononi propone que la consciencia de un sistema corresponde a su grado de información integrada (Φ, "phi") — una cantidad matemática calculable en principio para cualquier sistema físico. Altamente especulativa, sin consenso, y con implicaciones controvertidas (atribuiría algún grado de experiencia a sistemas muy simples).' },
+  { title: 'TEORÍA DEL ESPACIO DE TRABAJO GLOBAL', detail: 'Bernard Baars (y su versión neuronal, de Stanislas Dehaene) propone que la consciencia surge cuando una pieza de información se "difunde" ampliamente a través de una red cortical, haciéndose disponible simultáneamente a múltiples procesos cognitivos — memoria, lenguaje, planificación — en vez de quedar aislada en un módulo específico.' },
 ]
 
 function NeurotransmitterTable() {
@@ -428,6 +564,62 @@ function NeurotransmitterTable() {
           ))}
         </tbody>
       </table>
+    </div>
+  )
+}
+
+function ImagingTable() {
+  return (
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 760 }}>
+        <thead>
+          <tr>
+            {['TÉCNICA', 'RES. ESPACIAL', 'RES. TEMPORAL', 'QUÉ MIDE', 'INVASIVIDAD'].map((h, i) => (
+              <th key={i} style={{ textAlign: 'left', fontSize: 9.5, letterSpacing: 1.5, color: ACCENT, borderBottom: `1px solid ${ACCENT}55`, padding: '10px 14px', whiteSpace: 'nowrap' }}>
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {IMAGING_TECHNIQUES.map((row, i) => (
+            <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,79,163,0.03)' : 'transparent' }}>
+              <td style={{ padding: '12px 14px', fontSize: 10.5, color: '#fff', letterSpacing: 0.3, verticalAlign: 'top' }}>{row.tecnica}</td>
+              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{row.espacial}</td>
+              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{row.temporal}</td>
+              <td style={{ padding: '12px 14px', fontSize: 10, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>{row.mide}</td>
+              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top' }}>{row.invasividad}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function WaveBandsChart() {
+  const maxFreq = 100
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {WAVE_BANDS.map((band, i) => {
+        const widthPct = Math.min(100, (parseFloat(band.rango.split('–')[1] || band.rango) / maxFreq) * 100 + 14)
+        return (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 64, fontSize: 11, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{band.nombre}</div>
+            <div style={{ width: 80, fontSize: 9.5, color: ACCENT, flexShrink: 0 }}>{band.rango}</div>
+            <div style={{ flexGrow: 1, height: 14, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
+              <div style={{ width: `${widthPct}%`, height: '100%', background: `linear-gradient(90deg, ${ACCENT}33, ${ACCENT})`, boxShadow: `0 0 8px ${ACCENT}66` }} />
+            </div>
+          </div>
+        )
+      })}
+      <div style={{ marginTop: 6 }}>
+        {WAVE_BANDS.map((band, i) => (
+          <div key={i} style={{ fontSize: 9.5, lineHeight: 1.7, color: TEXT_DIM, marginBottom: 4 }}>
+            <span style={{ color: ACCENT }}>{band.nombre}</span> — {band.estado}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -595,16 +787,66 @@ export default function MentePage() {
               maxWidth: 620,
               borderLeft: `1px solid ${ACCENT}33`,
               paddingLeft: 24,
+              marginBottom: 32,
             }}
           >
             De la célula al proceso: cómo una neurona dispara, cómo un pulso eléctrico se vuelve señal
-            química, cómo un cerebro completo produce memoria, atención, lenguaje y decisión. Cinco
-            capas, de abajo hacia arriba.
+            química, cómo se registra y se lee esa actividad desde afuera, qué le pasa al cerebro
+            cuando falla una pieza puntual, y qué sigue sin explicación pese a todo lo anterior. Trece
+            capas, de la célula individual a la consciencia misma.
           </p>
+
+          {/* sello de documento */}
+          <div
+            style={{
+              display: 'inline-grid',
+              gridTemplateColumns: 'auto auto',
+              gap: '4px 24px',
+              fontSize: 9,
+              letterSpacing: 1,
+              color: `${ACCENT}99`,
+              border: `1px solid ${ACCENT}33`,
+              padding: '12px 18px',
+              marginBottom: 32,
+            }}
+          >
+            <span style={{ color: `${ACCENT}55` }}>CLASIFICACIÓN</span><span style={{ color: TEXT }}>NO RESTRINGIDA — CONSENSO CLÍNICO/EXPERIMENTAL</span>
+            <span style={{ color: `${ACCENT}55` }}>REVISIÓN</span><span style={{ color: TEXT }}>02 — 13 SECCIONES</span>
+            <span style={{ color: `${ACCENT}55` }}>ALCANCE</span><span style={{ color: TEXT }}>CÉLULA → SISTEMA → FRONTERA ABIERTA</span>
+          </div>
+
+          {/* índice */}
+          <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
+            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+              ÍNDICE
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '6px 20px' }}>
+              {[
+                ['I', 'sec-01', 'Anatomía de la neurona'],
+                ['II', 'sec-02', 'Línea de tiempo de descubrimientos'],
+                ['III', 'sec-03', 'El potencial de acción'],
+                ['IV', 'sec-04', 'Neurotransmisores principales'],
+                ['V', 'sec-05', 'Anatomía cerebral'],
+                ['VI', 'sec-06', 'Técnicas de neuroimagen y registro'],
+                ['VII', 'sec-07', 'Ondas cerebrales y arquitectura del sueño'],
+                ['VIII', 'sec-08', 'Casos clínicos históricos'],
+                ['IX', 'sec-09', 'Procesos cognitivos'],
+                ['X', 'sec-10', 'Neurodesarrollo y plasticidad'],
+                ['XI', 'sec-11', 'Psicofarmacología básica'],
+                ['XII', 'sec-12', 'La consciencia — el problema difícil'],
+                ['XIII', 'sec-13', 'Notas adicionales'],
+              ].map(([roman, id, label]) => (
+                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10 }}>
+                  <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
+                  <span>{label}</span>
+                </a>
+              ))}
+            </div>
+          </nav>
         </div>
 
         {/* I. ANATOMÍA DE LA NEURONA */}
-        <div style={{ marginBottom: 90 }}>
+        <div id="sec-01" style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="ANATOMÍA DE LA NEURONA" />
           <Panel>
             <NeuronDiagram />
@@ -633,9 +875,21 @@ export default function MentePage() {
           </div>
         </div>
 
-        {/* II. EL POTENCIAL DE ACCIÓN */}
-        <div style={{ marginBottom: 90 }}>
-          <SectionHeader roman="II" title="EL POTENCIAL DE ACCIÓN" />
+        {/* II. LÍNEA DE TIEMPO DE DESCUBRIMIENTOS */}
+        <div id="sec-02" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="II" title="LÍNEA DE TIEMPO DE DESCUBRIMIENTOS" />
+          <Panel>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {DISCOVERY_TIMELINE.map((entry, i) => (
+                <TimelineRow key={entry.year + entry.title} entry={entry} isLast={i === DISCOVERY_TIMELINE.length - 1} />
+              ))}
+            </div>
+          </Panel>
+        </div>
+
+        {/* III. EL POTENCIAL DE ACCIÓN */}
+        <div id="sec-03" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="III" title="EL POTENCIAL DE ACCIÓN" />
           <Panel>
             <ActionPotentialGraph />
             <Caption>
@@ -650,17 +904,17 @@ export default function MentePage() {
           </Panel>
         </div>
 
-        {/* III. NEUROTRANSMISORES */}
-        <div style={{ marginBottom: 90 }}>
-          <SectionHeader roman="III" title="NEUROTRANSMISORES PRINCIPALES" />
+        {/* IV. NEUROTRANSMISORES */}
+        <div id="sec-04" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="IV" title="NEUROTRANSMISORES PRINCIPALES" />
           <Panel style={{ padding: '20px 20px 26px' }}>
             <NeurotransmitterTable />
           </Panel>
         </div>
 
-        {/* IV. ANATOMÍA CEREBRAL */}
-        <div style={{ marginBottom: 90 }}>
-          <SectionHeader roman="IV" title="ANATOMÍA CEREBRAL" sub="vista lateral — los cuatro lóbulos, cerebelo, tronco encefálico" />
+        {/* V. ANATOMÍA CEREBRAL */}
+        <div id="sec-05" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="V" title="ANATOMÍA CEREBRAL" sub="vista lateral — los cuatro lóbulos, cerebelo, tronco encefálico" />
           <Panel>
             <BrainDiagram />
             <Caption>
@@ -700,9 +954,72 @@ export default function MentePage() {
           </div>
         </div>
 
-        {/* V. PROCESOS COGNITIVOS */}
-        <div style={{ marginBottom: 40 }}>
-          <SectionHeader roman="V" title="PROCESOS COGNITIVOS" />
+        {/* VI. TÉCNICAS DE NEUROIMAGEN Y REGISTRO */}
+        <div id="sec-06" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="VI" title="TÉCNICAS DE NEUROIMAGEN Y REGISTRO" sub="cómo se mide la actividad cerebral desde afuera — y qué se pierde en cada método" />
+          <Panel style={{ padding: '20px 20px 26px' }}>
+            <ImagingTable />
+            <Caption>
+              Ninguna técnica da la imagen completa: lo que gana en resolución espacial (fMRI, registro
+              unicelular) suele perder en resolución temporal, y viceversa (EEG, MEG). La optogenética
+              no registra nada — manipula directamente, lo que la hace la herramienta más precisa para
+              establecer causalidad (no solo correlación) entre la actividad de un circuito y una
+              conducta.
+            </Caption>
+          </Panel>
+        </div>
+
+        {/* VII. ONDAS CEREBRALES Y ARQUITECTURA DEL SUEÑO */}
+        <div id="sec-07" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="VII" title="ONDAS CEREBRALES Y ARQUITECTURA DEL SUEÑO" />
+          <Panel>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 16 }}>
+              BANDAS DE FRECUENCIA (EEG)
+            </div>
+            <WaveBandsChart />
+          </Panel>
+
+          <div style={{ marginTop: 24 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
+              DETALLE — ETAPAS DEL SUEÑO
+            </div>
+            <Panel>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {SLEEP_STAGES.map((s, i) => (
+                  <div key={i}>
+                    <div style={{ fontSize: 11, letterSpacing: 1.5, color: ACCENT }}>{s.nombre.toUpperCase()}</div>
+                    <div style={{ fontSize: 10.5, lineHeight: 1.7, color: TEXT_DIM, marginTop: 4 }}>{s.detail}</div>
+                  </div>
+                ))}
+              </div>
+              <Caption>
+                Un ciclo completo dura ≈ 90 minutos y se repite entre 4 y 6 veces por noche — con más
+                sueño de ondas lentas al principio de la noche y más REM hacia el final, no distribuido
+                parejo.
+              </Caption>
+            </Panel>
+          </div>
+        </div>
+
+        {/* VIII. CASOS CLÍNICOS HISTÓRICOS */}
+        <div id="sec-08" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="VIII" title="CASOS CLÍNICOS HISTÓRICOS" sub="lo que un daño puntual revela sobre la función normal" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {CLINICAL_CASES.map((c, i) => (
+              <Panel key={i}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 10, flexWrap: 'wrap' }}>
+                  <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, textShadow: `0 0 10px ${ACCENT}44` }}>{c.title}</div>
+                  <div style={{ fontSize: 9.5, color: LABEL_DIM }}>{c.year}</div>
+                </div>
+                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{c.detail}</div>
+              </Panel>
+            ))}
+          </div>
+        </div>
+
+        {/* IX. PROCESOS COGNITIVOS */}
+        <div id="sec-09" style={{ marginBottom: 40 }}>
+          <SectionHeader roman="IX" title="PROCESOS COGNITIVOS" />
           <Panel>
             <CardBlock title="MEMORIA">
               Se distinguen al menos tres sistemas según su duración y capacidad. La <b style={{ color: '#fff' }}>memoria sensorial</b>{' '}
@@ -747,10 +1064,96 @@ export default function MentePage() {
             <CardBlock title="NEUROPLASTICIDAD">
               El sistema nervioso reorganiza sus propias conexiones en respuesta a la experiencia. La
               regla de Hebb lo resume en una línea: <i>"las neuronas que se activan juntas, se conectan
-              entre sí"</i> — la base celular del aprendizaje asociativo, y el mecanismo que subyace a la
-              potenciación a largo plazo mencionada en la sección de neurotransmisores.
+              entre sí"</i> — la base celular del aprendizaje asociativo. Ver Sección X para el
+              desarrollo completo.
             </CardBlock>
           </Panel>
+        </div>
+
+        {/* X. NEURODESARROLLO Y PLASTICIDAD */}
+        <div id="sec-10" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="X" title="NEURODESARROLLO Y PLASTICIDAD" />
+          <Panel>
+            <CardBlock title="PERÍODOS CRÍTICOS">
+              Ventanas de desarrollo donde el cerebro es excepcionalmente sensible a la experiencia para
+              calibrar un circuito específico — el ejemplo clásico es el de Hubel y Wiesel (Nobel 1981):
+              privar a un gatito de visión en un ojo durante un período crítico temprano produce ceguera
+              funcional permanente en ese ojo, aunque el ojo en sí esté sano. Pasado el período crítico,
+              la misma privación no tiene ese efecto.
+            </CardBlock>
+            <CardBlock title="PODA SINÁPTICA (SYNAPTIC PRUNING)">
+              La infancia produce una sobreabundancia de sinapsis; la adolescencia y la adultez temprana
+              eliminan selectivamente las conexiones menos usadas, afinando los circuitos en vez de
+              simplemente agregar más. La corteza prefrontal — asociada a función ejecutiva y control de
+              impulsos — es de las últimas regiones en completar este proceso, recién a mediados de los
+              20 años.
+            </CardBlock>
+            <CardBlock title="MIELINIZACIÓN TARDÍA">
+              El aislamiento de mielina de los axones continúa mucho después del nacimiento — en algunas
+              vías de la corteza prefrontal, hasta bien entrada la tercera década de vida. Esto se
+              correlaciona con la maduración progresiva de la función ejecutiva a lo largo de la
+              adolescencia.
+            </CardBlock>
+            <CardBlock title="NEUROGÉNESIS ADULTA">
+              Durante décadas se asumió que un cerebro adulto no genera neuronas nuevas. Hoy existe
+              evidencia de neurogénesis adulta al menos en el giro dentado del hipocampo — aunque su
+              magnitud real en humanos adultos, y cuánto declina con la edad, sigue siendo objeto de
+              debate activo entre grupos de investigación con resultados discrepantes.
+            </CardBlock>
+          </Panel>
+        </div>
+
+        {/* XI. PSICOFARMACOLOGÍA BÁSICA */}
+        <div id="sec-11" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="XI" title="PSICOFARMACOLOGÍA BÁSICA" sub="cómo un fármaco cambia, de verdad, lo que hace una sinapsis" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {PHARM_TOPICS.map((t, i) => (
+              <Panel key={i}>
+                <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{t.title}</div>
+                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{t.detail}</div>
+              </Panel>
+            ))}
+          </div>
+        </div>
+
+        {/* XII. LA CONSCIENCIA — EL PROBLEMA DIFÍCIL */}
+        <div id="sec-12" style={{ marginBottom: 90 }}>
+          <SectionHeader roman="XII" title="LA CONSCIENCIA — EL PROBLEMA DIFÍCIL" sub="terreno abierto, sin consenso — a diferencia de todo lo anterior en este documento" />
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: TEXT_DIM, maxWidth: 680, marginBottom: 28 }}>
+            Todo lo descripto hasta acá es ciencia con consenso razonable: anatomía verificable,
+            mecanismos moleculares replicados, casos clínicos documentados. Esta sección es distinta —
+            ninguna de estas teorías está confirmada ni es mayoritariamente aceptada; se las incluye
+            explícitamente marcadas como terreno de investigación activa, no como hechos establecidos.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {CONSCIOUSNESS_TOPICS.map((t, i) => (
+              <Panel key={i}>
+                <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{t.title}</div>
+                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{t.detail}</div>
+              </Panel>
+            ))}
+          </div>
+        </div>
+
+        {/* XIII. NOTAS ADICIONALES */}
+        <div id="sec-13" style={{ marginBottom: 40 }}>
+          <SectionHeader roman="XIII" title="NOTAS ADICIONALES" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+              <strong style={{ color: '#fff' }}>Variabilidad individual.</strong> Casi todos los valores
+              y ubicaciones de este documento (localización exacta de un área funcional, duración de un
+              ciclo de sueño, umbral de una memoria de trabajo) son promedios poblacionales con
+              variación real entre individuos — la neuroanatomía funcional no es tan fija ni tan
+              uniforme como un mapa de carreteras.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+              <strong style={{ color: '#fff' }}>Lo que este documento no resuelve.</strong> Por diseño:
+              el origen de la experiencia subjetiva (Sección XII), el rol exacto del sueño REM en la
+              cognición, la magnitud real de la neurogénesis adulta, y por qué algunos tratamientos
+              psicofarmacológicos tardan semanas en producir su efecto clínico pese a actuar
+              bioquímicamente de inmediato. Son, hoy, preguntas abiertas de la neurociencia.
+            </p>
+          </div>
         </div>
 
         {/* footer */}
