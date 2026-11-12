@@ -116,6 +116,76 @@ const ANTILEPTONS: Particle[] = [
 ]
 
 // ---------------------------------------------------------------------
+// Datos — línea de tiempo de descubrimientos
+// ---------------------------------------------------------------------
+
+type TimelineEntry = { year: string; title: string; detail: string }
+
+const DISCOVERY_TIMELINE: TimelineEntry[] = [
+  { year: '1897', title: 'Electrón', detail: 'J.J. Thomson — primera partícula subatómica identificada, mide su relación carga/masa en rayos catódicos' },
+  { year: '1919', title: 'Protón', detail: 'Ernest Rutherford identifica el núcleo del hidrógeno como partícula fundamental de toda la materia nuclear' },
+  { year: '1932', title: 'Neutrón y positrón', detail: 'James Chadwick descubre el neutrón; Carl Anderson observa el positrón en rayos cósmicos, confirmando la antimateria predicha por Dirac en 1928' },
+  { year: '1937', title: 'Muón', detail: 'Anderson y Neddermeyer lo encuentran en rayos cósmicos — inicialmente confundido con el "mesón" que predecía Yukawa' },
+  { year: '1947', title: 'Pión', detail: 'Cecil Powell lo identifica en emulsión fotográfica — el verdadero mediador de Yukawa de la fuerza nuclear' },
+  { year: '1956', title: 'Neutrino', detail: 'Clyde Cowan y Frederick Reines detectan el antineutrino electrónico cerca de un reactor nuclear, 26 años después de que Pauli lo postulara' },
+  { year: '1964', title: 'Quarks y el barión Ω⁻', detail: 'Gell-Mann y Zweig proponen los quarks de forma independiente; el descubrimiento del Ω⁻ confirma el modelo' },
+  { year: '1968–69', title: 'Estructura interna del protón', detail: 'Dispersión profundamente inelástica en SLAC muestra que el protón no es puntual — primera evidencia directa de los quarks' },
+  { year: '1974', title: 'Quark charm (J/ψ)', detail: '"Revolución de Noviembre" — descubierto simultáneamente en SLAC y Brookhaven' },
+  { year: '1975', title: 'Tau', detail: 'Martin Perl lo descubre en SLAC — un tercer leptón cargado, inesperado' },
+  { year: '1977', title: 'Quark bottom (Upsilon)', detail: 'Fermilab' },
+  { year: '1979', title: 'Gluón', detail: 'Observado indirectamente en eventos de tres chorros de partículas en el colisionador PETRA (DESY)' },
+  { year: '1983', title: 'Bosones W y Z', detail: 'CERN, experimentos UA1/UA2 — Carlo Rubbia y Simon van der Meer, Nobel 1984' },
+  { year: '1995', title: 'Quark top', detail: 'Fermilab, Tevatron — el último quark, con una masa sorprendentemente cercana a la del átomo de oro' },
+  { year: '1998–2001', title: 'Oscilación de neutrinos', detail: 'Super-Kamiokande y SNO — implica que los neutrinos tienen masa' },
+  { year: '2012', title: 'Bosón de Higgs', detail: 'CERN, ATLAS y CMS — la última pieza del Modelo Estándar, 48 años después de ser propuesto' },
+  { year: '2015', title: 'Ondas gravitacionales', detail: 'LIGO detecta la fusión de dos agujeros negros — no es una partícula, pero confirma una predicción de Einstein de 1916 y abre una ventana observacional nueva para la física fundamental' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — canales de decaimiento del Higgs (branching ratios, mH ≈ 125 GeV)
+// ---------------------------------------------------------------------
+
+const HIGGS_BRANCHING: { channel: string; pct: number }[] = [
+  { channel: 'H⁰ → bb̄', pct: 58.2 },
+  { channel: 'H⁰ → W⁺W⁻*', pct: 21.4 },
+  { channel: 'H⁰ → gg', pct: 8.2 },
+  { channel: 'H⁰ → τ⁺τ⁻', pct: 6.3 },
+  { channel: 'H⁰ → cc̄', pct: 2.9 },
+  { channel: 'H⁰ → ZZ*', pct: 2.6 },
+  { channel: 'H⁰ → γγ', pct: 0.23 },
+]
+
+// ---------------------------------------------------------------------
+// Datos — más allá del Modelo Estándar (especulativo, sin confirmación
+// experimental directa — marcado explícitamente como tal)
+// ---------------------------------------------------------------------
+
+type BsmTopic = { title: string; detail: string }
+
+const BSM_TOPICS: BsmTopic[] = [
+  {
+    title: 'MATERIA OSCURA',
+    detail: 'Evidencia gravitacional abrumadora (curvas de rotación galáctica, lentes gravitacionales, el fondo cósmico de microondas) de que ≈27% del universo es materia que no emite ni absorbe luz. Candidatos hipotéticos: WIMPs (partículas masivas de interacción débil), axiones, neutrinos estériles. Ninguno detectado directamente todavía, pese a décadas de búsqueda (XENON, LUX-ZEPLIN y otros detectores subterráneos).',
+  },
+  {
+    title: 'ENERGÍA OSCURA',
+    detail: '≈68% del universo — la causa de su expansión acelerada, descubierta por observaciones de supernovas tipo Ia en 1998 (Nobel de Física 2011). Su naturaleza es, hoy, completamente desconocida.',
+  },
+  {
+    title: 'SUPERSIMETRÍA (SUSY)',
+    detail: 'Hipótesis de que cada partícula del Modelo Estándar tiene un "compañero" supersimétrico con espín distinto en 1/2 (ej. selectrón para el electrón, fotino para el fotón). Buscada activamente en el LHC — sin evidencia confirmada hasta la fecha, lo que ha descartado las versiones más simples de la teoría.',
+  },
+  {
+    title: 'GRAN UNIFICACIÓN (GUT)',
+    detail: 'La conjetura de que las interacciones fuerte, débil y electromagnética se funden en una sola fuerza a energías extremas (≈10¹⁶ GeV). Las tres constantes de acoplamiento casi convergen a esa escala — de forma mucho más precisa en extensiones supersimétricas —, una de las pistas motivacionales para SUSY, aunque la convergencia por sí sola no es una prueba.',
+  },
+  {
+    title: 'GRAVEDAD CUÁNTICA Y DIMENSIONES EXTRA',
+    detail: 'Teoría de cuerdas, gravedad cuántica de lazos, modelos con dimensiones espaciales adicionales — distintos intentos de incluir la gravedad en un marco cuántico. Ninguno cuenta con confirmación experimental directa; algunos (dimensiones extra "grandes") fueron parcialmente descartados por los límites de energía ya explorados en el LHC.',
+  },
+]
+
+// ---------------------------------------------------------------------
 // Datos — hadrones (partículas compuestas: quarks confinados en tríos
 // o pares quark-antiquark). No son partículas elementales, pero son la
 // gran mayoría de la materia hadrónica observable — protón y neutrón
@@ -350,6 +420,89 @@ function GenerationRow({
         </div>
       ))}
     </div>
+  )
+}
+
+function TimelineRow({ entry, color, isLast }: { entry: TimelineEntry; color: string; isLast: boolean }) {
+  return (
+    <div style={{ display: 'flex', gap: 20 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 14, flexShrink: 0 }}>
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            borderRadius: '50%',
+            background: color,
+            boxShadow: `0 0 10px ${color}aa`,
+            flexShrink: 0,
+            marginTop: 4,
+          }}
+        />
+        {!isLast && <div style={{ width: 1, flexGrow: 1, background: `${color}33`, marginTop: 4 }} />}
+      </div>
+      <div style={{ paddingBottom: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color, letterSpacing: 1, textShadow: `0 0 10px ${color}55` }}>
+            {entry.year}
+          </span>
+          <span style={{ fontSize: 11, letterSpacing: 1, color: '#e8f2ff' }}>{entry.title}</span>
+        </div>
+        <div style={{ fontSize: 10, lineHeight: 1.7, color: '#8fa8bc', marginTop: 6, maxWidth: 580 }}>
+          {entry.detail}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HiggsBranchingChart({ color }: { color: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {HIGGS_BRANCHING.map(row => (
+        <div key={row.channel} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ width: 92, fontSize: 10, color: '#c8daf0', flexShrink: 0, textAlign: 'right' }}>
+            {row.channel}
+          </div>
+          <div style={{ flexGrow: 1, height: 14, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
+            <div
+              style={{
+                width: `${Math.max(row.pct, 1.2)}%`,
+                height: '100%',
+                background: `linear-gradient(90deg, ${color}55, ${color})`,
+                boxShadow: `0 0 8px ${color}66`,
+              }}
+            />
+          </div>
+          <div style={{ width: 50, fontSize: 10, color: `${color}cc`, flexShrink: 0 }}>{row.pct}%</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Gráfico esquemático de "corrida" de las constantes de acoplamiento —
+// ilustrativo, no a escala real: muestra la forma cualitativa (1/α crece
+// linealmente con log(E) en una teoría de gauge) y cómo las tres casi
+// convergen cerca de la escala GUT, no valores numéricos exactos.
+function UnificationPlot({ color }: { color: string }) {
+  return (
+    <svg viewBox="0 0 420 220" style={{ width: '100%', height: 'auto', display: 'block' }}>
+      <line x1={40} y1={190} x2={400} y2={190} stroke={`${color}66`} strokeWidth={1} />
+      <line x1={40} y1={190} x2={40} y2={20} stroke={`${color}66`} strokeWidth={1} />
+      <text x={400} y={206} fontSize={9} fill={`${color}99`} fontFamily={mono} textAnchor="end">log(E) →</text>
+      <text x={14} y={24} fontSize={9} fill={`${color}99`} fontFamily={mono}>1/α</text>
+
+      <path d="M 50 70 L 390 40" stroke={color} strokeWidth={1.4} fill="none" opacity={0.9} />
+      <path d="M 50 110 L 390 44" stroke={color} strokeWidth={1.4} fill="none" opacity={0.65} />
+      <path d="M 50 175 L 390 48" stroke={color} strokeWidth={1.4} fill="none" opacity={0.4} />
+
+      <text x={55} y={64} fontSize={10} fill={color} fontFamily={mono}>1/α₁ (hipercarga)</text>
+      <text x={55} y={104} fontSize={10} fill={`${color}cc`} fontFamily={mono}>1/α₂ (débil)</text>
+      <text x={55} y={169} fontSize={10} fill={`${color}99`} fontFamily={mono}>1/α₃ (fuerte)</text>
+
+      <circle cx={382} cy={44} r={4} fill="none" stroke={color} strokeWidth={1.2} strokeDasharray="2 2" />
+      <text x={400} y={18} fontSize={9} fill={`${color}aa`} fontFamily={mono} textAnchor="end">≈10¹⁶ GeV (escala GUT)</text>
+    </svg>
   )
 }
 
@@ -660,6 +813,28 @@ export default function ArchivoParticulasPage() {
         >
           ATLAS DE PARTÍCULAS
         </h1>
+
+        {/* sello de control de documento — gesto de archivo de laboratorio,
+            no decoración narrativa: campos reales (clasificación, revisión,
+            alcance), consistentes con el resto del tono técnico */}
+        <div
+          style={{
+            display: 'inline-grid',
+            gridTemplateColumns: 'auto auto',
+            gap: '4px 24px',
+            fontSize: 9,
+            letterSpacing: 1,
+            color: `${ACCENT}99`,
+            border: `1px solid ${ACCENT}33`,
+            padding: '12px 18px',
+            marginBottom: 32,
+          }}
+        >
+          <span style={{ color: `${ACCENT}55` }}>CLASIFICACIÓN</span><span style={{ color: '#c8daf0' }}>NO RESTRINGIDA — DATOS PÚBLICOS (PDG)</span>
+          <span style={{ color: `${ACCENT}55` }}>REVISIÓN</span><span style={{ color: '#c8daf0' }}>03 — 14 SECCIONES</span>
+          <span style={{ color: `${ACCENT}55` }}>ALCANCE</span><span style={{ color: '#c8daf0' }}>MODELO ESTÁNDAR + FRONTERA ESPECULATIVA</span>
+        </div>
+
         <p
           style={{
             fontSize: 11,
@@ -667,7 +842,7 @@ export default function ArchivoParticulasPage() {
             letterSpacing: 0.4,
             color: '#8fb8d6',
             maxWidth: 640,
-            marginBottom: 88,
+            marginBottom: 48,
             borderLeft: `1px solid ${ACCENT}33`,
             paddingLeft: 22,
           }}
@@ -676,14 +851,63 @@ export default function ArchivoParticulasPage() {
           Modelo Estándar y sus antipartículas, los hadrones compuestos que forman la materia
           nuclear ordinaria, las leyes de conservación y números cuánticos que rigen cómo decaen,
           la estructura de simetría de gauge y el mecanismo de Higgs, la mezcla de quarks y la
-          violación de CP, la oscilación de neutrinos, y los diagramas de Feynman que describen cada
-          interacción vértice por vértice. Todos los valores son los aceptados por el consenso
-          experimental actual (PDG — Particle Data Group). Documento técnico, sin relación con el
-          lore del proxyverso.
+          violación de CP, la oscilación de neutrinos, los diagramas de Feynman que describen cada
+          interacción vértice por vértice, los grandes experimentos que midieron todo esto, y lo que
+          hoy sigue sin explicación. Todos los valores son los aceptados por el consenso experimental
+          actual (PDG — Particle Data Group); la frontera especulativa está marcada explícitamente
+          como tal. Documento técnico, sin relación con el lore del proxyverso.
         </p>
 
+        {/* índice — ancla directa a cada sección, el gesto de "documento
+            real" en vez de scroll ciego en una página ya muy larga */}
+        <nav
+          style={{
+            marginBottom: 88,
+            border: `1px solid ${ACCENT}22`,
+            padding: '20px 24px',
+            maxWidth: 640,
+          }}
+        >
+          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            ÍNDICE
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '6px 20px' }}>
+            {[
+              ['I', 'sec-01', 'Modelo Estándar — partículas elementales'],
+              ['II', 'sec-02', 'Línea de tiempo de descubrimientos'],
+              ['III', 'sec-03', 'Antipartículas'],
+              ['IV', 'sec-04', 'Partículas compuestas — hadrones'],
+              ['V', 'sec-05', 'Números cuánticos y conservación'],
+              ['VI', 'sec-06', 'Las cuatro interacciones fundamentales'],
+              ['VII', 'sec-07', 'Simetría de gauge y el Higgs'],
+              ['VIII', 'sec-08', 'Matriz CKM y violación CP'],
+              ['IX', 'sec-09', 'Oscilación de neutrinos'],
+              ['X', 'sec-10', 'Constantes de acoplamiento'],
+              ['XI', 'sec-11', 'Diagramas de Feynman'],
+              ['XII', 'sec-12', 'CERN y los grandes experimentos'],
+              ['XIII', 'sec-13', 'Más allá del Modelo Estándar'],
+              ['XIV', 'sec-14', 'Notas adicionales'],
+            ].map(([roman, id, label]) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                style={{
+                  fontSize: 10.5,
+                  color: '#9fb8d6',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  gap: 10,
+                }}
+              >
+                <span style={{ color: `${ACCENT}88`, width: 22, flexShrink: 0 }}>{roman}</span>
+                <span>{label}</span>
+              </a>
+            ))}
+          </div>
+        </nav>
+
         {/* 2. Tabla del Modelo Estándar */}
-        <div style={{ marginBottom: 110 }}>
+        <div id="sec-01" style={{ marginBottom: 110 }}>
           <SectionTag>SECCIÓN 01</SectionTag>
           <SectionTitle roman="I">MODELO ESTÁNDAR — PARTÍCULAS ELEMENTALES</SectionTitle>
 
@@ -738,10 +962,30 @@ export default function ArchivoParticulasPage() {
           </div>
         </div>
 
-        {/* 3. Antipartículas */}
-        <div style={{ marginBottom: 110 }}>
+        {/* 3. Línea de tiempo de descubrimientos */}
+        <div id="sec-02" style={{ marginBottom: 110 }}>
           <SectionTag>SECCIÓN 02</SectionTag>
-          <SectionTitle roman="II">ANTIPARTÍCULAS</SectionTitle>
+          <SectionTitle roman="II">LÍNEA DE TIEMPO DE DESCUBRIMIENTOS</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 40 }}>
+            Ninguna de las partículas de este archivo se dedujo de un escritorio y punto — cada una
+            tiene una fecha, un experimento y nombres propios detrás. Más de un siglo de física
+            experimental, desde el primer electrón hasta el Higgs.
+          </p>
+
+          <GlassPanel>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {DISCOVERY_TIMELINE.map((entry, i) => (
+                <TimelineRow key={entry.year + entry.title} entry={entry} color={ACCENT} isLast={i === DISCOVERY_TIMELINE.length - 1} />
+              ))}
+            </div>
+          </GlassPanel>
+        </div>
+
+        {/* 4. Antipartículas */}
+        <div id="sec-03" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 03</SectionTag>
+          <SectionTitle roman="III">ANTIPARTÍCULAS</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             Cada fermión del listado anterior tiene una antipartícula: misma masa y espín, carga
@@ -779,10 +1023,10 @@ export default function ArchivoParticulasPage() {
           </div>
         </div>
 
-        {/* 4. Partículas compuestas — hadrones */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 03</SectionTag>
-          <SectionTitle roman="III">PARTÍCULAS COMPUESTAS — HADRONES</SectionTitle>
+        {/* 5. Partículas compuestas — hadrones */}
+        <div id="sec-04" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 04</SectionTag>
+          <SectionTitle roman="IV">PARTÍCULAS COMPUESTAS — HADRONES</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             Los quarks nunca aparecen libres — el confinamiento de color los obliga a agruparse en
@@ -820,10 +1064,10 @@ export default function ArchivoParticulasPage() {
           </div>
         </div>
 
-        {/* 5. Números cuánticos y leyes de conservación */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 04</SectionTag>
-          <SectionTitle roman="IV">NÚMEROS CUÁNTICOS Y LEYES DE CONSERVACIÓN</SectionTitle>
+        {/* 6. Números cuánticos y leyes de conservación */}
+        <div id="sec-05" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 05</SectionTag>
+          <SectionTitle roman="V">NÚMEROS CUÁNTICOS Y LEYES DE CONSERVACIÓN</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             No todo lo que se conserva, se conserva siempre de la misma manera: algunos números
@@ -869,10 +1113,10 @@ export default function ArchivoParticulasPage() {
           </GlassPanel>
         </div>
 
-        {/* 6. Las cuatro interacciones fundamentales */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 05</SectionTag>
-          <SectionTitle roman="V">LAS CUATRO INTERACCIONES FUNDAMENTALES</SectionTitle>
+        {/* 7. Las cuatro interacciones fundamentales */}
+        <div id="sec-06" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 06</SectionTag>
+          <SectionTitle roman="VI">LAS CUATRO INTERACCIONES FUNDAMENTALES</SectionTitle>
 
           <GlassPanel style={{ padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
@@ -925,12 +1169,12 @@ export default function ArchivoParticulasPage() {
           </p>
         </div>
 
-        {/* 7. Simetría de gauge y el mecanismo de Higgs */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 06</SectionTag>
-          <SectionTitle roman="VI">SIMETRÍA DE GAUGE Y EL MECANISMO DE HIGGS</SectionTitle>
+        {/* 8. Simetría de gauge y el mecanismo de Higgs */}
+        <div id="sec-07" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 07</SectionTag>
+          <SectionTitle roman="VII">SIMETRÍA DE GAUGE Y EL MECANISMO DE HIGGS</SectionTitle>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680, marginBottom: 40 }}>
             <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               El Modelo Estándar completo es una teoría de gauge con grupo de simetría{' '}
               <strong style={{ color: ACCENT }}>SU(3)_C × SU(2)_L × U(1)_Y</strong>. Cada factor
@@ -955,12 +1199,47 @@ export default function ArchivoParticulasPage() {
               propio valor de expectación de vacío del Higgs.
             </p>
           </div>
+
+          <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+            ESTRUCTURA DEL LAGRANGIANO (esquemática)
+          </div>
+          <GlassPanel style={{ marginBottom: 40 }}>
+            <div style={{ fontFamily: mono, fontSize: 12, color: '#e8f2ff', marginBottom: 18, letterSpacing: 1 }}>
+              ℒ_SM = ℒ_gauge + ℒ_fermión + ℒ_Higgs + ℒ_Yukawa
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {[
+                { term: 'ℒ_gauge = −¼ G^a_μν G^aμν − ¼ W^a_μν W^aμν − ¼ B_μν B^μν', note: 'términos cinéticos de los campos de gauge — gluones (G), W, hipercarga (B)' },
+                { term: 'ℒ_fermión = Σᵢ ψ̄ᵢ iγ^μ D_μ ψᵢ', note: 'términos cinéticos de los fermiones; la derivada covariante D_μ codifica todas sus interacciones de gauge' },
+                { term: 'ℒ_Higgs = |D_μ Φ|² − V(Φ), V(Φ) = μ²Φ†Φ + λ(Φ†Φ)²', note: 'el potencial de Higgs — con μ² < 0, su forma de "sombrero mexicano" rompe la simetría electrodébil' },
+                { term: 'ℒ_Yukawa = −y_f Ψ̄_L Φ Ψ_R + h.c.', note: 'da masa a los fermiones por acoplamiento al Higgs — y_f distinta para cada uno, de ahí la jerarquía de masas' },
+              ].map(row => (
+                <div key={row.term}>
+                  <div style={{ fontFamily: mono, fontSize: 11, color: ACCENT, letterSpacing: 0.5 }}>{row.term}</div>
+                  <div style={{ fontSize: 9.5, color: '#7a94ac', marginTop: 4, lineHeight: 1.6 }}>{row.note}</div>
+                </div>
+              ))}
+            </div>
+          </GlassPanel>
+
+          <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+            CANALES DE DECAIMIENTO DEL HIGGS (branching ratios, m_H ≈ 125 GeV)
+          </div>
+          <GlassPanel>
+            <HiggsBranchingChart color={ACCENT} />
+            <div style={{ fontSize: 9.5, lineHeight: 1.7, color: '#7a94ac', marginTop: 18 }}>
+              El canal más frecuente (H⁰ → bb̄) no es el más usado para descubrirlo — el ruido de
+              fondo de la fuerte lo hace casi invisible en el LHC. Los canales que realmente
+              permitieron el anuncio de 2012 fueron los más raros pero más limpios: H⁰ → γγ y
+              H⁰ → ZZ* → 4 leptones, pese a representar apenas una fracción minúscula del total.
+            </div>
+          </GlassPanel>
         </div>
 
-        {/* 8. Mezcla de quarks — matriz CKM y violación CP */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 07</SectionTag>
-          <SectionTitle roman="VII">MEZCLA DE QUARKS — MATRIZ CKM Y VIOLACIÓN CP</SectionTitle>
+        {/* 9. Mezcla de quarks — matriz CKM y violación CP */}
+        <div id="sec-08" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 08</SectionTag>
+          <SectionTitle roman="VIII">MEZCLA DE QUARKS — MATRIZ CKM Y VIOLACIÓN CP</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Los autoestados de masa de los quarks (u, c, t / d, s, b) no coinciden exactamente con
@@ -1013,10 +1292,10 @@ export default function ArchivoParticulasPage() {
           </GlassPanel>
         </div>
 
-        {/* 9. Oscilación de neutrinos */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 08</SectionTag>
-          <SectionTitle roman="VIII">OSCILACIÓN DE NEUTRINOS</SectionTitle>
+        {/* 10. Oscilación de neutrinos */}
+        <div id="sec-09" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 09</SectionTag>
+          <SectionTitle roman="IX">OSCILACIÓN DE NEUTRINOS</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
             <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
@@ -1042,12 +1321,12 @@ export default function ArchivoParticulasPage() {
           </div>
         </div>
 
-        {/* 10. Constantes de acoplamiento y libertad asintótica */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 09</SectionTag>
-          <SectionTitle roman="IX">CONSTANTES DE ACOPLAMIENTO Y LIBERTAD ASINTÓTICA</SectionTitle>
+        {/* 11. Constantes de acoplamiento y libertad asintótica */}
+        <div id="sec-10" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 10</SectionTag>
+          <SectionTitle roman="X">CONSTANTES DE ACOPLAMIENTO Y LIBERTAD ASINTÓTICA</SectionTitle>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680, marginBottom: 32 }}>
             <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               Las "constantes" de acoplamiento de cada interacción no son constantes — dependen de
               la escala de energía a la que se miden, un efecto de renormalización en teoría
@@ -1070,12 +1349,25 @@ export default function ArchivoParticulasPage() {
               estructura interna.
             </p>
           </div>
+
+          <GlassPanel>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>
+              CORRIDA DE LAS CONSTANTES DE ACOPLAMIENTO (esquemático)
+            </div>
+            <UnificationPlot color={ACCENT} />
+            <div style={{ fontSize: 9.5, lineHeight: 1.7, color: '#7a94ac', marginTop: 14 }}>
+              Gráfico ilustrativo, no a escala real: muestra la forma cualitativa de cómo 1/α
+              (inverso de cada constante de acoplamiento) crece con la energía. En extensiones
+              supersimétricas del Modelo Estándar, las tres curvas convergen de forma mucho más
+              precisa cerca de la escala de Gran Unificación — ver Sección XIII.
+            </div>
+          </GlassPanel>
         </div>
 
-        {/* 11. Diagramas de Feynman */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 10</SectionTag>
-          <SectionTitle roman="X">DIAGRAMAS DE FEYNMAN</SectionTitle>
+        {/* 12. Diagramas de Feynman */}
+        <div id="sec-11" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 11</SectionTag>
+          <SectionTitle roman="XI">DIAGRAMAS DE FEYNMAN</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Convención usada en todos los diagramas de esta sección: el tiempo avanza de izquierda a
@@ -1095,10 +1387,10 @@ export default function ArchivoParticulasPage() {
           </div>
         </div>
 
-        {/* 12. CERN y los grandes experimentos */}
-        <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 11</SectionTag>
-          <SectionTitle roman="XI">CERN Y LOS GRANDES EXPERIMENTOS</SectionTitle>
+        {/* 13. CERN y los grandes experimentos */}
+        <div id="sec-12" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 12</SectionTag>
+          <SectionTitle roman="XII">CERN Y LOS GRANDES EXPERIMENTOS</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Casi todos los valores de este documento fueron medidos, confirmados o descubiertos en
@@ -1135,10 +1427,35 @@ export default function ArchivoParticulasPage() {
           </p>
         </div>
 
-        {/* 13. Notas adicionales */}
-        <div style={{ marginBottom: 90 }}>
-          <SectionTag>SECCIÓN 12</SectionTag>
-          <SectionTitle roman="XII">NOTAS ADICIONALES</SectionTitle>
+        {/* 14. Más allá del Modelo Estándar */}
+        <div id="sec-13" style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 13</SectionTag>
+          <SectionTitle roman="XIII">MÁS ALLÁ DEL MODELO ESTÁNDAR</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+            Todo lo anterior es, a la vez, un éxito enorme y una lista de lo que todavía falta. El
+            Modelo Estándar describe con precisión extraordinaria todo lo que mide un acelerador de
+            partículas — y al mismo tiempo no explica la mayor parte del contenido del universo. Esta
+            sección es, explícitamente, terreno especulativo: hipótesis activas de investigación, sin
+            confirmación experimental directa hasta la fecha.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {BSM_TOPICS.map(topic => (
+              <GlassPanel key={topic.title}>
+                <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>
+                  {topic.title}
+                </div>
+                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb8d6' }}>{topic.detail}</div>
+              </GlassPanel>
+            ))}
+          </div>
+        </div>
+
+        {/* 15. Notas adicionales */}
+        <div id="sec-14" style={{ marginBottom: 90 }}>
+          <SectionTag>SECCIÓN 14</SectionTag>
+          <SectionTitle roman="XIV">NOTAS ADICIONALES</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
             <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
@@ -1159,11 +1476,18 @@ export default function ArchivoParticulasPage() {
               arriba.
             </p>
             <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              <strong style={{ color: '#c8daf0' }}>Unidades naturales.</strong> Todas las masas de
+              este documento se dan en eV/c² (y sus múltiplos keV, MeV, GeV) en vez de kilogramos —
+              la convención estándar en física de partículas. En el sistema de unidades naturales
+              (ħ = c = 1) masa, energía y momento comparten unidad; un protón "pesa" ≈ 938 MeV
+              porque esa es, literalmente, su energía en reposo (E = mc², con c = 1).
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               <strong style={{ color: '#c8daf0' }}>Lo que el Modelo Estándar no explica.</strong>{' '}
               Pese a décadas de confirmación experimental precisa, el Modelo Estándar no da cuenta
               de la materia oscura, no explica la energía oscura, y no incluye una descripción
-              cuántica de la gravedad. Son, hoy, los problemas abiertos centrales de la física
-              fundamental.
+              cuántica de la gravedad — ver Sección XIII. Son, hoy, los problemas abiertos centrales
+              de la física fundamental.
             </p>
           </div>
         </div>
