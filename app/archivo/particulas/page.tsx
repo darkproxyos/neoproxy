@@ -94,6 +94,81 @@ const HIGGS: Particle = {
 }
 
 // ---------------------------------------------------------------------
+// Datos — antipartículas
+// ---------------------------------------------------------------------
+
+const ANTIQUARKS: Particle[] = [
+  { symbol: 'ū', name: 'ANTI-ARRIBA', charge: '−2/3', spin: '1/2', mass: '≈ 2.2 MeV/c²' },
+  { symbol: 'd̄', name: 'ANTI-ABAJO', charge: '+1/3', spin: '1/2', mass: '≈ 4.7 MeV/c²' },
+  { symbol: 'c̄', name: 'ANTI-ENCANTO', charge: '−2/3', spin: '1/2', mass: '≈ 1.27 GeV/c²' },
+  { symbol: 's̄', name: 'ANTI-EXTRAÑO', charge: '+1/3', spin: '1/2', mass: '≈ 95 MeV/c²' },
+  { symbol: 't̄', name: 'ANTI-CIMA', charge: '−2/3', spin: '1/2', mass: '≈ 173 GeV/c²' },
+  { symbol: 'b̄', name: 'ANTI-FONDO', charge: '+1/3', spin: '1/2', mass: '≈ 4.18 GeV/c²' },
+]
+
+const ANTILEPTONS: Particle[] = [
+  { symbol: 'e⁺', name: 'POSITRÓN', charge: '+1', spin: '1/2', mass: '≈ 0.511 MeV/c²' },
+  { symbol: 'ν̄e', name: 'ANTINEUTRINO ELECTRÓNICO', charge: '0', spin: '1/2', mass: 'casi nula' },
+  { symbol: 'μ⁺', name: 'ANTIMUÓN', charge: '+1', spin: '1/2', mass: '≈ 105.7 MeV/c²' },
+  { symbol: 'ν̄μ', name: 'ANTINEUTRINO MUÓNICO', charge: '0', spin: '1/2', mass: 'casi nula' },
+  { symbol: 'τ⁺', name: 'ANTITAU', charge: '+1', spin: '1/2', mass: '≈ 1776.9 MeV/c²' },
+  { symbol: 'ν̄τ', name: 'ANTINEUTRINO TAUÓNICO', charge: '0', spin: '1/2', mass: 'casi nula' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — hadrones (partículas compuestas: quarks confinados en tríos
+// o pares quark-antiquark). No son partículas elementales, pero son la
+// gran mayoría de la materia hadrónica observable — protón y neutrón
+// incluidos — y faltaban en la primera versión de este archivo.
+// ---------------------------------------------------------------------
+
+type Hadron = {
+  symbol: string
+  name: string
+  content: string
+  charge: string
+  spin: string
+  mass: string
+  note?: string
+}
+
+const BARYONS: Hadron[] = [
+  { symbol: 'p', name: 'PROTÓN', content: 'uud', charge: '+1', spin: '1/2', mass: '≈ 938.272 MeV/c²', note: 'estable — límite experimental de vida media > 10³⁴ años, nunca se observó decaer' },
+  { symbol: 'n', name: 'NEUTRÓN', content: 'udd', charge: '0', spin: '1/2', mass: '≈ 939.565 MeV/c²', note: 'libre decae en ≈ 879 s vía n → p + e⁻ + ν̄e (decaimiento beta)' },
+  { symbol: 'Λ⁰', name: 'LAMBDA', content: 'uds', charge: '0', spin: '1/2', mass: '≈ 1115.7 MeV/c²', note: 'vida media ≈ 2.6×10⁻¹⁰ s — el primer barión "extraño" descubierto (1950)' },
+  { symbol: 'Σ⁺/Σ⁰/Σ⁻', name: 'SIGMA', content: 'uus / uds / dds', charge: '+1 / 0 / −1', spin: '1/2', mass: '≈ 1189–1197 MeV/c²' },
+  { symbol: 'Ξ⁰/Ξ⁻', name: 'XI (CASCADA)', content: 'uss / dss', charge: '0 / −1', spin: '1/2', mass: '≈ 1315–1322 MeV/c²' },
+  { symbol: 'Ω⁻', name: 'OMEGA', content: 'sss', charge: '−1', spin: '3/2', mass: '≈ 1672.5 MeV/c²', note: 'predicho por Gell-Mann en 1962 y descubierto en 1964 — confirmación histórica del modelo de quarks (eightfold way)' },
+]
+
+const MESONS: Hadron[] = [
+  { symbol: 'π⁺/π⁻/π⁰', name: 'PIÓN', content: 'ud̄ / dū / mezcla uū,dd̄', charge: '+1 / −1 / 0', spin: '0', mass: '≈ 139.6 / 139.6 / 135.0 MeV/c²', note: 'el mesón más liviano — mediaba la fuerza nuclear en el modelo de Yukawa (1935)' },
+  { symbol: 'K⁺/K⁻/K⁰', name: 'KAÓN', content: 'us̄ / sū / ds̄', charge: '+1 / −1 / 0', spin: '0', mass: '≈ 493.7 / 493.7 / 497.6 MeV/c²', note: 'lleva extrañeza — su decaimiento inesperadamente lento llevó al descubrimiento de la extrañeza como número cuántico' },
+  { symbol: 'J/ψ', name: 'J/PSI', content: 'cc̄', charge: '0', spin: '1', mass: '≈ 3096.9 MeV/c²', note: 'descubierto simultáneamente en SLAC y Brookhaven en 1974 ("Revolución de Noviembre") — confirmó la existencia del quark charm' },
+  { symbol: 'Υ', name: 'UPSILON', content: 'bb̄', charge: '0', spin: '1', mass: '≈ 9460.3 MeV/c²', note: 'descubierto en Fermilab en 1977 — confirmó la existencia del quark bottom' },
+]
+
+// ---------------------------------------------------------------------
+// Datos — números cuánticos y leyes de conservación
+// ---------------------------------------------------------------------
+
+type ConservationLaw = {
+  name: string
+  symbol: string
+  conserved: string
+  note: string
+}
+
+const CONSERVATION_LAWS: ConservationLaw[] = [
+  { name: 'Carga eléctrica', symbol: 'Q', conserved: 'Siempre', note: 'ley exacta, ligada a la simetría de gauge U(1) electromagnética' },
+  { name: 'Número bariónico', symbol: 'B', conserved: 'Siempre (observado)', note: 'bariones = +1, antibariones = −1, todo lo demás = 0 — nunca se observó violarse, aunque muchas teorías más allá del Modelo Estándar predicen una violación minúscula (decaimiento del protón, nunca detectado)' },
+  { name: 'Número leptónico', symbol: 'Le, Lμ, Lτ', conserved: 'Por sabor: violado · total: conservado', note: 'la oscilación de neutrinos mezcla sabores leptónicos — el número leptónico total sigue conservado, pero cada Lℓ individual no' },
+  { name: 'Extrañeza', symbol: 'S', conserved: 'Fuerte/EM: sí · Débil: no', note: 'por eso las partículas "extrañas" (con quark s) decaen lento, solo vía interacción débil' },
+  { name: 'Encanto / belleza / top-ness', symbol: 'C, B′, T', conserved: 'Fuerte/EM: sí · Débil: no', note: 'mismo patrón que la extrañeza, para las generaciones 2ª y 3ª de quarks' },
+  { name: 'Isospín débil / hipercarga', symbol: 'T₃, Y', conserved: 'Antes de la ruptura electrodébil', note: 'números cuánticos del sector SU(2)_L × U(1)_Y — pierden su forma simple una vez roto el grupo de simetría por el campo de Higgs' },
+]
+
+// ---------------------------------------------------------------------
 // Datos — interacciones fundamentales
 // ---------------------------------------------------------------------
 
@@ -208,6 +283,42 @@ function ParticleCard({ p, color }: { p: Particle; color: string }) {
   )
 }
 
+function HadronCard({ h, color }: { h: Hadron; color: string }) {
+  return (
+    <div
+      style={{
+        background: 'rgba(5, 10, 15, 0.85)',
+        border: `1px solid ${color}55`,
+        borderRadius: 4,
+        padding: '14px 12px',
+        minWidth: 0,
+        boxShadow: `0 0 16px ${color}14 inset`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+        <div style={{ fontSize: 22, fontWeight: 700, color, textShadow: `0 0 14px ${color}66`, lineHeight: 1 }}>
+          {h.symbol}
+        </div>
+        <div style={{ fontSize: 9.5, letterSpacing: 1.2, color: '#c8daf0' }}>{h.name}</div>
+      </div>
+      <div style={{ fontSize: 9, color: `${color}99`, letterSpacing: 0.5 }}>contenido: {h.content}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4 }}>
+        <Stat label="CARGA" value={h.charge} color={color} />
+        <Stat label="SPIN" value={h.spin} color={color} />
+        <Stat label="MASA" value={h.mass} color={color} />
+      </div>
+      {h.note && (
+        <div style={{ fontSize: 8.5, lineHeight: 1.5, color: '#7a94ac', marginTop: 4, letterSpacing: 0.2 }}>
+          {h.note}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Stat({ label, value, color }: { label: string; value: string; color: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 9 }}>
@@ -305,6 +416,23 @@ function FeynmanFermion({
 
 function FeynmanDashed({ x1, y1, x2, y2, color }: { x1: number; y1: number; x2: number; y2: number; color: string }) {
   return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={1.6} strokeDasharray="5 4" />
+}
+
+// Gluón = línea rizada (bucles alternados), distinta de la onda lisa del
+// fotón — convención estándar en los diagramas de QCD.
+function FeynmanGluon({ x1, y1, x2, y2, color }: { x1: number; y1: number; x2: number; y2: number; color: string }) {
+  const loops = 6
+  const dx = (x2 - x1) / loops
+  const dy = (y2 - y1) / loops
+  const r = Math.hypot(dx, dy) / 2
+  let d = `M ${x1} ${y1}`
+  for (let i = 0; i < loops; i++) {
+    const endx = x1 + dx * (i + 1)
+    const endy = y1 + dy * (i + 1)
+    const sweep = i % 2 === 0 ? 1 : 0
+    d += ` A ${r} ${r} 0 1 ${sweep} ${endx} ${endy}`
+  }
+  return <path d={d} stroke={color} strokeWidth={1.4} fill="none" />
 }
 
 function FeynmanLabel({ x, y, children, color }: { x: number; y: number; children: string; color: string }) {
@@ -426,6 +554,76 @@ function DiagramBetaDecay() {
   )
 }
 
+// Diagrama 5: decaimiento del muón — μ⁻ → e⁻ + ν̄e + νμ (fuerza débil)
+function DiagramMuonDecay() {
+  const c = ACCENT
+  return (
+    <FeynmanFrame
+      title="05 // DECAIMIENTO DEL MUÓN"
+      caption="Un muón (μ⁻) se convierte en su propio neutrino (νμ) emitiendo un W⁻ virtual. Ese W⁻ decae de inmediato en un electrón (e⁻) y un antineutrino electrónico (ν̄e). A diferencia del decaimiento beta, acá no hay cambio de quark — es un proceso puramente leptónico, pero mediado por el mismo bosón W. μ⁻ → e⁻ + ν̄e + νμ."
+    >
+      <FeynmanFermion x1={20} y1={125} x2={160} y2={70} color={c} />
+      <FeynmanFermion x1={160} y1={70} x2={320} y2={30} color={c} />
+      <FeynmanDashed x1={160} y1={70} x2={160} y2={210} color={c} />
+      <FeynmanFermion x1={160} y1={210} x2={320} y2={170} color={c} />
+      <FeynmanFermion x1={160} y1={210} x2={320} y2={240} color={c} reverse />
+      <circle cx={160} cy={70} r={3} fill={c} />
+      <circle cx={160} cy={210} r={3} fill={c} />
+      <FeynmanLabel x={60} y={115} color={c}>μ⁻</FeynmanLabel>
+      <FeynmanLabel x={300} y={20} color={c}>νμ</FeynmanLabel>
+      <FeynmanLabel x={185} y={140} color={c}>W⁻</FeynmanLabel>
+      <FeynmanLabel x={300} y={160} color={c}>e⁻</FeynmanLabel>
+      <FeynmanLabel x={295} y={248} color={c}>ν̄e</FeynmanLabel>
+    </FeynmanFrame>
+  )
+}
+
+// Diagrama 6: aniquilación quark-antiquark en gluones — q + q̄ → g + g
+function DiagramQuarkGluonAnnihilation() {
+  const c = ACCENT
+  return (
+    <FeynmanFrame
+      title="06 // ANIQUILACIÓN QUARK-ANTIQUARK (FUERZA FUERTE)"
+      caption="El análogo fuerte del diagrama 02: un quark (q) y su antiquark (q̄) se aniquilan en un vértice de QCD y se materializan como dos gluones (g, líneas rizadas) en vez de fotones. Mismo esqueleto que la aniquilación electromagnética — cambia solo qué campo media la interacción. q + q̄ → g + g."
+    >
+      <FeynmanFermion x1={20} y1={60} x2={150} y2={125} color={c} />
+      <FeynmanFermion x1={150} y1={125} x2={20} y2={190} color={c} reverse />
+      <line x1={150} y1={125} x2={250} y2={125} stroke={c} strokeWidth={1.2} strokeDasharray="2 3" opacity={0.7} />
+      <FeynmanGluon x1={250} y1={125} x2={380} y2={60} color={c} />
+      <FeynmanGluon x1={250} y1={125} x2={380} y2={190} color={c} />
+      <circle cx={150} cy={125} r={3} fill={c} />
+      <circle cx={250} cy={125} r={3} fill={c} />
+      <FeynmanLabel x={60} y={50} color={c}>q</FeynmanLabel>
+      <FeynmanLabel x={60} y={205} color={c}>q̄</FeynmanLabel>
+      <FeynmanLabel x={200} y={115} color={c}>q virtual</FeynmanLabel>
+      <FeynmanLabel x={360} y={48} color={c}>g</FeynmanLabel>
+      <FeynmanLabel x={360} y={205} color={c}>g</FeynmanLabel>
+    </FeynmanFrame>
+  )
+}
+
+// Diagrama 7: producción de Higgs por fusión de gluones (gg → H, vía un
+// lazo virtual de quarks top) — el canal de producción dominante en el LHC.
+function DiagramHiggsGluonFusion() {
+  const c = ACCENT
+  return (
+    <FeynmanFrame
+      title="07 // PRODUCCIÓN DE HIGGS POR FUSIÓN DE GLUONES"
+      caption="Dos gluones (g) entran desde la izquierda y se acoplan a un lazo cerrado de quarks top virtuales (el quark más pesado domina el lazo, por su enorme acoplamiento de Yukawa al Higgs). El lazo se cierra emitiendo un bosón de Higgs (H⁰, línea discontinua) hacia la derecha. Es un diagrama de lazo (loop), no de árbol — y el canal de producción de Higgs más frecuente en el LHC. gg → H⁰."
+    >
+      <FeynmanGluon x1={20} y1={70} x2={140} y2={100} color={c} />
+      <FeynmanGluon x1={20} y1={180} x2={140} y2={150} color={c} />
+      <polygon points="140,100 140,150 200,125" fill="none" stroke={c} strokeWidth={1.4} />
+      <FeynmanDashed x1={200} y1={125} x2={360} y2={125} color={c} />
+      <FeynmanLabel x={55} y={60} color={c}>g</FeynmanLabel>
+      <FeynmanLabel x={55} y={198} color={c}>g</FeynmanLabel>
+      <FeynmanLabel x={168} y={95} color={c}>t</FeynmanLabel>
+      <FeynmanLabel x={168} y={168} color={c}>t</FeynmanLabel>
+      <FeynmanLabel x={280} y={115} color={c}>H⁰</FeynmanLabel>
+    </FeynmanFrame>
+  )
+}
+
 // ---------------------------------------------------------------------
 // Página
 // ---------------------------------------------------------------------
@@ -474,10 +672,14 @@ export default function ArchivoParticulasPage() {
             paddingLeft: 22,
           }}
         >
-          Mapa completo del Modelo Estándar de física de partículas: las partículas elementales
-          conocidas, las cuatro interacciones fundamentales y los diagramas de Feynman que describen
-          cómo interactúan. Todos los valores son los aceptados por el consenso experimental actual
-          (PDG). Documento técnico, sin relación con el lore del proxyverso.
+          Inventario completo de la física de partículas conocida: las partículas elementales del
+          Modelo Estándar y sus antipartículas, los hadrones compuestos que forman la materia
+          nuclear ordinaria, las leyes de conservación y números cuánticos que rigen cómo decaen,
+          la estructura de simetría de gauge y el mecanismo de Higgs, la mezcla de quarks y la
+          violación de CP, la oscilación de neutrinos, y los diagramas de Feynman que describen cada
+          interacción vértice por vértice. Todos los valores son los aceptados por el consenso
+          experimental actual (PDG — Particle Data Group). Documento técnico, sin relación con el
+          lore del proxyverso.
         </p>
 
         {/* 2. Tabla del Modelo Estándar */}
@@ -536,10 +738,141 @@ export default function ArchivoParticulasPage() {
           </div>
         </div>
 
-        {/* 3. Las cuatro interacciones fundamentales */}
+        {/* 3. Antipartículas */}
         <div style={{ marginBottom: 110 }}>
           <SectionTag>SECCIÓN 02</SectionTag>
-          <SectionTitle roman="II">LAS CUATRO INTERACCIONES FUNDAMENTALES</SectionTitle>
+          <SectionTitle roman="II">ANTIPARTÍCULAS</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+            Cada fermión del listado anterior tiene una antipartícula: misma masa y espín, carga
+            eléctrica (y todo otro número cuántico aditivo) exactamente invertida. Los bosones de
+            gauge neutros (fotón, Z⁰, Higgs) son su propia antipartícula; W⁺ y W⁻ son antipartículas
+            entre sí; cada uno de los ocho gluones tiene su contraparte de color/anticolor invertido
+            entre los mismos ocho estados.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 28 }}>
+            <GlassPanel>
+              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>ANTIQUARKS</div>
+              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+                Misma masa que su quark correspondiente, carga de color invertida (anticolor)
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+                {ANTIQUARKS.map(p => (
+                  <ParticleCard key={p.symbol} p={p} color={ACCENT} />
+                ))}
+              </div>
+            </GlassPanel>
+
+            <GlassPanel>
+              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>ANTILEPTONES</div>
+              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+                El positrón fue la primera antipartícula observada (Anderson, 1932) — confirmó la
+                predicción de Dirac de 1928
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+                {ANTILEPTONS.map(p => (
+                  <ParticleCard key={p.symbol} p={p} color={ACCENT} />
+                ))}
+              </div>
+            </GlassPanel>
+          </div>
+        </div>
+
+        {/* 4. Partículas compuestas — hadrones */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 03</SectionTag>
+          <SectionTitle roman="III">PARTÍCULAS COMPUESTAS — HADRONES</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+            Los quarks nunca aparecen libres — el confinamiento de color los obliga a agruparse en
+            hadrones. Dos familias: bariones (tres quarks, número bariónico ±1 — protón y neutrón
+            son los más livianos) y mesones (un quark y un antiquark, número bariónico 0). Son estas
+            partículas compuestas, no los quarks sueltos, las que forman toda la materia nuclear
+            ordinaria y las que se observan directamente en un detector de colisiones.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 28 }}>
+            <GlassPanel>
+              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BARIONES</div>
+              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+                qqq · spin 1/2 o 3/2 · el protón y el neutrón (nucleones) son la materia de todo
+                núcleo atómico
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {BARYONS.map(h => (
+                  <HadronCard key={h.symbol} h={h} color={ACCENT} />
+                ))}
+              </div>
+            </GlassPanel>
+
+            <GlassPanel>
+              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>MESONES</div>
+              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+                qq̄ · spin 0 o 1 · inestables, decaen rápido — nunca forman materia ordinaria estable
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {MESONS.map(h => (
+                  <HadronCard key={h.symbol} h={h} color={ACCENT} />
+                ))}
+              </div>
+            </GlassPanel>
+          </div>
+        </div>
+
+        {/* 5. Números cuánticos y leyes de conservación */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 04</SectionTag>
+          <SectionTitle roman="IV">NÚMEROS CUÁNTICOS Y LEYES DE CONSERVACIÓN</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+            No todo lo que se conserva, se conserva siempre de la misma manera: algunos números
+            cuánticos son leyes exactas, otros solo se respetan en ciertas interacciones y se violan
+            en otras — y esa diferencia es, en sí misma, una pista sobre la estructura del Modelo
+            Estándar.
+          </p>
+
+          <GlassPanel style={{ padding: 0, overflow: 'hidden' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10.5, minWidth: 640 }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${ACCENT}33` }}>
+                    {['NÚMERO CUÁNTICO', 'SÍMBOLO', '¿SE CONSERVA?', 'NOTA'].map(h => (
+                      <th
+                        key={h}
+                        style={{
+                          textAlign: 'left',
+                          padding: '14px 16px',
+                          color: ACCENT,
+                          letterSpacing: 1.5,
+                          fontSize: 9,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {CONSERVATION_LAWS.map((row, i) => (
+                    <tr key={row.name} style={{ borderBottom: i < CONSERVATION_LAWS.length - 1 ? `1px solid ${ACCENT}18` : undefined }}>
+                      <td style={{ padding: '14px 16px', color: '#e8f2ff', letterSpacing: 0.5, fontWeight: 700, whiteSpace: 'nowrap' }}>{row.name}</td>
+                      <td style={{ padding: '14px 16px', color: ACCENT, whiteSpace: 'nowrap' }}>{row.symbol}</td>
+                      <td style={{ padding: '14px 16px', color: '#c8daf0', whiteSpace: 'nowrap' }}>{row.conserved}</td>
+                      <td style={{ padding: '14px 16px', color: '#9fb8d6', minWidth: 260 }}>{row.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </GlassPanel>
+        </div>
+
+        {/* 6. Las cuatro interacciones fundamentales */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 05</SectionTag>
+          <SectionTitle roman="V">LAS CUATRO INTERACCIONES FUNDAMENTALES</SectionTitle>
 
           <GlassPanel style={{ padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
@@ -592,16 +925,163 @@ export default function ArchivoParticulasPage() {
           </p>
         </div>
 
-        {/* 4. Diagramas de Feynman */}
+        {/* 7. Simetría de gauge y el mecanismo de Higgs */}
         <div style={{ marginBottom: 110 }}>
-          <SectionTag>SECCIÓN 03</SectionTag>
-          <SectionTitle roman="III">DIAGRAMAS DE FEYNMAN</SectionTitle>
+          <SectionTag>SECCIÓN 06</SectionTag>
+          <SectionTitle roman="VI">SIMETRÍA DE GAUGE Y EL MECANISMO DE HIGGS</SectionTitle>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              El Modelo Estándar completo es una teoría de gauge con grupo de simetría{' '}
+              <strong style={{ color: ACCENT }}>SU(3)_C × SU(2)_L × U(1)_Y</strong>. Cada factor
+              produce sus propios bosones mediadores: SU(3)_C (cromodinámica cuántica, QCD) tiene 8
+              generadores → los 8 gluones; SU(2)_L (isospín débil) actúa solo sobre partículas de
+              quiralidad izquierda — la interacción débil viola paridad, algo confirmado
+              experimentalmente por Chien-Shiung Wu en 1956; U(1)_Y es la hipercarga débil.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              Antes de la ruptura de simetría, SU(2)_L × U(1)_Y predice cuatro bosones de gauge sin
+              masa (W¹, W², W³, B). El campo de Higgs adquiere un valor de expectación de vacío
+              distinto de cero (<strong style={{ color: ACCENT }}>v ≈ 246 GeV</strong>), y esa
+              ruptura espontánea de simetría mezcla W³ y B en el fotón (γ, que queda sin masa) y el
+              bosón Z⁰ (que adquiere masa) — el ángulo de mezcla se llama ángulo de Weinberg (θW, con
+              sin²θW ≈ 0.231). W¹ y W² se combinan en W⁺ y W⁻, ambos masivos.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              Los fermiones no reciben su masa del mismo mecanismo geométrico — la adquieren por
+              acoplamiento de Yukawa al campo de Higgs, con una intensidad de acoplamiento
+              proporcional a la masa de cada fermión. El quark top, con un acoplamiento de Yukawa
+              cercano a 1, es la partícula elemental conocida más pesada — casi tan masiva como el
+              propio valor de expectación de vacío del Higgs.
+            </p>
+          </div>
+        </div>
+
+        {/* 8. Mezcla de quarks — matriz CKM y violación CP */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 07</SectionTag>
+          <SectionTitle roman="VII">MEZCLA DE QUARKS — MATRIZ CKM Y VIOLACIÓN CP</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+            Los autoestados de masa de los quarks (u, c, t / d, s, b) no coinciden exactamente con
+            los autoestados que participan en la interacción débil — están mezclados por la matriz
+            de Cabibbo-Kobayashi-Maskawa (CKM), una matriz unitaria 3×3 compleja. Esa mezcla es lo
+            que permite que un quark cambie de generación en un decaimiento débil (ej. b → c), y sus
+            fases complejas son, hoy, la fuente conocida de violación de CP en el sector de quarks —
+            predicha por Kobayashi y Maskawa en 1973 y confirmada experimentalmente en BaBar (SLAC) y
+            Belle (KEK) a comienzos de los 2000, lo que les valió el Nobel de Física 2008.
+          </p>
+
+          <GlassPanel>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+              |V_CKM| — MAGNITUDES APROXIMADAS (parametrización de Wolfenstein)
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ borderCollapse: 'collapse', fontSize: 11, minWidth: 320, margin: '0 auto' }}>
+                <thead>
+                  <tr>
+                    <th />
+                    <th style={{ padding: '6px 18px', color: `${ACCENT}99`, fontWeight: 400 }}>d</th>
+                    <th style={{ padding: '6px 18px', color: `${ACCENT}99`, fontWeight: 400 }}>s</th>
+                    <th style={{ padding: '6px 18px', color: `${ACCENT}99`, fontWeight: 400 }}>b</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { quark: 'u', values: ['0.974', '0.225', '0.0037'], diag: 0 },
+                    { quark: 'c', values: ['0.225', '0.973', '0.041'], diag: 1 },
+                    { quark: 't', values: ['0.0086', '0.040', '0.999'], diag: 2 },
+                  ].map(row => (
+                    <tr key={row.quark}>
+                      <td style={{ padding: '6px 18px', color: `${ACCENT}99` }}>{row.quark}</td>
+                      {row.values.map((v, i) => (
+                        <td key={i} style={{ padding: '6px 18px', textAlign: 'center', color: i === row.diag ? ACCENT : '#c8daf0' }}>
+                          {v}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ fontSize: 9.5, lineHeight: 1.7, color: '#7a94ac', marginTop: 14 }}>
+              Los elementos cercanos a la diagonal (Vud, Vcs, Vtb) están cerca de 1 — un quark
+              "prefiere" decaer dentro de su propia generación. Los elementos lejos de la diagonal
+              son progresivamente más chicos — cambiar dos generaciones a la vez (ej. t↔d) es mucho
+              menos probable que cambiar una sola (ej. t↔b).
+            </div>
+          </GlassPanel>
+        </div>
+
+        {/* 9. Oscilación de neutrinos */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 08</SectionTag>
+          <SectionTitle roman="VIII">OSCILACIÓN DE NEUTRINOS</SectionTitle>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              Super-Kamiokande (neutrinos atmosféricos, Japón, 1998) y el Observatorio de Neutrinos
+              de Sudbury (neutrinos solares, Canadá, 2001) mostraron que un neutrino cambia de sabor
+              —electrónico, muónico, tauónico— a medida que se propaga por el espacio. Ese
+              descubrimiento les valió el Nobel de Física 2015 a Takaaki Kajita y Arthur McDonald.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              La oscilación solo es posible si los neutrinos tienen masa — por minúscula que sea —
+              contradiciendo la versión original del Modelo Estándar, que los postulaba exactamente
+              sin masa. La probabilidad de oscilación depende de las <em>diferencias</em> entre los
+              cuadrados de las masas de los tres estados de masa del neutrino, no de sus masas
+              absolutas — por eso se conocen esas diferencias con precisión, pero no la escala
+              absoluta de masa de ningún neutrino individual.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              Sigue abierta una pregunta central: ¿son los neutrinos partículas de Dirac (como el
+              resto de los fermiones, con antipartícula distinta) o de Majorana (su propia
+              antipartícula)? Los experimentos de doble decaimiento beta sin neutrinos buscan
+              activamente una respuesta.
+            </p>
+          </div>
+        </div>
+
+        {/* 10. Constantes de acoplamiento y libertad asintótica */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 09</SectionTag>
+          <SectionTitle roman="IX">CONSTANTES DE ACOPLAMIENTO Y LIBERTAD ASINTÓTICA</SectionTitle>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              Las "constantes" de acoplamiento de cada interacción no son constantes — dependen de
+              la escala de energía a la que se miden, un efecto de renormalización en teoría
+              cuántica de campos: las constantes "corren" con la energía.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              La constante de estructura fina (α, que fija la intensidad electromagnética) vale
+              ≈ 1/137 a baja energía, pero crece — aunque muy poco — a energías más altas. La
+              constante de acoplamiento fuerte (αs) hace exactamente lo contrario: es grande a baja
+              energía (de ahí el confinamiento — los quarks nunca se observan libres) pero se
+              vuelve pequeña a muy alta energía o muy corta distancia, un fenómeno llamado{' '}
+              <strong style={{ color: ACCENT }}>libertad asintótica</strong>.
+            </p>
+            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+              La libertad asintótica fue descubierta teóricamente por David Gross, David Politzer y
+              Frank Wilczek (Nobel de Física 2004) y es lo que permite tratar a los quarks dentro del
+              protón como casi libres en colisiones de muy alta energía — exactamente lo que se
+              observó primero en los experimentos de dispersión profundamente inelástica en SLAC a
+              fines de los años 60, la evidencia experimental original de que el protón tenía
+              estructura interna.
+            </p>
+          </div>
+        </div>
+
+        {/* 11. Diagramas de Feynman */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 10</SectionTag>
+          <SectionTitle roman="X">DIAGRAMAS DE FEYNMAN</SectionTitle>
 
           <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Convención usada en todos los diagramas de esta sección: el tiempo avanza de izquierda a
             derecha. Línea recta con flecha = fermión (flecha hacia adelante = partícula, hacia
-            atrás = antipartícula). Línea ondulada = fotón. Línea discontinua = bosón W/Z o Higgs.
-            Cada vértice es un punto de interacción real entre campos cuánticos.
+            atrás = antipartícula). Línea ondulada = fotón. Línea rizada = gluón. Línea discontinua =
+            bosón W/Z o Higgs. Cada vértice es un punto de interacción real entre campos cuánticos.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 24 }}>
@@ -609,13 +1089,56 @@ export default function ArchivoParticulasPage() {
             <DiagramAnnihilation />
             <DiagramCompton />
             <DiagramBetaDecay />
+            <DiagramMuonDecay />
+            <DiagramQuarkGluonAnnihilation />
+            <DiagramHiggsGluonFusion />
           </div>
         </div>
 
-        {/* 5. Notas adicionales */}
+        {/* 12. CERN y los grandes experimentos */}
+        <div style={{ marginBottom: 110 }}>
+          <SectionTag>SECCIÓN 11</SectionTag>
+          <SectionTitle roman="XI">CERN Y LOS GRANDES EXPERIMENTOS</SectionTitle>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+            Casi todos los valores de este documento fueron medidos, confirmados o descubiertos en
+            un puñado de laboratorios de altas energías. El más grande en operación es el Gran
+            Colisionador de Hadrones (LHC) del CERN, en la frontera franco-suiza cerca de Ginebra: un
+            anillo subterráneo de 27 km de circunferencia que colisiona haces de protones a energías
+            de hasta 13.6 TeV (Run 3, desde 2022) — la máquina más energética jamás construida.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+            {[
+              { name: 'ATLAS', detail: 'A Toroidal LHC ApparatuS', note: 'detector de propósito general — co-descubrió el bosón de Higgs en 2012' },
+              { name: 'CMS', detail: 'Compact Muon Solenoid', note: 'segundo detector de propósito general, diseño independiente de ATLAS — la confirmación cruzada entre ambos fue clave para anunciar el Higgs' },
+              { name: 'LHCb', detail: 'LHC-beauty', note: 'especializado en física del quark bottom (b) — violación de CP y decaimientos raros' },
+              { name: 'ALICE', detail: 'A Large Ion Collider Experiment', note: 'colisiones de iones pesados (plomo-plomo) — recrea el plasma de quarks y gluones, el estado de la materia microsegundos después del Big Bang' },
+            ].map(exp => (
+              <GlassPanel key={exp.name}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: ACCENT, letterSpacing: 2, textShadow: `0 0 12px ${ACCENT}55` }}>
+                  {exp.name}
+                </div>
+                <div style={{ fontSize: 9, color: `${ACCENT}99`, marginTop: 4, marginBottom: 10, letterSpacing: 0.5 }}>
+                  {exp.detail}
+                </div>
+                <div style={{ fontSize: 9.5, lineHeight: 1.6, color: '#9fb8d6' }}>{exp.note}</div>
+              </GlassPanel>
+            ))}
+          </div>
+
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginTop: 28 }}>
+            El 4 de julio de 2012, ATLAS y CMS anunciaron conjuntamente la observación de una nueva
+            partícula compatible con el bosón de Higgs — la última pieza que faltaba para confirmar
+            el Modelo Estándar completo, 48 años después de que Peter Higgs y otros propusieran el
+            mecanismo que lleva su nombre.
+          </p>
+        </div>
+
+        {/* 13. Notas adicionales */}
         <div style={{ marginBottom: 90 }}>
-          <SectionTag>SECCIÓN 04</SectionTag>
-          <SectionTitle roman="IV">NOTAS ADICIONALES</SectionTitle>
+          <SectionTag>SECCIÓN 12</SectionTag>
+          <SectionTitle roman="XII">NOTAS ADICIONALES</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
             <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
