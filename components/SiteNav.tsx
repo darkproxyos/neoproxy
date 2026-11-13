@@ -223,7 +223,12 @@ export default function SiteNav() {
         NEO·PROXY
       </Link>
 
-      <div className="site-nav-links" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+      {/* gap bajado de 24 a 18 para compensar el +1px de fontSize en cada
+          ítem -- a 12px el total ya pasaba el ancho disponible en laptops
+          de 1366px (PROXYVERSE quedaba cortado), no hay breakpoint
+          intermedio entre el nav completo y el menú hamburguesa (ver
+          globals.css, @media max-width: 768px). */}
+      <div className="site-nav-links" style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
         {navConfig.map((entry) => {
           if (isGroup(entry)) {
             const active = groupActive(pathname, entry)
@@ -236,9 +241,9 @@ export default function SiteNav() {
                   aria-expanded={open}
                   className="site-nav-link"
                   style={{
-                    fontFamily: mono, fontSize: 11, letterSpacing: 2, whiteSpace: 'nowrap',
+                    fontFamily: mono, fontSize: 12, letterSpacing: 2, whiteSpace: 'nowrap',
                     background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0',
-                    color: active ? groupColor : '#8fb8d6',
+                    color: active ? groupColor : '#a9c0d6',
                     display: 'flex', alignItems: 'center', gap: 7,
                   }}
                 >
@@ -273,7 +278,7 @@ export default function SiteNav() {
                                     pathname={pathname}
                                     activeColor={groupColor}
                                     style={{
-                                      fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
+                                      fontFamily: mono, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none',
                                       padding: '10px 18px 10px 30px', minHeight: 44, display: 'flex', alignItems: 'center',
                                       whiteSpace: 'nowrap', position: 'relative',
                                     }}
@@ -289,7 +294,7 @@ export default function SiteNav() {
                               pathname={pathname}
                               activeColor={groupColor}
                               style={{
-                                fontFamily: mono, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none',
+                                fontFamily: mono, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none',
                                 padding: '10px 18px', minHeight: 44, display: 'flex', alignItems: 'center',
                                 whiteSpace: 'nowrap', position: 'relative',
                               }}
@@ -307,7 +312,7 @@ export default function SiteNav() {
           if (!entry.live) {
             return (
               <span key={entry.label} title="Próximamente" style={{
-                fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#4a6080', cursor: 'default', whiteSpace: 'nowrap',
+                fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#5a7290', cursor: 'default', whiteSpace: 'nowrap',
               }}>
                 {entry.label}
               </span>
@@ -318,8 +323,8 @@ export default function SiteNav() {
           const active = isActive(pathname, entry.href)
           return (
             <Link key={entry.href} href={entry.href} className="site-nav-link" style={{
-              fontFamily: mono, fontSize: 11, letterSpacing: 2, textDecoration: 'none', whiteSpace: 'nowrap',
-              color: active ? entryColor : '#8fb8d6', display: 'flex', alignItems: 'center', gap: 7,
+              fontFamily: mono, fontSize: 12, letterSpacing: 2, textDecoration: 'none', whiteSpace: 'nowrap',
+              color: active ? entryColor : '#a9c0d6', display: 'flex', alignItems: 'center', gap: 7,
             }}>
               <LifeNode color={entryColor} active={active} />
               {entry.label}
@@ -360,7 +365,11 @@ export default function SiteNav() {
         const delay = () => `${(stagger++) * 0.035}s`
         return (
         <div className="site-nav-mobile-panel nav-glitch-in" style={{
-          position: 'fixed', inset: 0, zIndex: 100, background: '#000205f2', backdropFilter: 'blur(10px)',
+          // z-index por encima del widget flotante de Chat (zIndex 1000,
+          // components/Chat.tsx) -- antes quedaba atrás y el botón CHAT//
+          // tapaba el footer del panel (se notaba poco con la tipografía
+          // chica, se nota mucho con la más grande).
+          position: 'fixed', inset: 0, zIndex: 1001, background: '#000205f2', backdropFilter: 'blur(10px)',
           display: 'flex', flexDirection: 'column', padding: '20px 24px', overflowY: 'auto',
           borderLeft: `1px solid ${accent}55`, boxShadow: `-20px 0 60px -20px ${accent}33 inset`,
         }}>
@@ -426,10 +435,10 @@ export default function SiteNav() {
                       style={{ marginBottom: 12, animationDelay: delay() }}
                     >
                       <div style={{
-                        fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 4px',
+                        fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '10px 4px',
                         display: 'flex', alignItems: 'center', gap: 10,
                       }}>
-                        <span style={{ fontSize: 9, color: '#3a4a60', width: 16, flexShrink: 0 }}>{num}</span>
+                        <span style={{ fontSize: 10, color: '#4a6080', width: 16, flexShrink: 0 }}>{num}</span>
                         <NavIcon label={entry.label} color={sectionColor} />
                         <span style={{ flex: 1, color: groupIsActive ? sectionColor : '#d7e4f0' }}>{entry.label}</span>
                         <LifeNode color={sectionColor} active={groupIsActive} />
@@ -438,7 +447,7 @@ export default function SiteNav() {
                         isGroup(item) ? (
                           <div key={item.label} className="nav-item-in" style={{ marginBottom: 8, animationDelay: delay() }}>
                             <div style={{
-                              fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#4a6080', padding: '8px 20px',
+                              fontFamily: mono, fontSize: 11, letterSpacing: 1.5, color: '#5a7290', padding: '8px 20px',
                             }}>
                               {item.label}
                             </div>
@@ -451,7 +460,7 @@ export default function SiteNav() {
                                     onClick={() => setMobileOpen(false)}
                                     activeColor={sectionColor}
                                     style={{
-                                      fontFamily: mono, fontSize: 13, letterSpacing: 1.5, textDecoration: 'none',
+                                      fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
                                       padding: '12px 20px 12px 36px', minHeight: 44, display: 'flex', alignItems: 'center',
                                     }}
                                   />
@@ -467,7 +476,7 @@ export default function SiteNav() {
                               onClick={() => setMobileOpen(false)}
                               activeColor={sectionColor}
                               style={{
-                                fontFamily: mono, fontSize: 14, letterSpacing: 1.5, textDecoration: 'none',
+                                fontFamily: mono, fontSize: 15, letterSpacing: 1.5, textDecoration: 'none',
                                 padding: '12px 20px', minHeight: 44, display: 'flex', alignItems: 'center',
                               }}
                             />
@@ -485,13 +494,13 @@ export default function SiteNav() {
                       key={entry.label}
                       className="nav-item-in"
                       style={{
-                        fontFamily: mono, fontSize: 14, letterSpacing: 2, color: '#4a6080',
+                        fontFamily: mono, fontSize: 15, letterSpacing: 2, color: '#5a7290',
                         padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
                         animationDelay: delay(),
                       }}
                     >
-                      <span style={{ fontSize: 9, color: '#3a4a60', width: 16, flexShrink: 0 }}>{num}</span>
-                      {entry.label} <span style={{ fontSize: 9, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
+                      <span style={{ fontSize: 10, color: '#4a6080', width: 16, flexShrink: 0 }}>{num}</span>
+                      {entry.label} <span style={{ fontSize: 10, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
                     </div>
                   )
                   return divider ? [divider, content] : [content]
@@ -504,11 +513,11 @@ export default function SiteNav() {
                       href={entry.href}
                       onClick={() => setMobileOpen(false)}
                       style={{
-                        fontFamily: mono, fontSize: 14, letterSpacing: 2, textDecoration: 'none',
+                        fontFamily: mono, fontSize: 15, letterSpacing: 2, textDecoration: 'none',
                         padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
                       }}
                     >
-                      <span style={{ fontSize: 9, color: '#3a4a60', width: 16, flexShrink: 0 }}>{num}</span>
+                      <span style={{ fontSize: 10, color: '#4a6080', width: 16, flexShrink: 0 }}>{num}</span>
                       <NavIcon label={entry.label} color={sectionColor} />
                       <span style={{
                         flex: 1, color: active ? sectionColor : '#d7e4f0',
@@ -527,7 +536,7 @@ export default function SiteNav() {
 
           <div style={{
             position: 'relative', zIndex: 1, marginTop: 20, padding: '14px 14px 2px',
-            border: `1px solid ${accent}22`, fontFamily: mono, fontSize: 10, color: accent, letterSpacing: 1.5,
+            border: `1px solid ${accent}22`, fontFamily: mono, fontSize: 11, color: accent, letterSpacing: 1.5,
           }}>
             <span aria-hidden style={{ position: 'absolute', top: -1, left: -1, width: 7, height: 7, borderTop: `1px solid ${accent}aa`, borderLeft: `1px solid ${accent}aa` }} />
             <span aria-hidden style={{ position: 'absolute', top: -1, right: -1, width: 7, height: 7, borderTop: `1px solid ${accent}aa`, borderRight: `1px solid ${accent}aa` }} />

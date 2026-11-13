@@ -1213,8 +1213,13 @@ export default function Home() {
         // mouse está sobre un sub-nodo, su familia es la zona padre) —
         // todo lo que pertenece a esa familia se enciende a su color
         // real, el resto se queda en el cian-gris neutro. Suavizado con
-        // litT en vez de un salto instantáneo.
-        const hoveredFamily = hoveredId ? nodeById[hoveredId]?.familyId ?? null : null
+        // litT en vez de un salto instantáneo. Durante una parada del
+        // tour (panel de info abierto, sin hover real) cae en la zona del
+        // panel — antes quedaba en null acá y todo el resto de la escena
+        // se veía a brillo parejo, compitiendo visualmente con el panel
+        // (el síntoma real era "LABORATORIO" y otras etiquetas sueltas
+        // flotando sin que nada las distinga del nodo que importa).
+        const hoveredFamily = hoveredId ? nodeById[hoveredId]?.familyId ?? null : tourStopRef.current
         const LIT_RATE = 0.12
 
         nodes.forEach((n, i) => {
@@ -1237,7 +1242,12 @@ export default function Home() {
           const hoverBoost = isHovered ? 1.12 : 1
           const labelS = labelBase * hoverBoost
           n.label.scaling.set(labelS, labelS, labelS)
-          n.stem.material.alpha = ((n.tier === 'primary' ? 0.55 : 0.48) * (isFamilyActive ? 1.8 : 1)) * labelBase
+          // con un foco activo (hover o parada de tour), todo lo que no es
+          // esa familia se retira de la vista en vez de quedarse a brillo
+          // parejo compitiendo con el panel o con el nodo que sí importa.
+          const inactiveFade = hoveredFamily !== null && !isFamilyActive ? 0.28 : 1
+          n.stem.material.alpha = ((n.tier === 'primary' ? 0.55 : 0.48) * (isFamilyActive ? 1.8 : 1)) * labelBase * inactiveFade
+          n.label.material.alpha = labelBase * inactiveFade
 
           n.litT += ((isFamilyActive ? 1 : 0) - n.litT) * LIT_RATE
           const rgb = lerp3(n.dimRGB, n.fullRGB, n.litT)
@@ -1481,28 +1491,31 @@ export default function Home() {
             <div key={tourStop} style={{
               position: 'fixed', top: 'calc(8vh + 28px)', left: '50%', transform: 'translateX(-50%)',
               width: 'min(420px, calc(100vw - 48px))', zIndex: 45, pointerEvents: 'auto',
-              background: 'rgba(8, 12, 22, 0.86)', backdropFilter: 'blur(6px)',
+              // antes 0.86 -- dejaba pasar suficiente del canvas 3D de atrás
+              // como para que una línea del grafo cruzara justo por encima
+              // del título (bug de legibilidad real, no efecto buscado).
+              background: 'rgba(6, 9, 17, 0.97)', backdropFilter: 'blur(6px)',
               border: `1px solid ${tourStopZone.color}99`,
               boxShadow: `0 0 36px ${tourStopZone.color}2e, inset 0 0 24px rgba(0,0,0,0.3)`,
               clipPath: 'polygon(0 16px, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)',
               padding: '22px 24px 20px',
               animation: 'panel-in 520ms cubic-bezier(0.2,0.8,0.2,1) forwards',
             }}>
-              <div style={{ fontFamily: mono, fontSize: 10, color: tourStopZone.color, letterSpacing: 3 }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: tourStopZone.color, letterSpacing: 3 }}>
                 {tourStopZone.tag}
               </div>
-              <div style={{ fontFamily: mono, fontSize: 19, fontWeight: 700, color: '#eaf4fb', letterSpacing: 2.5, marginTop: 6, marginBottom: 12, textShadow: `0 0 14px ${tourStopZone.color}66` }}>
+              <div style={{ fontFamily: mono, fontSize: 21, fontWeight: 700, color: '#f2f8fc', letterSpacing: 2.5, marginTop: 7, marginBottom: 13, textShadow: `0 0 14px ${tourStopZone.color}66` }}>
                 {tourStopZone.title}
               </div>
-              <div style={{ fontFamily: mono, fontSize: 12.5, color: '#b7c6d4', lineHeight: 1.65, letterSpacing: 0.3 }}>
+              <div style={{ fontFamily: mono, fontSize: 13.5, color: '#c7d6e2', lineHeight: 1.75, letterSpacing: 0.3 }}>
                 {tourStopZone.description}
               </div>
               <button
                 onClick={() => router.push(tourStopZone.href)}
                 style={{
-                  marginTop: 18, width: '100%', padding: '11px 0', background: 'transparent',
+                  marginTop: 18, width: '100%', padding: '12px 0', background: 'transparent',
                   border: `1px solid ${tourStopZone.color}aa`, color: tourStopZone.color,
-                  fontFamily: mono, fontSize: 11, letterSpacing: 2.5, cursor: 'pointer',
+                  fontFamily: mono, fontSize: 12, letterSpacing: 2.5, cursor: 'pointer',
                 }}
               >
                 {tourStopZone.cta}
