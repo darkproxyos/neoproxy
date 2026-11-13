@@ -26,10 +26,12 @@ export default function Chat() {
 
   const send = async () => {
     if (!input.trim()) return
+    // El operador lo asigna el servidor según la sesión real (ver
+    // app/api/chat/route.ts) -- el cliente ya no declara quién es.
     await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: input, operator: 'DARKPROXY' })
+      body: JSON.stringify({ message: input })
     })
     setInput('')
   }
