@@ -22,6 +22,44 @@ const NAV_COLORS: Record<string, string> = {
   PROXYVERSE: '#00ff9d',
 }
 
+// Agrupa el índice del panel mobile en bloques editoriales — puramente
+// presentacional, no reestructura nav-config.ts. La clave es la sección
+// de primer nivel que abre cada bloque.
+const NAV_GROUP_LABEL: Record<string, string> = {
+  HOME: 'NÚCLEO',
+  'FABRICACIÓN': 'PRODUCCIÓN',
+  PROXYGAMES: 'EXPERIENCIAS',
+  CONOCIMIENTO: 'SABER',
+}
+
+// Pictograma mínimo por sección — trazo, no relleno, para no competir con
+// el nodo de color que ya identifica la zona.
+function NavIcon({ label, color }: { label: string; color: string }) {
+  const common = { width: 15, height: 15, viewBox: '0 0 16 16', fill: 'none', stroke: color, strokeWidth: 1.4 } as const
+  switch (label) {
+    case 'HOME':
+      return <svg {...common} aria-hidden><path d="M2 8 L8 2.5 L14 8" /><path d="M3.5 7 V14 H12.5 V7" /><path d="M6.5 14 V10 H9.5 V14" /></svg>
+    case 'MANIFIESTO':
+      return <svg {...common} aria-hidden><path d="M4 1.5 V14.5" /><path d="M4 2.5 H12.5 L10.5 5 L12.5 7.5 H4" /></svg>
+    case 'FABRICACIÓN':
+      return <svg {...common} aria-hidden><path d="M8 1.5 L14 4.8 V11.2 L8 14.5 L2 11.2 V4.8 Z" /><path d="M2 4.8 L8 8 L14 4.8" /><path d="M8 8 V14.5" /></svg>
+    case 'ESPECÍMENES':
+      return <svg {...common} aria-hidden><path d="M8 1.5 L14 5 V11 L8 14.5 L2 11 V5 Z" /><circle cx="8" cy="8" r="1.4" fill={color} stroke="none" /></svg>
+    case 'PROXYGAMES':
+      return <svg {...common} aria-hidden><rect x="1.5" y="5.5" width="13" height="7" rx="3" /><circle cx="5.3" cy="9" r="0.9" fill={color} stroke="none" /><circle cx="10.7" cy="9" r="0.9" fill={color} stroke="none" /></svg>
+    case 'REALIDAD AUMENTADA':
+      return <svg {...common} aria-hidden><path d="M2 2 H5 M2 2 V5 M14 2 H11 M14 2 V5 M2 14 H5 M2 14 V11 M14 14 H11 M14 14 V11" /><circle cx="8" cy="8" r="2" /></svg>
+    case 'EXPERIMENTAL':
+      return <svg {...common} aria-hidden><path d="M6.3 1.5 H9.7 V5.8 L13 13 C13.4 13.8 12.8 14.5 12 14.5 H4 C3.2 14.5 2.6 13.8 3 13 L6.3 5.8 Z" /><path d="M5 10.5 H11" /></svg>
+    case 'CONOCIMIENTO':
+      return <svg {...common} aria-hidden><path d="M2 3 C4 2 6.5 2 8 3.3 C9.5 2 12 2 14 3 V12.5 C12 11.5 9.5 11.5 8 12.8 C6.5 11.5 4 11.5 2 12.5 Z" /><path d="M8 3.3 V12.8" /></svg>
+    case 'PROXYVERSE':
+      return <svg {...common} aria-hidden><circle cx="8" cy="3" r="1.6" /><circle cx="3" cy="12" r="1.6" /><circle cx="13" cy="12" r="1.6" /><path d="M7.2 4.3 L4 10.6 M8.8 4.3 L12 10.6" /></svg>
+    default:
+      return null
+  }
+}
+
 function isActive(pathname: string, href: string) {
   return pathname === href || (href !== '/' && pathname.startsWith(href + '/'))
 }
@@ -355,32 +393,46 @@ export default function SiteNav() {
 
           {sessionAgent && (
             <div style={{
-              position: 'relative', zIndex: 1, fontFamily: mono, fontSize: 10, color: '#8fb8d6',
-              fontStyle: 'italic', lineHeight: 1.6, marginTop: 10, paddingLeft: 12,
+              position: 'relative', zIndex: 1, fontFamily: "'Newsreader', serif", fontSize: 15, color: '#e8ecf2',
+              fontStyle: 'italic', fontWeight: 400, lineHeight: 1.45, marginTop: 12, paddingLeft: 12,
               borderLeft: `2px solid ${accent}55`,
             }}>
-              "{sessionAgent.ambient.length > 0 ? sessionAgent.ambient[0] : sessionAgent.quote}"
+              {sessionAgent.ambient.length > 0 ? sessionAgent.ambient[0] : sessionAgent.quote}
             </div>
           )}
 
           <div className="nav-spine" style={{ ['--spine-color' as any]: accent }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24, flexGrow: 1, position: 'relative', zIndex: 1 }}>
-              {navConfig.map((entry) => {
+              {navConfig.flatMap((entry, idx) => {
                 const sectionColor = NAV_COLORS[entry.label] ?? accent
+                const groupLabel = NAV_GROUP_LABEL[entry.label]
+                const num = String(idx + 1).padStart(2, '0')
+                const divider = groupLabel ? (
+                  <div key={`div-${entry.label}`} style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    margin: idx === 0 ? '0 0 2px 4px' : '16px 0 2px 4px',
+                  }}>
+                    <span style={{ fontFamily: mono, fontSize: 8, letterSpacing: 3, color: '#3a4a60' }}>{groupLabel}</span>
+                    <div style={{ flex: 1, height: 1, background: '#3a4a6055' }} />
+                  </div>
+                ) : null
 
                 if (isGroup(entry)) {
-                  return (
+                  const groupIsActive = groupActive(pathname, entry)
+                  const content = (
                     <div
                       key={entry.label}
                       className="nav-item-in"
                       style={{ marginBottom: 12, animationDelay: delay() }}
                     >
                       <div style={{
-                        fontFamily: mono, fontSize: 11, letterSpacing: 2, color: sectionColor, padding: '10px 4px',
-                        display: 'flex', alignItems: 'center', gap: 8,
+                        fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 4px',
+                        display: 'flex', alignItems: 'center', gap: 10,
                       }}>
-                        <LifeNode color={sectionColor} active />
-                        {entry.label}
+                        <span style={{ fontSize: 9, color: '#3a4a60', width: 16, flexShrink: 0 }}>{num}</span>
+                        <NavIcon label={entry.label} color={sectionColor} />
+                        <span style={{ flex: 1, color: groupIsActive ? sectionColor : '#d7e4f0' }}>{entry.label}</span>
+                        <LifeNode color={sectionColor} active={groupIsActive} />
                       </div>
                       {entry.items.map((item) => (
                         isGroup(item) ? (
@@ -424,26 +476,29 @@ export default function SiteNav() {
                       ))}
                     </div>
                   )
+                  return divider ? [divider, content] : [content]
                 }
 
                 if (!entry.live) {
-                  return (
+                  const content = (
                     <div
                       key={entry.label}
                       className="nav-item-in"
                       style={{
                         fontFamily: mono, fontSize: 14, letterSpacing: 2, color: '#4a6080',
-                        padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center',
+                        padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
                         animationDelay: delay(),
                       }}
                     >
+                      <span style={{ fontSize: 9, color: '#3a4a60', width: 16, flexShrink: 0 }}>{num}</span>
                       {entry.label} <span style={{ fontSize: 9, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
                     </div>
                   )
+                  return divider ? [divider, content] : [content]
                 }
 
                 const active = isActive(pathname, entry.href)
-                return (
+                const content = (
                   <div key={entry.href} className="nav-item-in" style={{ animationDelay: delay() }}>
                     <Link
                       href={entry.href}
@@ -451,25 +506,36 @@ export default function SiteNav() {
                       style={{
                         fontFamily: mono, fontSize: 14, letterSpacing: 2, textDecoration: 'none',
                         padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
-                        color: sectionColor,
-                        textShadow: active ? `0 0 10px ${sectionColor}` : 'none',
-                        opacity: active ? 1 : 0.8,
                       }}
                     >
-                      <LifeNode color={sectionColor} active />
-                      {entry.label}
+                      <span style={{ fontSize: 9, color: '#3a4a60', width: 16, flexShrink: 0 }}>{num}</span>
+                      <NavIcon label={entry.label} color={sectionColor} />
+                      <span style={{
+                        flex: 1, color: active ? sectionColor : '#d7e4f0',
+                        textShadow: active ? `0 0 10px ${sectionColor}` : 'none',
+                      }}>
+                        {entry.label}
+                      </span>
+                      <LifeNode color={sectionColor} active={active} />
                     </Link>
                   </div>
                 )
+                return divider ? [divider, content] : [content]
               })}
             </div>
           </div>
 
           <div style={{
-            position: 'relative', zIndex: 1, fontFamily: mono, fontSize: 10, color: accent, letterSpacing: 1.5, paddingTop: 20,
-            borderTop: `1px solid ${accent}33`,
+            position: 'relative', zIndex: 1, marginTop: 20, padding: '14px 14px 2px',
+            border: `1px solid ${accent}22`, fontFamily: mono, fontSize: 10, color: accent, letterSpacing: 1.5,
           }}>
-            <SessionBlock />
+            <span aria-hidden style={{ position: 'absolute', top: -1, left: -1, width: 7, height: 7, borderTop: `1px solid ${accent}aa`, borderLeft: `1px solid ${accent}aa` }} />
+            <span aria-hidden style={{ position: 'absolute', top: -1, right: -1, width: 7, height: 7, borderTop: `1px solid ${accent}aa`, borderRight: `1px solid ${accent}aa` }} />
+            <span aria-hidden style={{ position: 'absolute', bottom: -1, left: -1, width: 7, height: 7, borderBottom: `1px solid ${accent}aa`, borderLeft: `1px solid ${accent}aa` }} />
+            <span aria-hidden style={{ position: 'absolute', bottom: -1, right: -1, width: 7, height: 7, borderBottom: `1px solid ${accent}aa`, borderRight: `1px solid ${accent}aa` }} />
+            <div style={{ paddingBottom: 14 }}>
+              <SessionBlock />
+            </div>
           </div>
 
           <style>{`
