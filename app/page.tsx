@@ -128,7 +128,6 @@ ZONES.forEach(zone => {
   ALL_NODE_META[zone.id] = { title: zone.title, tag: zone.tag }
   zone.subs?.forEach(sub => { ALL_NODE_META[sub.id] = { title: sub.title, tag: sub.tag } })
 })
-const TOTAL_NODE_COUNT = ZONES.length + ZONES.reduce((a, z) => a + (z.subs?.length ?? 0), 0)
 const ZONE_BY_ID: Record<string, Zone> = {}
 ZONES.forEach(zone => { ZONE_BY_ID[zone.id] = zone })
 
@@ -496,16 +495,6 @@ export default function Home() {
   const [tourStop, setTourStop] = useState<string | null>(null)
   const tourStopRef = useRef<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
-  const [clock, setClock] = useState('')
-
-  // reloj real — una sola lectura por segundo, no por frame (eso vive
-  // adentro del render loop de Babylon, esto es chrome 2D aparte)
-  useEffect(() => {
-    const tick = () => setClock(new Date().toLocaleTimeString('es-AR', { hour12: false }))
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [])
 
   useEffect(() => {
     const lines = [
@@ -1479,16 +1468,6 @@ export default function Home() {
             ].map((s, i) => (
               <div key={i} style={{ position: 'absolute', width: 26, height: 26, ...s }} />
             ))}
-
-            <div style={{ position: 'absolute', top: 106, left: 30, fontFamily: mono, fontSize: 10, color: '#00d4ffaa', letterSpacing: 2, lineHeight: 1.9 }}>
-              <div>NODES // {TOTAL_NODE_COUNT}</div>
-              <div>UNIONS // {ZONE_LINKS.length}</div>
-              <div>SIGNAL // ONLINE</div>
-            </div>
-
-            <div style={{ position: 'absolute', top: 106, right: 30, fontFamily: mono, fontSize: 10, color: '#00d4ffaa', letterSpacing: 2, textAlign: 'right' }}>
-              {clock}
-            </div>
 
             {hovered && ALL_NODE_META[hovered] && (
               <div style={{ position: 'absolute', top: 168, left: 30, fontFamily: mono, fontSize: 10, color: '#00ffccdd', letterSpacing: 2, textShadow: '0 0 10px #00ffcc55' }}>
