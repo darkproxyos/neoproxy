@@ -18,7 +18,7 @@ const NAV_COLORS: Record<string, string> = {
   FABRICACIÓN: '#5f95c9',
   PROXYGAMES: '#b400ff',
   EXPERIMENTAL: '#cc0000',
-  CONOCIMIENTO: '#6644aa',
+  'CODEX COGITO': '#6644aa',
   PROXYVERSE: '#00ff9d',
 }
 
@@ -29,7 +29,7 @@ const NAV_GROUP_LABEL: Record<string, string> = {
   HOME: 'NÚCLEO',
   'FABRICACIÓN': 'PRODUCCIÓN',
   PROXYGAMES: 'EXPERIENCIAS',
-  CONOCIMIENTO: 'SABER',
+  'CODEX COGITO': 'SABER',
 }
 
 // Pictograma mínimo por sección — trazo, no relleno, para no competir con
@@ -51,7 +51,7 @@ function NavIcon({ label, color }: { label: string; color: string }) {
       return <svg {...common} aria-hidden><path d="M2 2 H5 M2 2 V5 M14 2 H11 M14 2 V5 M2 14 H5 M2 14 V11 M14 14 H11 M14 14 V11" /><circle cx="8" cy="8" r="2" /></svg>
     case 'EXPERIMENTAL':
       return <svg {...common} aria-hidden><path d="M6.3 1.5 H9.7 V5.8 L13 13 C13.4 13.8 12.8 14.5 12 14.5 H4 C3.2 14.5 2.6 13.8 3 13 L6.3 5.8 Z" /><path d="M5 10.5 H11" /></svg>
-    case 'CONOCIMIENTO':
+    case 'CODEX COGITO':
       return <svg {...common} aria-hidden><path d="M2 3 C4 2 6.5 2 8 3.3 C9.5 2 12 2 14 3 V12.5 C12 11.5 9.5 11.5 8 12.8 C6.5 11.5 4 11.5 2 12.5 Z" /><path d="M8 3.3 V12.8" /></svg>
     case 'PROXYVERSE':
       return <svg {...common} aria-hidden><circle cx="8" cy="3" r="1.6" /><circle cx="3" cy="12" r="1.6" /><circle cx="13" cy="12" r="1.6" /><path d="M7.2 4.3 L4 10.6 M8.8 4.3 L12 10.6" /></svg>

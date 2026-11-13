@@ -89,9 +89,9 @@ const ZONES: Zone[] = [
     ],
   },
   {
-    id: 'conocimiento', tag: 'NPX-KNW-00', title: 'CONOCIMIENTO', href: '/knowledge', color: '#6644aa',
-    description: 'Filosofía y fundamentos del proyecto — los textos detrás del lore de los siete agentes residentes.',
-    cta: 'VER CONOCIMIENTO',
+    id: 'conocimiento', tag: 'NPX-KNW-00', title: 'CODEX COGITO', href: '/knowledge', color: '#6644aa',
+    description: 'Conceptos y autores reales, más los documentos de archivo — física, mente, lenguaje, alimentación — convergiendo en una sola idea.',
+    cta: 'ENTRAR AL CODEX',
     subs: [
       { id: 'filosofia', tag: 'NPX-KNW-00a', title: 'FILOSOFÍA', href: '/knowledge/filosofia' },
     ],
