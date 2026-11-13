@@ -35,7 +35,11 @@ export const navConfig: NavEntry[] = [
   // /audio, se vuelve a agregar acá cuando esté lista para mostrarse.
   { label: 'REALIDAD AUMENTADA', href: '/realidad-aumentada', live: true },
   { label: 'EXPERIMENTAL', href: '/experimental', live: true },
-  { label: 'CONOCIMIENTO', href: '/knowledge', live: true },
+  // CONOCIMIENTO se renombró a CODEX COGITO a pedido explícito: ahora es la
+  // sección madre que reúne la lista de conceptos/autores (ex-Conocimiento)
+  // más los cuatro documentos de archivo (física, mente, lenguaje,
+  // alimentación) — antes sueltos y sin link. Mismo href, /knowledge.
+  { label: 'CODEX COGITO', href: '/knowledge', live: true },
   { label: 'PROXYVERSE', href: '/proxyverse', live: true },
 ]
 

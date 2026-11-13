@@ -126,7 +126,7 @@ export default function FilosofiaPage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '104px 24px 0' }}>
           <Link href="/knowledge" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
-            ← VOLVER A CONOCIMIENTO
+            ← VOLVER AL CODEX
           </Link>
 
           <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: '#b06bff44', marginTop: 56, marginBottom: 16 }}>
@@ -199,7 +199,7 @@ export default function FilosofiaPage() {
                   <Link key={entry.id} href={`/knowledge?entry=${entry.id}`} style={{
                     fontSize: 9, letterSpacing: 1.5, color: `${chapter.color}aa`, textDecoration: 'none',
                   }}>
-                    → VER NODO DE {entry.name.split(' ').pop()?.toUpperCase()} EN /CONOCIMIENTO
+                    → VER NODO DE {entry.name.split(' ').pop()?.toUpperCase()} EN EL CODEX
                   </Link>
                 ))}
               </div>
