@@ -7,7 +7,7 @@ const modules = [
     href: '/lab',
     icon: '⚗️',
     name: 'Generative Lab',
-    desc: 'Laboratorio de geometría. Exploración procedural: algoritmos, formas caóticas, esculturas matemáticas.',
+    desc: 'El laboratorio real, arrancando de cero — un canvas para dibujar y experimentar, creciendo con el tiempo.',
   },
   {
     href: '/npos/stardust',

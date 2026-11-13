@@ -14,6 +14,9 @@ interface ArEntry {
   controls: string
 }
 
+// Máscara Kitsune y Modo Clásico salieron del catálogo a pedido explícito —
+// las rutas siguen vivas (/realidad-aumentada/mascara e
+// /realidad-aumentada/index.html), solo dejaron de listarse acá.
 const CATALOG: ArEntry[] = [
   {
     id: 'neocam',
@@ -22,14 +25,6 @@ const CATALOG: ArEntry[] = [
     href: '/realidad-aumentada/neocam',
     blurb: 'La cámara con todos los efectos: 16 modos de imagen (neón, térmica, nocturna, glitch, matrix, holograma, toon, VHS, pixel, blueprint, calor, silueta, cuerpo, infrarrojo, aura) generados en vivo por código — sin filtros de terceros. Máscaras de privacidad facial, HUD, trails, ghost, reactividad a audio y movimiento, cubos físicos y un minijuego con las manos.',
     controls: 'REQUIERE CÁMARA (Y MICRÓFONO PARA AUDIO)',
-  },
-  {
-    id: 'mascara',
-    code: 'NPX-AR-MASK',
-    title: 'MÁSCARA KITSUNE',
-    href: '/realidad-aumentada/mascara',
-    blurb: 'Face tracking real con MediaPipe: una máscara 3D de kitsune sigue tu cara en vivo por cámara, posición y rotación incluidas.',
-    controls: 'REQUIERE CÁMARA',
   },
   {
     id: 'freestyle',
@@ -46,14 +41,6 @@ const CATALOG: ArEntry[] = [
     href: '/realidad-aumentada/marcador',
     blurb: 'Tracking de imagen real (MindAR): enfocá un objeto o dibujo entrenado como marcador y aparece contenido en pantalla mientras lo mantengas en cuadro — reconocimiento continuo, no una foto única.',
     controls: 'REQUIERE CÁMARA Y EL MARCADOR FÍSICO',
-  },
-  {
-    id: 'clasico',
-    code: 'NPX-AR-CLASSIC',
-    title: 'MODO CLÁSICO',
-    href: '/realidad-aumentada/index.html',
-    blurb: 'El filtro original: maquillaje y mechones punk dibujados sobre tracking facial, con 6 paletas de color, partículas, glitch y 3 modos de cámara (normal, térmica, nocturna).',
-    controls: 'REQUIERE CÁMARA',
   },
 ]
 

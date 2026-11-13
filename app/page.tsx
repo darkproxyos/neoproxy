@@ -75,13 +75,8 @@ const ZONES: Zone[] = [
   },
   {
     id: 'laboratorio', tag: 'NPX-LAB-01', title: 'LABORATORIO', href: '/lab', color: '#ff8c1a',
-    description: 'Generadores y visualizaciones corriendo en vivo — Proxygenesis, atractores extraños, el mapa del Hemibrain.',
+    description: 'El laboratorio real, arrancando de cero — un canvas para dibujar y experimentar, creciendo con el tiempo.',
     cta: 'ENTRAR AL LABORATORIO',
-    subs: [
-      { id: 'proxygenesis', tag: 'NPX-LAB-01a', title: 'PROXYGENESIS', href: '/lab/proxygenesis' },
-      { id: 'atractores', tag: 'NPX-LAB-01b', title: 'ATRACTORES', href: '/lab/atractores' },
-      { id: 'hemibrain', tag: 'NPX-LAB-01c', title: 'HEMIBRAIN', href: '/lab/hemibrain' },
-    ],
   },
   {
     id: 'experimental', tag: 'NPX-EXP-00', title: 'EXPERIMENTAL', href: '/experimental', color: '#cc0000',

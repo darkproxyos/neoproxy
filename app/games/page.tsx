@@ -23,6 +23,8 @@ interface GameEntry {
 // después Freestyle // Aprendizaje, y el resto al final.
 // AR Combat (/ar) y Flyby (/games/planet) salieron del catálogo a pedido
 // explícito — las rutas siguen vivas, solo dejaron de listarse acá.
+// THE WIRED se mudó al catálogo de /experimental a pedido explícito — la
+// ruta real sigue siendo /games/wired, no se movió el código de la página.
 const CATALOG: GameEntry[] = [
   {
     id: 'trickster',
@@ -50,15 +52,6 @@ const CATALOG: GameEntry[] = [
     status: 'jugable',
     blurb: 'Modo aprendizaje del freestyle: vocabulario grande de filosofía, ciencia, matemática y lingüística, agrupado por terminación que rima — cada ronda tira varias palabras del mismo grupo para entrenar el oído a encontrar rimas.',
     controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
-  },
-  {
-    id: 'wired',
-    code: 'NPX-EXP-WIRED',
-    title: 'THE WIRED',
-    href: '/games/wired',
-    status: 'jugable',
-    blurb: 'Vuelo en primera persona por la capa entre capas. Absorbé fragmentos de memoria antes de que tu coherencia caiga a cero — la señal corrupta te acerca a la disolución.',
-    controls: 'WASD / FLECHAS · ESPACIO · SHIFT',
   },
   {
     id: 'trickster-mirror',
