@@ -1,9 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import KnowledgeScene, { type KnowledgeSceneHandle } from '@/components/knowledge/KnowledgeScene'
-import { entries, clusters, type Cluster } from '@/components/knowledge/entries'
+import { entries, clusters, type Cluster, type KnowledgeEntry } from '@/components/knowledge/entries'
 import { agents } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
@@ -23,30 +22,101 @@ function FormulaTag({ kind }: { kind: 'equation' | 'quote' | 'concept' }) {
   )
 }
 
+function KnowledgeRow({ entry, color, isOpen, onToggle }: {
+  entry: KnowledgeEntry; color: string; isOpen: boolean; onToggle: () => void
+}) {
+  const agent = entry.relatedAgent ? agents.find(a => a.id === entry.relatedAgent) : undefined
+
+  return (
+    <div id={`entry-${entry.id}`} style={{ borderBottom: '1px solid #ffffff0a' }}>
+      <button
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
+          width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer',
+          padding: '16px 4px', fontFamily: mono,
+        }}
+      >
+        <span style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 14, letterSpacing: 0.5, color: isOpen ? color : '#c8daf0' }}>
+            {entry.name}
+          </span>
+          <span style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>
+            {entry.years} — {entry.role}
+          </span>
+        </span>
+        <span aria-hidden="true" style={{
+          fontSize: 16, color: isOpen ? color : '#4a6080', flexShrink: 0,
+          transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s ease',
+        }}>
+          +
+        </span>
+      </button>
+
+      {isOpen && (
+        <div className="knw-accordion-body" style={{
+          borderLeft: `2px solid ${color}55`, marginLeft: 2, paddingLeft: 18, paddingBottom: 28,
+        }}>
+          <div style={{ marginBottom: 8 }}>
+            <FormulaTag kind={entry.formulaKind} />
+          </div>
+          <div style={{
+            fontFamily: mono, fontSize: 13, color: '#00ffcc', letterSpacing: 0.5, lineHeight: 1.6,
+            marginBottom: 16, wordBreak: 'break-word',
+          }}>
+            {entry.formula}
+          </div>
+          <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 16 }}>
+            {entry.formulaLabel}
+          </div>
+
+          <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0', marginBottom: 20, maxWidth: 640 }}>
+            {entry.summary}
+          </p>
+
+          <div style={{ borderLeft: `2px solid ${color}33`, paddingLeft: 14 }}>
+            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color, marginBottom: 8 }}>
+              EJEMPLO
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.8, color: '#9fc4e0', maxWidth: 640 }}>
+              {entry.example}
+            </p>
+          </div>
+
+          {agent && (
+            <Link href={`/proxyverse/${agent.id}`} style={{
+              display: 'block', marginTop: 20, paddingTop: 16, maxWidth: 640,
+              borderTop: `1px solid ${agent.color}33`, textDecoration: 'none',
+            }}>
+              <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>
+                ESTO YA VIVE EN PROXYVERSE
+              </div>
+              <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5 }}>
+                {agent.name} — {agent.role} →
+              </div>
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function KnowledgePage() {
-  const sceneRef = useRef<KnowledgeSceneHandle>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
-  const selected = entries.find(e => e.id === selectedId) || null
-
-  // Memoizado: KnowledgeScene arma el engine de Babylon entero dentro de un
-  // useEffect que depende de esta prop. Sin useCallback, handleSelect se
-  // redefine en cada render (cada click cambia selectedId -> re-render),
-  // así que ese efecto se re-disparaba en cada click y recreaba la escena
-  // desde cero a mitad de la animación de zoom — el foco de cámara al
-  // clickear un nodo nunca llegaba a verse, en ningún nodo.
-  const handleSelect = useCallback((id: string | null) => {
-    setSelectedId(id)
-    if (id) sceneRef.current?.focusOn(id)
-    else sceneRef.current?.resetView()
-  }, [])
+  const toggle = (id: string) => setSelectedId(prev => (prev === id ? null : id))
 
   // Deep-link desde un perfil de Proxyverse (/knowledge?entry=vonneumann):
-  // selecciona esa entrada apenas la escena carga.
+  // abre esa entrada apenas carga la página y la lleva a la vista.
   useEffect(() => {
     const entryId = new URLSearchParams(window.location.search).get('entry')
-    if (entryId && entries.some(e => e.id === entryId)) handleSelect(entryId)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!entryId || !entries.some(e => e.id === entryId)) return
+    setSelectedId(entryId)
+    window.setTimeout(() => {
+      document.getElementById(`entry-${entryId}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    }, 50)
   }, [])
 
   return (
@@ -54,7 +124,7 @@ export default function KnowledgePage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '104px 24px 80px' }}>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
         <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: '#00d4ff44', marginBottom: 20 }}>
           NPX-KNW-00 // ARQUITECTURA INVISIBLE
         </div>
@@ -71,14 +141,14 @@ export default function KnowledgePage() {
           maxWidth: 760, marginBottom: 48, borderLeft: '1px solid #00d4ff22', paddingLeft: 24,
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
-          qué es un límite, qué es un yo. Esta es la red de quienes se atrevieron a medirlo — no
-          a resolver el misterio, sino a ponerle una ecuación encima. Cada nodo es una pieza de la
+          qué es un límite, qué es un yo. Esta es la lista de quienes se atrevieron a medirlo — no
+          a resolver el misterio, sino a ponerle una ecuación encima. Cada nombre es una pieza de la
           arquitectura invisible que sostiene la Wired: información, mente, auto-organización,
           sistemas que se producen a sí mismos sin pedir permiso, geometría — la estructura que
           sostiene todo lo anterior, desde un punto sin tamaño hasta formas de 4 dimensiones que
           ni siquiera se pueden ver enteras, solo proyectar — y computación: la pila completa,
           capa por capa, de un bit a un modelo de lenguaje escribiendo estas mismas palabras.
-          Tocá un nodo. La red no explica — señala.
+          Tocá un nombre de la lista.
         </p>
 
         <Link href="/knowledge/filosofia" style={{
@@ -89,150 +159,42 @@ export default function KnowledgePage() {
           → FILOSOFÍA: UN SOLO RECORRIDO, SEIS NODOS, UN ARGUMENTO
         </Link>
 
-        <div className="knw-layout" style={{ display: 'flex', gap: 24 }}>
-          <div style={{
-            flex: '1 1 auto', minWidth: 0, height: '70vh', minHeight: 480,
-            border: '1px solid rgba(0, 212, 255, 0.15)', background: 'rgba(0,4,10,0.4)',
-            position: 'relative', overflow: 'hidden',
-          }}>
-            <KnowledgeScene ref={sceneRef} onSelect={handleSelect} />
+        {CLUSTER_ORDER.map(cluster => (
+          <div key={cluster} style={{ marginBottom: 36 }}>
             <div style={{
-              position: 'absolute', bottom: 12, left: 12, fontFamily: mono, fontSize: 8,
-              letterSpacing: 2, color: '#00d4ff55', pointerEvents: 'none',
+              fontFamily: mono, fontSize: 10, letterSpacing: 2, color: clusters[cluster].color,
+              marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8,
             }}>
-              ARRASTRAR: ORBITAR // SCROLL: ZOOM // CLICK: ENFOCAR NODO
-            </div>
-          </div>
-
-          <div className="knw-sidebar" style={{ flex: '0 0 340px', minWidth: 0 }}>
-            {/* Detail panel */}
-            <div style={{
-              border: '1px solid rgba(0, 212, 255, 0.15)', background: 'rgba(0,4,10,0.6)',
-              padding: 20, minHeight: 220, marginBottom: 20,
-            }}>
-              {selected ? (
-                <>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                    <div style={{
-                      fontFamily: mono, fontSize: 9, letterSpacing: 2,
-                      color: clusters[selected.cluster].color,
-                    }}>
-                      {clusters[selected.cluster].label}
-                    </div>
-                    <button
-                      onClick={() => handleSelect(null)}
-                      aria-label="Cerrar"
-                      style={{
-                        background: 'none', border: '1px solid #00d4ff44', color: '#00d4ff',
-                        width: 28, height: 28, cursor: 'pointer', fontFamily: mono, fontSize: 12, flexShrink: 0,
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <div style={{ fontFamily: mono, fontSize: 16, color: '#fff', letterSpacing: 1, marginBottom: 4 }}>
-                    {selected.name}
-                  </div>
-                  <div style={{ fontFamily: mono, fontSize: 10, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
-                    {selected.years}
-                  </div>
-                  <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, marginBottom: 16 }}>
-                    {selected.role}
-                  </div>
-
-                  <div style={{ marginBottom: 8 }}>
-                    <FormulaTag kind={selected.formulaKind} />
-                  </div>
-                  <div style={{
-                    fontFamily: mono, fontSize: 13, color: '#00ffcc', letterSpacing: 0.5, lineHeight: 1.6,
-                    marginBottom: 16, wordBreak: 'break-word',
-                  }}>
-                    {selected.formula}
-                  </div>
-                  <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 16 }}>
-                    {selected.formulaLabel}
-                  </div>
-
-                  <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0', marginBottom: 20 }}>
-                    {selected.summary}
-                  </p>
-
-                  <div style={{
-                    borderLeft: `2px solid ${clusters[selected.cluster].color}55`, paddingLeft: 14,
-                  }}>
-                    <div style={{
-                      fontFamily: mono, fontSize: 8, letterSpacing: 2, color: clusters[selected.cluster].color,
-                      marginBottom: 8,
-                    }}>
-                      EJEMPLO
-                    </div>
-                    <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.8, color: '#9fc4e0' }}>
-                      {selected.example}
-                    </p>
-                  </div>
-
-                  {selected.relatedAgent && (() => {
-                    const agent = agents.find(a => a.id === selected.relatedAgent)
-                    if (!agent) return null
-                    return (
-                      <Link href={`/proxyverse/${agent.id}`} style={{
-                        display: 'block', marginTop: 20, paddingTop: 16,
-                        borderTop: `1px solid ${agent.color}33`, textDecoration: 'none',
-                      }}>
-                        <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>
-                          ESTO YA VIVE EN PROXYVERSE
-                        </div>
-                        <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5 }}>
-                          {agent.name} — {agent.role} →
-                        </div>
-                      </Link>
-                    )
-                  })()}
-                </>
-              ) : (
-                <div style={{ fontFamily: mono, fontSize: 11, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8 }}>
-                  SELECCIONÁ UN NODO EN LA RED, O UN NOMBRE DE LA LISTA, PARA VER SU ECUACIÓN Y SU LUGAR EN EL SISTEMA.
-                </div>
-              )}
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%', background: clusters[cluster].color,
+                boxShadow: `0 0 8px ${clusters[cluster].color}`, display: 'inline-block',
+              }} />
+              {clusters[cluster].label}
             </div>
 
-            {/* Legend + list */}
-            {CLUSTER_ORDER.map(cluster => (
-              <div key={cluster} style={{ marginBottom: 20 }}>
-                <div style={{
-                  fontFamily: mono, fontSize: 9, letterSpacing: 2, color: clusters[cluster].color,
-                  marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8,
-                }}>
-                  <span style={{
-                    width: 8, height: 8, borderRadius: '50%', background: clusters[cluster].color,
-                    boxShadow: `0 0 8px ${clusters[cluster].color}`, display: 'inline-block',
-                  }} />
-                  {clusters[cluster].label}
-                </div>
-                {entries.filter(e => e.cluster === cluster).map(e => (
-                  <button
-                    key={e.id}
-                    onClick={() => handleSelect(e.id)}
-                    style={{
-                      display: 'block', width: '100%', textAlign: 'left', background: selectedId === e.id ? `${clusters[cluster].color}18` : 'transparent',
-                      border: 'none', borderLeft: selectedId === e.id ? `2px solid ${clusters[cluster].color}` : '2px solid transparent',
-                      color: selectedId === e.id ? clusters[cluster].color : '#8fb8d6', cursor: 'pointer',
-                      fontFamily: mono, fontSize: 11, letterSpacing: 0.5, padding: '10px 12px', minHeight: 40,
-                    }}
-                  >
-                    {e.name}
-                  </button>
-                ))}
-              </div>
+            {entries.filter(e => e.cluster === cluster).map(entry => (
+              <KnowledgeRow
+                key={entry.id}
+                entry={entry}
+                color={clusters[cluster].color}
+                isOpen={selectedId === entry.id}
+                onToggle={() => toggle(entry.id)}
+              />
             ))}
           </div>
-        </div>
+        ))}
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
-          .knw-layout { flex-direction: column !important; }
-          .knw-sidebar { flex: 1 1 auto !important; }
+        @keyframes knw-expand {
+          from { opacity: 0; transform: translateY(-6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .knw-accordion-body {
+          animation: knw-expand 0.22s ease;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .knw-accordion-body { animation: none; }
         }
       `}</style>
     </div>
