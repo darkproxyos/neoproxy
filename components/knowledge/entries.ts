@@ -2,11 +2,10 @@ export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas' 
 
 export type FormulaKind = 'equation' | 'quote' | 'concept'
 
-// Forma literal que debe tomar el mesh del nodo en la escena 3D, en vez del
-// poliedro genérico por defecto del cluster — solo lo usan las entradas de
-// 'geometria', donde el nodo ES el objeto que describe (components/knowledge/
-// KnowledgeScene.tsx interpreta este campo). 'tesseract' | '24cell' | '600cell'
-// son wireframes 4D reales, proyectados y rotando en vivo — no son clip art.
+// Forma conceptual asociada a cada entrada de 'geometria' -- el objeto que
+// describe cada una. Quedó sin consumidor cuando se sacó el visor 3D
+// (KnowledgeScene.tsx, borrado) de /knowledge a pedido explícito; se deja
+// como dato igual, documenta algo real aunque hoy no se renderice.
 export type NodeShape =
   | 'point' | 'line' | 'triangle'
   | 'tetrahedron' | 'cube' | 'octahedron' | 'dodecahedron' | 'icosahedron'
