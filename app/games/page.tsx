@@ -18,15 +18,11 @@ interface GameEntry {
 }
 
 // Descripciones verificadas contra el código real de cada página — no
-// inventar mecánicas que no existen. Planet no tiene ningún input handler
-// (sin keydown, sin mouse, sin colisión): es un flythrough automático, no
-// un juego jugable, y se etiqueta como tal. AR Combat (components/
-// ARCombatSystem.tsx) tampoco usa cámara real ni WebXR pese al nombre —
-// verifica soporte de immersive-ar solo para un aviso de fallback, y corre
-// siempre en el modo 3D de escritorio.
+// inventar mecánicas que no existen.
 // Orden pedido explícitamente: Trickster primero, después Espectro (naves),
-// después Freestyle // Aprendizaje, y el resto al final. AR Combat se agrega
-// al final — se mudó acá desde el dropdown de EXPERIMENTAL.
+// después Freestyle // Aprendizaje, y el resto al final.
+// AR Combat (/ar) y Flyby (/games/planet) salieron del catálogo a pedido
+// explícito — las rutas siguen vivas, solo dejaron de listarse acá.
 const CATALOG: GameEntry[] = [
   {
     id: 'trickster',
@@ -65,15 +61,6 @@ const CATALOG: GameEntry[] = [
     controls: 'WASD / FLECHAS · ESPACIO · SHIFT',
   },
   {
-    id: 'planet',
-    code: 'NPX-EXP-FLYBY',
-    title: 'FLYBY',
-    href: '/games/planet',
-    status: 'demo',
-    blurb: 'Sobrevuelo automático de una nave a través de un túnel de anillos y un campo estelar. Todavía sin controles — demo visual, no jugable.',
-    controls: 'SIN CONTROLES — AUTOPLAY',
-  },
-  {
     id: 'trickster-mirror',
     code: 'NPX-EXP-MIRROR',
     title: 'TRICKSTER // ESPEJO',
@@ -90,15 +77,6 @@ const CATALOG: GameEntry[] = [
     status: 'jugable',
     blurb: 'Herramienta de freestyle: cada ciertos segundos aparecen entre 1 y 6 conceptos del Proxyverse (agentes, frases, vocabulario del proyecto) para improvisar encima de tu propia pista.',
     controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
-  },
-  {
-    id: 'ar',
-    code: 'NPX-EXP-ARCOMBAT',
-    title: 'AR COMBAT',
-    href: '/ar',
-    status: 'jugable',
-    blurb: 'Tiro al blanco 3D: destruí los octaedros rojos que flotan y rotan por la escena antes de que se multipliquen, con cámara orbital, munición limitada y puntaje en vivo. Pese al nombre, corre en 3D de escritorio — no usa la cámara del dispositivo ni una sesión WebXR real.',
-    controls: 'CLICK EN EL OBJETIVO — CÁMARA ORBITAL',
   },
 ]
 
