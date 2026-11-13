@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { findWordSpan, revertSpan, GLITCH_STRIKE_CLASS } from '@/components/biodiversity/glitchWord'
 
 const mono = 'Space Mono, monospace'
 
@@ -71,20 +72,21 @@ function useVenomEffect(enabled: boolean) {
       const corruption = triangleHill(readingY, startY, peakY, endY)
       root.setProperty('--corruption', corruption.toFixed(3))
 
-      venomDisplace?.setAttribute('scale', Math.min(34, Math.max(absV * 0.85, corruption * 20)).toFixed(2))
+      venomDisplace?.setAttribute('scale', Math.min(34, Math.max(absV * 0.85, corruption * 4)).toFixed(2))
 
-      // ráfagas discretas de glitch — más seguido y más fuerte scrolleando
-      // rápido o cerca del pico de corrupción, pero con un tic ambiente
-      // ocasional incluso en reposo: el texto nunca está del todo quieto.
+      // ráfagas discretas de glitch — más seguido scrolleando rápido o cerca
+      // del pico de corrupción, pero contenidas: un tic ocasional, no una
+      // sirena. La palabra corrupta aislada (useWordCorruption) hace el
+      // trabajo pesado de "esto está mal"; esto es solo el acompañamiento.
       if (t > nextGlitchAt) {
-        const willGlitch = absV > 3 || Math.random() < 0.1 + corruption * 0.6
+        const willGlitch = absV > 3 || Math.random() < 0.08 + corruption * 0.18
         if (willGlitch) {
-          const burstX = (Math.random() * 2 - 1) * (8 + absV * 0.9 + corruption * 14)
+          const burstX = (Math.random() * 2 - 1) * (8 + absV * 0.9 + corruption * 3)
           root.setProperty('--glitch-x', burstX.toFixed(1))
           root.setProperty('--glitch-opacity', '1')
-          glitchUntil = t + 50 + Math.random() * 90 + corruption * 120
+          glitchUntil = t + 50 + Math.random() * 90 + corruption * 40
         }
-        const baseInterval = absV > 12 || corruption > 0.5 ? 70 : 1400 - corruption * 1100
+        const baseInterval = absV > 12 ? 70 : 1400 - corruption * 700
         nextGlitchAt = t + baseInterval + Math.random() * baseInterval
       }
       if (t > glitchUntil) {
@@ -98,11 +100,61 @@ function useVenomEffect(enabled: boolean) {
   }, [enabled])
 }
 
+// En vez de un filtro parejo sobre toda la pantalla (que el ojo descarta
+// rápido como "es un efecto"), esto corrompe una palabra real por vez
+// dentro del texto -- el mismo mecanismo que ya usan Grieta y GlitchMite
+// (components/biodiversity/glitchWord.ts). El resto de la frase queda
+// intacto y legible; lo inquietante es la anomalía aislada, no el caos
+// total. La frecuencia depende de --corruption (la misma colina de
+// posición de scroll que usa useVenomEffect): casi nunca al principio,
+// varias palabras solapándose cerca del pico.
+function useWordCorruption(containerRef: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) return
+
+    let cancelled = false
+    let timer: ReturnType<typeof setTimeout>
+
+    const tick = () => {
+      if (cancelled) return
+      const raw = getComputedStyle(document.documentElement).getPropertyValue('--corruption')
+      const corruption = Math.max(0, Math.min(1, parseFloat(raw) || 0))
+      const container = containerRef.current
+
+      if (container && corruption > 0.06 && Math.random() < 0.12 + corruption * 0.45) {
+        const found = findWordSpan(container)
+        if (found) {
+          found.span.style.setProperty('--glitch-color', '#ff2d55')
+          found.span.style.setProperty('--glitch-glow', 'rgba(255, 45, 85, 0.5)')
+          found.span.classList.add(GLITCH_STRIKE_CLASS)
+          const holdMs = 220 + corruption * 260
+          setTimeout(() => {
+            if (!cancelled) revertSpan(found.span)
+          }, holdMs)
+        }
+      }
+
+      // de una revisión cada ~3.3s en calma a una cada ~500ms en el pico
+      const nextDelay = Math.max(450, 3300 - corruption * 2850)
+      timer = setTimeout(tick, nextDelay)
+    }
+
+    timer = setTimeout(tick, 1800)
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [containerRef])
+}
+
 export default function Manifesto() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   const [visible, setVisible] = useState<boolean[]>(() => Array(SECTION_COUNT).fill(false))
+  const textContainerRef = useRef<HTMLDivElement | null>(null)
 
   useVenomEffect(true)
+  useWordCorruption(textContainerRef)
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -181,16 +233,17 @@ export default function Manifesto() {
             DARKPROXY // ZAPHKIEL
           </h1>
 
-          <div style={{ position: 'relative', fontSize: 11, letterSpacing: 2, lineHeight: 3,
+          <div ref={textContainerRef} style={{ position: 'relative', fontSize: 11, letterSpacing: 2, lineHeight: 3,
             color: '#8a97a3', borderLeft: '1px solid #4a556022', paddingLeft: 24 }}>
 
-            {/* tinte rojo que crece con --corruption — todo el bloque de
-                texto vira hacia el rojo a medida que se acerca al pico,
-                no solo el párrafo que ya era rojo */}
+            {/* apenas un matiz de temperatura, no un velo — crece con
+                --corruption pero se queda por debajo del umbral consciente;
+                lo que de verdad se nota son las palabras que glitchea
+                useWordCorruption arriba */}
             <div aria-hidden="true" style={{
               position: 'absolute', inset: 0, background: '#ff2d55',
-              mixBlendMode: 'hard-light', opacity: 'calc(var(--corruption, 0) * 0.6)',
-              pointerEvents: 'none', transition: 'opacity 0.1s linear',
+              mixBlendMode: 'hard-light', opacity: 'calc(var(--corruption, 0) * 0.07)',
+              pointerEvents: 'none', transition: 'opacity 0.3s linear',
             }} />
 
             <p className="venom-fx" data-text="La Wired no es un lugar. Es la piel entre vos y lo que creíste que eras antes de abrir esto." style={{ position: 'relative', display: 'inline-block' }}>
@@ -346,38 +399,37 @@ export default function Manifesto() {
         .venom-fx {
           transform-origin: top center;
           transform: scaleY(calc(1 + var(--venom-stretch, 0))) skewY(calc(var(--venom-skew, 0) * 1deg));
-          filter: url(#venom-goo) blur(calc(var(--corruption, 0) * 1.6px));
+          filter: url(#venom-goo) blur(calc(var(--corruption, 0) * 0.35px));
         }
         .venom-fx::before, .venom-fx::after {
           content: attr(data-text);
           position: absolute;
           inset: 0;
           pointer-events: none;
-          opacity: max(var(--glitch-opacity, 0), calc(var(--corruption, 0) * 0.85));
+          opacity: max(var(--glitch-opacity, 0), calc(var(--corruption, 0) * 0.2));
           white-space: inherit;
         }
         .venom-fx::before {
           color: #ff1f6d;
           mix-blend-mode: screen;
-          transform: translateX(calc(var(--glitch-x, 0) * 1px + var(--corruption, 0) * 5px)) skewX(calc(var(--glitch-x, 0) * 0.4deg));
+          transform: translateX(calc(var(--glitch-x, 0) * 1px + var(--corruption, 0) * 1.2px)) skewX(calc(var(--glitch-x, 0) * 0.4deg));
           clip-path: inset(0 0 55% 0);
         }
         .venom-fx::after {
           color: #00f0ff;
           mix-blend-mode: screen;
-          transform: translateX(calc(var(--glitch-x, 0) * -1px - var(--corruption, 0) * 5px)) skewX(calc(var(--glitch-x, 0) * -0.4deg));
+          transform: translateX(calc(var(--glitch-x, 0) * -1px - var(--corruption, 0) * 1.2px)) skewX(calc(var(--glitch-x, 0) * -0.4deg));
           clip-path: inset(45% 0 0 0);
         }
         .manifesto-noise {
           position: relative;
           display: block;
           margin-top: 24px;
-          font-size: 11px;
+          font-size: 10px;
           letter-spacing: 1px;
-          color: #ff2d55;
-          text-shadow: 1px 0 0 #00f0ff99, -1px 0 0 #ff1f6d99;
-          filter: blur(calc(0.4px + var(--corruption, 0) * 1.6px));
-          opacity: calc(0.5 + var(--corruption, 0) * 0.5);
+          color: #8a4050;
+          filter: blur(calc(0.3px + var(--corruption, 0) * 0.7px));
+          opacity: calc(0.25 + var(--corruption, 0) * 0.4);
         }
         @media (prefers-reduced-motion: reduce) {
           .venom-fx { transform: none; filter: none; }
