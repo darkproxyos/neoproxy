@@ -15,6 +15,10 @@ const PORTAL = '#00ffcc'
 // asset importado. CORE_SCALE/paleta comparten lenguaje con el resto del
 // sitio (cian=jugador, rojo=peligro, ámbar=acento, verde=portal).
 const TOTAL_LEVELS = 8
+const CELL_SIZE = 4
+const WALL_THICKNESS = 0.3
+const WALL_HEIGHT = 2
+const PLAYER_RADIUS = 0.55
 
 type Hazard = {
   type: 'spike' | 'orbit' | 'patrol'
@@ -26,10 +30,19 @@ type Hazard = {
   to?: [number, number]
 }
 
+// horizontal=true -- el segmento se extiende en X, a una Z fija (pared
+// "norte/sur" de una celda); horizontal=false -- se extiende en Z, a una
+// X fija (pared "este/oeste").
+type WallSegment = { x: number; z: number; horizontal: boolean }
+
+type MazeCell = { walls: { n: boolean; s: boolean; e: boolean; w: boolean } }
+
 type LevelDef = {
-  arenaHalf: number
+  cols: number
+  rows: number
   spawn: [number, number]
   portal: [number, number]
+  walls: WallSegment[]
   hazards: Hazard[]
 }
 
@@ -44,53 +57,108 @@ function makeRng(seed: number) {
   }
 }
 
+// Backtracker recursivo (DFS con pila, iterativo para no reventar la call
+// stack en laberintos grandes) -- laberinto perfecto: exactamente un
+// camino entre dos celdas cualesquiera, así spawn y portal SIEMPRE quedan
+// conectados sin tener que verificarlo aparte.
+function generateMazeGrid(cols: number, rows: number, rng: () => number): MazeCell[][] {
+  const grid: MazeCell[][] = Array.from({ length: rows }, () =>
+    Array.from({ length: cols }, () => ({ walls: { n: true, s: true, e: true, w: true } }))
+  )
+  const visited: boolean[][] = Array.from({ length: rows }, () => Array(cols).fill(false))
+  const stack: [number, number][] = [[0, 0]]
+  visited[0][0] = true
+  while (stack.length) {
+    const [cx, cy] = stack[stack.length - 1]
+    const options: Array<{ nx: number; ny: number; dir: 'n' | 's' | 'e' | 'w'; opp: 'n' | 's' | 'e' | 'w' }> = []
+    if (cy > 0 && !visited[cy - 1][cx]) options.push({ nx: cx, ny: cy - 1, dir: 'n', opp: 's' })
+    if (cy < rows - 1 && !visited[cy + 1][cx]) options.push({ nx: cx, ny: cy + 1, dir: 's', opp: 'n' })
+    if (cx > 0 && !visited[cy][cx - 1]) options.push({ nx: cx - 1, ny: cy, dir: 'w', opp: 'e' })
+    if (cx < cols - 1 && !visited[cy][cx + 1]) options.push({ nx: cx + 1, ny: cy, dir: 'e', opp: 'w' })
+    if (options.length === 0) { stack.pop(); continue }
+    const pick = options[Math.floor(rng() * options.length)]
+    grid[cy][cx].walls[pick.dir] = false
+    grid[pick.ny][pick.nx].walls[pick.opp] = false
+    visited[pick.ny][pick.nx] = true
+    stack.push([pick.nx, pick.ny])
+  }
+  return grid
+}
+
 function buildLevel(index: number): LevelDef {
   const rng = makeRng(index * 7919 + 13)
-  const arenaHalf = 11 + index * 1.4
-  const spawn: [number, number] = [-arenaHalf + 2.5, -arenaHalf + 2.5]
-  const portal: [number, number] = [arenaHalf - 2.5, arenaHalf - 2.5]
-  const minClear = 3.2
-  const farEnough = (p: [number, number]) => {
-    const dS = Math.hypot(p[0] - spawn[0], p[1] - spawn[1])
-    const dP = Math.hypot(p[0] - portal[0], p[1] - portal[1])
-    return dS > minClear && dP > minClear
-  }
-  const randPoint = (): [number, number] => {
-    for (let tries = 0; tries < 30; tries++) {
-      const p: [number, number] = [
-        (rng() * 2 - 1) * (arenaHalf - 2),
-        (rng() * 2 - 1) * (arenaHalf - 2),
-      ]
-      if (farEnough(p)) return p
+  const cols = 5 + Math.min(5, Math.floor(index * 0.8))
+  const rows = 5 + Math.min(5, Math.floor(index * 0.8))
+  const grid = generateMazeGrid(cols, rows, rng)
+
+  const cellCenter = (cx: number, cy: number): [number, number] => [
+    (cx - (cols - 1) / 2) * CELL_SIZE,
+    (cy - (rows - 1) / 2) * CELL_SIZE,
+  ]
+
+  // paredes: solo se dibuja la N/S de un lado y la E/O del otro -- cada
+  // límite interno es compartido por dos celdas (se mantienen en sync al
+  // tallar el laberinto), dibujarlo una sola vez evita planos duplicados.
+  const walls: WallSegment[] = []
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const [wx, wz] = cellCenter(x, y)
+      const cell = grid[y][x]
+      if (y === 0 && cell.walls.n) walls.push({ x: wx, z: wz - CELL_SIZE / 2, horizontal: true })
+      if (cell.walls.s) walls.push({ x: wx, z: wz + CELL_SIZE / 2, horizontal: true })
+      if (x === 0 && cell.walls.w) walls.push({ x: wx - CELL_SIZE / 2, z: wz, horizontal: false })
+      if (cell.walls.e) walls.push({ x: wx + CELL_SIZE / 2, z: wz, horizontal: false })
     }
-    return [0, 0]
+  }
+
+  const spawnCell: [number, number] = [0, 0]
+  const portalCell: [number, number] = [cols - 1, rows - 1]
+  const spawn = cellCenter(...spawnCell)
+  const portal = cellCenter(...portalCell)
+
+  const isReserved = (x: number, y: number) =>
+    (x === portalCell[0] && y === portalCell[1]) ||
+    Math.abs(x - spawnCell[0]) + Math.abs(y - spawnCell[1]) <= 1
+
+  const candidates: [number, number][] = []
+  for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) if (!isReserved(x, y)) candidates.push([x, y])
+  for (let i = candidates.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1))
+    ;[candidates[i], candidates[j]] = [candidates[j], candidates[i]]
+  }
+
+  // para el patrol: un vecino conectado por un pasaje real (no un punto
+  // cualquiera) -- así el hazard viaja dentro del corredor, nunca cruza
+  // una pared.
+  function openNeighbor(x: number, y: number): [number, number] | null {
+    const cell = grid[y][x]
+    const dirs: Array<['n' | 's' | 'e' | 'w', number, number]> = [['n', 0, -1], ['s', 0, 1], ['e', 1, 0], ['w', -1, 0]]
+    const open = dirs.filter(([d]) => !cell.walls[d])
+    if (!open.length) return null
+    const [, dx, dy] = open[Math.floor(rng() * open.length)]
+    return [x + dx, y + dy]
   }
 
   const hazards: Hazard[] = []
-  const spikeCount = 2 + Math.floor(index * 1.1)
-  for (let i = 0; i < spikeCount; i++) hazards.push({ type: 'spike', base: randPoint() })
-
-  const orbitCount = Math.floor(index / 2)
-  for (let i = 0; i < orbitCount; i++) {
-    hazards.push({
-      type: 'orbit',
-      base: randPoint(),
-      radius: 2 + rng() * 2.5,
-      speed: 0.6 + rng() * 0.8,
-    })
+  let ci = 0
+  const spikeCount = Math.min(candidates.length, 3 + Math.floor(index * 1.2))
+  for (let i = 0; i < spikeCount && ci < candidates.length; i++, ci++) {
+    hazards.push({ type: 'spike', base: cellCenter(...candidates[ci]) })
+  }
+  const orbitCount = Math.min(candidates.length - ci, Math.floor(index / 3))
+  for (let i = 0; i < orbitCount && ci < candidates.length; i++, ci++) {
+    hazards.push({ type: 'orbit', base: cellCenter(...candidates[ci]), radius: 0.7 + rng() * 0.3, speed: 0.8 + rng() * 0.6 })
+  }
+  const patrolCount = Math.min(candidates.length - ci, 1 + Math.floor(index / 2))
+  for (let i = 0; i < patrolCount && ci < candidates.length; i++, ci++) {
+    const [cx, cy] = candidates[ci]
+    const neighbor = openNeighbor(cx, cy)
+    const from = cellCenter(cx, cy)
+    const to = neighbor ? cellCenter(...neighbor) : from
+    hazards.push({ type: 'patrol', base: from, to, speed: 0.5 + rng() * 0.4 })
   }
 
-  const patrolCount = Math.floor((index + 1) / 2)
-  for (let i = 0; i < patrolCount; i++) {
-    const from = randPoint()
-    const to: [number, number] = [
-      Math.max(-arenaHalf + 1.5, Math.min(arenaHalf - 1.5, from[0] + (rng() * 2 - 1) * 8)),
-      Math.max(-arenaHalf + 1.5, Math.min(arenaHalf - 1.5, from[1] + (rng() * 2 - 1) * 8)),
-    ]
-    hazards.push({ type: 'patrol', base: from, to, speed: 0.4 + rng() * 0.5 })
-  }
-
-  return { arenaHalf, spawn, portal, hazards }
+  return { cols, rows, spawn, portal, walls, hazards }
 }
 
 export default function DigizBabylon() {
@@ -132,11 +200,10 @@ export default function DigizBabylon() {
       // cambiar de arena (tamaño distinto por nivel). ---
       let ground: any = null
       let groundMat: any = null
-      function buildGround(half: number) {
+      function buildGround(width: number, depth: number) {
         if (ground) ground.dispose()
         if (groundMat) groundMat.dispose()
-        const size = half * 2 + 4
-        ground = B.MeshBuilder.CreateGround('ground', { width: size, height: size }, scene)
+        ground = B.MeshBuilder.CreateGround('ground', { width, height: depth }, scene)
         groundMat = new B.StandardMaterial('groundMat', scene)
         const texSize = 512
         const dt = new B.DynamicTexture('groundTex', texSize, scene, false)
@@ -160,6 +227,54 @@ export default function DigizBabylon() {
         ground.material = groundMat
         ground.isPickable = true
         ground.receiveShadows = true
+      }
+
+      // --- paredes del laberinto: cubos de "acrílico" -- cuerpo muy
+      // transparente con brillo especular fuerte (lee como plástico/vidrio
+      // sin necesitar un environment map) más un borde cian marcado vía
+      // enableEdgesRendering, que es lo que realmente vende "bloque sólido
+      // transparente" en vez de una caja con alpha a secas. Un solo
+      // material compartido por todas las paredes del nivel. ---
+      let acrylicMat: any = null
+      function ensureAcrylicMat() {
+        if (acrylicMat) return acrylicMat
+        acrylicMat = new B.StandardMaterial('acrylicMat', scene)
+        acrylicMat.diffuseColor = new B.Color3(0.08, 0.3, 0.38)
+        acrylicMat.emissiveColor = new B.Color3(0.02, 0.1, 0.14)
+        acrylicMat.specularColor = new B.Color3(1, 1, 1)
+        acrylicMat.specularPower = 48
+        acrylicMat.alpha = 0.22
+        acrylicMat.backFaceCulling = false
+        return acrylicMat
+      }
+      let wallMeshes: any[] = []
+      function clearWalls() {
+        wallMeshes.forEach(m => m.dispose())
+        wallMeshes = []
+      }
+      function buildWalls(segments: WallSegment[]) {
+        clearWalls()
+        const mat = ensureAcrylicMat()
+        for (const seg of segments) {
+          const w = seg.horizontal ? CELL_SIZE : WALL_THICKNESS
+          const d = seg.horizontal ? WALL_THICKNESS : CELL_SIZE
+          const box = B.MeshBuilder.CreateBox('wall', { width: w, height: WALL_HEIGHT, depth: d }, scene)
+          box.position.set(seg.x, WALL_HEIGHT / 2, seg.z)
+          box.material = mat
+          box.isPickable = false
+          box.enableEdgesRendering()
+          box.edgesWidth = 3
+          box.edgesColor = new B.Color4(0, 0.83, 1, 0.85)
+          wallMeshes.push(box)
+        }
+      }
+      function collidesWithWalls(x: number, z: number, segments: WallSegment[]): boolean {
+        for (const seg of segments) {
+          const halfW = (seg.horizontal ? CELL_SIZE : WALL_THICKNESS) / 2 + PLAYER_RADIUS
+          const halfD = (seg.horizontal ? WALL_THICKNESS : CELL_SIZE) / 2 + PLAYER_RADIUS
+          if (Math.abs(x - seg.x) < halfW && Math.abs(z - seg.z) < halfD) return true
+        }
+        return false
       }
 
       // --- jugador: esfera cian con glow + estela de partículas ---
@@ -254,10 +369,10 @@ export default function DigizBabylon() {
         liveHazards = []
       }
 
-      function loadLevel(index: number) {
+      function loadLevel(def: LevelDef) {
         clearHazards()
-        const def = buildLevel(index)
-        buildGround(def.arenaHalf)
+        buildGround(def.cols * CELL_SIZE + 3, def.rows * CELL_SIZE + 3)
+        buildWalls(def.walls)
         player.position.x = def.spawn[0]
         player.position.z = def.spawn[1]
         targetX = def.spawn[0]
@@ -306,7 +421,7 @@ export default function DigizBabylon() {
         currentDef = buildLevel(index)
         stateRef.current.levelIndex = index
         levelCompleteLock = false
-        loadLevel(index)
+        loadLevel(currentDef)
       }
       controlRef.current = { goToLevel }
 
@@ -317,14 +432,20 @@ export default function DigizBabylon() {
         last = now
 
         // jugador persigue el target a velocidad constante (no un lerp
-        // exponencial -- así se siente "manejado", no "pegado al mouse")
+        // exponencial -- así se siente "manejado", no "pegado al mouse").
+        // Colisión por eje separado contra las paredes del laberinto: si
+        // el paso en X choca se descarta solo ese eje, Z se intenta igual
+        // -- así el jugador desliza contra la pared en vez de trabarse en
+        // seco cuando apunta en diagonal hacia una esquina.
         const dx = targetX - player.position.x
         const dz = targetZ - player.position.z
         const dist = Math.hypot(dx, dz)
         if (dist > 0.02) {
           const step = Math.min(dist, PLAYER_SPEED * dt)
-          player.position.x += (dx / dist) * step
-          player.position.z += (dz / dist) * step
+          const newX = player.position.x + (dx / dist) * step
+          const newZ = player.position.z + (dz / dist) * step
+          if (!collidesWithWalls(newX, player.position.z, currentDef.walls)) player.position.x = newX
+          if (!collidesWithWalls(player.position.x, newZ, currentDef.walls)) player.position.z = newZ
           player.rotation.y = Math.atan2(dx, dz)
         }
         player.rotation.x += dt * 2
@@ -446,8 +567,9 @@ export default function DigizBabylon() {
           </h1>
           <p style={{ fontFamily: mono, fontSize: 12, color: '#8fb8d6', maxWidth: 480, lineHeight: 1.9, marginBottom: 36 }}>
             Mismo concepto que el original -- una esfera que persigue tu mouse o tu dedo,
-            esquivando peligros hasta el portal -- pero reconstruido desde cero en Babylon.js:
-            geometría, niveles y texturas generados en código, nada importado.
+            esquivando peligros hasta el portal -- reconstruido desde cero en Babylon.js:
+            geometría, niveles y texturas generadas en código, nada importado. Ahora adentro
+            de un laberinto real, con paredes de acrílico transparente.
           </p>
           <button
             onClick={startGame}
