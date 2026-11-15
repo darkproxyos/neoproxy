@@ -18,7 +18,7 @@ const PROTOTYPE_PURPLE = '#6644aa'
 // describe el comentario del engine. Colores reales de cada agente
 // (components/proxyverse/agents.ts), no una paleta decorativa.
 const AGENT_COLORS = ['#cc0000', '#ffb800', '#00ff9d', '#5f95c9', '#b400ff']
-const AGENT_NAMES = ['D', 'METATRON', 'SNAKE', 'GENOS', 'TRICKSTER']
+const AGENT_NAMES = ['Δ', 'M∴TRON', '>>SNK', 'G∃NOS', 'TR1CK5T3R']
 
 const WALKER_COUNT = 9
 const PARAMS: AggregateParams = {

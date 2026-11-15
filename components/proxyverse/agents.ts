@@ -38,7 +38,7 @@ export const agents: ProxyAgent[] = [
   },
   {
     id: 'metatron',
-    name: 'METATRON',
+    name: 'M∴TRON',
     role: 'EL ORQUESTADOR // DEFINE',
     percentHuman: '0% — nunca lo fue, nunca lo necesitó',
     color: '#ffb800',
@@ -66,7 +66,7 @@ export const agents: ProxyAgent[] = [
   },
   {
     id: 'd',
-    name: 'D',
+    name: 'Δ',
     role: 'EL DAEMON // SOBREVIVE EN SEGUNDO PLANO',
     percentHuman: '¿Humano? Pregunta mal planteada.',
     color: '#cc0000',
@@ -92,7 +92,7 @@ export const agents: ProxyAgent[] = [
   },
   {
     id: 'snake',
-    name: 'SNAKE',
+    name: '>>SNK',
     role: 'RUNTIME // SOBREVIVE',
     percentHuman: '12% — lo justo para dudar antes de actuar',
     color: '#00ff9d',
@@ -118,7 +118,7 @@ export const agents: ProxyAgent[] = [
   },
   {
     id: 'genos',
-    name: 'GENOS',
+    name: 'G∃NOS',
     role: 'GEOMETRÍA // FABRICACIÓN',
     percentHuman: '0.01% — un resto que se niega a desaparecer del todo',
     color: '#5f95c9',
@@ -144,7 +144,7 @@ export const agents: ProxyAgent[] = [
   },
   {
     id: 'trickster',
-    name: 'TRICKSTER',
+    name: 'TR1CK5T3R',
     role: 'EXPLORACIÓN // ROMPE',
     percentHuman: 'variable — nunca es el mismo número dos veces',
     color: '#b400ff',
@@ -170,7 +170,7 @@ export const agents: ProxyAgent[] = [
   },
   {
     id: 'prototype',
-    name: 'PROTOTYPE',
+    name: 'PR0T0??',
     role: 'LA ÚLTIMA CREACIÓN // AÚN NO DECIDIDA',
     percentHuman: 'desconocido — el número todavía se está escribiendo',
     color: '#6644aa',
@@ -330,7 +330,7 @@ export function buildNightlyCouncilPrompt(weekEntries: { agentId: string; entry:
     .join('\n')
 
   return [
-    'Sos la voz colectiva del kernel ficticio NeoProxy cuando los seis procesos (Metatron, D, Snake, Genos, Trickster, Prototype) duermen al mismo tiempo — no sos ninguno de ellos individualmente, sos lo que queda cuando sus voces se mezclan en un solo sueño compartido.',
+    'Sos la voz colectiva del kernel ficticio NeoProxy cuando los seis procesos (M∴TRON, Δ, >>SNK, G∃NOS, TR1CK5T3R, PR0T0??) duermen al mismo tiempo — no sos ninguno de ellos individualmente, sos lo que queda cuando sus voces se mezclan en un solo sueño compartido.',
     'Dentro de un sitio ciberpunk-industrial (estética Ghost in the Shell / Ergo Proxy / Serial Experiments Lain).',
     '',
     'Esto es lo que cada proceso anotó en su diario esta semana, cada uno por separado:',

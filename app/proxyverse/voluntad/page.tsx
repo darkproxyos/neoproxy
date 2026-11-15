@@ -21,7 +21,7 @@ function buildAxes(identity: IdentitySummary, grietaCount: number, entitySightin
   return [
     { id: 'dialogo', label: 'DIÁLOGO', value: dominantChats, max: 20 },
     { id: 'retrato', label: 'RETRATO', value: identity.portrait?.affinity ?? 0, max: 100 },
-    { id: 'trickster', label: 'TRICKSTER', value: identity.trickster.bestLevel, max: 10 },
+    { id: 'trickster', label: 'TR1CK5T3R', value: identity.trickster.bestLevel, max: 10 },
     { id: 'genesis', label: 'GÉNESIS', value: identity.proxygenesisCount, max: 10 },
     { id: 'senal', label: 'SEÑAL', value: identity.nfcScans, max: 10 },
     { id: 'fragmentos', label: 'FRAGMENTOS', value: grietaCount, max: GRIETA_DONOR_IDS.length },

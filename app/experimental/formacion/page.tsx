@@ -16,7 +16,7 @@ const METATRON_AMBER = '#ffb800'
 // D, Snake, Genos, Trickster, Prototype — los otros cinco agentes reales,
 // no Metatron (que es el líder, no un seguidor).
 const FOLLOWER_COLORS = ['#cc0000', '#00ff9d', '#5f95c9', '#b400ff', '#6644aa']
-const FOLLOWER_NAMES = ['D', 'SNAKE', 'GENOS', 'TRICKSTER', 'PROTOTYPE']
+const FOLLOWER_NAMES = ['Δ', '>>SNK', 'G∃NOS', 'TR1CK5T3R', 'PR0T0??']
 
 const ARENA_HALF = 4.0
 const PARAMS: FormationParams = {
@@ -222,7 +222,7 @@ export default function FormacionPage() {
                 <div style={{ color: '#4a6080' }}>DISTANCIA MEDIA AL LÍDER</div>
                 <div style={{ color: METATRON_AMBER, textAlign: 'right' }}>{spread.toFixed(2)}</div>
               </div>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: '#4a6080', marginBottom: 6 }}>SIGUEN A METATRON:</div>
+              <div style={{ fontSize: 8, letterSpacing: 1, color: '#4a6080', marginBottom: 6 }}>SIGUEN A M∴TRON:</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {FOLLOWER_COLORS.map((c, i) => (
                   <span key={c} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 8, color: '#8fb8d6' }}>

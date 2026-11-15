@@ -29,7 +29,7 @@ const CATALOG: GameEntry[] = [
   {
     id: 'trickster',
     code: 'NPX-EXP-TRICKSTER',
-    title: 'TRICKSTER // CAMPO DE PRUEBA',
+    title: 'TR1CK5T3R // CAMPO DE PRUEBA',
     href: '/games/trickster',
     status: 'demo',
     blurb: 'El primer personaje jugable del catálogo — generado y traído desde afuera, corriendo con esqueleto y animación real (Mixamo) en una escena propia. El salto todavía es animación procedural, sin clip propio.',
@@ -56,7 +56,7 @@ const CATALOG: GameEntry[] = [
   {
     id: 'trickster-mirror',
     code: 'NPX-EXP-MIRROR',
-    title: 'TRICKSTER // ESPEJO',
+    title: 'TR1CK5T3R // ESPEJO',
     href: '/games/trickster-mirror',
     status: 'demo',
     blurb: 'Trickster en reposo copia tus movimientos de cabeza y brazos en tiempo real, leídos con la cámara del dispositivo (MediaPipe Pose, corre entero en el navegador). Sin piernas ni torso — solo lo que una webcam frontal puede ver bien.',
