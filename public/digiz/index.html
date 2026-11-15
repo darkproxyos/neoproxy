@@ -30,37 +30,19 @@
             <div id = "turn"></div>
 
           <script type="text/javascript" src="js/phaser.js"></script>
+          <!-- Digiz 0.2: los 29 scripts de nivel ya no se cargan todos de
+               entrada -- levelLoader.js los inyecta recién al elegirse
+               (ver js/levelLoader.js y los startLevel() en menunivel.js /
+               cada nivelN.js). -->
+          <script type="text/javascript" src="js/levelLoader.js"></script>
+          <!-- Pase visual NeoProxy: parchea Phaser.StateManager.prototype.add
+               antes de que exista ningún estado, así que va acá, antes de
+               menu.js/menunivel.js/index.js (no necesita window.game para
+               parchear -- solo para el setup real, que corre después,
+               dentro de cada create() ya parcheado). -->
+          <script type="text/javascript" src="js/neoproxySkin.js"></script>
           <script type="text/javascript" src="js/menu.js"></script>
           <script type="text/javascript" src="js/menunivel.js"></script>
-          <script type="text/javascript" src="js/nivel1.js"></script>
-          <script type="text/javascript" src="js/nivel2.js"></script>
-          <script type="text/javascript" src="js/nivel3.js"></script>
-          <script type="text/javascript" src="js/nivel4.js"></script>
-          <script type="text/javascript" src="js/nivel5.js"></script>
-          <script type="text/javascript" src="js/nivel6.js"></script>
-          <script type="text/javascript" src="js/nivel7.js"></script>
-          <script type="text/javascript" src="js/nivel8.js"></script>
-          <script type="text/javascript" src="js/nivel9.js"></script>
-          <script type="text/javascript" src="js/nivel10.js"></script>
-          <script type="text/javascript" src="js/nivel11.js"></script>
-          <script type="text/javascript" src="js/nivel12.js"></script>
-          <script type="text/javascript" src="js/nivel13.js"></script>
-          <script type="text/javascript" src="js/nivel14.js"></script>
-          <script type="text/javascript" src="js/nivel15.js"></script>
-          <script type="text/javascript" src="js/nivel16.js"></script>
-          <script type="text/javascript" src="js/nivel17.js"></script>
-          <script type="text/javascript" src="js/nivel18.js"></script>
-          <script type="text/javascript" src="js/nivel19.js"></script>
-          <script type="text/javascript" src="js/nivel20.js"></script>
-          <script type="text/javascript" src="js/nivel21.js"></script>
-          <script type="text/javascript" src="js/nivel22.js"></script>
-          <script type="text/javascript" src="js/nivel23.js"></script>
-          <script type="text/javascript" src="js/nivel24.js"></script>
-          <script type="text/javascript" src="js/nivel25.js"></script>
-          <script type="text/javascript" src="js/nivel26.js"></script>
-          <script type="text/javascript" src="js/nivel27.js"></script>
-          <script type="text/javascript" src="js/nivel28.js"></script>
-          <script type="text/javascript" src="js/nivel29.js"></script>
 
         <script type="text/javascript" src="js/index.js"></script>
 

@@ -174,7 +174,7 @@ win: function(){
     if(nivelg < nivel){
       localStorage.setItem("nivel",nivel);
     }
-game.state.start('Nivel8')
+startLevel('Nivel8')
 
 },
 

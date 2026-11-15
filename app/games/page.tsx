@@ -77,8 +77,8 @@ const CATALOG: GameEntry[] = [
     title: 'DIGIZ',
     href: '/games/digiz',
     status: 'jugable',
-    blurb: 'Juego anterior al Proxyverse, construido entero en Phaser — 29 niveles esquivando púas, sierras, boomerangs y láseres hasta el portal de salida. Revivido acá tal cual corría originalmente.',
-    controls: 'FLECHAS / TÁCTIL — LLEGAR AL PORTAL',
+    blurb: 'Juego anterior al Proxyverse, construido entero en Phaser — 29 niveles esquivando púas, sierras, boomerangs y láseres hasta el portal de salida. Revivido con una pasada visual NeoProxy (paleta, estela, geometría) y carga de niveles bajo demanda.',
+    controls: 'MOUSE / DEDO — TE SIGUE HASTA EL PORTAL',
   },
 ]
 

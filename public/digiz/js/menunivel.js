@@ -95,145 +95,145 @@ finallvl = game.add.audio('finallvl');
     purplelvl.loop = true;
     whitelvl.loop = true;
 
-  var boton1 = this.add.button(game.world.centerX-110,game.world.centerY-200,'nivel1',function(){this.state.start('Nivel1')},this);
+  var boton1 = this.add.button(game.world.centerX-110,game.world.centerY-200,'nivel1',function(){startLevel('Nivel1')},this);
         boton1.anchor.setTo(0.5);
 
-        var boton2 = this.add.button(game.world.centerX-65,game.world.centerY-200,'nivel2',function(){this.state.start('Nivel2')},this);
+        var boton2 = this.add.button(game.world.centerX-65,game.world.centerY-200,'nivel2',function(){startLevel('Nivel2')},this);
         boton2.anchor.setTo(0.5);
         boton2.inputEnabled = false;
         boton2.alpha = 0.2;
 
-        var boton3 = this.add.button(game.world.centerX-20,game.world.centerY-200,'nivel3',function(){this.state.start('Nivel3')},this);
+        var boton3 = this.add.button(game.world.centerX-20,game.world.centerY-200,'nivel3',function(){startLevel('Nivel3')},this);
         boton3.anchor.setTo(0.5);
         boton3.inputEnabled = false;
         boton3.alpha = 0.2;
 
-        var boton4 = this.add.button(game.world.centerX+25,game.world.centerY-200,'nivel4',function(){this.state.start('Nivel4')},this);
+        var boton4 = this.add.button(game.world.centerX+25,game.world.centerY-200,'nivel4',function(){startLevel('Nivel4')},this);
         boton4.anchor.setTo(0.5);
         boton4.inputEnabled = false;
         boton4.alpha = 0.2;
 
-        var boton5 = this.add.button(game.world.centerX+70,game.world.centerY-200,'nivel5',function(){this.state.start('Nivel5')},this);
+        var boton5 = this.add.button(game.world.centerX+70,game.world.centerY-200,'nivel5',function(){startLevel('Nivel5')},this);
         boton5.anchor.setTo(0.5);
         boton5.inputEnabled = false;
         boton5.alpha = 0.2;
 
-        var boton6 = this.add.button(game.world.centerX+115,game.world.centerY-200,'nivel6',function(){this.state.start('Nivel6')},this);
+        var boton6 = this.add.button(game.world.centerX+115,game.world.centerY-200,'nivel6',function(){startLevel('Nivel6')},this);
         boton6.anchor.setTo(0.5);
         boton6.inputEnabled = false;
         boton6.alpha = 0.2;
 
-        var boton7 = this.add.button(game.world.centerX-110,game.world.centerY-150,'nivel7',function(){this.state.start('Nivel7')},this);
+        var boton7 = this.add.button(game.world.centerX-110,game.world.centerY-150,'nivel7',function(){startLevel('Nivel7')},this);
         boton7.anchor.setTo(0.5);
         boton7.inputEnabled = false;
         boton7.alpha = 0.2;
 
-        var boton8 = this.add.button(game.world.centerX-65,game.world.centerY-150,'nivel8',function(){this.state.start('Nivel8')},this);
+        var boton8 = this.add.button(game.world.centerX-65,game.world.centerY-150,'nivel8',function(){startLevel('Nivel8')},this);
         boton8.anchor.setTo(0.5);
         boton8.inputEnabled = false;
         boton8.alpha = 0.2;
 
-        var boton9 = this.add.button(game.world.centerX-20,game.world.centerY-150,'nivel9',function(){this.state.start('Nivel9')},this);
+        var boton9 = this.add.button(game.world.centerX-20,game.world.centerY-150,'nivel9',function(){startLevel('Nivel9')},this);
         boton9.anchor.setTo(0.5);
         boton9.inputEnabled = false;
         boton9.alpha = 0.2;
 
-        var boton10 = this.add.button(game.world.centerX+25,game.world.centerY-150,'nivel10',function(){this.state.start('Nivel10')},this);
+        var boton10 = this.add.button(game.world.centerX+25,game.world.centerY-150,'nivel10',function(){startLevel('Nivel10')},this);
         boton10.anchor.setTo(0.5);
         boton10.inputEnabled = false;
         boton10.alpha = 0.2;
 
-        var boton11 = this.add.button(game.world.centerX+70,game.world.centerY-150,'nivel11',function(){this.state.start('Nivel11')},this);
+        var boton11 = this.add.button(game.world.centerX+70,game.world.centerY-150,'nivel11',function(){startLevel('Nivel11')},this);
         boton11.anchor.setTo(0.5);
         boton11.inputEnabled = false;
         boton11.alpha = 0.2;
 
-        var boton12 = this.add.button(game.world.centerX+115,game.world.centerY-150,'nivel12',function(){this.state.start('Nivel12')},this);
+        var boton12 = this.add.button(game.world.centerX+115,game.world.centerY-150,'nivel12',function(){startLevel('Nivel12')},this);
         boton12.anchor.setTo(0.5);
         boton12.inputEnabled = false;
         boton12.alpha = 0.2;
 
-        var boton13 = this.add.button(game.world.centerX-110,game.world.centerY-100,'nivel13',function(){this.state.start('Nivel13')},this);
+        var boton13 = this.add.button(game.world.centerX-110,game.world.centerY-100,'nivel13',function(){startLevel('Nivel13')},this);
         boton13.anchor.setTo(0.5);
         boton13.inputEnabled = false;
         boton13.alpha = 0.2;
 
-        var boton14 = this.add.button(game.world.centerX-65,game.world.centerY-100,'nivel14',function(){this.state.start('Nivel14')},this);
+        var boton14 = this.add.button(game.world.centerX-65,game.world.centerY-100,'nivel14',function(){startLevel('Nivel14')},this);
         boton14.anchor.setTo(0.5);
         boton14.inputEnabled = false;
         boton14.alpha = 0.2;
 
-        var boton15 = this.add.button(game.world.centerX-20,game.world.centerY-100,'nivel15',function(){this.state.start('Nivel15')},this);
+        var boton15 = this.add.button(game.world.centerX-20,game.world.centerY-100,'nivel15',function(){startLevel('Nivel15')},this);
         boton15.anchor.setTo(0.5);
         boton15.inputEnabled = false;
         boton15.alpha = 0.2;
 
-        var boton16 = this.add.button(game.world.centerX+25,game.world.centerY-100,'nivel16',function(){this.state.start('Nivel16')},this);
+        var boton16 = this.add.button(game.world.centerX+25,game.world.centerY-100,'nivel16',function(){startLevel('Nivel16')},this);
         boton16.anchor.setTo(0.5);
         boton16.inputEnabled = false;
         boton16.alpha = 0.2;
 
-        var boton17 = this.add.button(game.world.centerX+70,game.world.centerY-100,'nivel17',function(){this.state.start('Nivel17')},this);
+        var boton17 = this.add.button(game.world.centerX+70,game.world.centerY-100,'nivel17',function(){startLevel('Nivel17')},this);
         boton17.anchor.setTo(0.5);
         boton17.inputEnabled = false;
         boton17.alpha = 0.2;
 
-        var boton18 = this.add.button(game.world.centerX+115,game.world.centerY-100,'nivel18',function(){this.state.start('Nivel18')},this);
+        var boton18 = this.add.button(game.world.centerX+115,game.world.centerY-100,'nivel18',function(){startLevel('Nivel18')},this);
         boton18.anchor.setTo(0.5);
         boton18.inputEnabled = false;
         boton18.alpha = 0.2;
 
-        var boton19 = this.add.button(game.world.centerX-110,game.world.centerY-50,'nivel19',function(){this.state.start('Nivel19')},this);
+        var boton19 = this.add.button(game.world.centerX-110,game.world.centerY-50,'nivel19',function(){startLevel('Nivel19')},this);
         boton19.anchor.setTo(0.5);
         boton19.inputEnabled = false;
         boton19.alpha = 0.2;
 
-        var boton20 = this.add.button(game.world.centerX-65,game.world.centerY-50,'nivel20',function(){this.state.start('Nivel20')},this);
+        var boton20 = this.add.button(game.world.centerX-65,game.world.centerY-50,'nivel20',function(){startLevel('Nivel20')},this);
         boton20.anchor.setTo(0.5);
         boton20.inputEnabled = false;
         boton20.alpha = 0.2;
 
-        var boton21 = this.add.button(game.world.centerX-20,game.world.centerY-50,'nivel21',function(){this.state.start('Nivel21')},this);
+        var boton21 = this.add.button(game.world.centerX-20,game.world.centerY-50,'nivel21',function(){startLevel('Nivel21')},this);
         boton21.anchor.setTo(0.5);
         boton21.inputEnabled = false;
         boton21.alpha = 0.2;
 
-        var boton22 = this.add.button(game.world.centerX+25,game.world.centerY-50,'nivel22',function(){this.state.start('Nivel22')},this);
+        var boton22 = this.add.button(game.world.centerX+25,game.world.centerY-50,'nivel22',function(){startLevel('Nivel22')},this);
         boton22.anchor.setTo(0.5);
         boton22.inputEnabled = false;
         boton22.alpha = 0.2;
 
-        var boton23 = this.add.button(game.world.centerX+70,game.world.centerY-50,'nivel23',function(){this.state.start('Nivel23')},this);
+        var boton23 = this.add.button(game.world.centerX+70,game.world.centerY-50,'nivel23',function(){startLevel('Nivel23')},this);
         boton23.anchor.setTo(0.5);
         boton23.inputEnabled = false;
         boton23.alpha = 0.2;
 
-        var boton24 = this.add.button(game.world.centerX+115,game.world.centerY-50,'nivel24',function(){this.state.start('Nivel24')},this);
+        var boton24 = this.add.button(game.world.centerX+115,game.world.centerY-50,'nivel24',function(){startLevel('Nivel24')},this);
         boton24.anchor.setTo(0.5);
         boton24.inputEnabled = false;
         boton24.alpha = 0.2;
 
-        var boton25 = this.add.button(game.world.centerX-110,game.world.centerY,'nivel25',function(){this.state.start('Nivel25')},this);
+        var boton25 = this.add.button(game.world.centerX-110,game.world.centerY,'nivel25',function(){startLevel('Nivel25')},this);
         boton25.anchor.setTo(0.5);
         boton25.inputEnabled = false;
         boton25.alpha = 0.2;
 
-        var boton26 = this.add.button(game.world.centerX-65,game.world.centerY,'nivel26',function(){this.state.start('Nivel26')},this);
+        var boton26 = this.add.button(game.world.centerX-65,game.world.centerY,'nivel26',function(){startLevel('Nivel26')},this);
         boton26.anchor.setTo(0.5);
         boton26.inputEnabled = false;
         boton26.alpha = 0.2;
 
-        var boton27 = this.add.button(game.world.centerX-20,game.world.centerY,'nivel27',function(){this.state.start('Nivel27')},this);
+        var boton27 = this.add.button(game.world.centerX-20,game.world.centerY,'nivel27',function(){startLevel('Nivel27')},this);
         boton27.anchor.setTo(0.5);
         boton27.inputEnabled = false;
         boton27.alpha = 0.2;
 
-        var boton28 = this.add.button(game.world.centerX+25,game.world.centerY,'nivel28',function(){this.state.start('Nivel28')},this);
+        var boton28 = this.add.button(game.world.centerX+25,game.world.centerY,'nivel28',function(){startLevel('Nivel28')},this);
         boton28.anchor.setTo(0.5);
         boton28.inputEnabled = false;
         boton28.alpha = 0.2;
 
-        var boton29 = this.add.button(game.world.centerX+70,game.world.centerY,'nivel29',function(){this.state.start('Nivel29')},this);
+        var boton29 = this.add.button(game.world.centerX+70,game.world.centerY,'nivel29',function(){startLevel('Nivel29')},this);
         boton29.anchor.setTo(0.5);
         boton29.inputEnabled = false;
         boton29.alpha = 0.2;
