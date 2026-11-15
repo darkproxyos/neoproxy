@@ -52,7 +52,7 @@ export const navConfig: NavEntry[] = [
 // sub-rutas que son herramientas fullscreen de verdad (mascara y neocam).
 // /lab/proxygenesis dejó de ser texto estático: ahora es un generador 3D
 // con su propia barra superior — el SiteNav global se le superponía.
-export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/lab/proxygenesis', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/games/digiz', '/ar', '/realidad-aumentada/mascara', '/realidad-aumentada/neocam', '/draw', '/etereo']
+export const navHiddenPrefixes = ['/login', '/admin', '/kernel', '/lab/atractores', '/lab/hemibrain', '/lab/sandbox', '/lab/proxygenesis', '/lab/primercuerpo', '/games/wired', '/games/planet', '/games/spaceship', '/games/trickster', '/games/trickster-mirror', '/games/rap', '/games/rap-aprendizaje', '/games/digiz', '/ar', '/realidad-aumentada/mascara', '/realidad-aumentada/neocam', '/draw', '/etereo']
 
 export function isNavHidden(pathname: string): boolean {
   return navHiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))
