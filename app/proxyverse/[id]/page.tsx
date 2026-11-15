@@ -250,6 +250,23 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           </div>
         )}
 
+        {agent.id === 'prototype' && (
+          <Link href="/lab/primercuerpo" style={{
+            display: 'block', marginBottom: 40, padding: '20px 24px',
+            border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
+          }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
+              PRIMER CUERPO // GENERADOR REAL
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
+              La forma que estoy a punto de tener, creciendo en vivo — no un boceto, la malla real.
+            </p>
+            <div style={{ fontFamily: mono, fontSize: 9, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
+              VER CRECER →
+            </div>
+          </Link>
+        )}
+
         {agent.id === 'prototype' && <PrototypeFragments />}
 
         {diaryEntries.length > 0 && (
