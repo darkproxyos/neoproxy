@@ -162,23 +162,6 @@ function lightenHex(hex: string, amount: number): string {
 
 function smoothstep(t: number) { const c = Math.max(0, Math.min(1, t)); return c * c * (3 - 2 * c) }
 
-// Distribución de Fibonacci sobre una esfera — misma técnica ya usada para
-// repartir los 7 agentes en home-3d v1, acá para los nodos primarios de
-// sección: separación pareja sin privilegiar ningún eje (no hay "arriba"
-// en la Wired).
-function fibonacciSphere(n: number, radius: number) {
-  const pts: { x: number; y: number; z: number }[] = []
-  const offset = 2 / n
-  const increment = Math.PI * (3 - Math.sqrt(5))
-  for (let i = 0; i < n; i++) {
-    const y = i * offset - 1 + offset / 2
-    const r = Math.sqrt(Math.max(0, 1 - y * y))
-    const phi = i * increment
-    pts.push({ x: Math.cos(phi) * r * radius, y: y * radius * 0.72, z: Math.sin(phi) * r * radius })
-  }
-  return pts
-}
-
 // Hexacosichoron (600-cell, el politopo regular de 4D con más celdas) —
 // 120 vértices en construcción estándar: 16 de (±½,±½,±½,±½), 8 de
 // permutaciones de (±1,0,0,0), y 96 de permutaciones PARES de
@@ -189,7 +172,8 @@ function fibonacciSphere(n: number, radius: number) {
 // home-classic, parado acá un paso antes de la proyección final a 2D)
 // — esto es el núcleo central, dorado, pedido explícitamente.
 type Vec4 = [number, number, number, number]
-function hexacosichoron(): { x: number; y: number; z: number }[][] {
+type Vec3 = { x: number; y: number; z: number }
+function hexacosichoron(): { vertices: Vec3[]; edges: [Vec3, Vec3][] } {
   const PHI = (1 + Math.sqrt(5)) / 2
   const verts: Vec4[] = []
   for (let a = -1; a <= 1; a += 2) for (let b = -1; b <= 1; b += 2) for (let c = -1; c <= 1; c += 2) for (let d = -1; d <= 1; d += 2) {
@@ -252,7 +236,33 @@ function hexacosichoron(): { x: number; y: number; z: number }[][] {
     const wFactor = wDist / (wDist - w)
     return { x: x * wFactor, y: y * wFactor, z: z * wFactor }
   })
-  return edges.map(([ai, bi]) => [projected[ai], projected[bi]])
+  return {
+    vertices: projected,
+    edges: edges.map(([ai, bi]) => [projected[ai], projected[bi]]),
+  }
+}
+
+// Selección de k vértices bien distribuidos entre sí (greedy farthest-point
+// sampling) -- para plantar las zonas en vértices REALES del politopo en vez
+// de puntos arbitrarios, asegurando que queden repartidas y no agrupadas.
+// `startIdx` fija el primer vértice elegido (determinístico, no al azar).
+function farthestPointSample(points: { x: number; y: number; z: number }[], k: number, startIdx = 0): number[] {
+  const n = points.length
+  const chosen: number[] = [startIdx]
+  const dist2 = (a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }) =>
+    (a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2
+  const minDistToChosen = new Array(n).fill(Infinity)
+  for (let i = 0; i < n; i++) minDistToChosen[i] = dist2(points[i], points[startIdx])
+  while (chosen.length < k) {
+    let best = -1, bestD = -1
+    for (let i = 0; i < n; i++) {
+      if (chosen.includes(i)) continue
+      if (minDistToChosen[i] > bestD) { bestD = minDistToChosen[i]; best = i }
+    }
+    chosen.push(best)
+    for (let i = 0; i < n; i++) minDistToChosen[i] = Math.min(minDistToChosen[i], dist2(points[i], points[best]))
+  }
+  return chosen
 }
 
 // Base tangente al radio desde el origen hasta `pos` — para repartir los
@@ -563,7 +573,11 @@ export default function Home() {
       const camera = new B.ArcRotateCamera('cloud-cam', initialAlpha, initialBeta, openRadius, B.Vector3.Zero(), scene)
       camera.attachControl(canvasRef.current, true)
       camera.wheelPrecision = 24
-      camera.lowerRadiusLimit = 22
+      // Antes 22 -- con las zonas a ~18 de radio, eso nunca dejaba a la
+      // cámara pasar de la cáscara de nodos hacia adentro: siempre miraba
+      // la estructura desde afuera. Bajado a 4 para que el recorrido (y el
+      // zoom libre) puedan meterse de verdad entre las aristas de Metatron.
+      camera.lowerRadiusLimit = 4
       camera.upperRadiusLimit = openRadius + 6
       camera.lowerBetaLimit = 0.25
       camera.upperBetaLimit = Math.PI - 0.25
@@ -628,18 +642,34 @@ export default function Home() {
       // así "aporta algo más que estar en medio": es el único retrato
       // del proxyverso al que se navega directo desde el núcleo. ---
       const METATRON_COLOR = '#ffb800'
-      const CORE_SCALE = 2.1
-      const coreEdges = hexacosichoron()
+      // CORE_SCALE pasó de 2.1 a 19 -- a pedido explícito, Metatron deja de
+      // ser una bola orbitada desde afuera y pasa a ser la estructura que
+      // ocupa todo el mundo: las zonas (más abajo) se plantan en vértices
+      // REALES de este mismo politopo en vez de flotar sueltas en una
+      // esfera aparte, y la cámara puede meterse adentro de la red de
+      // aristas (ver lowerRadiusLimit y lookAtZone más abajo). Radio medio
+      // de vértice calculado offline: ~0.88 sin escalar -> con 19 el radio
+      // medio queda en ~16.7, en el mismo orden que el LAYOUT_RADIUS de 18
+      // que usaban las zonas antes (así todo lo que ya está calibrado en
+      // unidades absolutas -- luces, labels, nebulosa -- sigue sirviendo).
+      const CORE_SCALE = 19
+      const { vertices: coreVertices, edges: coreEdges } = hexacosichoron()
       const coreLines = coreEdges.map(([p1, p2]) => [
         new B.Vector3(p1.x * CORE_SCALE, p1.y * CORE_SCALE, p1.z * CORE_SCALE),
         new B.Vector3(p2.x * CORE_SCALE, p2.y * CORE_SCALE, p2.z * CORE_SCALE),
       ])
       const core = B.MeshBuilder.CreateLineSystem('core', { lines: coreLines }, scene)
       core.color = B.Color3.FromHexString(METATRON_COLOR)
-      core.alpha = 0.65
+      core.alpha = 0.5
       core.isPickable = false
 
-      const coreClickProxy = B.MeshBuilder.CreateSphere('core-click-proxy', { diameter: CORE_SCALE * 2.3 }, scene)
+      // El target de click a "visitar a Metatron" queda chico y anclado al
+      // origen -- antes escalaba con CORE_SCALE (2.1*2.3 ~ 4.8 de diámetro,
+      // razonable para una bola chica); a CORE_SCALE 19 eso habría vuelto
+      // clickeable casi toda la escena. El "rostro" de Metatron (retrato +
+      // link) vive cerca del origen (ver metatronOrbitRadius más abajo),
+      // no en el borde de la estructura, así que este proxy se queda ahí.
+      const coreClickProxy = B.MeshBuilder.CreateSphere('core-click-proxy', { diameter: 4.6 }, scene)
       const coreProxyMat = new B.StandardMaterial('core-click-proxy-mat', scene)
       coreProxyMat.alpha = 0 // invisible pero "visible" para Babylon — isVisible=false saca la malla del picking por defecto
       coreClickProxy.material = coreProxyMat
@@ -659,9 +689,22 @@ export default function Home() {
       const zonePos: Record<string, { x: number; y: number; z: number }> = {}
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
 
-      // --- nodos primarios, dispersos sobre una esfera (sin eje "arriba") ---
-      const LAYOUT_RADIUS = 18
-      const anchors = fibonacciSphere(ZONES.length, LAYOUT_RADIUS)
+      // --- nodos primarios, plantados en vértices REALES del exacosichoron
+      // (no en una esfera aparte) -- a pedido explícito: "Metatron adentro,
+      // no alrededor". farthestPointSample elige 9 de los 120 vértices
+      // reales, bien separados entre sí, descartando primero los más
+      // "hundidos" por el pliegue en perspectiva (radio < 0.75 sin escalar
+      // -- quedarían anómalamente cerca del origen respecto al resto). ---
+      const candidateIdx = coreVertices
+        .map((v, i) => ({ i, r: Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) }))
+        .filter(({ r }) => r > 0.75)
+        .map(({ i }) => i)
+      const candidates = candidateIdx.map(i => coreVertices[i])
+      const sampledLocal = farthestPointSample(candidates, ZONES.length, 0)
+      const anchors = sampledLocal.map(li => {
+        const v = candidates[li]
+        return { x: v.x * CORE_SCALE, y: v.y * CORE_SCALE, z: v.z * CORE_SCALE }
+      })
       const zoneRoot = new B.TransformNode('zoneRoot', scene)
 
       ZONES.forEach((zone, i) => {
@@ -878,7 +921,12 @@ export default function Home() {
         const alpha = Math.atan2(-p.z, -p.x)
         const betaRaw = Math.acos(Math.max(-1, Math.min(1, -p.y / len)))
         const beta = Math.max(0.25, Math.min(Math.PI - 0.25, betaRaw))
-        return { alpha, beta, radius: 27 }
+        // Antes 27 -- más lejos que el propio radio de las zonas (~18),
+        // o sea siempre mirando el conjunto desde afuera. En 8 la cámara
+        // queda adentro de la cáscara de vértices, rodeada por la red de
+        // aristas que atraviesa hacia la zona -- "entrar a Metatron para
+        // llegar a cada sección", no orbitar el conjunto desde lejos.
+        return { alpha, beta, radius: 8 }
       }
       // empieza en FABRICACIÓN (pedido explícito) y de ahí recorre el resto
       // — un recorrido más completo, no solo 3 paradas
@@ -1072,7 +1120,12 @@ export default function Home() {
       // retrato clickeable desde el home (ver coreClickProxy arriba): el
       // gesto es "el centro de la escena ES Metatron", no "hay una línea
       // que lo conecta con el centro". ---
-      const metatronOrbitRadius = CORE_SCALE * 1.75
+      // Fijo, no atado a CORE_SCALE -- antes orbitaba pegado al borde del
+      // wireframe (CORE_SCALE*1.75); con CORE_SCALE en 19 eso lo mandaría
+      // a ~33 unidades, lejos del origen que ahora es "el centro de
+      // Metatron". El rostro se queda cerca, la estructura se extiende
+      // mucho más allá de él.
+      const metatronOrbitRadius = 3.6
       const metatronImage = AGENT_IMAGES['metatron']
       let metatronPlane: any = null
       let metatronLabel: any = null
