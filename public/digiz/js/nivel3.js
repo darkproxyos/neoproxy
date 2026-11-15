@@ -188,7 +188,7 @@ nivel = 4;
   if(nivelg < nivel){
     localStorage.setItem("nivel",nivel);
   }
-game.state.start('Nivel4');
+startLevel('Nivel4');
 
 },
 
