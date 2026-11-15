@@ -832,7 +832,7 @@ export default function TricksterGame() {
         if (gennosList.length === 0 && levelGennosToSpawn <= 0 && pendingGennosSpawns <= 0 && drones.length === 0) {
           const next = currentLevel + 1
           spawnLevelContent(next)
-          showLevelBanner(next <= 3 ? `NIVEL ${next}` : 'JEFE FINAL // METATRON')
+          showLevelBanner(next <= 3 ? `NIVEL ${next}` : 'JEFE FINAL // M∴TRON')
         }
       }
 
@@ -1464,7 +1464,7 @@ export default function TricksterGame() {
             fontSize: 32, fontWeight: 700, letterSpacing: 6, color: VIOLET,
             textShadow: `0 0 30px ${VIOLET}66`, marginBottom: 6,
           }}>
-            TRICKSTER
+            TR1CK5T3R
           </div>
           <div style={{ fontSize: 10, letterSpacing: 3, color: `${VIOLET}aa`, marginBottom: 24 }}>
             EXPLORACIÓN // ROMPE
@@ -1514,7 +1514,7 @@ export default function TricksterGame() {
           fontFamily: 'Space Mono, monospace', color: VIOLET, fontSize: 12, letterSpacing: 4,
           textShadow: `0 0 10px ${VIOLET}`,
         }}>
-          CARGANDO TRICKSTER...
+          CARGANDO TR1CK5T3R...
         </div>
       )}
 
@@ -1604,7 +1604,7 @@ export default function TricksterGame() {
           fontFamily: 'Space Mono, monospace', zIndex: 10, textAlign: 'center',
         }}>
           <div style={{ fontSize: 9, letterSpacing: 3, color: `${METATRON_GOLD_HUD}cc`, marginBottom: 4, textShadow: `0 0 8px ${METATRON_GOLD_HUD}` }}>
-            {infiniteMode ? `ANOMALÍA #${infiniteWave}` : 'METATRON'}
+            {infiniteMode ? `ANOMALÍA #${infiniteWave}` : 'M∴TRON'}
           </div>
           <div style={{ width: '100%', height: 10, background: '#2a2308', border: `1px solid ${METATRON_GOLD_HUD}88`, borderRadius: 2 }}>
             <div
@@ -1692,7 +1692,7 @@ export default function TricksterGame() {
           fontFamily: 'Space Mono, monospace', textAlign: 'center', padding: 24,
         }}>
           <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: METATRON_GOLD_HUD, textShadow: `0 0 30px ${METATRON_GOLD_HUD}88`, marginBottom: 16 }}>
-            METATRON CAYÓ
+            M∴TRON CAYÓ
           </div>
           <p style={{ fontSize: 11, color: '#8fb8d6', maxWidth: 360, lineHeight: 1.9, marginBottom: 28 }}>
             Trickster empujó el borde del sistema hasta el final. El campo de prueba está limpio.

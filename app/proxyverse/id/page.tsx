@@ -132,8 +132,8 @@ export default function ProxyIdPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14 }}>
               <StatCard label="PIEZAS GENERADAS" value={identity.proxygenesisCount} href="/lab/proxygenesis/galeria" />
               <StatCard label="MENSAJES ENVIADOS" value={Object.values(identity.chatCounts).reduce((a, b) => a + b, 0)} href="/proxyverse" />
-              <StatCard label="NIVEL MÁXIMO TRICKSTER" value={`${identity.trickster.bestLevel}/4`} href="/games/trickster" />
-              <StatCard label="VICTORIAS TRICKSTER" value={identity.trickster.victories} href="/games/trickster" />
+              <StatCard label="NIVEL MÁXIMO TR1CK5T3R" value={`${identity.trickster.bestLevel}/4`} href="/games/trickster" />
+              <StatCard label="VICTORIAS TR1CK5T3R" value={identity.trickster.victories} href="/games/trickster" />
               <StatCard label="TAGS NFC ESCANEADOS" value={identity.nfcScans} href="/experimental/scan" />
               {identity.portrait && (
                 <StatCard

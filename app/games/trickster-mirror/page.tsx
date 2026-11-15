@@ -284,7 +284,7 @@ export default function TricksterMirrorPage() {
           fontFamily: 'Space Mono, monospace', color: VIOLET, fontSize: 12, letterSpacing: 4,
           textShadow: `0 0 10px ${VIOLET}`,
         }}>
-          CARGANDO TRICKSTER...
+          CARGANDO TR1CK5T3R...
         </div>
       )}
 
@@ -309,7 +309,7 @@ export default function TricksterMirrorPage() {
         fontFamily: 'Space Mono, monospace', fontSize: 10, letterSpacing: 2,
         color: VIOLET, textShadow: `0 0 10px ${VIOLET}`,
       }}>
-        TRICKSTER // ESPEJO
+        TR1CK5T3R // ESPEJO
       </div>
 
       {!loading && cameraState === 'idle' && (

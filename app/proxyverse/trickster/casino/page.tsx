@@ -56,11 +56,11 @@ export default function TricksterCasinoPage() {
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${COLOR}88`, textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
-          ← VOLVER A TRICKSTER
+          ← VOLVER A TR1CK5T3R
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${COLOR}66`, marginBottom: 16 }}>
-          NPX-PXV-00 // SALA_TRICKSTER
+          NPX-PXV-00 // SALA_TR1CK5T3R
         </div>
 
         <h1 style={{

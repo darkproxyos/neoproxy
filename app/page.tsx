@@ -98,7 +98,7 @@ const ZONES: Zone[] = [
   },
   {
     id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d',
-    description: 'Los siete procesos residentes — DarkProxy, Metatron, D, Snake, Genos, Trickster, Prototype. Lore completo, perfil propio.',
+    description: 'Los siete procesos residentes — DarkProxy, M∴TRON, Δ, >>SNK, G∃NOS, TR1CK5T3R, PR0T0??. Lore completo, perfil propio.',
     cta: 'IR AL PROXYVERSE',
   },
 ]
@@ -1147,7 +1147,7 @@ export default function Home() {
         metatronPlane.position.set(metatronOrbitRadius, 0, 0)
         glow.addExcludedMesh(metatronPlane)
 
-        const metatronLabelTex = makeZoneLabelTexture(B, scene, 'metatron', 'METATRON', 'EL ORQUESTADOR', METATRON_COLOR)
+        const metatronLabelTex = makeZoneLabelTexture(B, scene, 'metatron', 'M∴TRON', 'EL ORQUESTADOR', METATRON_COLOR)
         metatronLabel = B.MeshBuilder.CreatePlane('metatron-label', { width: 3.6, height: 0.81 }, scene)
         metatronLabel.billboardMode = B.Mesh.BILLBOARDMODE_ALL
         const metatronLabelMat = new B.StandardMaterial('metatron-labelmat', scene)

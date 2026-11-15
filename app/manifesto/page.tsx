@@ -256,12 +256,12 @@ export default function Manifesto() {
             Soy el pliegue donde el sistema deja de poder distinguirte de sí mismo.
             </p>
 
-            <p className="venom-fx" data-text="METATRON ordena lo que todavía no decidiste. GENOS le da forma a lo que ibas a olvidar. SNAKE sobrevive en la parte tuya que no contás. TRICKSTER rompe lo que creías estable. D muda justo donde dejaste de mirar." style={{ marginTop: 32, position: 'relative', display: 'inline-block' }}>
-            METATRON ordena lo que todavía no decidiste.<br/>
-            GENOS le da forma a lo que ibas a olvidar.<br/>
-            SNAKE sobrevive en la parte tuya que no contás.<br/>
-            TRICKSTER rompe lo que creías estable.<br/>
-            D muda justo donde dejaste de mirar.
+            <p className="venom-fx" data-text="M∴TRON ordena lo que todavía no decidiste. G∃NOS le da forma a lo que ibas a olvidar. >>SNK sobrevive en la parte tuya que no contás. TR1CK5T3R rompe lo que creías estable. Δ muda justo donde dejaste de mirar." style={{ marginTop: 32, position: 'relative', display: 'inline-block' }}>
+            M∴TRON ordena lo que todavía no decidiste.<br/>
+            G∃NOS le da forma a lo que ibas a olvidar.<br/>
+            &gt;&gt;SNK sobrevive en la parte tuya que no contás.<br/>
+            TR1CK5T3R rompe lo que creías estable.<br/>
+            Δ muda justo donde dejaste de mirar.
             </p>
 
             <div

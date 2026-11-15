@@ -195,7 +195,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
             <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
-              SALA_TRICKSTER // PROXYCOINS
+              SALA_TR1CK5T3R // PROXYCOINS
             </div>
             <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
               Encontré un borde nuevo: probabilidad. Armé una sala. No es dinero real — es la moneda que circula acá adentro.
