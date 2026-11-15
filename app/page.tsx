@@ -685,7 +685,7 @@ export default function Home() {
       const nodes: NodeEntry[] = []
       const linkEntries: { mesh: any; mat: any; aId: string; bId: string; baseDelay: number; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number }[] = []
       const pathLines: { mesh: any; mat: any; zoneId: string; dimRGB: [number, number, number]; fullRGB: [number, number, number]; litT: number; dot: any; dotMat: any }[] = []
-      const zoneIcons: { mesh: any; baseDelay: number }[] = []
+      const zoneIcons: { mesh: any; mat: any; zoneId: string; baseDelay: number }[] = []
       const zonePos: Record<string, { x: number; y: number; z: number }> = {}
       const allAvoidAnchors: { x: number; y: number; z: number }[] = []
 
@@ -819,7 +819,7 @@ export default function Home() {
         iconPlane.material = iconMat
         iconPlane.isPickable = false
         iconPlane.scaling.set(0.001, 0.001, 0.001)
-        zoneIcons.push({ mesh: iconPlane, baseDelay })
+        zoneIcons.push({ mesh: iconPlane, mat: iconMat, zoneId: zone.id, baseDelay })
 
         // --- sub-secciones: nodos satélite más chicos en anillo alrededor
         // del nodo primario, cada uno linkeando a una ruta real del sitio
@@ -1254,14 +1254,6 @@ export default function Home() {
         const cloudP = smoothstep(Math.min(1, (t - elapsed0) / CLOUD_EMERGE_MS))
         dustRoot.scaling.set(cloudP, cloudP, cloudP)
 
-        // ignición: apenas termina de condensar la nube, un sobre-brillo
-        // breve que decae — el "big bang" del arranque, no un fade-in
-        // liso. Coincide con la mitad del travelling de apertura: la
-        // cámara todavía se está acercando cuando el núcleo estalla.
-        const sinceEmerge = t - elapsed0 - CLOUD_EMERGE_MS
-        const ignitionDecay = sinceEmerge >= 0 ? Math.max(0, 1 - sinceEmerge / 750) : 0
-        glow.intensity = GLOW_BASE + 1.4 * ignitionDecay * ignitionDecay
-
         // paleta restringida: "familia" activa = la zona en foco (si el
         // mouse está sobre un sub-nodo, su familia es la zona padre) —
         // todo lo que pertenece a esa familia se enciende a su color
@@ -1274,6 +1266,42 @@ export default function Home() {
         // flotando sin que nada las distinga del nodo que importa).
         const hoveredFamily = hoveredId ? nodeById[hoveredId]?.familyId ?? null : tourStopRef.current
         const LIT_RATE = 0.12
+        // Cuánto "adentro" del lattice está la cámara ahora mismo, en
+        // continuo -- no solo en una parada con panel abierto. El tramo
+        // viajando entre dos zonas pasa por el mismo radio chico que una
+        // parada (lookAtZone usa radius:8 para ambas puntas del segmento),
+        // así que atar el des-ruido a "¿hay panel?" dejaba sin tratar
+        // justo los tramos de viaje -- que es donde se vieron los haces de
+        // luz más largos cruzando la pantalla. radius<=10 = completamente
+        // adentro, radius>=26 = ya en el plano general/postal de apertura.
+        const insideT = 1 - Math.max(0, Math.min(1, (camera.radius - 10) / 16))
+        const inactiveFadeAmount = 0.28 - 0.16 * insideT
+
+        // ignición: apenas termina de condensar la nube, un sobre-brillo
+        // breve que decae — el "big bang" del arranque, no un fade-in
+        // liso. Coincide con la mitad del travelling de apertura: la
+        // cámara todavía se está acercando cuando el núcleo estalla.
+        const sinceEmerge = t - elapsed0 - CLOUD_EMERGE_MS
+        const ignitionDecay = sinceEmerge >= 0 ? Math.max(0, 1 - sinceEmerge / 750) : 0
+        // El glow (blurKernelSize 48) se ve bien de lejos, pero metido en
+        // el lattice cualquier línea delgada cerca de cámara explota en un
+        // halo borroso que cruza toda la pantalla -- eran justamente los
+        // crosslinks en reposo (ya tenues en alpha) los que se leían como
+        // "espadas de luz": el GlowLayer no escala con el alpha del
+        // material, solo con su emissive. Bajar la intensidad global del
+        // glow en proporción a qué tan adentro está la cámara doma eso sin
+        // tocar el look de siempre (vista general, plano de apertura).
+        const glowFocusDamp = 1 - 0.6 * insideT
+        glow.intensity = (GLOW_BASE + 1.4 * ignitionDecay * ignitionDecay) * glowFocusDamp
+
+        // Niebla dinámica: a 0.02 fija, el postal de apertura (cámara lejos,
+        // todo el poliedro a la vez) se ve bien, pero adentro de la
+        // estructura las 1200 aristas del lattice se leen todas igual de
+        // nítidas sin importar su distancia real -- de ahí el "muro de
+        // líneas cruzadas" detrás del panel. Subirla en proporción a
+        // insideT hunde lo lejano en profundidad sin tocar el plano
+        // general ni crear un salto brusco al entrar/salir de una parada.
+        scene.fogDensity = 0.02 + 0.045 * insideT
 
         nodes.forEach((n, i) => {
           const localElapsed = t - elapsed0 - n.baseDelay
@@ -1298,7 +1326,7 @@ export default function Home() {
           // con un foco activo (hover o parada de tour), todo lo que no es
           // esa familia se retira de la vista en vez de quedarse a brillo
           // parejo compitiendo con el panel o con el nodo que sí importa.
-          const inactiveFade = hoveredFamily !== null && !isFamilyActive ? 0.28 : 1
+          const inactiveFade = hoveredFamily !== null && !isFamilyActive ? inactiveFadeAmount : 1
           n.stem.material.alpha = ((n.tier === 'primary' ? 0.55 : 0.48) * (isFamilyActive ? 1.8 : 1)) * labelBase * inactiveFade
           n.label.material.alpha = labelBase * inactiveFade
 
@@ -1324,7 +1352,13 @@ export default function Home() {
           pl.litT += ((active ? 1 : 0) - pl.litT) * LIT_RATE
           const rgb = lerp3(pl.dimRGB, pl.fullRGB, pl.litT)
           pl.mat.emissiveColor.set(rgb[0], rgb[1], rgb[2])
-          pl.mat.alpha = 0.42 + 0.4 * pl.litT
+          // antes los 9 haces núcleo→zona quedaban todos a alpha ~0.42+ al
+          // mismo tiempo -- con la cámara metida en el lattice eso se veía
+          // como varios rayos brillantes cruzando el encuadre sin relación
+          // con la parada activa. Ahora los que no son el foco se apagan
+          // casi del todo, igual que ya pasa con nodos y etiquetas.
+          const pathInactiveFade = hoveredFamily !== null && !active ? inactiveFadeAmount : 1
+          pl.mat.alpha = (0.42 + 0.4 * pl.litT) * pathInactiveFade
 
           // pulso dorado (color de Metatron) viajando núcleo → zona,
           // más rápido y brillante cuando esa familia está activa
@@ -1334,7 +1368,7 @@ export default function Home() {
             const phase = (Math.sin(t * speed + idx * 1.9) + 1) / 2
             pl.dot.position.set(target.x * phase, target.y * phase, target.z * phase)
             const pulseRGB = lerp3([1, 0.72, 0], rgb, phase * 0.7)
-            pl.dotMat.emissiveColor.set(pulseRGB[0], pulseRGB[1], pulseRGB[2])
+            pl.dotMat.emissiveColor.set(pulseRGB[0] * pathInactiveFade, pulseRGB[1] * pathInactiveFade, pulseRGB[2] * pathInactiveFade)
             const dotScale = 1 + 0.5 * pl.litT
             pl.dot.scaling.set(dotScale, dotScale, dotScale)
           }
@@ -1344,6 +1378,10 @@ export default function Home() {
           const localElapsed = t - elapsed0 - zi.baseDelay - 150
           const p = smoothstep(Math.max(0, Math.min(1, localElapsed / NODE_EMERGE_MS)))
           zi.mesh.scaling.set(p, p, p)
+          // antes quedaban a opacidad plena siempre -- eran parte del
+          // "ruido" de rombos flotando sin relación con la parada activa
+          const iconFade = hoveredFamily !== null && zi.zoneId !== hoveredFamily ? inactiveFadeAmount : 1
+          zi.mat.alpha = p * iconFade
         })
 
         zoneLights.forEach(zl => {
@@ -1373,16 +1411,38 @@ export default function Home() {
           cl.litT += ((active ? 1 : 0) - cl.litT) * LIT_RATE
           const rgb = lerp3(cl.dimRGB, cl.fullRGB, cl.litT)
           cl.mat.emissiveColor.set(rgb[0], rgb[1], rgb[2])
-          cl.mat.alpha = Math.min(1, (0.34 + 0.55 * cl.litT) * crossP)
+          const a = zonePos[cl.aId], b = zonePos[cl.bId]
+          // la cámara orbita muy cerca del anchor de la zona activa durante
+          // una parada/tramo de tour (radius ~8, a veces mucho menos) -- un
+          // tubo delgado visto casi de punta, con un extremo pegado a la
+          // cámara, revienta en pantalla por pura perspectiva (el extremo
+          // cercano ocupa una franja enorme) sin que tenga nada que ver con
+          // su alpha real -- de ahí las "espadas de luz" cruzando el panel
+          // que ni el fog ni bajar el glow alcanzaban a controlar del todo.
+          // Un near-fade por distancia real cámara→extremo apaga el tramo
+          // justo donde empieza a explotar.
+          const camPos = camera.position
+          const distNearest = Math.min(
+            Math.hypot(a.x - camPos.x, a.y - camPos.y, a.z - camPos.z),
+            Math.hypot(b.x - camPos.x, b.y - camPos.y, b.z - camPos.z),
+          )
+          const nearFade = Math.max(0, Math.min(1, (distNearest - 2.2) / (7 - 2.2)))
+          // el "láser de neón" activado llegaba a alpha ~0.89 -- a la
+          // distancia de cámara de antes (afuera de la estructura) se leía
+          // como un cable fino; metidos adentro del lattice (parada de
+          // tour) el mismo tubo cruza el encuadre como una cuchilla de luz
+          // tapando el panel. Se atenúa el boost de activación en proporción
+          // a qué tan adentro está la cámara, además del near-fade de arriba.
+          const crosslinkBoost = 1 - 0.6 * insideT
+          cl.mat.alpha = Math.min(1, (0.34 + 0.55 * cl.litT * crosslinkBoost) * crossP * nearFade)
           // el haz paralelo ya tiene un piso visible en reposo (no parte
           // de cero) — más marcado, no solo al activarse
-          const glowAlpha = (0.12 + 0.32 * cl.litT) * crossP
+          const glowAlpha = (0.12 + 0.32 * cl.litT * crosslinkBoost) * crossP * nearFade
           cl.glowA.color.set(rgb[0], rgb[1], rgb[2])
           cl.glowB.color.set(rgb[0], rgb[1], rgb[2])
           cl.glowA.alpha = glowAlpha
           cl.glowB.alpha = glowAlpha
 
-          const a = zonePos[cl.aId], b = zonePos[cl.bId]
           const phase = (Math.sin(t * 0.00055 + idx * 1.3) + 1) / 2
           cl.dot.position.set(a.x + (b.x - a.x) * phase, a.y + (b.y - a.y) * phase, a.z + (b.z - a.z) * phase)
           // más grande y más brillante (mezclado hacia blanco) cuando la
