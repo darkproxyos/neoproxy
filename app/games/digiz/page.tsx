@@ -35,6 +35,17 @@ export default function DigizGame() {
       >
         ← VOLVER
       </Link>
+      <Link
+        href="/games/digiz/3d"
+        style={{
+          position: 'absolute', top: 14, right: 14, zIndex: 10,
+          fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#00d4ff',
+          background: 'rgba(0,2,5,0.72)', border: '1px solid #00d4ff66',
+          padding: '6px 12px', textDecoration: 'none', backdropFilter: 'blur(4px)',
+        }}
+      >
+        VER EN 3D →
+      </Link>
     </div>
   )
 }
