@@ -71,6 +71,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'Herramienta de freestyle: cada ciertos segundos aparecen entre 1 y 6 conceptos del Proxyverse (agentes, frases, vocabulario del proyecto) para improvisar encima de tu propia pista.',
     controls: 'SIN TECLADO — SOLO MIRAR Y RAPEAR',
   },
+  {
+    id: 'digiz',
+    code: 'NPX-GAME-DIGIZ',
+    title: 'DIGIZ',
+    href: '/games/digiz',
+    status: 'jugable',
+    blurb: 'Juego anterior al Proxyverse, construido entero en Phaser — 29 niveles esquivando púas, sierras, boomerangs y láseres hasta el portal de salida. Revivido acá tal cual corría originalmente.',
+    controls: 'FLECHAS / TÁCTIL — LLEGAR AL PORTAL',
+  },
 ]
 
 export default function GamesHubPage() {
