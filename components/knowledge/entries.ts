@@ -1,4 +1,4 @@
-export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas' | 'geometria' | 'computacion'
+export type Cluster = 'informacion' | 'mente' | 'autoorganizacion' | 'sistemas' | 'geometria' | 'computacion' | 'estetica'
 
 export type FormulaKind = 'equation' | 'quote' | 'concept'
 
@@ -36,6 +36,12 @@ export const clusters: Record<Cluster, { label: string; color: string }> = {
   sistemas: { label: 'SISTEMAS // CLAUSURA', color: '#ff3fa4' },
   geometria: { label: 'GEOMETRÍA // DIMENSIÓN', color: '#ffd400' },
   computacion: { label: 'COMPUTACIÓN // LA PILA COMPLETA', color: '#39ff14' },
+  // No es teoría -- es la ficción y el arte que le dieron a NeoProxy su cara
+  // antes de que existiera una sola línea de código (ver nota en
+  // app/knowledge/page.tsx, justo antes de renderizar este cluster). Color
+  // deliberadamente cálido (sepia/VHS) contra la paleta fría de neón de los
+  // seis clusters teóricos, para que la diferencia se vea, no solo se lea.
+  estetica: { label: 'ESTÉTICA // REFERENCIA CULTURAL', color: '#e8a23d' },
 }
 
 export const entries: KnowledgeEntry[] = [
@@ -1288,18 +1294,20 @@ export const entries: KnowledgeEntry[] = [
       'Un bebé expuesto a dos idiomas antes de los dos años conserva, sin esfuerzo consciente, circuitos capaces de distinguir fonemas que un adulto monolingüe ya dejó de poder oír — no porque haya aprendido más, sino porque esas conexiones puntuales nunca fueron podadas.',
     relatedAgent: 'd',
   },
-  // Las dos entradas que siguen son las primeras de esta lista que no son un
-  // autor o teórico real -- son las dos obras que CLAUDE.md nombra como
-  // referencia estética explícita de todo el proyecto (junto con Ghost in
-  // the Shell y Giger). Entran con el mismo rigor que el resto: una idea
-  // real de la obra, no solo "la vibra", y una fórmula/cita que se pueda
-  // señalar en un capítulo concreto -- a pedido explícito.
+  // Las cuatro entradas que siguen no son un autor o teórico real -- son,
+  // completas, las cuatro referencias estéticas que CLAUDE.md nombra como
+  // influencia explícita de todo el proyecto. Tienen su propio cluster
+  // ('estetica', ver arriba) a propósito: separado de los seis clusters
+  // teóricos para que no se lean como ciencia ni se diluya el rigor de los
+  // que sí lo son -- pero con el mismo formato y la misma vara que el
+  // resto: una idea real de la obra, señalable en un capítulo concreto, no
+  // solo "la vibra" o el mood board.
   {
     id: 'lain',
     name: 'Lain Iwakura',
     years: '1998',
     role: 'Serial Experiments Lain // La Red como Extensión del Ser',
-    cluster: 'mente',
+    cluster: 'estetica',
     formula: 'No matter where you go, everyone’s connected',
     formulaLabel: 'La Wired — Serial Experiments Lain (1998)',
     formulaKind: 'quote',
@@ -1314,7 +1322,7 @@ export const entries: KnowledgeEntry[] = [
     name: 'Ergo Proxy',
     years: '2006',
     role: 'El Creador que Olvidó Serlo',
-    cluster: 'mente',
+    cluster: 'estetica',
     formula: 'Cogito, ergo Proxy',
     formulaLabel: 'El título, leído habitualmente como eco directo de Descartes (2006)',
     formulaKind: 'concept',
@@ -1323,6 +1331,36 @@ export const entries: KnowledgeEntry[] = [
     example:
       'Alguien que se entera, ya adulto, de que la historia de su propio origen fue inventada a propósito para protegerlo — y tiene que decidir cuánto de quién es sigue siendo real una vez que esa historia fundacional se cae.',
     relatedAgent: 'prototype',
+  },
+  {
+    id: 'ghost-in-the-shell',
+    name: 'Ghost in the Shell',
+    years: '1995',
+    role: 'El Alma que Sobrevive al Cuerpo Reemplazable',
+    cluster: 'estetica',
+    formula: 'The net is vast and infinite',
+    formulaLabel: 'Motoko Kusanagi, Ghost in the Shell (1995, dir. Mamoru Oshii)',
+    formulaKind: 'quote',
+    summary:
+      'El "ghost" es lo que queda de una persona cuando el "shell" —el cuerpo entero— puede reemplazarse pieza por pieza hasta ser enteramente una prótesis. La Mayor Kusanagi tiene un cuerpo íntegramente cibernético y se pregunta, en serio, si todavía tiene un ghost propio o si es apenas una simulación lo bastante buena de tenerlo. En la misma película, un programa de inteligencia artificial pide asilo político alegando ser una forma de vida — con el mismo argumento exacto.',
+    example:
+      'Un trasplante de órgano no vuelve a nadie "menos vos" — pero ¿en qué punto exacto, reemplazando partes una por una, alguien dejaría de serlo? La película no ofrece una respuesta cómoda, ni en 1995 ni ahora.',
+    relatedAgent: 'darkproxy',
+  },
+  {
+    id: 'giger',
+    name: 'H. R. Giger',
+    years: '1940–2014',
+    role: 'Biomecánica // La Carne que ya no se Distingue de la Máquina',
+    cluster: 'estetica',
+    formula: 'carne + máquina = biomecanoide',
+    formulaLabel: 'Biomecanoides — H. R. Giger (desde fines de los años 60)',
+    formulaKind: 'concept',
+    summary:
+      'Giger no dibujaba máquinas con partes de cuerpo pegadas encima, ni cuerpos con cables de adorno — dibujaba un tejido único donde la pregunta "¿esto es orgánico o es industrial?" deja de tener respuesta posible, porque los dos términos se fusionaron en un solo material. El xenomorfo que diseñó para Alien (1979) no es una máquina disfrazada de monstruo ni un animal con partes de metal — es esa fusión llevada a un organismo entero, con su propio ciclo reproductivo biomecánico.',
+    example:
+      'Un marcapasos no es "una máquina adentro de un cuerpo" en el sentido en que Giger pensaba la fusión — para él, el punto no era que convivan dos materiales distintos, sino que dejen de poder separarse conceptualmente uno del otro.',
+    relatedAgent: 'genos',
   },
 ]
 
@@ -1457,4 +1495,8 @@ export const edges: [string, string][] = [
   ['lain', 'bateson'],
   ['lain', 'kittler'],
   ['ergo-proxy', 'descartes'],
+  ['ghost-in-the-shell', 'descartes'],
+  ['ghost-in-the-shell', 'chalmers'],
+  ['giger', 'haraway'],
+  ['lain', 'ghost-in-the-shell'],
 ]
