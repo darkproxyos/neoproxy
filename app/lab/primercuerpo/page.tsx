@@ -154,6 +154,9 @@ function alignCylinder(cyl: BABYLON.Mesh, a: BABYLON.Vector3, b: BABYLON.Vector3
 // clonando lo que ya está en pantalla).
 const ICOSAHEDRON_RADIUS = 1.9
 
+// Grosor real con margen para SLA: a 75mm de altura total, 0.05 world units
+// quedaba cerca de 0.5-0.6mm de diámetro real -- suficiente para el visor
+// pero ajustado para resina en el despegue del FEP. Subido con margen.
 function buildLatticeParts(scene: BABYLON.Scene): BABYLON.Mesh[] {
   const verts = icosahedronVertices(ICOSAHEDRON_RADIUS)
   const parts: BABYLON.Mesh[] = []
@@ -162,22 +165,37 @@ function buildLatticeParts(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const b = new BABYLON.Vector3(...verts[j])
     const h = BABYLON.Vector3.Distance(a, b)
     if (h < 1e-5) continue
-    const cyl = BABYLON.MeshBuilder.CreateCylinder(`edge${i}_${j}`, { diameter: 0.05, height: h, tessellation: 8 }, scene)
+    const cyl = BABYLON.MeshBuilder.CreateCylinder(`edge${i}_${j}`, { diameter: 0.07, height: h, tessellation: 8 }, scene)
     alignCylinder(cyl, a, b)
     parts.push(cyl)
   }
   for (const v of verts) {
-    const sph = BABYLON.MeshBuilder.CreateSphere('node', { diameter: 0.09, segments: 8 }, scene)
+    const sph = BABYLON.MeshBuilder.CreateSphere('node', { diameter: 0.12, segments: 8 }, scene)
     sph.position = new BABYLON.Vector3(...v)
     parts.push(sph)
   }
   return parts
 }
 
+// Hash determinístico por posición (sin estado, sin RNG) -- variación de
+// sección a lo largo de cada rama para que la resina translúcida tenga algo
+// que hacer con la luz (una rama real no tiene radio constante).
+function hashNoise(p: Vec3): number {
+  const s = Math.sin(p[0] * 12.9898 + p[1] * 78.233 + p[2] * 37.719) * 43758.5453
+  return s - Math.floor(s)
+}
+
 // exponent alto + maxRadius bajo = ramas que se afinan de verdad hacia las
 // puntas en vez de un tronco uniforme grueso (pipe model de da Vinci).
-function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[]): BABYLON.Mesh[] {
-  const radii = computeRadii(nodes, { leafRadius: 0.03, exponent: 2.6, maxRadius: 0.28 })
+// opts.joints/tessellation: la vista en vivo usa cilindros baratos (se
+// reconstruye muchas veces por segundo mientras crece); el export agrega
+// esferas de unión en cada nodo y sube la tessellation -- ahí no hay costo
+// de framerate y es lo que evita los "escalones" facetados en una impresión
+// a capas finas.
+function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[], opts: { tessellation?: number; joints?: boolean } = {}): BABYLON.Mesh[] {
+  const tess = opts.tessellation ?? 8
+  const baseRadii = computeRadii(nodes, { leafRadius: 0.03, exponent: 2.6, maxRadius: 0.28 })
+  const radii = baseRadii.map((r, i) => r * (0.85 + hashNoise(nodes[i].pos) * 0.3))
   const parts: BABYLON.Mesh[] = []
   for (let i = 1; i < nodes.length; i++) {
     const child = nodes[i]
@@ -189,10 +207,17 @@ function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[]): BABYLON.M
     const cyl = BABYLON.MeshBuilder.CreateCylinder(`coral${i}`, {
       diameterTop: Math.max(0.01, radii[i] * 2),
       diameterBottom: Math.max(0.01, radii[child.parent] * 2),
-      height: h, tessellation: 8,
+      height: h, tessellation: tess,
     }, scene)
     alignCylinder(cyl, a, b)
     parts.push(cyl)
+  }
+  if (opts.joints) {
+    for (let i = 1; i < nodes.length; i++) {
+      const sph = BABYLON.MeshBuilder.CreateSphere(`joint${i}`, { diameter: Math.max(0.02, radii[i] * 2), segments: Math.max(6, Math.round(tess / 2)) }, scene)
+      sph.position = new BABYLON.Vector3(...nodes[i].pos)
+      parts.push(sph)
+    }
   }
   return parts
 }
@@ -233,8 +258,22 @@ export default function PrimerCuerpoPage() {
     dirLight.intensity = 0.7
 
     const gl = new BABYLON.GlowLayer('glow', scene)
-    gl.intensity = 0.35
+    gl.intensity = 0.28
 
+    // Luz puntual dentro de la pieza, como si viniera de la base -- el
+    // truco de fotografía de objetos de vidrio/resina: que las partes finas
+    // se iluminen por dentro y las gruesas queden en silueta, en vez de
+    // depender solo de luz plana de frente.
+    const coreLight = new BABYLON.PointLight('coreLight', new BABYLON.Vector3(0, -1, 0), scene)
+    coreLight.diffuse = BABYLON.Color3.FromHexString(GREEN)
+    coreLight.specular = BABYLON.Color3.FromHexString(GREEN)
+    coreLight.intensity = 0.9
+    coreLight.range = 7
+
+    // Jaula y coral son la MISMA resina verde (una sola pieza impresa en la
+    // Photon Mono 2, ver blueprint) -- no un "exoesqueleto negro" aparte,
+    // eso sería otro material que esta pieza no usa. El contraste es brillo
+    // selectivo (ver abajo), no un cambio de color/material de la jaula.
     const lattice = BABYLON.Mesh.MergeMeshes(buildLatticeParts(scene), true, true, undefined, false, true)
     if (lattice) {
       lattice.name = 'Lattice_Metatron'
@@ -244,6 +283,7 @@ export default function PrimerCuerpoPage() {
       // el glow es solo para el coral (brillo selectivo).
       mat.emissiveColor = BABYLON.Color3.Black()
       mat.specularColor = BABYLON.Color3.FromHexString(GREEN)
+      mat.specularPower = 128
       mat.alpha = 0.82
       mat.backFaceCulling = false
       lattice.material = mat
@@ -311,9 +351,10 @@ export default function PrimerCuerpoPage() {
         merged.name = 'Coral_Primer_Cuerpo'
         const mat = new BABYLON.StandardMaterial('coralMat', scene)
         mat.diffuseColor = BABYLON.Color3.FromHexString(GREEN).scale(0.3)
-        mat.emissiveColor = BABYLON.Color3.FromHexString(GREEN).scale(0.5)
+        mat.emissiveColor = BABYLON.Color3.FromHexString(GREEN).scale(0.35)
         mat.specularColor = BABYLON.Color3.FromHexString(GREEN)
-        mat.alpha = 0.6
+        mat.specularPower = 128
+        mat.alpha = 0.75
         merged.material = mat
       }
       lastCoralNodesRef.current = perRootNodes
@@ -362,7 +403,7 @@ export default function PrimerCuerpoPage() {
     const perRootNodes = lastCoralNodesRef.current
     if (!scene || perRootNodes.length === 0) return
 
-    const exportParts = [...buildLatticeParts(scene), ...perRootNodes.flatMap(nodes => buildCoralParts(scene, nodes))]
+    const exportParts = [...buildLatticeParts(scene), ...perRootNodes.flatMap(nodes => buildCoralParts(scene, nodes, { tessellation: 14, joints: true }))]
     if (exportParts.length === 0) return
 
     let merged: BABYLON.Mesh | null = null
