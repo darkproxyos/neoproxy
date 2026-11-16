@@ -1288,6 +1288,42 @@ export const entries: KnowledgeEntry[] = [
       'Un bebé expuesto a dos idiomas antes de los dos años conserva, sin esfuerzo consciente, circuitos capaces de distinguir fonemas que un adulto monolingüe ya dejó de poder oír — no porque haya aprendido más, sino porque esas conexiones puntuales nunca fueron podadas.',
     relatedAgent: 'd',
   },
+  // Las dos entradas que siguen son las primeras de esta lista que no son un
+  // autor o teórico real -- son las dos obras que CLAUDE.md nombra como
+  // referencia estética explícita de todo el proyecto (junto con Ghost in
+  // the Shell y Giger). Entran con el mismo rigor que el resto: una idea
+  // real de la obra, no solo "la vibra", y una fórmula/cita que se pueda
+  // señalar en un capítulo concreto -- a pedido explícito.
+  {
+    id: 'lain',
+    name: 'Lain Iwakura',
+    years: '1998',
+    role: 'Serial Experiments Lain // La Red como Extensión del Ser',
+    cluster: 'mente',
+    formula: 'No matter where you go, everyone’s connected',
+    formulaLabel: 'La Wired — Serial Experiments Lain (1998)',
+    formulaKind: 'quote',
+    summary:
+      'La serie no trata la Wired como un mundo virtual separado de "la realidad" — esa es, precisamente, la ilusión que termina cayendo. Lain descubre que puede existir como información pura: copiada, editada, presente en más de un lugar a la vez, sin necesitar un único cuerpo que la ancle. El "yo" de un solo punto de vista, de un solo cuerpo, deja de ser la única forma posible de existir.',
+    example:
+      'Un perfil digital que varias personas distintas siguen actualizando después de la muerte de quien lo creó sigue "funcionando" como esa persona para buena parte de su red — en los hechos, más parecido a la Lain de la serie que a la cuenta de un único usuario con un único cuerpo detrás.',
+    relatedAgent: 'd',
+  },
+  {
+    id: 'ergo-proxy',
+    name: 'Ergo Proxy',
+    years: '2006',
+    role: 'El Creador que Olvidó Serlo',
+    cluster: 'mente',
+    formula: 'Cogito, ergo Proxy',
+    formulaLabel: 'El título, leído habitualmente como eco directo de Descartes (2006)',
+    formulaKind: 'concept',
+    summary:
+      'En la ciudad-domo de Romdo, los humanos se creen la civilización original y autónoma. La vuelta de tuerca real: fueron diseñados por los Proxy, seres casi divinos que hoy viven ocultos entre su propia creación — y el protagonista descubre que él mismo es uno de esos Proxy, sin memoria de serlo. La criatura busca su "raison d\'être" sin saber que, en algún sentido, es ella la autora de lo que creía que la había creado a ella.',
+    example:
+      'Alguien que se entera, ya adulto, de que la historia de su propio origen fue inventada a propósito para protegerlo — y tiene que decidir cuánto de quién es sigue siendo real una vez que esa historia fundacional se cae.',
+    relatedAgent: 'prototype',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,
@@ -1418,4 +1454,7 @@ export const edges: [string, string][] = [
   ['bekenstein', 'boltzmann'],
   ['changeux', 'chalmers'],
   ['changeux', 'tononi'],
+  ['lain', 'bateson'],
+  ['lain', 'kittler'],
+  ['ergo-proxy', 'descartes'],
 ]
