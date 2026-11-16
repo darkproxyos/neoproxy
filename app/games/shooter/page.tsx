@@ -54,6 +54,7 @@ export default function ShooterGame() {
   const [wave, setWave] = useState(1)
   const [hitFlash, setHitFlash] = useState(0)
   const [ambientOn, setAmbientOn] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const isTouch = useIsTouchDevice()
 
   const toggleAmbient = () => {
@@ -62,7 +63,38 @@ export default function ShooterGame() {
     else { ambientRef.current.start(); setAmbientOn(true) }
   }
 
-  useEffect(() => () => { ambientRef.current?.dispose(); sfxRef.current?.dispose() }, [])
+  // Fullscreen + orientación horizontal -- mismo mecanismo que
+  // /games/trickster (enterFullscreenLandscape): el lock de orientación
+  // requiere fullscreen primero en la mayoría de navegadores Android, y
+  // ambos requieren un gesto directo del usuario (por eso vive en el
+  // onClick del botón, no en un efecto al montar). iOS Safari no soporta
+  // el Screen Orientation API en absoluto -- ahí el lock no hace nada y
+  // el juego sigue jugable tal cual esté, sin un fallback forzado por
+  // software (no hay forma real de rotar la pantalla sin eso).
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen?.()
+        await (screen as any).orientation?.lock?.('landscape')
+      } else {
+        await document.exitFullscreen?.()
+      }
+    } catch {
+      // Sin soporte o el usuario lo rechazó -- se sigue jugando tal cual esté.
+    }
+  }
+
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement)
+    document.addEventListener('fullscreenchange', onFsChange)
+    return () => document.removeEventListener('fullscreenchange', onFsChange)
+  }, [])
+
+  useEffect(() => () => {
+    ambientRef.current?.dispose()
+    sfxRef.current?.dispose()
+    try { (screen as any).orientation?.unlock?.() } catch { /* sin soporte */ }
+  }, [])
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -295,7 +327,10 @@ export default function ShooterGame() {
       const onMouseMove = (e: MouseEvent) => {
         if (document.pointerLockElement !== (canvas as unknown as Element)) return
         yawPitchRef.current.yaw += e.movementX * SENSITIVITY
-        yawPitchRef.current.pitch -= e.movementY * SENSITIVITY
+        // Mira invertida a pedido explícito -- mover el mouse/dedo hacia
+        // abajo apunta hacia arriba y viceversa (convención clásica de
+        // "invert Y" de FPS de joystick).
+        yawPitchRef.current.pitch += e.movementY * SENSITIVITY
         yawPitchRef.current.pitch = Math.max(-1.3, Math.min(1.3, yawPitchRef.current.pitch))
       }
       window.addEventListener('mousemove', onMouseMove)
@@ -444,7 +479,7 @@ export default function ShooterGame() {
     lookLast.current = { x: e.clientX, y: e.clientY }
     const SENS = 0.0042
     yawPitchRef.current.yaw += dx * SENS
-    yawPitchRef.current.pitch -= dy * SENS
+    yawPitchRef.current.pitch += dy * SENS // mira invertida -- ver nota en onMouseMove
     yawPitchRef.current.pitch = Math.max(-1.3, Math.min(1.3, yawPitchRef.current.pitch))
   }
   const onLookUp = (e: React.PointerEvent) => {
@@ -522,6 +557,13 @@ export default function ShooterGame() {
           border: `1px solid ${ambientOn ? CYAN : '#ffffff33'}`, color: ambientOn ? CYAN : '#8892a4',
         }}>
           {ambientOn ? '♪ AMBIENTE ON' : '♪ AMBIENTE OFF'}
+        </button>
+        <button onClick={toggleFullscreen} style={{
+          fontFamily: mono, fontSize: 9, letterSpacing: 2, cursor: 'pointer', padding: '4px 12px',
+          background: isFullscreen ? `${CYAN}22` : '#00050aaa',
+          border: `1px solid ${isFullscreen ? CYAN : '#ffffff33'}`, color: isFullscreen ? CYAN : '#8892a4',
+        }}>
+          {isFullscreen ? '⛶ SALIR DE PANTALLA COMPLETA' : '⛶ PANTALLA COMPLETA'}
         </button>
       </div>
 
