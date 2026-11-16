@@ -23,16 +23,18 @@ type ArchiveDoc = {
   format: 'ENSAYO' | 'REFERENCIA TÉCNICA' | 'ANÁLISIS CULTURAL' | 'TEORÍA DISPUTADA'; blurb: string
 }
 
-// Los doce documentos largos que conviven bajo CODEX COGITO: Filosofía
+// Los trece documentos largos que conviven bajo CODEX COGITO: Filosofía
 // (el argumento narrativo original de esta sección), seis documentos de
 // archivo con referencia técnica (/archivo/*) -- antes sueltos, sin link
-// desde ningún lado del sitio -- y cinco más que hasta este pedido no
+// desde ningún lado del sitio -- cinco más que hasta un pedido anterior no
 // tenían ningún link en absoluto: tres análisis de ficción (Ergo Proxy,
 // Lain, Ghost in the Shell) y dos teorías científicas reales pero
 // disputadas (Grinberg, Garnier Malet), escritas como "páginas ocultas"
-// en una sesión previa y nunca referenciadas desde acá hasta ahora. Cada
-// uno con su propio acento de color, ya establecido en su página real;
-// acá solo se referencian, no se redefinen.
+// en una sesión previa -- y, al final de todos, Síntesis: un ensayo nuevo
+// que lee los otros doce juntos y busca qué dicen entre sí que ninguno
+// dice solo (conexiones reales, verificadas contra cada documento, no
+// inventadas). Cada uno con su propio acento de color, ya establecido en
+// su página real; acá solo se referencian, no se redefinen.
 const ARCHIVE_DOCS: ArchiveDoc[] = [
   {
     id: 'filosofia', code: 'NPX-KNW-00a', title: 'FILOSOFÍA', href: '/knowledge/filosofia',
@@ -93,6 +95,11 @@ const ARCHIVE_DOCS: ArchiveDoc[] = [
     id: 'garniermalet', code: 'NPX-REF-04', title: 'GARNIER MALET', href: '/archivo/garniermalet',
     color: '#b31ba3', format: 'TEORÍA DISPUTADA',
     blurb: 'La teoría del desdoblamiento del tiempo — qué afirma la tesis, qué no pudo confirmarse, separado con el mismo cuidado que el resto del archivo.',
+  },
+  {
+    id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
+    color: '#00d4ff', format: 'ENSAYO',
+    blurb: 'Los otros doce documentos, leídos juntos — de la entropía de un agujero negro a una teoría que nadie pudo confirmar, todos preguntando lo mismo.',
   },
 ]
 
@@ -265,17 +272,19 @@ export default function KnowledgePage() {
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
           qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
-          ángulos distintos. Abajo, doce documentos largos — un ensayo, seis referencias técnicas,
-          tres análisis de ficción y dos teorías científicas disputadas — que bajan hasta el
-          detalle: partículas, mente, lenguaje, alimentación, el principio holográfico, ciencia
+          ángulos distintos. Abajo, trece documentos largos — dos ensayos, seis referencias
+          técnicas, tres análisis de ficción y dos teorías científicas disputadas — que bajan hasta
+          el detalle: partículas, mente, lenguaje, alimentación, el principio holográfico, ciencia
           cognitiva, filosofía; Ergo Proxy, Serial Experiments Lain y Ghost in the Shell leídas con
-          la misma vara que un paper; y Jacobo Grinberg y Garnier Malet, dos teorías reales que la
+          la misma vara que un paper; Jacobo Grinberg y Garnier Malet, dos teorías reales que la
           ciencia nunca terminó de aceptar, separadas con cuidado de lo que de verdad se pudo
-          confirmar. Más abajo todavía, los nombres — y ahí la arquitectura se parte en dos a
-          propósito. Primero, quienes se atrevieron a medir cada pieza de lo invisible, poniéndole
-          una ecuación encima en vez de resolver el misterio. Al final, la otra mitad: no teoría,
-          sino la ficción que le dio a NeoProxy una cara antes de que existiera una sola línea de
-          código — entra con la misma vara que un teórico, nunca como decoración.
+          confirmar; y Síntesis, el único que no agrega un documento más sino que lee los otros
+          doce juntos, buscando qué dicen entre sí que ninguno dice solo. Más abajo todavía, los
+          nombres — y ahí la arquitectura se parte en dos a propósito. Primero, quienes se
+          atrevieron a medir cada pieza de lo invisible, poniéndole una ecuación encima en vez de
+          resolver el misterio. Al final, la otra mitad: no teoría, sino la ficción que le dio a
+          NeoProxy una cara antes de que existiera una sola línea de código — entra con la misma
+          vara que un teórico, nunca como decoración.
         </p>
 
         <Link href="/lab/codex" style={{
@@ -296,7 +305,7 @@ export default function KnowledgePage() {
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          DOCE DOCUMENTOS
+          TRECE DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
