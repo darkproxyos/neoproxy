@@ -245,6 +245,23 @@ export default function KnowledgePage() {
           decoración.
         </p>
 
+        <Link href="/lab/codex" style={{
+          display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
+          border: '1px solid #00d4ff44', background: 'linear-gradient(135deg, #00d4ff0f, transparent)',
+        }}>
+          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', marginBottom: 8 }}>
+            NPX-LAB-CODEX // ENTRAR AL ESPACIO
+          </div>
+          <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: '#00d4ff', marginBottom: 8, textShadow: '0 0 16px #00d4ff55' }}>
+            VER LOS NOMBRES FLOTAR, NO LISTADOS →
+          </div>
+          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
+            Las 88 entradas y sus 109 conexiones reales, en un espacio 3D que nunca termina de
+            asentarse — cada nombre es un punto de luz que se mueve solo, atraído por sus propias
+            conexiones. Tocar un nombre abre su ficha real, la misma de acá abajo.
+          </p>
+        </Link>
+
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
           SIETE DOCUMENTOS
         </div>
