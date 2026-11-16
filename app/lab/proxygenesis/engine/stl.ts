@@ -20,10 +20,17 @@ export function exportMeshToSTL(mesh: BABYLON.Mesh, filename: string) {
 
   let offset = 84
   for (let i = 0; i < indices.length; i += 3) {
-    // normal a 0 — un visor STL la recalcula; no vale la pena calcularla a mano acá
-    dv.setFloat32(offset, 0, true)
-    dv.setFloat32(offset + 4, 0, true)
-    dv.setFloat32(offset + 8, 0, true)
+    const i0 = indices[i] * 3, i1 = indices[i + 1] * 3, i2 = indices[i + 2] * 3
+    const ux = positions[i1] - positions[i0], uy = positions[i1 + 1] - positions[i0 + 1], uz = positions[i1 + 2] - positions[i0 + 2]
+    const vx = positions[i2] - positions[i0], vy = positions[i2 + 1] - positions[i0 + 1], vz = positions[i2 + 2] - positions[i0 + 2]
+    let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx
+    // triángulo degenerado (longitud de normal ~0) -- deja (0,0,0), el visor
+    // igual la recalcula; evita dividir por cero sin agregar un caso especial
+    const nl = Math.hypot(nx, ny, nz)
+    if (nl > 1e-12) { nx /= nl; ny /= nl; nz /= nl } else { nx = 0; ny = 0; nz = 0 }
+    dv.setFloat32(offset, nx, true)
+    dv.setFloat32(offset + 4, ny, true)
+    dv.setFloat32(offset + 8, nz, true)
     offset += 12
 
     for (let v = 0; v < 3; v++) {
