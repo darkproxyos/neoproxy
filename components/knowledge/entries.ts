@@ -1258,6 +1258,36 @@ export const entries: KnowledgeEntry[] = [
       'Un satélite guía y el resto de una formación orbital ajustándose para mantener distancia exacta entre sí mientras lo siguen — no porque se pongan de acuerdo entre ellos, sino porque todos responden a la misma señal desde arriba.',
     relatedAgent: 'metatron',
   },
+  {
+    id: 'bekenstein',
+    name: 'Jacob Bekenstein',
+    years: '1947–2015',
+    role: 'Física Teórica // El Límite de la Información',
+    cluster: 'informacion',
+    formula: 'S ≤ A / 4',
+    formulaLabel: 'Entropía de Bekenstein-Hawking, en unidades de Planck (1972–73)',
+    formulaKind: 'equation',
+    summary:
+      'Se preguntó qué pasa con la información cuando algo cae en un agujero negro — y en vez de asumir que desaparece sin más, calculó que un agujero negro tiene una entropía real, proporcional no al volumen que encierra sino al área de su horizonte de sucesos. Esa es la grieta que abrió: si la cantidad máxima de información que cabe en una región depende de su superficie y no de su interior, el universo entero podría, en principio, describirse por completo desde su borde.',
+    example:
+      'Dos agujeros negros del mismo volumen pero distinta forma tienen distinta área de horizonte — y por lo tanto, distinto límite de información que pueden contener. La capacidad depende literalmente de la piel, no de lo que hay adentro.',
+    relatedAgent: 'genos',
+  },
+  {
+    id: 'changeux',
+    name: 'Jean-Pierre Changeux',
+    years: '1936–',
+    role: 'Neurociencia // Selección Sináptica',
+    cluster: 'mente',
+    formula: 'exceso de sinapsis + selección por uso = circuito estable',
+    formulaLabel: 'Estabilización selectiva de sinapsis (1973)',
+    formulaKind: 'concept',
+    summary:
+      'Antes de terminar de formarse, un cerebro infantil fabrica muchísimas más conexiones sinápticas de las que va a necesitar — un exceso genéticamente programado. Lo que decide cuáles sobreviven no es otro plano genético sino la actividad misma: las sinapsis que se usan se estabilizan, las que no se usan se retraen. El cerebro adulto no es un circuito construido según un diseño — es lo que quedó después de una poda guiada por la experiencia, variación y selección operando adentro de un solo órgano.',
+    example:
+      'Un bebé expuesto a dos idiomas antes de los dos años conserva, sin esfuerzo consciente, circuitos capaces de distinguir fonemas que un adulto monolingüe ya dejó de poder oír — no porque haya aprendido más, sino porque esas conexiones puntuales nunca fueron podadas.',
+    relatedAgent: 'd',
+  },
 ]
 
 // Relaciones reales entre pensadores/ideas — cruzan clusters a proposito,
@@ -1383,4 +1413,9 @@ export const edges: [string, string][] = [
   ['modelo_lenguaje', 'hofstadter'],
   ['modelo_lenguaje', 'chalmers'],
   ['pila_completa', 'tononi'],
+
+  // nuevas entradas — conexiones reales hacia pensadores ya presentes
+  ['bekenstein', 'boltzmann'],
+  ['changeux', 'chalmers'],
+  ['changeux', 'tononi'],
 ]
