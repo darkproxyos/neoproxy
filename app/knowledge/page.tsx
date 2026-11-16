@@ -304,6 +304,23 @@ export default function KnowledgePage() {
           </p>
         </Link>
 
+        <Link href="/knowledge/arcanum" style={{
+          display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
+          border: '1px solid #c9a24d44', background: 'linear-gradient(135deg, #c9a24d0f, transparent)',
+        }}>
+          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#c9a24d88', marginBottom: 8 }}>
+            NPX-KNW-ARN // TERCERA PATA DEL CODEX
+          </div>
+          <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: '#c9a24d', marginBottom: 8, textShadow: '0 0 16px #c9a24d55' }}>
+            CODEX ARCANUM: LA MAGIA LEÍDA COMO PROTOCOLO →
+          </div>
+          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
+            Heka egipcio, el Corpus Hermético, los grimorios salomónicos, Dee, la Golden Dawn, Crowley,
+            magia del caos — historia verificable, no lista de hechizos. Termina en un instrumento real:
+            el sigilo de Spare, cargado con un ritual cronometrado de verdad.
+          </p>
+        </Link>
+
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
           TRECE DOCUMENTOS
         </div>

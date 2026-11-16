@@ -10,6 +10,7 @@ import { loadSigilGallery, saveSigilToGallery, deleteSigilFromGallery, type Gall
 const mono = "'Space Mono', monospace"
 const GREEN = '#00ff9d'
 const VIOLET = '#b06bff'
+const GOLD = '#c9a24d'
 
 const SUGGESTED = [
   'VEO CON CLARIDAD',
@@ -18,7 +19,25 @@ const SUGGESTED = [
   'CONFÍO EN EL PROCESO',
 ]
 
-type Status = 'idle' | 'reducing' | 'drawing' | 'done'
+type Status = 'idle' | 'reducing' | 'drawing' | 'done' | 'charging' | 'charged'
+
+// Ritual de carga -- el paso que el método histórico de Spare sí tiene y
+// que esta herramienta no ofrecía hasta ahora: crear el sigilo es solo la
+// mitad del procedimiento documentado; la otra mitad es llevar la
+// atención a un estado de absorción breve (gnosis) y después soltar
+// conscientemente el significado literal. Acá eso se implementa como un
+// ciclo de respiración guiado y cronometrado -- nada de "energía", el
+// mecanismo real detrás es atencional: narrowing de foco + el efecto de
+// cierre que cualquier ritual estructurado produce, documentado en
+// psicología (ver nota de cierre en pantalla). Tres ciclos de 4-4-6
+// segundos, ~42s en total, siempre la misma duración -- determinístico
+// como el resto de la herramienta, no al azar.
+const BREATH_CYCLE = [
+  { phase: 'INHALÁ', ms: 4000 },
+  { phase: 'SOSTENÉ', ms: 4000 },
+  { phase: 'EXHALÁ', ms: 6000 },
+] as const
+const BREATH_REPEATS = 3
 
 function SigilSVG({ glyph, size = 200, animate = false }: { glyph: SigilGlyph; size?: number; animate?: boolean }) {
   const pathRef = useRef<SVGPathElement>(null)
@@ -80,6 +99,7 @@ export default function SigiloPage() {
   const [instruction, setInstruction] = useState<ConceptualInstruction | null>(null)
   const [gallery, setGallery] = useState<GallerySigil[]>([])
   const [saved, setSaved] = useState(false)
+  const [breathPhase, setBreathPhase] = useState<{ phase: string; cycle: number } | null>(null)
   const timersRef = useRef<number[]>([])
 
   useEffect(() => {
@@ -93,6 +113,7 @@ export default function SigiloPage() {
     timersRef.current = []
     setSaved(false)
     setGlyph(null)
+    setBreathPhase(null)
     const r = reduceIntention(phrase)
     setReduced(r)
     setInstruction(buildConceptualInstruction(r.keptLetters))
@@ -116,7 +137,24 @@ export default function SigiloPage() {
 
   const borrar = (id: string) => setGallery(deleteSigilFromGallery(id))
 
-  const busy = status === 'reducing' || status === 'drawing'
+  const cargar = () => {
+    setStatus('charging')
+    let delay = 0
+    for (let cycle = 0; cycle < BREATH_REPEATS; cycle++) {
+      for (const step of BREATH_CYCLE) {
+        const t = window.setTimeout(() => setBreathPhase({ phase: step.phase, cycle: cycle + 1 }), delay)
+        timersRef.current.push(t)
+        delay += step.ms
+      }
+    }
+    const tEnd = window.setTimeout(() => {
+      setBreathPhase(null)
+      setStatus('charged')
+    }, delay)
+    timersRef.current.push(tEnd)
+  }
+
+  const busy = status === 'reducing' || status === 'drawing' || status === 'charging'
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative' }}>
@@ -144,7 +182,13 @@ export default function SigiloPage() {
           Un procedimiento real y documentado, no una animación decorativa: tu intención se normaliza,
           se le quitan las letras repetidas quedándote con la primera aparición de cada una, y ese set
           se funde en un único trazo sobre una rueda fija de 26 posiciones (A–Z). Mismo texto, siempre
-          el mismo sigilo — es reproducible a propósito, no al azar.
+          el mismo sigilo — es reproducible a propósito, no al azar. Después de trazarlo hay un paso más:
+          un ritual de carga cronometrado (respiración guiada, ~45 segundos) que cierra el procedimiento
+          tal como lo describió Austin Osman Spare — ver{' '}
+          <Link href="/arcano/grimorios" style={{ color: GOLD, textDecoration: 'none' }}>
+            de dónde sale este método
+          </Link>{' '}
+          en Codex Arcanum.
         </p>
 
         <textarea
@@ -209,15 +253,19 @@ export default function SigiloPage() {
             <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 14 }}>
               PASO 3 — GLIFO
             </div>
-            <div style={{
-              display: 'flex', justifyContent: 'center', border: `1px solid ${GREEN}33`,
-              background: 'rgba(0,10,6,0.5)', padding: 20, marginBottom: 16,
-            }}>
+            <div
+              className={status === 'charging' ? 'sigil-charging-pulse' : status === 'charged' ? 'sigil-fracture' : undefined}
+              style={{
+                display: 'flex', justifyContent: 'center',
+                border: `1px solid ${status === 'charging' || status === 'charged' ? GOLD : GREEN}33`,
+                background: 'rgba(0,10,6,0.5)', padding: 20, marginBottom: 16,
+              }}
+            >
               <SigilSVG glyph={glyph} size={260} animate={status === 'drawing' || status === 'done'} />
             </div>
 
             {status === 'done' && (
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 <button onClick={guardar} disabled={saved} style={{
                   fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px',
                   cursor: saved ? 'default' : 'pointer', background: saved ? `${GREEN}18` : 'transparent',
@@ -225,12 +273,64 @@ export default function SigiloPage() {
                 }}>
                   {saved ? '◉ GUARDADO' : '✦ GUARDAR EN GALERÍA'}
                 </button>
+                <button onClick={cargar} style={{
+                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+                  background: 'transparent', border: `1px solid ${GOLD}66`, color: GOLD,
+                }}>
+                  ◈ CARGAR (RITUAL, ~45S)
+                </button>
+              </div>
+            )}
+
+            {status === 'charging' && breathPhase && (
+              <div className="fade-in" style={{ textAlign: 'center', padding: '28px 0' }}>
+                <div style={{ fontSize: 9, color: `${GOLD}99`, letterSpacing: 3, marginBottom: 10 }}>
+                  CICLO {breathPhase.cycle} / {BREATH_REPEATS}
+                </div>
+                <div style={{
+                  fontSize: 26, letterSpacing: 6, color: GOLD, textShadow: `0 0 24px ${GOLD}55`,
+                }}>
+                  {breathPhase.phase}
+                </div>
+              </div>
+            )}
+
+            {status === 'charged' && (
+              <div className="fade-in" style={{ marginTop: 20 }}>
+                <div style={{
+                  fontSize: 10, lineHeight: 1.9, color: `${GOLD}cc`, letterSpacing: 0.3,
+                  border: `1px solid ${GOLD}33`, background: `${GOLD}0a`, padding: '16px 18px', marginBottom: 14, maxWidth: 560,
+                }}>
+                  <strong style={{ color: GOLD }}>Lo que acaba de pasar, en términos reales:</strong> ningún
+                  mecanismo sobrenatural — tres ciclos de respiración sostenida angostan la atención sobre
+                  un solo objeto (el glifo) el tiempo suficiente para producir una absorción leve, y la
+                  estructura del ritual (inicio marcado, cierre marcado) es, por sí sola, lo que mide la
+                  literatura sobre ritual y ansiedad: no hace falta creer en el sigilo para que el
+                  procedimiento tenga un efecto real sobre quien lo hace. El método histórico de Spare pide,
+                  después de esto, soltar conscientemente el significado literal — por eso el botón dice
+                  "olvidar", no "repetir".
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                  <button onClick={guardar} disabled={saved} style={{
+                    fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px',
+                    cursor: saved ? 'default' : 'pointer', background: saved ? `${GREEN}18` : 'transparent',
+                    border: `1px solid ${GREEN}66`, color: GREEN, opacity: saved ? 0.7 : 1,
+                  }}>
+                    {saved ? '◉ GUARDADO' : '✦ GUARDAR EN GALERÍA'}
+                  </button>
+                  <button onClick={() => { setStatus('idle'); setGlyph(null); setReduced(null); setInstruction(null); setIntention('') }} style={{
+                    fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+                    background: 'transparent', border: `1px solid ${GOLD}66`, color: GOLD,
+                  }}>
+                    ✧ OLVIDAR Y EMPEZAR OTRO
+                  </button>
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {instruction && status === 'done' && (
+        {instruction && (status === 'done' || status === 'charging' || status === 'charged') && (
           <div className="fade-in" style={{ marginBottom: 40 }}>
             <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10 }}>
               PASO 4 — INSTRUCCIÓN CONCEPTUAL

@@ -659,3 +659,33 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .shooter-hitmarker { animation: none; opacity: 0; }
 }
+
+/* Ritual de carga de /experimental/sigilo -- pulso durante la respiración
+   guiada (el glifo "respira" con el ciclo), fractura al cerrar el ritual
+   (se desarma visualmente justo cuando el texto dice "soltá el
+   significado literal"). Puramente atencional, no decorativo: la
+   animación tiene que coincidir con lo que el usuario está haciendo en
+   ese momento, no correr de fondo sin relación con el ritual. */
+@keyframes sigil-breathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(201,162,77,0.4)); }
+}
+.sigil-charging-pulse {
+  animation: sigil-breathe 7s ease-in-out infinite;
+}
+
+@keyframes sigil-fracture-shake {
+  0% { opacity: 1; transform: translate(0, 0); }
+  20% { opacity: 0.85; transform: translate(-2px, 1px); }
+  40% { opacity: 0.6; transform: translate(2px, -1px); }
+  60% { opacity: 0.8; transform: translate(-1px, -1px); }
+  80% { opacity: 0.5; transform: translate(1px, 1px); }
+  100% { opacity: 1; transform: translate(0, 0); }
+}
+.sigil-fracture {
+  animation: sigil-fracture-shake 1.1s ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sigil-charging-pulse, .sigil-fracture { animation: none !important; }
+}
