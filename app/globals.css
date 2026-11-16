@@ -620,3 +620,42 @@ body {
    reconocible como la MISMA fuente a través de apariciones separadas, en
    vez de un glitch anónimo más. Reusa .bio-glitch-word/.bio-glitch-strike
    (mismo mecanismo que GlitchMite y Grieta) vía --glitch-color/--glitch-glow. */
+
+/* Hitmarker de /games/shooter -- una X roja que aparece sobre la mira al
+   confirmar un impacto y se desvanece sola; se dispara montando el elemento
+   de nuevo con una key distinta por cada hit (mismo mecanismo que
+   .click-desync más arriba), no con una clase que se agrega/saca a mano. */
+@keyframes shooter-hitmarker-pop {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
+}
+
+.shooter-hitmarker {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+  z-index: 16;
+  animation: shooter-hitmarker-pop 0.22s ease-out forwards;
+}
+
+.shooter-hitmarker::before,
+.shooter-hitmarker::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #ff2d6b;
+}
+
+.shooter-hitmarker::before { transform: translate(-50%, -50%) rotate(45deg); }
+.shooter-hitmarker::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter-hitmarker { animation: none; opacity: 0; }
+}
