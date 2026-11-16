@@ -1,9 +1,10 @@
 'use client'
 
 // NPX-REF-00 — ERGO PROXY: ANÁLISIS
-// Ruta oculta: no se linkea desde ningún lado del sitio (ni nav-config.ts,
-// ni Codex Cogito, ni ninguna otra página) ni tiene un link de vuelta en
-// sí misma -- mismo tratamiento "sin enlazar" que el resto de /archivo.
+// No está en nav-config.ts (igual que el resto de /archivo), pero ahora sí
+// se linkea desde la grilla de documentos de /knowledge -- agregada a
+// pedido explícito ("ya tenías un análisis detallado... agrega las
+// páginas"), después de vivir un tiempo como página oculta sin link.
 // Acento propio: rust/cobre #c9703a, distinto de los ya usados (fabricación
 // azul, laboratorio naranja, experimental rojo, codex violeta, proxyverse
 // verde, manifiesto dorado, partículas celeste, mente magenta, lenguaje

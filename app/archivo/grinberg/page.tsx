@@ -1,10 +1,10 @@
 'use client'
 
 // NPX-REF-03 — JACOBO GRINBERG: TEORÍA SINTÉRGICA
-// Ruta oculta: no se linkea desde ningún lado del sitio (ni nav-config.ts,
-// ni Codex Cogito, ni ninguna otra página) ni tiene un link de vuelta en
-// sí misma -- mismo tratamiento "sin enlazar" que el resto de /archivo
-// (ergoproxy NPX-REF-00, lain NPX-REF-01, gits NPX-REF-02).
+// No está en nav-config.ts (igual que el resto de /archivo), pero ahora sí
+// se linkea desde la grilla de documentos de /knowledge -- agregada a
+// pedido explícito ("teoría de Jacob Grimberg"), después de vivir un
+// tiempo como página oculta sin link.
 // Acento propio: verde esmeralda-bioluminiscente #39d953, distinto de los
 // 13 ya usados (incluye el verde-menta de proxyverse y el teal de lenguaje,
 // ninguno pisa este verde más puro/central).

@@ -1,11 +1,11 @@
 'use client'
 
 // NPX-REF-04 — JEAN-PIERRE GARNIER MALET: TEORÍA DEL DESDOBLAMIENTO DEL TIEMPO
-// Ruta oculta: no se linkea desde ningún lado del sitio (ni nav-config.ts,
-// ni Codex Cogito, ni ninguna otra página) ni tiene un link de vuelta en
-// sí misma -- mismo tratamiento "sin enlazar" que el resto de /archivo
-// (ergoproxy NPX-REF-00, lain NPX-REF-01, gits NPX-REF-02, grinberg
-// NPX-REF-03).
+// No está en nav-config.ts (igual que el resto de /archivo), pero ahora sí
+// se linkea desde la grilla de documentos de /knowledge -- agregada a
+// pedido explícito ("otro Pierre", para distinguirlo de Jean-Pierre
+// Changeux, ya en el Codex), después de vivir un tiempo como página
+// oculta sin link.
 // Acento propio: magenta-violeta profundo #b31ba3, distinto de los 14 ya
 // usados -- más oscuro y más saturado que el fucsia de gits y el rosa de
 // mente, para no leerse como el mismo color en pantalla.
