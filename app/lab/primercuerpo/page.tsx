@@ -12,22 +12,13 @@
 // agents.ts) — documentado en el blueprint "NeoProxy — Espécimen 001:
 // Primer Cuerpo". Mismo orden que GRIETA_DONOR_IDS en identity.ts.
 //
-// Revisión de código cruzada (3 IA externas) aplicada acá: aristas del
-// icosaedro hardcodeadas (eran correctas por umbral, pero frágiles a futuro
-// ruido orgánico en los vértices), stepping del generador presupuestado por
-// tiempo real en vez de pasos fijos, cadencia de rebuild del coral bajada
-// para no saturar el hilo principal, y el fallback de 25% de D/Trickster
-// reemplazado por valores derivados de datos reales (nunca se tocan las
-// bios shipeadas en agents.ts, que ya cumplen otra función en el resto del
-// sitio). El export de STL se reconstruye desde los datos crudos (vértices
-// del icosaedro + nodos del esqueleto del coral) en vez de clonar los mesh
-// en vivo: Babylon.Mesh.clone() comparte la geometría subyacente con el
-// original, y disponer el clon mergeado corrompía la malla visible en
-// pantalla (confirmado con un stack trace real en
-// `_renderTransparentSorted` que persistía en casi todos los frames
-// siguientes, no en uno solo — intentar "arreglarlo" con un try/catch en el
-// render loop solo tapaba el síntoma, la escena seguía sin poder renderizar
-// nada nuevo después de exportar).
+// Aristas del icosaedro hardcodeadas (verificadas a mano, 30 aristas, grado
+// 5 por vértice) por robustez a futuro ruido orgánico en los vértices.
+// Stepping del generador presupuestado por tiempo real, no por pasos fijos.
+// Fallback de 25% de D/Trickster reemplazado por valores derivados de datos
+// reales, solo en esta capa (nunca se tocan las bios shipeadas en
+// agents.ts). El export reconstruye la malla desde datos crudos en vez de
+// clonar los mesh en vivo -- ver comentario en handleExport.
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
@@ -306,11 +297,10 @@ export default function PrimerCuerpoPage() {
     return () => { cancelled = true }
   }, [isClient, seed, curl])
 
-  // El export reconstruye la malla desde cero (vértices del icosaedro +
-  // últimos nodos del esqueleto del coral) en vez de clonar lo que está en
-  // pantalla -- ver nota de arriba sobre por qué clonar corrompía la escena
-  // en vivo. Estas partes nunca comparten geometría con nada visible, así
-  // que disponerlas después de exportar es seguro.
+  // No clonar el mesh vivo: Babylon.Mesh.clone() comparte la geometría con
+  // el original, y disponer el clon corrompe la malla en pantalla. Por eso
+  // esto reconstruye desde cero (vértices del icosaedro + últimos nodos del
+  // esqueleto) en vez de clonar lo que ya está en escena.
   const handleExport = useCallback(() => {
     const scene = sceneRef.current
     const nodes = lastCoralNodesRef.current
