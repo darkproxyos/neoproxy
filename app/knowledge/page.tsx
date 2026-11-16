@@ -20,14 +20,19 @@ function parseStartYear(years: string): number {
 
 type ArchiveDoc = {
   id: string; code: string; title: string; href: string; color: string
-  format: 'ENSAYO' | 'REFERENCIA TÉCNICA'; blurb: string
+  format: 'ENSAYO' | 'REFERENCIA TÉCNICA' | 'ANÁLISIS CULTURAL' | 'TEORÍA DISPUTADA'; blurb: string
 }
 
-// Los siete documentos largos que conviven bajo CODEX COGITO: Filosofía
-// (el argumento narrativo original de esta sección) y seis
-// documentos de archivo (/archivo/*) -- antes sueltos, sin link desde
-// ningún lado del sitio. Cada uno con su propio acento de color, ya
-// establecido en su página real; acá solo se referencian, no se redefinen.
+// Los doce documentos largos que conviven bajo CODEX COGITO: Filosofía
+// (el argumento narrativo original de esta sección), seis documentos de
+// archivo con referencia técnica (/archivo/*) -- antes sueltos, sin link
+// desde ningún lado del sitio -- y cinco más que hasta este pedido no
+// tenían ningún link en absoluto: tres análisis de ficción (Ergo Proxy,
+// Lain, Ghost in the Shell) y dos teorías científicas reales pero
+// disputadas (Grinberg, Garnier Malet), escritas como "páginas ocultas"
+// en una sesión previa y nunca referenciadas desde acá hasta ahora. Cada
+// uno con su propio acento de color, ya establecido en su página real;
+// acá solo se referencian, no se redefinen.
 const ARCHIVE_DOCS: ArchiveDoc[] = [
   {
     id: 'filosofia', code: 'NPX-KNW-00a', title: 'FILOSOFÍA', href: '/knowledge/filosofia',
@@ -63,6 +68,31 @@ const ARCHIVE_DOCS: ArchiveDoc[] = [
     id: 'cognitiva', code: 'NPX-ARC-06', title: 'CIENCIA COGNITIVA', href: '/archivo/cognitiva',
     color: '#22e06b', format: 'REFERENCIA TÉCNICA',
     blurb: 'El campo interdisciplinario completo — de la revolución contra el conductismo al problema difícil de la consciencia, distinto del recorte neurocientífico de MENTE.',
+  },
+  {
+    id: 'ergoproxy', code: 'NPX-REF-00', title: 'ERGO PROXY', href: '/archivo/ergoproxy',
+    color: '#c9703a', format: 'ANÁLISIS CULTURAL',
+    blurb: 'Romdo, los Proxy y el título leído como eco directo de Descartes — premisa, filosofía y la recepción real de la serie, sección por sección.',
+  },
+  {
+    id: 'lain', code: 'NPX-REF-01', title: 'SERIAL EXPERIMENTS LAIN', href: '/archivo/lain',
+    color: '#4f6bff', format: 'ANÁLISIS CULTURAL',
+    blurb: 'La Wired como extensión del yo — identidad, el final real de la serie y por qué sigue citada 25 años después.',
+  },
+  {
+    id: 'gits', code: 'NPX-REF-02', title: 'GHOST IN THE SHELL', href: '/archivo/gits',
+    color: '#d946ef', format: 'ANÁLISIS CULTURAL',
+    blurb: 'El ghost en la máquina — filosofía, versiones y el legado real sobre Matrix y el cyberpunk que vino después.',
+  },
+  {
+    id: 'grinberg', code: 'NPX-REF-03', title: 'JACOBO GRINBERG', href: '/archivo/grinberg',
+    color: '#39d953', format: 'TEORÍA DISPUTADA',
+    blurb: 'La teoría sintérgica y los potenciales transferidos — biografía, experimentos, recepción científica real y una desaparición sin resolver.',
+  },
+  {
+    id: 'garniermalet', code: 'NPX-REF-04', title: 'GARNIER MALET', href: '/archivo/garniermalet',
+    color: '#b31ba3', format: 'TEORÍA DISPUTADA',
+    blurb: 'La teoría del desdoblamiento del tiempo — qué afirma la tesis, qué no pudo confirmarse, separado con el mismo cuidado que el resto del archivo.',
   },
 ]
 
@@ -235,14 +265,17 @@ export default function KnowledgePage() {
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
           qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
-          ángulos distintos. Abajo, siete documentos largos — un ensayo y seis referencias técnicas —
-          que bajan hasta el detalle: partículas, mente, lenguaje, alimentación, el principio
-          holográfico, ciencia cognitiva, filosofía. Más abajo todavía, los nombres — y ahí la
-          arquitectura se parte en dos a propósito. Primero, quienes se atrevieron a medir cada pieza
-          de lo invisible, poniéndole una ecuación encima en vez de resolver el misterio. Al final,
-          la otra mitad: no teoría, sino la ficción que le dio a NeoProxy una cara antes de que
-          existiera una sola línea de código — entra con la misma vara que un teórico, nunca como
-          decoración.
+          ángulos distintos. Abajo, doce documentos largos — un ensayo, seis referencias técnicas,
+          tres análisis de ficción y dos teorías científicas disputadas — que bajan hasta el
+          detalle: partículas, mente, lenguaje, alimentación, el principio holográfico, ciencia
+          cognitiva, filosofía; Ergo Proxy, Serial Experiments Lain y Ghost in the Shell leídas con
+          la misma vara que un paper; y Jacobo Grinberg y Garnier Malet, dos teorías reales que la
+          ciencia nunca terminó de aceptar, separadas con cuidado de lo que de verdad se pudo
+          confirmar. Más abajo todavía, los nombres — y ahí la arquitectura se parte en dos a
+          propósito. Primero, quienes se atrevieron a medir cada pieza de lo invisible, poniéndole
+          una ecuación encima en vez de resolver el misterio. Al final, la otra mitad: no teoría,
+          sino la ficción que le dio a NeoProxy una cara antes de que existiera una sola línea de
+          código — entra con la misma vara que un teórico, nunca como decoración.
         </p>
 
         <Link href="/lab/codex" style={{
@@ -263,7 +296,7 @@ export default function KnowledgePage() {
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          SIETE DOCUMENTOS
+          DOCE DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,

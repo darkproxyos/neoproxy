@@ -1,10 +1,10 @@
 'use client'
 
 // NPX-REF-02 — GHOST IN THE SHELL: ANÁLISIS
-// Ruta oculta: no se linkea desde ningún lado del sitio (ni nav-config.ts,
-// ni Codex Cogito, ni ninguna otra página) ni tiene un link de vuelta en
-// sí misma -- mismo tratamiento "sin enlazar" que el resto de /archivo
-// (ergoproxy NPX-REF-00, lain NPX-REF-01).
+// No está en nav-config.ts (igual que el resto de /archivo), pero ahora sí
+// se linkea desde la grilla de documentos de /knowledge -- agregada a
+// pedido explícito junto con ergoproxy (NPX-REF-00) y lain (NPX-REF-01),
+// después de vivir un tiempo como página oculta sin link.
 // Acento propio: fucsia-violeta eléctrico #d946ef, distinto de los 12 ya
 // usados (fabricación azul, laboratorio naranja, experimental rojo, codex
 // violeta-grisáceo, proxyverse verde, manifiesto dorado, partículas celeste,
