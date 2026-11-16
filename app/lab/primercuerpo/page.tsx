@@ -7,10 +7,14 @@
 // Metatrón geométricamente exacta (12 vértices + 30 aristas reales de un
 // icosaedro regular, no una forma libre). Exporta a .STL para imprimir.
 //
-// La semilla y el curl del coral NO son random: se derivan de datos reales
-// de los 5 agentes donantes de Grietas (color hex + percentHuman de
-// agents.ts) — documentado en el blueprint "NeoProxy — Espécimen 001:
-// Primer Cuerpo". Mismo orden que GRIETA_DONOR_IDS en identity.ts.
+// El coral crece desde 5 raíces simultáneas, una por vértice de la jaula,
+// cada una asignada a uno de los 5 agentes donantes de Grietas (en vez de
+// un solo tronco recto desde abajo): evita el tronco grueso único y hace que
+// la jaula se vea atravesada por 5 brotes reales, no tapada por un bloque.
+// La semilla, el curl y la raíz de cada brote NO son random: se derivan de
+// datos reales de esos 5 agentes (color hex + percentHuman de agents.ts) —
+// documentado en el blueprint "NeoProxy — Espécimen 001: Primer Cuerpo".
+// Mismo orden que GRIETA_DONOR_IDS en identity.ts.
 //
 // Aristas del icosaedro hardcodeadas (verificadas a mano, 30 aristas, grado
 // 5 por vértice) por robustez a futuro ruido orgánico en los vértices.
@@ -19,6 +23,9 @@
 // reales, solo en esta capa (nunca se tocan las bios shipeadas en
 // agents.ts). El export reconstruye la malla desde datos crudos en vez de
 // clonar los mesh en vivo -- ver comentario en handleExport.
+//
+// Brillo selectivo: la jaula no tiene emissive (queda nítida, sin glow) --
+// solo el coral emite, así no se funden en un blob de luz verde.
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
@@ -76,8 +83,26 @@ function deriveSeedParams(donors: DonorData[]) {
   donors.forEach((d, i) => { seedAcc += (d.colorNum % 997) * (i + 1) + Math.round(d.percent * 37) })
   const seed = (seedAcc % 2147483647) || 1
   const avgPercent = donors.reduce((a, b) => a + b.percent, 0) / donors.length
-  const curl = 0.1 + Math.min(0.26, (avgPercent / 100) * 0.3)
+  // Base más alta que antes: con el promedio real de los 5 donantes (~5%,
+  // tras el fix de D/Trickster) la fórmula vieja daba un curl casi recto.
+  const curl = 0.22 + Math.min(0.18, (avgPercent / 100) * 0.3)
   return { seed, curl }
+}
+
+// Reparte las 5 raíces del coral entre los 12 vértices de la jaula, una por
+// donante, derivado de su color real (no al azar). Colisión -> siguiente
+// vértice libre, determinístico.
+function assignDonorVertices(donors: DonorData[]): number[] {
+  const used = new Set<number>()
+  return donors.map(d => {
+    let idx = d.colorNum % 12
+    while (used.has(idx)) idx = (idx + 1) % 12
+    used.add(idx)
+    return idx
+  })
+}
+function lerpVec3(a: Vec3, b: Vec3, t: number): Vec3 {
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
 }
 
 // Cubo de Metatrón real: 12 vértices de un icosaedro regular (fórmula de
@@ -127,28 +152,32 @@ function alignCylinder(cyl: BABYLON.Mesh, a: BABYLON.Vector3, b: BABYLON.Vector3
 // llamada crea geometría nueva e independiente. Las usan tanto la escena en
 // vivo (una vez cada una) como el export de STL (de nuevo, fresco, nunca
 // clonando lo que ya está en pantalla).
+const ICOSAHEDRON_RADIUS = 1.9
+
 function buildLatticeParts(scene: BABYLON.Scene): BABYLON.Mesh[] {
-  const verts = icosahedronVertices(1.6)
+  const verts = icosahedronVertices(ICOSAHEDRON_RADIUS)
   const parts: BABYLON.Mesh[] = []
   for (const [i, j] of ICOSAHEDRON_EDGES) {
     const a = new BABYLON.Vector3(...verts[i])
     const b = new BABYLON.Vector3(...verts[j])
     const h = BABYLON.Vector3.Distance(a, b)
     if (h < 1e-5) continue
-    const cyl = BABYLON.MeshBuilder.CreateCylinder(`edge${i}_${j}`, { diameter: 0.045, height: h, tessellation: 6 }, scene)
+    const cyl = BABYLON.MeshBuilder.CreateCylinder(`edge${i}_${j}`, { diameter: 0.05, height: h, tessellation: 8 }, scene)
     alignCylinder(cyl, a, b)
     parts.push(cyl)
   }
   for (const v of verts) {
-    const sph = BABYLON.MeshBuilder.CreateSphere('node', { diameter: 0.08, segments: 8 }, scene)
+    const sph = BABYLON.MeshBuilder.CreateSphere('node', { diameter: 0.09, segments: 8 }, scene)
     sph.position = new BABYLON.Vector3(...v)
     parts.push(sph)
   }
   return parts
 }
 
+// exponent alto + maxRadius bajo = ramas que se afinan de verdad hacia las
+// puntas en vez de un tronco uniforme grueso (pipe model de da Vinci).
 function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[]): BABYLON.Mesh[] {
-  const radii = computeRadii(nodes, { leafRadius: 0.022, exponent: 2.3, maxRadius: 0.4 })
+  const radii = computeRadii(nodes, { leafRadius: 0.03, exponent: 2.6, maxRadius: 0.28 })
   const parts: BABYLON.Mesh[] = []
   for (let i = 1; i < nodes.length; i++) {
     const child = nodes[i]
@@ -160,7 +189,7 @@ function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[]): BABYLON.M
     const cyl = BABYLON.MeshBuilder.CreateCylinder(`coral${i}`, {
       diameterTop: Math.max(0.01, radii[i] * 2),
       diameterBottom: Math.max(0.01, radii[child.parent] * 2),
-      height: h, tessellation: 6,
+      height: h, tessellation: 8,
     }, scene)
     alignCylinder(cyl, a, b)
     parts.push(cyl)
@@ -171,7 +200,7 @@ function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[]): BABYLON.M
 export default function PrimerCuerpoPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sceneRef = useRef<BABYLON.Scene | null>(null)
-  const lastCoralNodesRef = useRef<SkeletonNode[]>([])
+  const lastCoralNodesRef = useRef<SkeletonNode[][]>([])
   const autoRotateRef = useRef(true)
   const [isClient, setIsClient] = useState(false)
   const [growPct, setGrowPct] = useState(0)
@@ -192,28 +221,30 @@ export default function PrimerCuerpoPage() {
     sceneRef.current = scene
     scene.clearColor = new BABYLON.Color4(0.01, 0.02, 0.015, 1)
 
-    const camera = new BABYLON.ArcRotateCamera('cam', Math.PI / 3, Math.PI / 2.4, 7.5, new BABYLON.Vector3(0, 1.2, 0), scene)
+    const camera = new BABYLON.ArcRotateCamera('cam', Math.PI / 3, Math.PI / 2.4, 8.2, new BABYLON.Vector3(0, 1.2, 0), scene)
     camera.attachControl(canvasRef.current, true)
     camera.wheelPrecision = 50
     camera.lowerRadiusLimit = 3
-    camera.upperRadiusLimit = 20
+    camera.upperRadiusLimit = 22
 
     const hemi = new BABYLON.HemisphericLight('h', new BABYLON.Vector3(0, 1, 0), scene)
-    hemi.intensity = 0.5
+    hemi.intensity = 0.55
     const dirLight = new BABYLON.DirectionalLight('dl', new BABYLON.Vector3(-0.5, -1, -0.3), scene)
-    dirLight.intensity = 0.6
+    dirLight.intensity = 0.7
 
     const gl = new BABYLON.GlowLayer('glow', scene)
-    gl.intensity = 0.7
+    gl.intensity = 0.35
 
     const lattice = BABYLON.Mesh.MergeMeshes(buildLatticeParts(scene), true, true, undefined, false, true)
     if (lattice) {
       lattice.name = 'Lattice_Metatron'
       const mat = new BABYLON.StandardMaterial('latticeMat', scene)
-      mat.diffuseColor = BABYLON.Color3.FromHexString(GREEN).scale(0.2)
-      mat.emissiveColor = BABYLON.Color3.FromHexString(GREEN).scale(0.45)
+      mat.diffuseColor = BABYLON.Color3.FromHexString(GREEN).scale(0.5)
+      // Sin emissive: así el GlowLayer no la toma y la jaula queda nítida,
+      // el glow es solo para el coral (brillo selectivo).
+      mat.emissiveColor = BABYLON.Color3.Black()
       mat.specularColor = BABYLON.Color3.FromHexString(GREEN)
-      mat.alpha = 0.55
+      mat.alpha = 0.82
       mat.backFaceCulling = false
       lattice.material = mat
     }
@@ -244,33 +275,48 @@ export default function PrimerCuerpoPage() {
     const scene = sceneRef.current
     let cancelled = false
 
-    const gen = runSpaceColonization({
-      seed,
-      numAttractors: 650,
-      canopyCenter: [0, 1.1, 0],
-      canopyRadius: [1.75, 2.5, 1.75],
-      rootPos: [0, -1.5, 0],
-      influenceRadius: 0.85,
-      killDistance: 0.17,
-      stepSize: 0.12,
-      maxIterations: 420,
-      curl,
+    // 5 raíces, una por donante, ancladas en su vértice de la jaula -- no
+    // un solo tronco recto desde abajo (eso era lo que se veía como un
+    // bloque). Cada canopy apunta del vértice hacia el centro, así los 5
+    // brotes se cruzan en el medio en vez de quedar aislados en la cáscara.
+    const CENTER: Vec3 = [0, 1.1, 0]
+    const vertices = icosahedronVertices(ICOSAHEDRON_RADIUS)
+    const vertexIdx = assignDonorVertices(donors)
+    const growths = donors.map((d, i) => {
+      const rootPos = vertices[vertexIdx[i]]
+      const canopyCenter = lerpVec3(rootPos, CENTER, 0.55)
+      const rootSeed = ((seed + vertexIdx[i] * 104729) % 2147483647) || 1
+      const rootCurl = curl + (d.percent / 100) * 0.08
+      const gen = runSpaceColonization({
+        seed: rootSeed,
+        numAttractors: 240,
+        canopyCenter,
+        canopyRadius: [1.0, 1.4, 1.0] as Vec3,
+        rootPos,
+        influenceRadius: 0.75,
+        killDistance: 0.15,
+        stepSize: 0.1,
+        maxIterations: 300,
+        curl: rootCurl,
+      })
+      return { gen, nodes: [] as SkeletonNode[], iteration: 0, maxIterations: 300, done: false }
     })
 
-    const buildCoral = (nodes: SkeletonNode[]) => {
+    const buildCoral = (perRootNodes: SkeletonNode[][]) => {
       const old = scene.getMeshByName('Coral_Primer_Cuerpo')
       if (old) old.dispose()
-      const merged = BABYLON.Mesh.MergeMeshes(buildCoralParts(scene, nodes), true, true, undefined, false, true)
+      const parts = perRootNodes.flatMap(nodes => buildCoralParts(scene, nodes))
+      const merged = parts.length ? BABYLON.Mesh.MergeMeshes(parts, true, true, undefined, false, true) : null
       if (merged) {
         merged.name = 'Coral_Primer_Cuerpo'
         const mat = new BABYLON.StandardMaterial('coralMat', scene)
         mat.diffuseColor = BABYLON.Color3.FromHexString(GREEN).scale(0.3)
-        mat.emissiveColor = BABYLON.Color3.FromHexString(GREEN).scale(0.55)
+        mat.emissiveColor = BABYLON.Color3.FromHexString(GREEN).scale(0.5)
         mat.specularColor = BABYLON.Color3.FromHexString(GREEN)
-        mat.alpha = 0.72
+        mat.alpha = 0.6
         merged.material = mat
       }
-      lastCoralNodesRef.current = nodes
+      lastCoralNodesRef.current = perRootNodes
     }
 
     const FRAME_BUDGET_MS = 8
@@ -279,23 +325,33 @@ export default function PrimerCuerpoPage() {
     const step = () => {
       if (cancelled) return
       const t0 = performance.now()
-      let result = gen.next()
-      while (!result.done && performance.now() - t0 < FRAME_BUDGET_MS) {
-        result = gen.next()
+      while (performance.now() - t0 < FRAME_BUDGET_MS) {
+        let anyActive = false
+        for (const g of growths) {
+          if (g.done) continue
+          anyActive = true
+          const result = g.gen.next()
+          g.nodes = result.value.nodes
+          g.iteration = result.value.iteration
+          g.maxIterations = result.value.maxIterations
+          g.done = result.done === true
+          if (performance.now() - t0 >= FRAME_BUDGET_MS) break
+        }
+        if (!anyActive) break
       }
-      if (result.value) {
-        const v = result.value
-        setGrowPct(Math.min(99, Math.round((v.iteration / v.maxIterations) * 100)))
-        if (frame % REBUILD_EVERY_N_FRAMES === 0 || result.done) buildCoral(v.nodes)
-      }
+      const totalIter = growths.reduce((a, g) => a + g.iteration, 0)
+      const totalMax = growths.reduce((a, g) => a + g.maxIterations, 0)
+      setGrowPct(Math.min(99, Math.round((totalIter / totalMax) * 100)))
+      const allDone = growths.every(g => g.done)
+      if (frame % REBUILD_EVERY_N_FRAMES === 0 || allDone) buildCoral(growths.map(g => g.nodes))
       frame++
-      if (!result.done) requestAnimationFrame(step)
+      if (!allDone) requestAnimationFrame(step)
       else { setGrowPct(100); setDone(true) }
     }
     requestAnimationFrame(step)
 
     return () => { cancelled = true }
-  }, [isClient, seed, curl])
+  }, [isClient, seed, curl, donors])
 
   // No clonar el mesh vivo: Babylon.Mesh.clone() comparte la geometría con
   // el original, y disponer el clon corrompe la malla en pantalla. Por eso
@@ -303,10 +359,10 @@ export default function PrimerCuerpoPage() {
   // esqueleto) en vez de clonar lo que ya está en escena.
   const handleExport = useCallback(() => {
     const scene = sceneRef.current
-    const nodes = lastCoralNodesRef.current
-    if (!scene || nodes.length === 0) return
+    const perRootNodes = lastCoralNodesRef.current
+    if (!scene || perRootNodes.length === 0) return
 
-    const exportParts = [...buildLatticeParts(scene), ...buildCoralParts(scene, nodes)]
+    const exportParts = [...buildLatticeParts(scene), ...perRootNodes.flatMap(nodes => buildCoralParts(scene, nodes))]
     if (exportParts.length === 0) return
 
     let merged: BABYLON.Mesh | null = null
