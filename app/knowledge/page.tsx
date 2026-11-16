@@ -7,15 +7,24 @@ import { agents } from '@/components/proxyverse/agents'
 
 const mono = "'Space Mono', monospace"
 
-const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria', 'computacion']
+const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'geometria', 'computacion', 'estetica']
+
+// Para ordenar cada cluster cronológicamente en vez de por orden de
+// inserción en el array -- toma el primer número de "years" (sirve igual
+// para "1844–1906", "1960–" o un año suelto como "1998"). Si no encuentra
+// ninguno, lo manda al final en vez de romper el orden del resto.
+function parseStartYear(years: string): number {
+  const match = years.match(/\d+/)
+  return match ? parseInt(match[0], 10) : Infinity
+}
 
 type ArchiveDoc = {
   id: string; code: string; title: string; href: string; color: string
   format: 'ENSAYO' | 'REFERENCIA TÉCNICA'; blurb: string
 }
 
-// Los cinco documentos largos que conviven bajo CODEX COGITO: Filosofía
-// (el argumento narrativo original de esta sección) y los cuatro
+// Los siete documentos largos que conviven bajo CODEX COGITO: Filosofía
+// (el argumento narrativo original de esta sección) y seis
 // documentos de archivo (/archivo/*) -- antes sueltos, sin link desde
 // ningún lado del sitio. Cada uno con su propio acento de color, ya
 // establecido en su página real; acá solo se referencian, no se redefinen.
@@ -225,15 +234,19 @@ export default function KnowledgePage() {
           maxWidth: 760, marginBottom: 20, borderLeft: '1px solid #00d4ff22', paddingLeft: 24,
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
-          qué es un límite, qué es un yo. Acá convergen dos formas de responderla. Abajo, cinco
-          documentos largos — ensayo y referencia técnica — que bajan hasta el detalle: partículas,
-          mente, lenguaje, alimentación, filosofía. Más abajo todavía, los nombres: quienes se
-          atrevieron a medir cada pieza de la arquitectura invisible que sostiene la Wired, no a
-          resolver el misterio, sino a ponerle una ecuación encima.
+          qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
+          ángulos distintos. Abajo, siete documentos largos — un ensayo y seis referencias técnicas —
+          que bajan hasta el detalle: partículas, mente, lenguaje, alimentación, el principio
+          holográfico, ciencia cognitiva, filosofía. Más abajo todavía, los nombres — y ahí la
+          arquitectura se parte en dos a propósito. Primero, quienes se atrevieron a medir cada pieza
+          de lo invisible, poniéndole una ecuación encima en vez de resolver el misterio. Al final,
+          la otra mitad: no teoría, sino la ficción que le dio a NeoProxy una cara antes de que
+          existiera una sola línea de código — entra con la misma vara que un teórico, nunca como
+          decoración.
         </p>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          CINCO DOCUMENTOS
+          SIETE DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
@@ -249,7 +262,8 @@ export default function KnowledgePage() {
           Información, mente, auto-organización, sistemas que se producen a sí mismos sin pedir
           permiso, geometría — desde un punto sin tamaño hasta formas de 4 dimensiones que ni
           siquiera se pueden ver enteras, solo proyectar — y computación: la pila completa, capa por
-          capa, de un bit a un modelo de lenguaje escribiendo estas mismas palabras. Tocá un nombre.
+          capa, de un bit a un modelo de lenguaje escribiendo estas mismas palabras. Cada cluster,
+          ordenado por año. Tocá un nombre.
         </p>
 
         {CLUSTER_ORDER.map(cluster => (
@@ -264,8 +278,19 @@ export default function KnowledgePage() {
               }} />
               {clusters[cluster].label}
             </div>
+            {cluster === 'estetica' && (
+              <p style={{
+                fontFamily: mono, fontSize: 9.5, lineHeight: 1.8, color: '#a0854a', maxWidth: 640,
+                margin: '10px 0 14px', fontStyle: 'italic',
+              }}>
+                Estas cuatro no son ciencia ni son verificables de la misma manera que todo lo de
+                arriba — son las obras que le dieron forma visual y filosófica a NeoProxy antes de
+                que existiera el sitio. Entran igual, con una idea real y señalable cada una, nunca
+                solo como referencia de estilo.
+              </p>
+            )}
 
-            {entries.filter(e => e.cluster === cluster).map(entry => (
+            {entries.filter(e => e.cluster === cluster).sort((a, b) => parseStartYear(a.years) - parseStartYear(b.years)).map(entry => (
               <KnowledgeRow
                 key={entry.id}
                 entry={entry}
