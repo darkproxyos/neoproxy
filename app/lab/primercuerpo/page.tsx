@@ -322,19 +322,26 @@ export default function PrimerCuerpoPage() {
     const CENTER: Vec3 = [0, 1.1, 0]
     const vertices = icosahedronVertices(ICOSAHEDRON_RADIUS)
     const vertexIdx = assignDonorVertices(donors)
+    const maxPercent = Math.max(...donors.map(d => d.percent), 1)
     const growths = donors.map((d, i) => {
       const rootPos = vertices[vertexIdx[i]]
       const canopyCenter = lerpVec3(rootPos, CENTER, 0.55)
       const rootSeed = ((seed + vertexIdx[i] * 104729) % 2147483647) || 1
       const rootCurl = curl + (d.percent / 100) * 0.08
+      // Dominancia real: el donante con mayor percentHuman tira más fuerte y
+      // su brote crece más grande -- rompe la simetría radial (antes los 5
+      // crecían igual de fuerte, y la pieza se veía igual desde cualquier
+      // ángulo) sin inventar una inclinación a mano; el gesto sigue
+      // saliendo de datos reales.
+      const dom = 0.6 + (d.percent / maxPercent) * 0.8
       const gen = runSpaceColonization({
         seed: rootSeed,
-        numAttractors: 240,
+        numAttractors: Math.round(170 * dom),
         canopyCenter,
-        canopyRadius: [1.0, 1.4, 1.0] as Vec3,
+        canopyRadius: [1.0 * dom, 1.4 * dom, 1.0 * dom] as Vec3,
         rootPos,
         influenceRadius: 0.75,
-        killDistance: 0.15,
+        killDistance: 0.19,
         stepSize: 0.1,
         maxIterations: 300,
         curl: rootCurl,
