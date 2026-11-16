@@ -8,13 +8,19 @@
 // icosaedro regular, no una forma libre). Exporta a .STL para imprimir.
 //
 // El coral crece desde 5 raíces simultáneas, una por vértice de la jaula,
-// cada una asignada a uno de los 5 agentes donantes de Grietas (en vez de
-// un solo tronco recto desde abajo): evita el tronco grueso único y hace que
-// la jaula se vea atravesada por 5 brotes reales, no tapada por un bloque.
-// La semilla, el curl y la raíz de cada brote NO son random: se derivan de
-// datos reales de esos 5 agentes (color hex + percentHuman de agents.ts) —
-// documentado en el blueprint "NeoProxy — Espécimen 001: Primer Cuerpo".
-// Mismo orden que GRIETA_DONOR_IDS en identity.ts.
+// cada una asignada a un agente de agents.ts (en vez de un solo tronco
+// recto desde abajo): evita el tronco grueso único y hace que la jaula se
+// vea atravesada por 5 brotes reales, no tapada por un bloque. La semilla,
+// el curl y la raíz de cada brote NO son random: se derivan de datos reales
+// (color hex + percentHuman) — documentado en el blueprint "NeoProxy —
+// Espécimen 001: Primer Cuerpo". Mismo orden que GRIETA_DONOR_IDS en
+// identity.ts. El copy de la UI deliberadamente no insiste en la lore
+// interna (quién es cada agente, por qué le "presta un fragmento" a
+// Prototype) -- a pedido explícito, el framing es más universal
+// (filosófico/científico: crecimiento, determinismo, geometría regular)
+// porque a un visitante sin contexto de NeoProxy no le va a importar la
+// lore tanto como a quien ya sigue el sitio. La derivación real sigue
+// visible, solo que colapsada detrás de un toggle en vez de ser el titular.
 //
 // Aristas del icosaedro hardcodeadas (verificadas a mano, 30 aristas, grado
 // 5 por vértice) por robustez a futuro ruido orgánico en los vértices.
@@ -393,6 +399,7 @@ export default function PrimerCuerpoPage() {
   const [done, setDone] = useState(false)
   const [autoRotate, setAutoRotate] = useState(true)
   const [latticeMode, setLatticeMode] = useState<LatticeMode>('metatron')
+  const [showDerivation, setShowDerivation] = useState(false)
 
   const donors = useMemo(() => getDonorData(), [])
   const { seed, curl } = useMemo(() => deriveSeedParams(donors), [donors])
@@ -539,7 +546,10 @@ export default function PrimerCuerpoPage() {
       lastCoralNodesRef.current = perRootNodes
     }
 
-    const FRAME_BUDGET_MS = 8
+    // Presupuesto bajado a propósito (antes 8ms): a pedido explícito, el
+    // crecimiento se ve más lento y se puede seguir paso a paso en vez de
+    // resolverse en un par de segundos.
+    const FRAME_BUDGET_MS = 2.2
     const REBUILD_EVERY_N_FRAMES = 15
     let frame = 0
     const step = () => {
@@ -629,13 +639,23 @@ export default function PrimerCuerpoPage() {
         }}>
           PRIMER CUERPO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fd6b0', lineHeight: 2, maxWidth: 620, marginBottom: 32 }}>
-          Retícula de Cubo de Metatrón (icosaedro real, 12 vértices / 30 aristas) + coral de space
-          colonization creciendo a través de ella y desbordándola — la misma jaula y la misma fuga
-          que la "Fricción Metatrón↔DarkProxy" de la lore. La semilla y el curl del coral salen de
-          datos reales de los 5 agentes que le prestaron un fragmento a Prototype, no de un número
-          al azar.
+        <p style={{ fontSize: 11, color: '#8fd6b0', lineHeight: 2, maxWidth: 620, marginBottom: 20 }}>
+          Una retícula exacta —doce vértices, treinta aristas, el sólido que los griegos contaron
+          entre los cinco posibles— contiene un crecimiento que no deja de empujar hacia afuera.
+          Es el mismo patrón que organiza un coral, un rayo, una raíz buscando agua: competencia
+          por espacio, resuelta un paso a la vez. Nada de la forma final quedó al azar: nace de una
+          semilla determinística, derivada de una variable real, reproducible — la misma entrada da
+          siempre la misma salida, como cualquier organismo repitiendo su propio desarrollo.
         </p>
+
+        <p style={{
+          fontSize: 14, color: GREEN, lineHeight: 1.7, maxWidth: 560, marginBottom: 36,
+          fontStyle: 'italic', opacity: 0.85, borderLeft: `2px solid ${GREEN}44`, paddingLeft: 16,
+        }}>
+          No es ornamento. Es estructura que decidió crecer.
+        </p>
+
+        <div style={{ height: 1, background: `${GREEN}22`, marginBottom: 32 }} />
 
         <div style={{ fontSize: 9, letterSpacing: 3, color: `${GREEN}88`, marginBottom: 10 }}>
           JAULA
@@ -648,7 +668,7 @@ export default function PrimerCuerpoPage() {
               background: latticeMode === 'metatron' ? `${GREEN}22` : 'transparent', border: `1px solid ${GREEN}66`, color: GREEN,
             }}
           >
-            CUBO DE METATRÓN
+            ICOSAEDRO
           </button>
           <button
             onClick={() => setLatticeMode('hexacosichoron')}
@@ -660,11 +680,17 @@ export default function PrimerCuerpoPage() {
             HEXACOSICORON (4D)
           </button>
         </div>
+        {latticeMode === 'metatron' && (
+          <p style={{ fontSize: 10, color: '#4a8058', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
+            Doce vértices, treinta aristas, grado cinco cada uno — la misma retícula que la
+            geometría sagrada llama Cubo de Metatrón.
+          </p>
+        )}
         {latticeMode === 'hexacosichoron' && (
           <p style={{ fontSize: 10, color: '#d9a441', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
-            EXPERIMENTAL -- 600-cell (politopo regular de 4D, 120 vértices) rotando en 4D; la jaula es
-            la trayectoria proyectada de cada vértice, no el politopo quieto. No forma parte del
-            blueprint todavía y no está verificado para impresión real.
+            Un politopo regular de cuatro dimensiones no cabe en nuestro espacio — lo que ves es su
+            sombra proyectada, y el rastro que esa sombra deja al girar. 120 vértices, construcción
+            de Coxeter. Experimental: no verificado para impresión real, no forma parte del blueprint.
           </p>
         )}
 
@@ -701,27 +727,44 @@ export default function PrimerCuerpoPage() {
           </button>
         </div>
 
-        <div style={{ fontSize: 9, letterSpacing: 3, color: `${GREEN}88`, marginBottom: 14 }}>
-          DATOS REALES QUE ALIMENTAN LA SEMILLA — LOS 5 DONANTES DE GRIETAS
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10, marginBottom: 40 }}>
-          {donors.map(d => (
-            <div key={d.id} style={{
-              display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-              border: `1px solid ${d.color}55`, background: `${d.color}0a`,
-            }}>
-              <span style={{ width: 9, height: 9, borderRadius: '50%', background: d.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, letterSpacing: 1, color: '#dff5e8' }}>
-                {d.name} <span style={{ color: '#4a8058' }}>— {d.color} · {d.percent}%</span>
-              </span>
+        <button
+          onClick={() => setShowDerivation(s => !s)}
+          style={{
+            fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a8058', background: 'transparent',
+            border: 'none', cursor: 'pointer', padding: 0, marginBottom: showDerivation ? 14 : 40,
+          }}
+        >
+          {showDerivation ? '▾' : '▸'} DE DÓNDE SALE LA SEMILLA — NADA ACÁ ES AL AZAR
+        </button>
+        {showDerivation && (
+          <div style={{ marginBottom: 40 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8, marginBottom: 14 }}>
+              {donors.map(d => (
+                <div key={d.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 9, padding: '7px 12px',
+                  border: `1px solid ${d.color}33`, background: `${d.color}08`,
+                }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: d.color, flexShrink: 0, opacity: 0.8 }} />
+                  <span style={{ fontSize: 9, letterSpacing: 0.5, color: '#9fc9ae' }}>
+                    {d.name} <span style={{ color: '#3a6248' }}>— {d.color} · {d.percent}%</span>
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+            <p style={{ fontSize: 9, color: '#3a6248', lineHeight: 1.9, maxWidth: 620 }}>
+              Cinco variables reales (color, porcentaje) entran a una función determinística y salen
+              como semilla ({seed}) y curl ({curl.toFixed(3)}). Misma entrada, misma salida, siempre
+              — eso es lo que hace que no sea azar, no que los números tengan un significado oculto.
+            </p>
+          </div>
+        )}
+
+        <div style={{ height: 1, background: `${GREEN}22`, marginBottom: 28 }} />
 
         <p style={{ fontSize: 10, color: '#4a8058', lineHeight: 1.9, maxWidth: 620 }}>
-          Semilla derivada: {seed} · curl: {curl.toFixed(3)}. Esto no es el render de referencia —
-          es la malla real, exportable, que se imprime en resina. El blueprint completo (materiales,
-          litofanía, NFC, edición) vive aparte, documentado antes de fabricar nada.
+          Esto no es el render de referencia — es la malla real, exportable, que se imprime en
+          resina. El blueprint físico completo (materiales, litofanía, NFC, edición) vive aparte,
+          documentado antes de fabricar nada.
         </p>
       </div>
     </div>

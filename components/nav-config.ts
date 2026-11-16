@@ -29,6 +29,9 @@ export const navConfig: NavEntry[] = [
       // en /arsenal, se vuelve a listar acá cuando esté lista para mostrarse.
     ],
   },
+  // PRIMER CUERPO: generador real del Espécimen 001 (primer artefacto físico
+  // de la marca) -- entrada propia a pedido explícito, antes de ESPECÍMENES.
+  { label: 'PRIMER CUERPO', href: '/lab/primercuerpo', live: true },
   { label: 'ESPECÍMENES', href: '/especimenes', live: true },
   { label: 'PROXYGAMES', href: '/games', live: true },
   // AUDIO: oculto del menú a pedido explícito — la página sigue viva en
