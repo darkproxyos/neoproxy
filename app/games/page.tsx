@@ -27,6 +27,15 @@ interface GameEntry {
 // ruta real sigue siendo /games/wired, no se movió el código de la página.
 const CATALOG: GameEntry[] = [
   {
+    id: 'shooter',
+    code: 'NPX-GAME-SHOOTER',
+    title: 'SHOOTER // CAMPO DE TIRO',
+    href: '/games/shooter',
+    status: 'demo',
+    blurb: 'Primer corte de un FPS mobile-first — joystick analógico + arrastre para apuntar + botón de disparo (en desktop: WASD + mouse con pointer lock). Blancos con vaivén simple, sin IA. Brazos y arma en primera persona son geometría placeholder, a la espera del asset real.',
+    controls: 'JOYSTICK + ARRASTRE + DISPARAR — O WASD + MOUSE',
+  },
+  {
     id: 'trickster',
     code: 'NPX-EXP-TRICKSTER',
     title: 'TR1CK5T3R // CAMPO DE PRUEBA',
