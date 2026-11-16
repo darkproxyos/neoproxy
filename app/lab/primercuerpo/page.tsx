@@ -26,6 +26,14 @@
 //
 // Brillo selectivo: la jaula no tiene emissive (queda nítida, sin glow) --
 // solo el coral emite, así no se funden en un blob de luz verde.
+//
+// Jaula alternativa (EXPERIMENTAL, toggle en la UI, no reemplaza el Cubo de
+// Metatrón del blueprint): un hexacosicoron (600-cell, el politopo regular
+// de 4D con 120 vértices -- el "primo" de 4D del icosaedro) rotando en 4D,
+// proyectado a 3D. En vez de dibujar el politopo quieto, se registra la
+// trayectoria de cada vértice mientras rota (eso es la "derivada" pedida:
+// no la forma estática, su variación) y esa trayectoria es la jaula. Nunca
+// verificado para impresión -- ver nota en la UI.
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
@@ -89,14 +97,15 @@ function deriveSeedParams(donors: DonorData[]) {
   return { seed, curl }
 }
 
-// Reparte las 5 raíces del coral entre los 12 vértices de la jaula, una por
-// donante, derivado de su color real (no al azar). Colisión -> siguiente
-// vértice libre, determinístico.
-function assignDonorVertices(donors: DonorData[]): number[] {
+// Reparte las 5 raíces del coral entre los anclajes de la jaula activa, una
+// por donante, derivado de su color real (no al azar). Colisión -> siguiente
+// anclaje libre, determinístico. anchorCount depende del modo: 12 vértices
+// del icosaedro, o 120 del hexacosicoron.
+function assignDonorVertices(donors: DonorData[], anchorCount: number): number[] {
   const used = new Set<number>()
   return donors.map(d => {
-    let idx = d.colorNum % 12
-    while (used.has(idx)) idx = (idx + 1) % 12
+    let idx = d.colorNum % anchorCount
+    while (used.has(idx)) idx = (idx + 1) % anchorCount
     used.add(idx)
     return idx
   })
@@ -133,6 +142,146 @@ function icosahedronVertices(radius: number): Vec3[] {
   ]
   const n = Math.hypot(1, phi, 0)
   return raw.map(([x, y, z]) => [x / n * radius, y / n * radius, z / n * radius] as Vec3)
+}
+
+// --- Hexacosicoron (600-cell), jaula alternativa experimental ---
+
+type Vec4 = [number, number, number, number]
+
+// Todas las permutaciones de [0,1,2,3] con su paridad (par/impar por
+// cantidad de inversiones) -- se usa para quedarse solo con las 12
+// permutaciones PARES del tercer grupo de vértices del 600-cell.
+function permutationsWithParity(n: number): { order: number[]; even: boolean }[] {
+  const arr = Array.from({ length: n }, (_, i) => i)
+  const result: { order: number[]; even: boolean }[] = []
+  const used = new Array(n).fill(false)
+  const current: number[] = []
+  const countInversions = (order: number[]) => {
+    let inv = 0
+    for (let i = 0; i < order.length; i++)
+      for (let j = i + 1; j < order.length; j++)
+        if (order[i] > order[j]) inv++
+    return inv
+  }
+  const backtrack = () => {
+    if (current.length === n) {
+      const order = [...current]
+      result.push({ order, even: countInversions(order) % 2 === 0 })
+      return
+    }
+    for (let i = 0; i < n; i++) {
+      if (used[i]) continue
+      used[i] = true
+      current.push(arr[i])
+      backtrack()
+      current.pop()
+      used[i] = false
+    }
+  }
+  backtrack()
+  return result
+}
+
+// 120 vértices reales del 600-cell (Coxeter): 8 + 16 + 96. El tercer grupo
+// (permutaciones pares de ±φ/2, ±1/2, ±1/(2φ), 0) es el que le da al 600-cell
+// su conexión con el icosaedro -- coherente con seguir usando φ, como la
+// jaula de Metatrón.
+function hexacosichoronVertices(radius: number): Vec4[] {
+  const PHI = (1 + Math.sqrt(5)) / 2
+  const pts: Vec4[] = []
+
+  for (let pos = 0; pos < 4; pos++) {
+    for (const s of [1, -1]) {
+      const v: number[] = [0, 0, 0, 0]
+      v[pos] = s
+      pts.push(v as Vec4)
+    }
+  }
+
+  for (let mask = 0; mask < 16; mask++) {
+    const v: number[] = [0, 0, 0, 0]
+    for (let b = 0; b < 4; b++) v[b] = (mask & (1 << b)) ? 0.5 : -0.5
+    pts.push(v as Vec4)
+  }
+
+  const base = [PHI / 2, 0.5, 1 / (2 * PHI), 0]
+  for (const { order, even } of permutationsWithParity(4)) {
+    if (!even) continue
+    for (let mask = 0; mask < 8; mask++) {
+      const v: number[] = [0, 0, 0, 0]
+      let bit = 0
+      for (let slot = 0; slot < 4; slot++) {
+        const mag = base[order[slot]]
+        if (mag === 0) { v[slot] = 0; continue }
+        v[slot] = (mask & (1 << bit)) ? mag : -mag
+        bit++
+      }
+      pts.push(v as Vec4)
+    }
+  }
+
+  return pts.map(p => p.map(c => c * radius) as Vec4)
+}
+
+// Rotación doble en 4D: dos planos ortogonales (XW, YZ) girando a la vez,
+// a velocidad angular relativa HEXA_K. Es lo que produce las trayectorias
+// "en flor" al proyectar -- una rotación de un solo plano se ve plana.
+function rotate4D(p: Vec4, theta: number, k: number): Vec4 {
+  const [x, y, z, w] = p
+  const c1 = Math.cos(theta), s1 = Math.sin(theta)
+  const c2 = Math.cos(theta * k), s2 = Math.sin(theta * k)
+  return [x * c1 - w * s1, y * c2 - z * s2, y * s2 + z * c2, x * s1 + w * c1]
+}
+
+// Proyección en perspectiva 4D->3D (divide por la distancia al "visor" en
+// w) -- el mismo truco que una cámara en perspectiva normal, un eje más.
+function project4Dto3D(p: Vec4, viewerDist: number): Vec3 {
+  const [x, y, z, w] = p
+  const factor = viewerDist / (viewerDist - w)
+  return [x * factor, y * factor, z * factor]
+}
+
+const HEXA_RADIUS = 1.5
+const HEXA_VIEWER_DIST = 3.4 // > cualquier |w| posible a este radio -- sin esto, factor diverge
+const HEXA_K = 1.0 // 1 = rotación isoclínica, la más simétrica
+const HEXA_TRAIL_STEPS = 56
+const HEXA_ARC = Math.PI * 1.25 // menos de una vuelta completa: una vuelta entera cierra el trazo sobre sí mismo
+
+// La "derivada" pedida: no se dibuja el politopo quieto, se registra la
+// posición proyectada de cada uno de sus 120 vértices en cada paso de la
+// rotación y se conectan los pasos consecutivos -- la jaula es la
+// trayectoria, no la forma. anchorsOut junta la posición final de cada
+// trayectoria (de donde cuelgan las raíces del coral en este modo).
+function buildHexaTrailParts(scene: BABYLON.Scene, tess: number, anchorsOut?: Vec3[]): BABYLON.Mesh[] {
+  const verts4D = hexacosichoronVertices(HEXA_RADIUS)
+  const parts: BABYLON.Mesh[] = []
+  for (let vi = 0; vi < verts4D.length; vi++) {
+    let prev: BABYLON.Vector3 | null = null
+    for (let s = 0; s <= HEXA_TRAIL_STEPS; s++) {
+      const theta = (s / HEXA_TRAIL_STEPS) * HEXA_ARC
+      const p3 = project4Dto3D(rotate4D(verts4D[vi], theta, HEXA_K), HEXA_VIEWER_DIST)
+      const cur = new BABYLON.Vector3(...p3)
+      if (prev) {
+        const h = BABYLON.Vector3.Distance(prev, cur)
+        if (h > 1e-5) {
+          const cyl = BABYLON.MeshBuilder.CreateCylinder(`hexa${vi}_${s}`, { diameter: 0.03, height: h, tessellation: tess }, scene)
+          alignCylinder(cyl, prev, cur)
+          parts.push(cyl)
+        }
+      }
+      prev = cur
+      if (anchorsOut && s === HEXA_TRAIL_STEPS) anchorsOut.push(p3)
+    }
+  }
+  return parts
+}
+
+// Mismo cálculo que el final de cada trayectoria en buildHexaTrailParts,
+// pero sin crear ninguna malla -- para saber dónde anclar el coral sin
+// pagar el costo de construir los 120 tubos solo para leer un punto.
+function hexaFinalAnchors(): Vec3[] {
+  const verts4D = hexacosichoronVertices(HEXA_RADIUS)
+  return verts4D.map(v => project4Dto3D(rotate4D(v, HEXA_ARC, HEXA_K), HEXA_VIEWER_DIST))
 }
 
 function alignCylinder(cyl: BABYLON.Mesh, a: BABYLON.Vector3, b: BABYLON.Vector3) {
@@ -222,6 +371,18 @@ function buildCoralParts(scene: BABYLON.Scene, nodes: SkeletonNode[], opts: { te
   return parts
 }
 
+type LatticeMode = 'metatron' | 'hexacosichoron'
+
+// Anclajes de la jaula activa -- 12 vértices del icosaedro, o la posición
+// final de las 120 trayectorias del hexacosicoron.
+function getCageAnchors(mode: LatticeMode): Vec3[] {
+  return mode === 'metatron' ? icosahedronVertices(ICOSAHEDRON_RADIUS) : hexaFinalAnchors()
+}
+
+function buildCageParts(scene: BABYLON.Scene, mode: LatticeMode): BABYLON.Mesh[] {
+  return mode === 'metatron' ? buildLatticeParts(scene) : buildHexaTrailParts(scene, 6)
+}
+
 export default function PrimerCuerpoPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sceneRef = useRef<BABYLON.Scene | null>(null)
@@ -231,6 +392,7 @@ export default function PrimerCuerpoPage() {
   const [growPct, setGrowPct] = useState(0)
   const [done, setDone] = useState(false)
   const [autoRotate, setAutoRotate] = useState(true)
+  const [latticeMode, setLatticeMode] = useState<LatticeMode>('metatron')
 
   const donors = useMemo(() => getDonorData(), [])
   const { seed, curl } = useMemo(() => deriveSeedParams(donors), [donors])
@@ -270,25 +432,6 @@ export default function PrimerCuerpoPage() {
     coreLight.intensity = 0.9
     coreLight.range = 7
 
-    // Jaula y coral son la MISMA resina verde (una sola pieza impresa en la
-    // Photon Mono 2, ver blueprint) -- no un "exoesqueleto negro" aparte,
-    // eso sería otro material que esta pieza no usa. El contraste es brillo
-    // selectivo (ver abajo), no un cambio de color/material de la jaula.
-    const lattice = BABYLON.Mesh.MergeMeshes(buildLatticeParts(scene), true, true, undefined, false, true)
-    if (lattice) {
-      lattice.name = 'Lattice_Metatron'
-      const mat = new BABYLON.StandardMaterial('latticeMat', scene)
-      mat.diffuseColor = BABYLON.Color3.FromHexString(GREEN).scale(0.5)
-      // Sin emissive: así el GlowLayer no la toma y la jaula queda nítida,
-      // el glow es solo para el coral (brillo selectivo).
-      mat.emissiveColor = BABYLON.Color3.Black()
-      mat.specularColor = BABYLON.Color3.FromHexString(GREEN)
-      mat.specularPower = 128
-      mat.alpha = 0.82
-      mat.backFaceCulling = false
-      lattice.material = mat
-    }
-
     engine.runRenderLoop(() => {
       if (autoRotateRef.current) camera.alpha += 0.0022
       scene.render()
@@ -304,6 +447,33 @@ export default function PrimerCuerpoPage() {
     }
   }, [isClient])
 
+  // Jaula -- separada del setup de escena porque cambia con latticeMode (el
+  // toggle Metatrón/hexacosicoron reconstruye solo esto, no la escena
+  // entera). Jaula y coral son la MISMA resina verde (una sola pieza
+  // impresa en la Photon Mono 2, ver blueprint) -- no un "exoesqueleto
+  // negro" aparte. El contraste es brillo selectivo, no un cambio de
+  // color/material.
+  useEffect(() => {
+    if (!isClient || !sceneRef.current) return
+    const scene = sceneRef.current
+    const old = scene.getMeshByName('Cage_PrimerCuerpo')
+    if (old) old.dispose()
+    const cage = BABYLON.Mesh.MergeMeshes(buildCageParts(scene, latticeMode), true, true, undefined, false, true)
+    if (cage) {
+      cage.name = 'Cage_PrimerCuerpo'
+      const mat = new BABYLON.StandardMaterial('latticeMat', scene)
+      mat.diffuseColor = BABYLON.Color3.FromHexString(GREEN).scale(0.5)
+      // Sin emissive: así el GlowLayer no la toma y la jaula queda nítida,
+      // el glow es solo para el coral (brillo selectivo).
+      mat.emissiveColor = BABYLON.Color3.Black()
+      mat.specularColor = BABYLON.Color3.FromHexString(GREEN)
+      mat.specularPower = 128
+      mat.alpha = latticeMode === 'metatron' ? 0.82 : 0.65
+      mat.backFaceCulling = false
+      cage.material = mat
+    }
+  }, [isClient, latticeMode])
+
   // crecimiento del coral — motor real de space colonization. Presupuesto
   // de tiempo real por frame (no un número fijo de pasos: a distinto
   // framerate, un conteo fijo de pasos corre a distinta velocidad real) y
@@ -314,14 +484,16 @@ export default function PrimerCuerpoPage() {
     if (!isClient || !sceneRef.current) return
     const scene = sceneRef.current
     let cancelled = false
+    setDone(false)
+    setGrowPct(0)
 
     // 5 raíces, una por donante, ancladas en su vértice de la jaula -- no
     // un solo tronco recto desde abajo (eso era lo que se veía como un
     // bloque). Cada canopy apunta del vértice hacia el centro, así los 5
     // brotes se cruzan en el medio en vez de quedar aislados en la cáscara.
     const CENTER: Vec3 = [0, 1.1, 0]
-    const vertices = icosahedronVertices(ICOSAHEDRON_RADIUS)
-    const vertexIdx = assignDonorVertices(donors)
+    const vertices = getCageAnchors(latticeMode)
+    const vertexIdx = assignDonorVertices(donors, vertices.length)
     const maxPercent = Math.max(...donors.map(d => d.percent), 1)
     const growths = donors.map((d, i) => {
       const rootPos = vertices[vertexIdx[i]]
@@ -399,7 +571,7 @@ export default function PrimerCuerpoPage() {
     requestAnimationFrame(step)
 
     return () => { cancelled = true }
-  }, [isClient, seed, curl, donors])
+  }, [isClient, seed, curl, donors, latticeMode])
 
   // No clonar el mesh vivo: Babylon.Mesh.clone() comparte la geometría con
   // el original, y disponer el clon corrompe la malla en pantalla. Por eso
@@ -410,7 +582,7 @@ export default function PrimerCuerpoPage() {
     const perRootNodes = lastCoralNodesRef.current
     if (!scene || perRootNodes.length === 0) return
 
-    const exportParts = [...buildLatticeParts(scene), ...perRootNodes.flatMap(nodes => buildCoralParts(scene, nodes, { tessellation: 14, joints: true }))]
+    const exportParts = [...buildCageParts(scene, latticeMode), ...perRootNodes.flatMap(nodes => buildCoralParts(scene, nodes, { tessellation: 14, joints: true }))]
     if (exportParts.length === 0) return
 
     let merged: BABYLON.Mesh | null = null
@@ -433,7 +605,7 @@ export default function PrimerCuerpoPage() {
       merged?.dispose(false, true)
       exportParts.forEach(p => { if (!p.isDisposed()) p.dispose(false, true) })
     }
-  }, [])
+  }, [latticeMode])
 
   return (
     <div style={{ background: '#000503', minHeight: '100vh', color: '#c8f0da', fontFamily: mono, position: 'relative' }}>
@@ -464,6 +636,37 @@ export default function PrimerCuerpoPage() {
           datos reales de los 5 agentes que le prestaron un fragmento a Prototype, no de un número
           al azar.
         </p>
+
+        <div style={{ fontSize: 9, letterSpacing: 3, color: `${GREEN}88`, marginBottom: 10 }}>
+          JAULA
+        </div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
+          <button
+            onClick={() => setLatticeMode('metatron')}
+            style={{
+              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+              background: latticeMode === 'metatron' ? `${GREEN}22` : 'transparent', border: `1px solid ${GREEN}66`, color: GREEN,
+            }}
+          >
+            CUBO DE METATRÓN
+          </button>
+          <button
+            onClick={() => setLatticeMode('hexacosichoron')}
+            style={{
+              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+              background: latticeMode === 'hexacosichoron' ? `${GREEN}22` : 'transparent', border: `1px solid ${GREEN}66`, color: GREEN,
+            }}
+          >
+            HEXACOSICORON (4D)
+          </button>
+        </div>
+        {latticeMode === 'hexacosichoron' && (
+          <p style={{ fontSize: 10, color: '#d9a441', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
+            EXPERIMENTAL -- 600-cell (politopo regular de 4D, 120 vértices) rotando en 4D; la jaula es
+            la trayectoria proyectada de cada vértice, no el politopo quieto. No forma parte del
+            blueprint todavía y no está verificado para impresión real.
+          </p>
+        )}
 
         <div style={{ border: `1px solid ${GREEN}33`, position: 'relative', marginBottom: 20 }}>
           <canvas ref={canvasRef} style={{ width: '100%', height: 480, display: 'block' }} />
