@@ -45,6 +45,16 @@ const ARCHIVE_DOCS: ArchiveDoc[] = [
     color: '#b4e61d', format: 'REFERENCIA TÉCNICA',
     blurb: 'Nutrición y biohacking — lo que comés como información para el cuerpo y la mente, con cifras reales.',
   },
+  {
+    id: 'holografia', code: 'NPX-ARC-05', title: 'PRINCIPIO HOLOGRÁFICO', href: '/archivo/holografia',
+    color: '#6c5ce7', format: 'REFERENCIA TÉCNICA',
+    blurb: 'De la entropía de un agujero negro a AdS/CFT — con la distinción honesta entre lo matemáticamente probado y la especulación sobre nuestro universo real.',
+  },
+  {
+    id: 'cognitiva', code: 'NPX-ARC-06', title: 'CIENCIA COGNITIVA', href: '/archivo/cognitiva',
+    color: '#22e06b', format: 'REFERENCIA TÉCNICA',
+    blurb: 'El campo interdisciplinario completo — de la revolución contra el conductismo al problema difícil de la consciencia, distinto del recorte neurocientífico de MENTE.',
+  },
 ]
 
 function ArchiveDocCard({ doc }: { doc: ArchiveDoc }) {
