@@ -189,6 +189,24 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           "{agent.quote}"
         </div>
 
+        {agent.id === 'darkproxy' && (
+          <Link href="/admin/darkproxy" style={{
+            display: 'block', marginBottom: 40, padding: '20px 24px',
+            border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
+          }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
+              NPX-ROOT // TERMINAL
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
+              Esto no es un perfil que mirás desde afuera, como los otros. Es la entrada — la interfaz
+              real sobre el organismo, no la ficha de un personaje.
+            </p>
+            <div style={{ fontFamily: mono, fontSize: 9, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
+              ENTRAR →
+            </div>
+          </Link>
+        )}
+
         {agent.id === 'trickster' && (
           <Link href="/proxyverse/trickster/casino" style={{
             display: 'block', marginBottom: 40, padding: '20px 24px',

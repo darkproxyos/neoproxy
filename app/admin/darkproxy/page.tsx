@@ -18,8 +18,13 @@ import { purgeEntropy, injectCorruption, getSystemState, getSystemHistory, getUs
 
 const mono = "'Space Mono', monospace";
 const CYAN = '#00d4ff';
+const AMBER = '#f5a623';
 
 export default function DarkProxyTerminal() {
+  // Visible en el cliente a propósito -- si NEXT_PUBLIC_ADMIN_BYPASS_AUTH
+  // está en "true" en Vercel, nadie debería poder olvidarlo mirando esta
+  // pantalla. Ver middleware.ts y app/admin/actions.ts.
+  const bypassActive = process.env.NEXT_PUBLIC_ADMIN_BYPASS_AUTH === 'true';
   const [entropyHistory, setEntropyHistory] = useState<any[]>([]);
   const [systemState, setSystemState] = useState<any>(null);
   const [usageMetrics, setUsageMetrics] = useState<any>(null);
@@ -83,6 +88,16 @@ export default function DarkProxyTerminal() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '56px 24px 80px' }}>
+        {bypassActive && (
+          <div style={{
+            border: `1px solid ${AMBER}66`, background: `${AMBER}14`, color: AMBER,
+            fontSize: 10, letterSpacing: 1, lineHeight: 1.8, padding: '12px 16px', marginBottom: 24,
+          }}>
+            ⚠ ACCESO SIN SESIÓN ACTIVO — NEXT_PUBLIC_ADMIN_BYPASS_AUTH=true. Cualquiera con esta URL
+            entra sin login, incluidas purgar entropía / inyectar corrupción. Borrar la variable en
+            Vercel apenas el login real funcione.
+          </div>
+        )}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
           borderBottom: `1px solid ${CYAN}22`, paddingBottom: 24, marginBottom: 32, gap: 16, flexWrap: 'wrap',

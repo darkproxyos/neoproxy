@@ -4,11 +4,20 @@ import { NextResponse } from 'next/server'
 
 const { auth } = NextAuth(authConfig)
 
+// Bypass temporal mientras el login real de producción está roto (ver
+// scripts/reset-root-password.ts) -- OFF por default. Solo afecta /admin,
+// nunca /kernel. Ver .env.example para cómo activarlo/desactivarlo.
+const BYPASS_ADMIN_AUTH = process.env.NEXT_PUBLIC_ADMIN_BYPASS_AUTH === 'true'
+
 export default auth((req) => {
   const isLoggedIn = !!req.auth
   const isAdminRoute = req.nextUrl.pathname.startsWith('/admin')
   const isKernelRoute = req.nextUrl.pathname.startsWith('/kernel')
   const isLoginPage = req.nextUrl.pathname === '/login'
+
+  if (isAdminRoute && BYPASS_ADMIN_AUTH) {
+    return NextResponse.next()
+  }
 
   if ((isAdminRoute || isKernelRoute) && !isLoggedIn) {
     return NextResponse.redirect(new URL('/login', req.url))

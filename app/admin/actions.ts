@@ -12,7 +12,16 @@ import { isoWeekKey } from "@/lib/isoWeek";
 // cualquier sesion autenticada, no solo role: 'root', podia llegar a estas
 // Server Actions. Ya se quito (era teatro redundante); este chequeo es, y
 // siempre fue, la proteccion real.
+//
+// NEXT_PUBLIC_ADMIN_BYPASS_AUTH (ver .env.example y middleware.ts) salta
+// este chequeo por completo cuando esta en "true" -- temporal, mientras el
+// login real de produccion esta roto. Con esto activo, estas acciones
+// (purgar entropia, inyectar corrupcion) quedan abiertas a cualquiera con
+// la URL, sin sesion. Off por default.
+const BYPASS_ADMIN_AUTH = process.env.NEXT_PUBLIC_ADMIN_BYPASS_AUTH === 'true';
+
 async function requireRoot() {
+  if (BYPASS_ADMIN_AUTH) return { authorized: true as const };
   const session = await auth();
   if ((session?.user as any)?.role !== 'root') {
     return { authorized: false as const, error: 'UNAUTHORIZED' };
