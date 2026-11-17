@@ -311,6 +311,39 @@ export default function ExperimentalHubPage() {
           <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>MISMO TEXTO, MISMO SIGILO — SIEMPRE</div>
         </Link>
 
+        <div style={{ fontSize: 10, color: '#3fcf9e', letterSpacing: 4, marginBottom: 10 }}>
+          YI JING
+        </div>
+        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+          Lo opuesto al sigilo: acá nada es determinístico a propósito. El método real de las tres
+          monedas — seis líneas, azar genuino sin semilla, tal como siempre fue — arma uno de 64
+          hexagramas reales (dos trigramas apilados) con una lectura propia de NeoProxy sobre esa
+          combinación.
+        </p>
+        <Link href="/experimental/yijing" className="fade-in artifact-card" style={{
+          display: 'block', textDecoration: 'none', color: 'inherit', padding: 24, marginBottom: 56,
+          background: 'rgba(2,4,8,0.8)', border: '1px solid #3fcf9e33', borderLeft: '3px solid #3fcf9e',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+            <span style={{ fontSize: 9, letterSpacing: 2, color: '#3fcf9eaa' }}>NPX-XP-YIJING</span>
+            <span style={{
+              fontSize: 9, letterSpacing: 1, color: '#3fcf9e', border: '1px solid #3fcf9e55', padding: '2px 7px',
+            }}>
+              AZAR REAL, SIN SEMILLA
+            </span>
+          </div>
+          <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>易經 YI JING</div>
+          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            Tres monedas, seis líneas, de abajo hacia arriba — el hexagrama primario y, si hay líneas
+            cambiantes, hacia dónde se mueve. Las 8 líneas de cada trigrama son reales; la lectura de
+            cada combinación es síntesis propia, dicha así.
+          </p>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3fcf9ecc', marginBottom: 8 }}>
+            64 HEXAGRAMAS REALES · LECTURA PROPIA DE NEOPROXY
+          </div>
+          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>CADA TIRADA ES DISTINTA — A PROPÓSITO</div>
+        </Link>
+
         <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 10 }}>
           ACECHO
         </div>

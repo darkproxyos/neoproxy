@@ -8,16 +8,18 @@
 // tesis que /knowledge/sintesis ya dejó planteada para el resto del
 // Codex. Mismo criterio de honestidad que el resto del sitio: separar lo
 // históricamente verificable (manuscritos, fechas, personas reales) de
-// lo que cada practicante afirmó sin que eso tenga aval. Arranca con un
+// lo que cada practicante afirmó sin que eso tenga aval. Arrancó con un
 // solo documento de archivo (Grimorios) y un instrumento real
-// (/experimental/sigilo, extendido con un ritual de carga) -- crece
-// desde acá, no pretende estar completo.
+// (/experimental/sigilo, extendido con un ritual de carga). Yi Jing
+// suma el primer sistema de otra cultura y un segundo instrumento real
+// (/experimental/yijing) -- crece desde acá, no pretende estar completo.
 
 import Link from 'next/link'
 
 const mono = "'Space Mono', monospace"
 const GOLD = '#c9a24d'
 const RED = '#8b1538'
+const JADE = '#3fcf9e'
 
 type ArcanumDoc = {
   code: string; title: string; href: string; color: string; blurb: string
@@ -28,6 +30,11 @@ const ARCANUM_DOCS: ArcanumDoc[] = [
     code: 'NPX-ARN-00', title: 'GRIMORIOS Y SISTEMAS OCCIDENTALES', href: '/arcano/grimorios',
     color: RED,
     blurb: 'De heka egipcio a la magia del caos — manuscritos, fechas y personas reales, con cada atribución legendaria marcada como tal.',
+  },
+  {
+    code: 'NPX-ARN-01', title: '易經 YI JING', href: '/arcano/yijing',
+    color: JADE,
+    blurb: 'El primer sistema de otra cultura en este Codex — China, ~1000-750 a.C. Historia real, los 8 trigramas verificables, y la nota honesta de por qué las 64 lecturas del instrumento son síntesis propia.',
   },
 ]
 
@@ -102,35 +109,53 @@ export default function CodexArcanumPage() {
           ))}
         </div>
 
-        <Link href="/experimental/sigilo" style={{
-          display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
-          border: `1px solid ${GOLD}44`, background: `linear-gradient(135deg, ${GOLD}0f, transparent)`,
-        }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${GOLD}88`, marginBottom: 8 }}>
-            NPX-XP-SIGILO // INSTRUMENTO, NO SOLO ARCHIVO
-          </div>
-          <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: GOLD, marginBottom: 8, textShadow: `0 0 16px ${GOLD}55` }}>
-            FORJAR Y CARGAR UN SIGILO →
-          </div>
-          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
-            El método de Austin Osman Spare (capítulo VIII de Grimorios), corriendo como algoritmo
-            determinístico real — reducción de letras, glifo sobre una rueda fija, y ahora un ritual de
-            carga cronometrado con respiración guiada, cerrado con una nota honesta sobre el mecanismo
-            psicológico real detrás.
-          </p>
-        </Link>
+        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#80705a', marginBottom: 16 }}>
+          INSTRUMENTOS
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginBottom: 56 }}>
+          <Link href="/experimental/sigilo" style={{
+            display: 'block', textDecoration: 'none', padding: '20px 24px',
+            border: `1px solid ${GOLD}44`, background: `linear-gradient(135deg, ${GOLD}0f, transparent)`,
+          }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${GOLD}88`, marginBottom: 8 }}>
+              NPX-XP-SIGILO // DETERMINÍSTICO A PROPÓSITO
+            </div>
+            <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: GOLD, marginBottom: 8, textShadow: `0 0 16px ${GOLD}55` }}>
+              FORJAR Y CARGAR UN SIGILO →
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
+              El método de Austin Osman Spare (cap. VIII de Grimorios): reducción de letras, glifo sobre
+              una rueda fija, y un ritual de carga cronometrado con respiración guiada.
+            </p>
+          </Link>
+          <Link href="/experimental/yijing" style={{
+            display: 'block', textDecoration: 'none', padding: '20px 24px',
+            border: `1px solid ${JADE}44`, background: `linear-gradient(135deg, ${JADE}0f, transparent)`,
+          }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${JADE}aa`, marginBottom: 8 }}>
+              NPX-XP-YIJING // AZAR REAL, SIN SEMILLA
+            </div>
+            <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: JADE, marginBottom: 8, textShadow: `0 0 16px ${JADE}55` }}>
+              LANZAR LAS TRES MONEDAS →
+            </div>
+            <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
+              El método real del Yi Jing (ver cap. IV): seis líneas de monedas reales, el hexagrama
+              primario y, si cambia, hacia dónde se mueve.
+            </p>
+          </Link>
+        </div>
 
         <div style={{ borderTop: `1px solid ${GOLD}22`, paddingTop: 28 }}>
           <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#80705a', marginBottom: 10 }}>
             LO QUE TODAVÍA NO ESTÁ
           </div>
           <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.9, color: '#8a7868', maxWidth: 620, margin: 0 }}>
-            Esta sección arranca con el linaje occidental (Egipto, hermetismo, grimorios, Renacimiento,
-            revival del siglo XIX, magia del caos) porque es el que ya tiene, en este sitio, un instrumento
-            real corriendo detrás (el sigilo de Spare). Sistemas de otras culturas — vudú, chamanismo
-            amazónico y siberiano, curanderismo mesoamericano — merecen el mismo trato antropológico
-            cuidadoso que el resto del Codex, no una mención de pasada: quedan pendientes a propósito, para
-            no tratarlos peor que a Agrippa o a Crowley.
+            Dos linajes ya cubiertos, el occidental (Egipto, hermetismo, grimorios, Renacimiento, revival
+            del siglo XIX, magia del caos) y el chino (Yi Jing) — los dos con un instrumento real
+            corriendo detrás. Otros sistemas — vudú, chamanismo amazónico y siberiano, curanderismo
+            mesoamericano — merecen el mismo trato antropológico cuidadoso que el resto del Codex, no una
+            mención de pasada: quedan pendientes a propósito, para no tratarlos peor que a Agrippa, a
+            Crowley o al Yi Jing.
           </p>
         </div>
       </div>
