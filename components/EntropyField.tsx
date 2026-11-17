@@ -6,7 +6,7 @@ const POLL_MS = 45_000
 
 type GlitchBar = { id: number; top: number; height: number }
 
-// La entropía que el Overseer purga/inyecta desde /admin/overseer (ver
+// La entropía que DarkProxy purga/inyecta desde /admin/darkproxy (ver
 // app/admin/actions.ts) deja de ser un número de panel cerrado: acá se lee
 // en vivo y hace que el sitio entero reaccione para cualquier visitante —
 // el ruido de fondo (ya existente en layout.tsx, ahora reactivo vía la

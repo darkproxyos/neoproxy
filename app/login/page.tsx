@@ -84,7 +84,7 @@ export default function LoginPage() {
     if (result?.error) {
       setError('ACCESO DENEGADO // CREDENCIALES INVÁLIDAS')
     } else {
-      router.push('/dashboard')
+      router.push('/admin/darkproxy')
     }
   }
 

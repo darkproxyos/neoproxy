@@ -43,8 +43,8 @@ export default function Portal() {
             SIGNAL GROUP
           </a>
 
-          <Link href="/dashboard" className={styles.button}>
-            USER DASHBOARD
+          <Link href="/admin/darkproxy" className={styles.button}>
+            DARKPROXY
           </Link>
         </div>
 

@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
       console.error('entropy-entity: el shift se aplicó pero el broadcast falló:', broadcastErr)
     }
 
-    revalidatePath('/admin/overseer')
+    revalidatePath('/admin/darkproxy')
 
     return NextResponse.json({ status: 'shifted', delta, previousLevel, newLevel, candidates })
   } catch (err) {
