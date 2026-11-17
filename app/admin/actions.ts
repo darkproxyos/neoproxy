@@ -7,10 +7,11 @@ import { eq, desc, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { isoWeekKey } from "@/lib/isoWeek";
 
-// El gate de /admin/overseer/page.tsx es puramente client-side (una password
-// hardcodeada) y no protege nada por si solo — cualquier sesion autenticada,
-// no solo role: 'root', podia llegar a estas Server Actions. Este chequeo es
-// la proteccion real.
+// /admin/darkproxy/page.tsx (antes /admin/overseer) tenia un gate
+// client-side con password hardcodeada que no protegia nada por si solo —
+// cualquier sesion autenticada, no solo role: 'root', podia llegar a estas
+// Server Actions. Ya se quito (era teatro redundante); este chequeo es, y
+// siempre fue, la proteccion real.
 async function requireRoot() {
   const session = await auth();
   if ((session?.user as any)?.role !== 'root') {
@@ -36,7 +37,7 @@ export async function purgeEntropy() {
       payload: { message: "Entropy purged by Overseer" }
     });
 
-    revalidatePath("/admin/overseer");
+    revalidatePath("/admin/darkproxy");
     return { success: true, message: "Entropía purgada." };
   } catch (error) {
     console.error("Error purging entropy:", error);
@@ -68,7 +69,7 @@ export async function injectCorruption(amount: number = 10) {
       payload: { amount, newCorruption, newEntropy }
     });
 
-    revalidatePath("/admin/overseer");
+    revalidatePath("/admin/darkproxy");
     return { success: true, message: `Corrupción inyectada: +${amount}` };
   } catch (error) {
     console.error("Error injecting corruption:", error);

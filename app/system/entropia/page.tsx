@@ -10,7 +10,7 @@ const GREEN = '#39ff14'
 // Sin link desde ningún menú ni página — quien llega acá ya sabía que
 // buscar. No explica quién es Entropy, no lo nombra fuera del eventType
 // crudo: solo el registro, como quedó, sin curar. Misma fuente de datos
-// que /admin/overseer (memory_events), pero público — el admin la ve
+// que /admin/darkproxy (memory_events), pero público — el admin la ve
 // mezclada con el resto de su historial sin que nadie se lo explique ahí;
 // esto es la misma huella, aislada, para quien ya sospecha que hay un
 // patrón.
