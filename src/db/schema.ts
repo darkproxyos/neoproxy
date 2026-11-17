@@ -81,3 +81,17 @@ export const agentDiaryEntries = sqliteTable('agent_diary_entries', {
   entry: text('entry').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 }, (t) => [primaryKey({ columns: [t.agentId, t.dateKey] })])
+
+// Tareas reales de DarkProxy (negocio/producto/contenido/fabricación/kernel)
+// — distintas de los pending_tasks de Memory/hub.json, que son stubs
+// ficticios del kernel (lore, no la vida real de quien opera el sitio).
+// Esta tabla es la que arma /preview/darkproxy (y después /admin/darkproxy
+// cuando el login real vuelva a funcionar).
+export const darkproxyTasks = sqliteTable('darkproxy_tasks', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text('title').notNull(),
+  category: text('category').notNull().default('general'), // negocio | producto | contenido | fabricacion | kernel | general
+  status: text('status').notNull().default('pending'), // pending | in_progress | done
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+})
