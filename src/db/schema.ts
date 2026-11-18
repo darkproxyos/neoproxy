@@ -95,3 +95,26 @@ export const darkproxyTasks = sqliteTable('darkproxy_tasks', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 })
+
+// Segunda mente: captura de un campo, sin fricción -- el análisis con IA
+// (si encuentra una acción concreta, crea una fila en darkproxy_tasks) pasa
+// DESPUÉS de guardar, nunca bloqueando la captura. linkedTaskId queda null
+// hasta que (si) ese análisis genera una tarea real.
+export const mindEntries = sqliteTable('mind_entries', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  content: text('content').notNull(),
+  processed: integer('processed', { mode: 'boolean' }).notNull().default(false),
+  linkedTaskId: text('linked_task_id'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+})
+
+// Log manual de ingreso/gasto -- no hay todavía ningún dato de ventas real
+// en ningún lado (el checkout de Mercado Pago no guarda nada), así que esto
+// es la primera verdad de negocio: manual, declarado como tal, no una
+// gráfica vacía esperando una integración que no existe.
+export const moneyLog = sqliteTable('money_log', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  amount: integer('amount').notNull(), // positivo = ingreso, negativo = gasto, en la unidad que se use (CLP)
+  note: text('note').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+})

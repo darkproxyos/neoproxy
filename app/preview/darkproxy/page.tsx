@@ -20,6 +20,8 @@ import { useEffect, useState } from 'react';
 import {
   getSystemStateReadOnly, getUsageMetricsReadOnly,
   listTasks, createTask, setTaskStatus, deleteTask,
+  logVisitAndGetStreak, listThoughts, captureThought, analyzeThought,
+  listMoneyLog, addMoneyEntry,
 } from './actions';
 
 const mono = "'Space Mono', monospace";
@@ -28,6 +30,22 @@ const AMBER = '#f5a623';
 
 type Stage = 'angel' | 'glitch' | 'darkproxy' | 'revealed';
 type Task = { id: string; title: string; category: string; status: string; createdAt: string; updatedAt: string };
+type Thought = { id: string; content: string; processed: boolean; linkedTaskId: string | null; createdAt: string };
+type MoneyEntry = { id: string; amount: number; note: string; createdAt: string };
+
+// Lo de hoy: si hay algo EN CURSO, seguir eso (lo más reciente que se tocó)
+// pesa más que arrancar algo nuevo. Si no, la tarea PENDIENTE más vieja --
+// no la más urgente por categoría (no hay dato real de urgencia todavía),
+// la que lleva más tiempo esperando. Sin esto, abrir el dashboard es una
+// pared de datos; con esto, es una sola cosa.
+function pickTopTask(tasks: Task[]): Task | null {
+  const inProgress = tasks.filter(t => t.status === 'in_progress')
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  if (inProgress.length > 0) return inProgress[0];
+  const pending = tasks.filter(t => t.status === 'pending')
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  return pending[0] ?? null;
+}
 
 const CATEGORIES = ['negocio', 'producto', 'contenido', 'fabricacion', 'kernel', 'general'];
 const CATEGORY_LABEL: Record<string, string> = {
@@ -110,17 +128,33 @@ export default function DarkProxyPreview() {
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState('general');
   const [busy, setBusy] = useState(false);
+  const [streak, setStreak] = useState<number | null>(null);
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
+  const [thoughtInput, setThoughtInput] = useState('');
+  const [thoughtBusy, setThoughtBusy] = useState(false);
+  const [moneyEntries, setMoneyEntries] = useState<MoneyEntry[]>([]);
+  const [balance, setBalance] = useState(0);
+  const [moneyAmount, setMoneyAmount] = useState('');
+  const [moneyNote, setMoneyNote] = useState('');
+  const [moneyKind, setMoneyKind] = useState<'ingreso' | 'gasto'>('ingreso');
 
   const loadData = async () => {
-    const [state, metrics, taskList] = await Promise.all([
-      getSystemStateReadOnly(), getUsageMetricsReadOnly(), listTasks(),
+    const [state, metrics, taskList, thoughtList, money] = await Promise.all([
+      getSystemStateReadOnly(), getUsageMetricsReadOnly(), listTasks(), listThoughts(), listMoneyLog(),
     ]);
     setSystemState(state);
     setUsageMetrics(metrics);
     setTasks(taskList as Task[]);
+    setThoughts(thoughtList as Thought[]);
+    setMoneyEntries(money.entries as MoneyEntry[]);
+    setBalance(money.balance);
   };
 
-  useEffect(() => { if (stage === 'revealed') loadData(); }, [stage]);
+  useEffect(() => {
+    if (stage !== 'revealed') return;
+    loadData();
+    logVisitAndGetStreak().then(setStreak);
+  }, [stage]);
 
   if (stage !== 'revealed') {
     return <Transition onDone={() => setStage('revealed')} />;
@@ -147,9 +181,36 @@ export default function DarkProxyPreview() {
     await loadData();
   };
 
+  // Captura óptima: guarda ya (rápido, un campo), muestra el pensamiento
+  // de inmediato en la lista, y SOLO DESPUÉS dispara el análisis con IA
+  // sin esperarlo -- si tarda o falla, la captura ya pasó, no se nota.
+  const handleCapture = async () => {
+    const content = thoughtInput.trim();
+    if (!content) return;
+    setThoughtInput('');
+    setThoughtBusy(true);
+    const result = await captureThought(content);
+    await loadData();
+    setThoughtBusy(false);
+    if (result.success && result.id) {
+      analyzeThought(result.id, content).then(() => loadData());
+    }
+  };
+
+  const handleAddMoney = async () => {
+    const parsed = parseInt(moneyAmount.replace(/\D/g, ''), 10);
+    if (!parsed) return;
+    const signed = moneyKind === 'gasto' ? -parsed : parsed;
+    await addMoneyEntry(signed, moneyNote);
+    setMoneyAmount('');
+    setMoneyNote('');
+    await loadData();
+  };
+
   const card: React.CSSProperties = { border: `1px solid ${CYAN}33`, background: `${CYAN}08`, padding: '20px 22px' };
   const pendingTasks = tasks.filter(t => t.status !== 'done');
   const doneTasks = tasks.filter(t => t.status === 'done');
+  const topTask = pickTopTask(tasks);
 
   return (
     <div style={{ background: '#030608', minHeight: '100vh', color: '#c8e8f4', fontFamily: mono, position: 'relative' }}>
@@ -187,6 +248,38 @@ export default function DarkProxyPreview() {
           }}>
             VER TRANSICIÓN DE NUEVO
           </button>
+        </div>
+
+        <div style={{
+          border: `1px solid ${CYAN}55`, background: `linear-gradient(135deg, ${CYAN}14, transparent)`,
+          padding: '22px 24px', marginBottom: 16,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+            <h3 style={{ fontSize: 10, letterSpacing: 2, color: CYAN, margin: 0 }}>// LO DE HOY</h3>
+            {streak !== null && streak > 0 && (
+              <span style={{ fontSize: 10, letterSpacing: 1, color: '#7fa8b8' }}>
+                🔥 {streak} día{streak === 1 ? '' : 's'} seguido{streak === 1 ? '' : 's'} entrando como DarkProxy
+              </span>
+            )}
+          </div>
+          {topTask ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+              <button onClick={() => cycleStatus(topTask)} style={{
+                fontFamily: mono, fontSize: 8.5, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
+                background: topTask.status === 'in_progress' ? `${AMBER}1a` : 'transparent',
+                border: `1px solid ${topTask.status === 'in_progress' ? AMBER : CYAN}55`,
+                color: topTask.status === 'in_progress' ? AMBER : CYAN,
+              }}>
+                {STATUS_LABEL[topTask.status]}
+              </button>
+              <span style={{ fontSize: 16, color: '#e8f4fa' }}>{topTask.title}</span>
+              <span style={{ fontSize: 8.5, letterSpacing: 1, color: '#4a7888', border: `1px solid #4a788855`, padding: '3px 7px' }}>
+                {CATEGORY_LABEL[topTask.category] || topTask.category}
+              </span>
+            </div>
+          ) : (
+            <p style={{ fontSize: 11.5, color: '#7fa8b8', margin: 0 }}>Sin tareas pendientes — agregá la primera abajo.</p>
+          )}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16, marginBottom: 16 }}>
@@ -295,6 +388,103 @@ export default function DarkProxyPreview() {
                 </div>
               )}
             </>
+          )}
+        </div>
+
+        <div style={{ ...card, marginBottom: 16 }}>
+          <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// SEGUNDA MENTE</h3>
+          <p style={{ fontSize: 9.5, color: '#4a7888', lineHeight: 1.7, margin: '0 0 18px' }}>
+            Un campo, lo que pienses, se guarda ya. Si encuentra una acción concreta, la manda sola a
+            Tareas Pendientes -- eso pasa después, nunca bloquea la captura.
+          </p>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            <input
+              value={thoughtInput}
+              onChange={e => setThoughtInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleCapture(); }}
+              placeholder="¿QUÉ TENÉS EN MENTE?"
+              style={{
+                flex: 1, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
+                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+              }}
+            />
+            <button onClick={handleCapture} disabled={thoughtBusy || !thoughtInput.trim()} style={{
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
+              background: `${CYAN}14`, border: `1px solid ${CYAN}88`, color: CYAN, opacity: thoughtBusy ? 0.5 : 1,
+            }}>
+              GUARDAR
+            </button>
+          </div>
+          {thoughts.length === 0 ? (
+            <p style={{ fontSize: 10.5, color: '#4a7888' }}>SIN NOTAS TODAVÍA.</p>
+          ) : (
+            thoughts.map(t => (
+              <div key={t.id} style={{ padding: '9px 0', borderBottom: `1px solid ${CYAN}14` }}>
+                <p style={{ fontSize: 11, color: '#c8e8f4', margin: '0 0 4px', lineHeight: 1.6 }}>{t.content}</p>
+                <div style={{ fontSize: 8.5, color: '#4a7888', letterSpacing: 0.5 }}>
+                  {!t.processed ? 'analizando...' : t.linkedTaskId ? '💡 generó una tarea' : 'sin acción detectada'}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div style={card}>
+          <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// NEGOCIO — BALANCE REAL</h3>
+          <p style={{ fontSize: 9.5, color: '#4a7888', lineHeight: 1.7, margin: '0 0 14px' }}>
+            Manual a propósito -- el checkout de Mercado Pago todavía no guarda nada en ningún lado.
+            Esto es lo real que hay, no una gráfica vacía.
+          </p>
+          <div style={{ fontSize: 28, color: balance >= 0 ? '#39ff8a' : '#ff5555', marginBottom: 18 }}>
+            ${balance.toLocaleString('es-CL')}
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+            <select value={moneyKind} onChange={e => setMoneyKind(e.target.value as 'ingreso' | 'gasto')} style={{
+              background: '#010305', border: `1px solid ${CYAN}44`, color: CYAN, fontFamily: mono, fontSize: 10.5, padding: '9px 10px',
+            }}>
+              <option value="ingreso">+ INGRESO</option>
+              <option value="gasto">− GASTO</option>
+            </select>
+            <input
+              value={moneyAmount}
+              onChange={e => setMoneyAmount(e.target.value)}
+              placeholder="MONTO"
+              inputMode="numeric"
+              style={{
+                width: 110, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
+                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+              }}
+            />
+            <input
+              value={moneyNote}
+              onChange={e => setMoneyNote(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleAddMoney(); }}
+              placeholder="NOTA (OPCIONAL)"
+              style={{
+                flex: 1, minWidth: 140, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
+                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+              }}
+            />
+            <button onClick={handleAddMoney} disabled={!moneyAmount.trim()} style={{
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
+              background: `${CYAN}14`, border: `1px solid ${CYAN}88`, color: CYAN,
+            }}>
+              REGISTRAR
+            </button>
+          </div>
+          {moneyEntries.length === 0 ? (
+            <p style={{ fontSize: 10.5, color: '#4a7888' }}>SIN MOVIMIENTOS TODAVÍA.</p>
+          ) : (
+            moneyEntries.slice(0, 8).map(m => (
+              <div key={m.id} style={{
+                display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: `1px solid ${CYAN}14`,
+              }}>
+                <span style={{ fontSize: 11, color: '#a8c8d4' }}>{m.note}</span>
+                <span style={{ fontSize: 11, color: m.amount >= 0 ? '#39ff8a' : '#ff5555' }}>
+                  {m.amount >= 0 ? '+' : ''}{m.amount.toLocaleString('es-CL')}
+                </span>
+              </div>
+            ))
           )}
         </div>
       </div>
