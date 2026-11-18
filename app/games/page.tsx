@@ -89,6 +89,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'Juego anterior al Proxyverse, construido entero en Phaser — 29 niveles esquivando púas, sierras, boomerangs y láseres hasta el portal de salida. Tres formas de jugarlo: el original revivido, una versión inclinada en 3D real (CSS), y una reconstrucción completa en Babylon.js desde cero.',
     controls: 'MOUSE / DEDO — TE SIGUE HASTA EL PORTAL',
   },
+  {
+    id: 'mobius',
+    code: 'NPX-GAME-MOBIUS',
+    title: 'MÖBIUS',
+    href: '/games/mobius',
+    status: 'demo',
+    blurb: 'Plataformero sobre una cinta de Möbius real (geometría paramétrica real, no un efecto de cámara pegado encima) — la normal de la superficie es tu "arriba", así que el giro se siente en el cuerpo al pasar la mitad del recorrido. Dos vueltas completas (4π) para cerrar el bucle de verdad.',
+    controls: '←→ / A D CAMBIAR DE CARRIL — ESPACIO SALTAR',
+  },
 ]
 
 export default function GamesHubPage() {
