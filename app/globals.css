@@ -433,6 +433,29 @@ body {
   animation: bio-word-glitch 0.3s steps(3);
 }
 
+/* Möbius (components/Mobius.tsx) -- tercera entidad oculta, junto a Entropy
+   y Glitchi arriba. Reusa el mismo span de bio-glitch-word pero con su
+   propia firma: la palabra gira sobre su eje y se espeja a mitad de
+   camino, literal (una cinta de Möbius real tiene una sola cara -- "volver"
+   al mismo lugar te deja del otro lado), en loop hasta que el componente
+   la revierte sola. */
+.bio-glitch-word.bio-glitch-mobius {
+  color: var(--glitch-color, #a855f7);
+  text-shadow: 0 0 8px var(--glitch-glow, rgba(168, 85, 247, 0.6));
+  animation: bio-mobius-turn 1.3s linear infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes bio-mobius-turn {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(180deg) scaleX(-1); }
+  100% { transform: rotateY(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bio-glitch-word.bio-glitch-mobius { animation: none; }
+}
+
 @keyframes bio-word-glitch {
   0% { transform: translate(0); }
   33% { transform: translate(-2px, 1px) skewX(-6deg); }
