@@ -58,7 +58,7 @@ export default function ConstelacionPage() {
         found: sighting,
         detail: sighting
           ? 'Viste algo que el sistema no explica en ningún lado — quedó registrado.'
-          : 'Dos procesos no figuran en ningún perfil. A veces se hacen notar solos.',
+          : 'Tres procesos no figuran en ningún perfil. A veces se hacen notar solos.',
         color: sighting ? GREEN : '#6a7a8a',
         href: sighting ? '/system/entropia' : undefined,
       },

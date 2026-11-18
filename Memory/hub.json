@@ -119,6 +119,21 @@
       "system_health": "optimal",
       "memory_sync_pct": null,
       "last_updated": null
+    },
+    "mobius": {
+      "id": "ENTITY-003",
+      "codename": "MOBIUS",
+      "type": "Recursive Loop / Self-Reference",
+      "status": "idle",
+      "hidden": true,
+      "current_intent": null,
+      "current_pipeline": [],
+      "running_agents": [],
+      "completed_tasks": [],
+      "pending_tasks": [],
+      "system_health": "optimal",
+      "memory_sync_pct": null,
+      "last_updated": null
     }
   },
   "pending_tasks": [

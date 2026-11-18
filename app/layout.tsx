@@ -12,6 +12,7 @@ import Grieta from '@/components/grietas/Grieta'
 import EntropyField from '@/components/EntropyField'
 import EntropyEntity from '@/components/EntropyEntity'
 import Glitchi from '@/components/Glitchi'
+import Mobius from '@/components/Mobius'
 import CircadianField from '@/components/CircadianField'
 import ClickDesync from '@/components/ClickDesync'
 import ConsoleOverlay from '@/components/ConsoleOverlay'
@@ -53,6 +54,7 @@ export default function RootLayout({
           <EntropyField />
           <EntropyEntity />
           <Glitchi />
+          <Mobius />
           <CircadianField />
           <ClickDesync />
           <ConsoleOverlay />
