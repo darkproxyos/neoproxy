@@ -23,20 +23,22 @@ type ArchiveDoc = {
   format: 'ENSAYO' | 'REFERENCIA TÉCNICA' | 'ANÁLISIS CULTURAL' | 'TEORÍA DISPUTADA'; blurb: string
 }
 
-// Los catorce documentos largos que conviven bajo CODEX COGITO: Filosofía
-// (el argumento narrativo original de esta sección), siete documentos de
+// Los quince documentos largos que conviven bajo CODEX COGITO: Filosofía
+// (el argumento narrativo original de esta sección), ocho documentos de
 // archivo con referencia técnica (/archivo/*, el séptimo -- Dinero -- a
-// pedido explícito sobre economía, autores, consejos y negocios) --
-// antes sueltos, sin link desde ningún lado del sitio -- cinco más que
-// hasta un pedido anterior no tenían ningún link en absoluto: tres
+// pedido explícito sobre economía, el octavo -- Metacognición -- sobre
+// diálogo interno y cómo identificar los propios errores de pensamiento)
+// -- antes sueltos, sin link desde ningún lado del sitio -- cinco más
+// que hasta un pedido anterior no tenían ningún link en absoluto: tres
 // análisis de ficción (Ergo Proxy, Lain, Ghost in the Shell) y dos
 // teorías científicas reales pero disputadas (Grinberg, Garnier Malet),
 // escritas como "páginas ocultas" en una sesión previa -- y, al final de
-// todos, Síntesis: un ensayo escrito ANTES de Dinero, que lee los otros
-// doce documentos de ese momento y busca qué dicen entre sí que ninguno
-// dice solo (conexiones reales, verificadas contra cada documento, no
-// inventadas) -- no se reescribió para forzar a Dinero adentro de ese
-// argumento, que es sobre materia/información, no sobre economía. Cada
+// todos, Síntesis: un ensayo escrito ANTES de Dinero y Metacognición, que
+// lee los otros doce documentos de ese momento y busca qué dicen entre sí
+// que ninguno dice solo (conexiones reales, verificadas contra cada
+// documento, no inventadas) -- no se reescribió para forzar a los dos
+// documentos posteriores adentro de ese argumento, que es sobre
+// materia/información, no sobre economía ni psicología individual. Cada
 // uno con su propio acento de color, ya establecido en
 // su página real; acá solo se referencian, no se redefinen.
 const ARCHIVE_DOCS: ArchiveDoc[] = [
@@ -104,6 +106,11 @@ const ARCHIVE_DOCS: ArchiveDoc[] = [
     id: 'dinero', code: 'NPX-ARC-07', title: 'DINERO', href: '/archivo/dinero',
     color: '#b8860b', format: 'REFERENCIA TÉCNICA',
     blurb: 'Economía, psicología conductual y neuroventas — Kahneman y Thaler con Nobel real, Kiyosaki y Eker como desarrollo personal, Klarić apoyado en un modelo ya superado. Nada tratado igual.',
+  },
+  {
+    id: 'metacognicion', code: 'NPX-ARC-08', title: 'METACOGNICIÓN', href: '/archivo/metacognicion',
+    color: '#ff7a3d', format: 'REFERENCIA TÉCNICA',
+    blurb: 'Diálogo interno, voz mental y cómo identificar tus propios errores de pensamiento — Beck/Burns y Kross con décadas de evidencia controlada, IFS honesto sobre tener mucha menos.',
   },
   {
     id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
@@ -281,16 +288,18 @@ export default function KnowledgePage() {
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
           qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
-          ángulos distintos. Abajo, catorce documentos largos — dos ensayos, siete referencias
+          ángulos distintos. Abajo, quince documentos largos — dos ensayos, ocho referencias
           técnicas, tres análisis de ficción y dos teorías científicas disputadas — que bajan hasta
           el detalle: partículas, mente, lenguaje, alimentación, el principio holográfico, ciencia
           cognitiva, dinero (economía, psicología conductual y neuroventas, con el mismo cuidado de
-          separar Nobel real de desarrollo personal), filosofía; Ergo Proxy, Serial Experiments Lain
-          y Ghost in the Shell leídas con la misma vara que un paper; Jacobo Grinberg y Garnier
-          Malet, dos teorías reales que la ciencia nunca terminó de aceptar, separadas con cuidado
-          de lo que de verdad se pudo confirmar; y Síntesis, que no agrega un documento más sino que
-          lee doce de los otros trece juntos (todos menos Dinero, que llegó después) buscando qué
-          dicen entre sí que ninguno dice solo.
+          separar Nobel real de desarrollo personal), metacognición (diálogo interno y cómo
+          identificar los propios errores de pensamiento, con el mismo cuidado de separar CBT con
+          décadas de evidencia de modelos con mucha menos), filosofía; Ergo Proxy, Serial
+          Experiments Lain y Ghost in the Shell leídas con la misma vara que un paper; Jacobo
+          Grinberg y Garnier Malet, dos teorías reales que la ciencia nunca terminó de aceptar,
+          separadas con cuidado de lo que de verdad se pudo confirmar; y Síntesis, que no agrega un
+          documento más sino que lee doce de los otros catorce juntos (todos menos Dinero y
+          Metacognición, que llegaron después) buscando qué dicen entre sí que ninguno dice solo.
           Más abajo todavía, los nombres — y ahí la arquitectura se parte en dos a propósito.
           Primero, quienes se atrevieron a medir cada pieza de lo invisible, poniéndole una ecuación
           encima en vez de
@@ -334,7 +343,7 @@ export default function KnowledgePage() {
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          CATORCE DOCUMENTOS
+          QUINCE DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
