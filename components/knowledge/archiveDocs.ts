@@ -74,6 +74,11 @@ export const ARCHIVE_DOCS: ArchiveDoc[] = [
     blurb: 'La teoría del desdoblamiento del tiempo — qué afirma la tesis, qué no pudo confirmarse, separado con el mismo cuidado que el resto del archivo.',
   },
   {
+    id: 'giger', code: 'NPX-REF-05', title: 'GIGER', href: '/archivo/giger',
+    color: '#8a8176', format: 'ANÁLISIS CULTURAL',
+    blurb: 'La estética biomecánica — el cuarto pilar visual que nombra CLAUDE.md (junto a Ergo Proxy, Lain y Ghost in the Shell), sin documento propio hasta ahora.',
+  },
+  {
     id: 'dinero', code: 'NPX-ARC-07', title: 'DINERO', href: '/archivo/dinero',
     color: '#b8860b', format: 'REFERENCIA TÉCNICA',
     blurb: 'Economía, psicología conductual y neuroventas — Kahneman y Thaler con Nobel real, Kiyosaki y Eker como desarrollo personal, Klarić apoyado en un modelo ya superado. Nada tratado igual.',
@@ -102,6 +107,21 @@ export const ARCHIVE_DOCS: ArchiveDoc[] = [
     id: 'cibernetica', code: 'NPX-ARC-12', title: 'CIBERNÉTICA', href: '/archivo/cibernetica',
     color: '#3a4ba0', format: 'REFERENCIA TÉCNICA',
     blurb: 'Cómo un sistema se regula a sí mismo — Wiener, Ashby, von Neumann y Bertalanffy: el vocabulario real detrás de "organismo vivo", la frase que ya usa CLAUDE.md para describir NeoProxy.',
+  },
+  {
+    id: 'computacion-cuantica', code: 'NPX-ARC-13', title: 'COMPUTACIÓN CUÁNTICA', href: '/archivo/computacion-cuantica',
+    color: '#1b3a6b', format: 'REFERENCIA TÉCNICA',
+    blurb: 'Qubits, entrelazamiento y por qué todavía no existe una máquina útil a gran escala — supremacía cuántica y qubits topológicos tratados como la controversia real que son, no como hito cerrado.',
+  },
+  {
+    id: 'redes-neuronales', code: 'NPX-ARC-14', title: 'REDES NEURONALES ARTIFICIALES', href: '/archivo/redes-neuronales',
+    color: '#8fa3b0', format: 'REFERENCIA TÉCNICA',
+    blurb: 'Funcionamiento, tipos, orígenes, hasta ahora y futuro — McCulloch, Perceptrón, Transformer y Hopfield (Nobel 2024), ya sembrados en el Codex sin documento que los uniera.',
+  },
+  {
+    id: 'adn', code: 'NPX-ARC-15', title: 'ADN', href: '/archivo/adn',
+    color: '#ff8577', format: 'REFERENCIA TÉCNICA',
+    blurb: 'La molécula, el código, y el crédito que tardó décadas en repartirse bien — de Rosalind Franklin a CRISPR, con el debate real sobre el ADN no codificante todavía abierto.',
   },
   {
     id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
