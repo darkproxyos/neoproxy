@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { entries, clusters, type Cluster, type KnowledgeEntry } from '@/components/knowledge/entries'
 import { agents } from '@/components/proxyverse/agents'
+import { ARCHIVE_DOCS, type ArchiveDoc } from '@/components/knowledge/archiveDocs'
 
 const mono = "'Space Mono', monospace"
 
@@ -18,106 +19,9 @@ function parseStartYear(years: string): number {
   return match ? parseInt(match[0], 10) : Infinity
 }
 
-type ArchiveDoc = {
-  id: string; code: string; title: string; href: string; color: string
-  format: 'ENSAYO' | 'REFERENCIA TÉCNICA' | 'ANÁLISIS CULTURAL' | 'TEORÍA DISPUTADA'; blurb: string
-}
-
-// Los quince documentos largos que conviven bajo CODEX COGITO: Filosofía
-// (el argumento narrativo original de esta sección), ocho documentos de
-// archivo con referencia técnica (/archivo/*, el séptimo -- Dinero -- a
-// pedido explícito sobre economía, el octavo -- Metacognición -- sobre
-// diálogo interno y cómo identificar los propios errores de pensamiento)
-// -- antes sueltos, sin link desde ningún lado del sitio -- cinco más
-// que hasta un pedido anterior no tenían ningún link en absoluto: tres
-// análisis de ficción (Ergo Proxy, Lain, Ghost in the Shell) y dos
-// teorías científicas reales pero disputadas (Grinberg, Garnier Malet),
-// escritas como "páginas ocultas" en una sesión previa -- y, al final de
-// todos, Síntesis: un ensayo escrito ANTES de Dinero y Metacognición, que
-// lee los otros doce documentos de ese momento y busca qué dicen entre sí
-// que ninguno dice solo (conexiones reales, verificadas contra cada
-// documento, no inventadas) -- no se reescribió para forzar a los dos
-// documentos posteriores adentro de ese argumento, que es sobre
-// materia/información, no sobre economía ni psicología individual. Cada
-// uno con su propio acento de color, ya establecido en
-// su página real; acá solo se referencian, no se redefinen.
-const ARCHIVE_DOCS: ArchiveDoc[] = [
-  {
-    id: 'filosofia', code: 'NPX-KNW-00a', title: 'FILOSOFÍA', href: '/knowledge/filosofia',
-    color: '#b06bff', format: 'ENSAYO',
-    blurb: 'Un solo recorrido, seis nodos, un argumento — de la información a la pregunta por el yo.',
-  },
-  {
-    id: 'particulas', code: 'NPX-ARC-01', title: 'PARTÍCULAS', href: '/archivo/particulas',
-    color: '#5fd4ff', format: 'REFERENCIA TÉCNICA',
-    blurb: 'El modelo estándar completo — quarks, leptones, bosones, diagramas de Feynman — con el detalle de un archivo de laboratorio.',
-  },
-  {
-    id: 'mente', code: 'NPX-ARC-02', title: 'MENTE', href: '/archivo/mente',
-    color: '#ff4fa3', format: 'REFERENCIA TÉCNICA',
-    blurb: 'Neurociencia y ciencia cognitiva — de la neurona individual al problema difícil de la consciencia.',
-  },
-  {
-    id: 'lenguaje', code: 'NPX-ARC-03', title: 'LENGUAJE', href: '/archivo/lenguaje',
-    color: '#2ee6b8', format: 'REFERENCIA TÉCNICA',
-    blurb: 'Lingüística completa — fonética, sintaxis, la jerarquía de Chomsky, familias de lenguas.',
-  },
-  {
-    id: 'alimentacion', code: 'NPX-ARC-04', title: 'ALIMENTACIÓN', href: '/archivo/alimentacion',
-    color: '#b4e61d', format: 'REFERENCIA TÉCNICA',
-    blurb: 'Nutrición y biohacking — lo que comés como información para el cuerpo y la mente, con cifras reales.',
-  },
-  {
-    id: 'holografia', code: 'NPX-ARC-05', title: 'PRINCIPIO HOLOGRÁFICO', href: '/archivo/holografia',
-    color: '#6c5ce7', format: 'REFERENCIA TÉCNICA',
-    blurb: 'De la entropía de un agujero negro a AdS/CFT — con la distinción honesta entre lo matemáticamente probado y la especulación sobre nuestro universo real.',
-  },
-  {
-    id: 'cognitiva', code: 'NPX-ARC-06', title: 'CIENCIA COGNITIVA', href: '/archivo/cognitiva',
-    color: '#22e06b', format: 'REFERENCIA TÉCNICA',
-    blurb: 'El campo interdisciplinario completo — de la revolución contra el conductismo al problema difícil de la consciencia, distinto del recorte neurocientífico de MENTE.',
-  },
-  {
-    id: 'ergoproxy', code: 'NPX-REF-00', title: 'ERGO PROXY', href: '/archivo/ergoproxy',
-    color: '#c9703a', format: 'ANÁLISIS CULTURAL',
-    blurb: 'Romdo, los Proxy y el título leído como eco directo de Descartes — premisa, filosofía y la recepción real de la serie, sección por sección.',
-  },
-  {
-    id: 'lain', code: 'NPX-REF-01', title: 'SERIAL EXPERIMENTS LAIN', href: '/archivo/lain',
-    color: '#4f6bff', format: 'ANÁLISIS CULTURAL',
-    blurb: 'La Wired como extensión del yo — identidad, el final real de la serie y por qué sigue citada 25 años después.',
-  },
-  {
-    id: 'gits', code: 'NPX-REF-02', title: 'GHOST IN THE SHELL', href: '/archivo/gits',
-    color: '#d946ef', format: 'ANÁLISIS CULTURAL',
-    blurb: 'El ghost en la máquina — filosofía, versiones y el legado real sobre Matrix y el cyberpunk que vino después.',
-  },
-  {
-    id: 'grinberg', code: 'NPX-REF-03', title: 'JACOBO GRINBERG', href: '/archivo/grinberg',
-    color: '#39d953', format: 'TEORÍA DISPUTADA',
-    blurb: 'La teoría sintérgica y los potenciales transferidos — biografía, experimentos, recepción científica real y una desaparición sin resolver.',
-  },
-  {
-    id: 'garniermalet', code: 'NPX-REF-04', title: 'GARNIER MALET', href: '/archivo/garniermalet',
-    color: '#b31ba3', format: 'TEORÍA DISPUTADA',
-    blurb: 'La teoría del desdoblamiento del tiempo — qué afirma la tesis, qué no pudo confirmarse, separado con el mismo cuidado que el resto del archivo.',
-  },
-  {
-    id: 'dinero', code: 'NPX-ARC-07', title: 'DINERO', href: '/archivo/dinero',
-    color: '#b8860b', format: 'REFERENCIA TÉCNICA',
-    blurb: 'Economía, psicología conductual y neuroventas — Kahneman y Thaler con Nobel real, Kiyosaki y Eker como desarrollo personal, Klarić apoyado en un modelo ya superado. Nada tratado igual.',
-  },
-  {
-    id: 'metacognicion', code: 'NPX-ARC-08', title: 'METACOGNICIÓN', href: '/archivo/metacognicion',
-    color: '#ff7a3d', format: 'REFERENCIA TÉCNICA',
-    blurb: 'Diálogo interno, voz mental y cómo identificar tus propios errores de pensamiento — Beck/Burns y Kross con décadas de evidencia controlada, IFS honesto sobre tener mucha menos.',
-  },
-  {
-    id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
-    color: '#00d4ff', format: 'ENSAYO',
-    blurb: 'Los otros doce documentos, leídos juntos — de la entropía de un agujero negro a una teoría que nadie pudo confirmar, todos preguntando lo mismo.',
-  },
-]
+// ARCHIVE_DOCS vive en components/knowledge/archiveDocs.ts -- se extrajo
+// de acá para que app/knowledge/atlas/page.tsx pueda reusar los mismos
+// datos reales sin duplicarlos.
 
 function ArchiveDocCard({ doc }: { doc: ArchiveDoc }) {
   return (
@@ -288,18 +192,22 @@ export default function KnowledgePage() {
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
           qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
-          ángulos distintos. Abajo, quince documentos largos — dos ensayos, ocho referencias
+          ángulos distintos. Abajo, diecinueve documentos largos — dos ensayos, doce referencias
           técnicas, tres análisis de ficción y dos teorías científicas disputadas — que bajan hasta
           el detalle: partículas, mente, lenguaje, alimentación, el principio holográfico, ciencia
           cognitiva, dinero (economía, psicología conductual y neuroventas, con el mismo cuidado de
           separar Nobel real de desarrollo personal), metacognición (diálogo interno y cómo
-          identificar los propios errores de pensamiento, con el mismo cuidado de separar CBT con
-          décadas de evidencia de modelos con mucha menos), filosofía; Ergo Proxy, Serial
-          Experiments Lain y Ghost in the Shell leídas con la misma vara que un paper; Jacobo
-          Grinberg y Garnier Malet, dos teorías reales que la ciencia nunca terminó de aceptar,
-          separadas con cuidado de lo que de verdad se pudo confirmar; y Síntesis, que no agrega un
-          documento más sino que lee doce de los otros catorce juntos (todos menos Dinero y
-          Metacognición, que llegaron después) buscando qué dicen entre sí que ninguno dice solo.
+          identificar los propios errores de pensamiento), semiótica (el signo y el simulacro de
+          Baudrillard), hermenéutica (la interpretación, desde Schleiermacher hasta Gadamer),
+          autoorganización (Prigogine, Lorenz, Barabási — ciencia que ya corre en vivo en el sitio)
+          y cibernética (Wiener, Ashby, Bertalanffy — el vocabulario real detrás de "organismo
+          vivo"), filosofía; Ergo Proxy, Serial Experiments Lain y Ghost in the Shell leídas con la
+          misma vara que un paper; Jacobo Grinberg y Garnier Malet, dos teorías reales que la
+          ciencia nunca terminó de aceptar, separadas con cuidado de lo que de verdad se pudo
+          confirmar; y Síntesis, que no agrega un documento más sino que lee doce de los otros
+          dieciocho juntos (los que ya existían cuando se escribió) buscando qué dicen entre sí que
+          ninguno dice solo. El <Link href="/knowledge/atlas" style={{ color: '#fff', textDecoration: 'underline' }}>Atlas</Link>,
+          más abajo, pone a los ~70 nombres de esta página en una sola línea de tiempo real.
           Más abajo todavía, los nombres — y ahí la arquitectura se parte en dos a propósito.
           Primero, quienes se atrevieron a medir cada pieza de lo invisible, poniéndole una ecuación
           encima en vez de
@@ -343,7 +251,7 @@ export default function KnowledgePage() {
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          QUINCE DOCUMENTOS
+          DIECINUEVE DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
