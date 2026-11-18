@@ -124,6 +124,11 @@ export const ARCHIVE_DOCS: ArchiveDoc[] = [
     blurb: 'La molécula, el código, y el crédito que tardó décadas en repartirse bien — de Rosalind Franklin a CRISPR, con el debate real sobre el ADN no codificante todavía abierto.',
   },
   {
+    id: 'wetware', code: 'NPX-ARC-16', title: 'WETWARE', href: '/archivo/wetware',
+    color: '#c90076', format: 'REFERENCIA TÉCNICA',
+    blurb: 'El cuerpo humano reescrito como arquitectura de sistema — anatomía real primero, analogía computacional después, con el límite de esa traducción marcado a propósito. Fase 1/3: solo texto.',
+  },
+  {
     id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
     color: '#00d4ff', format: 'ENSAYO',
     blurb: 'Los otros doce documentos, leídos juntos — de la entropía de un agujero negro a una teoría que nadie pudo confirmar, todos preguntando lo mismo.',
