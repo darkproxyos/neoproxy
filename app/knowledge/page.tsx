@@ -192,21 +192,25 @@ export default function KnowledgePage() {
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
           qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
-          ángulos distintos. Abajo, diecinueve documentos largos — dos ensayos, doce referencias
-          técnicas, tres análisis de ficción y dos teorías científicas disputadas — que bajan hasta
-          el detalle: partículas, mente, lenguaje, alimentación, el principio holográfico, ciencia
-          cognitiva, dinero (economía, psicología conductual y neuroventas, con el mismo cuidado de
-          separar Nobel real de desarrollo personal), metacognición (diálogo interno y cómo
-          identificar los propios errores de pensamiento), semiótica (el signo y el simulacro de
-          Baudrillard), hermenéutica (la interpretación, desde Schleiermacher hasta Gadamer),
-          autoorganización (Prigogine, Lorenz, Barabási — ciencia que ya corre en vivo en el sitio)
-          y cibernética (Wiener, Ashby, Bertalanffy — el vocabulario real detrás de "organismo
-          vivo"), filosofía; Ergo Proxy, Serial Experiments Lain y Ghost in the Shell leídas con la
-          misma vara que un paper; Jacobo Grinberg y Garnier Malet, dos teorías reales que la
-          ciencia nunca terminó de aceptar, separadas con cuidado de lo que de verdad se pudo
-          confirmar; y Síntesis, que no agrega un documento más sino que lee doce de los otros
-          dieciocho juntos (los que ya existían cuando se escribió) buscando qué dicen entre sí que
-          ninguno dice solo. El <Link href="/knowledge/atlas" style={{ color: '#fff', textDecoration: 'underline' }}>Atlas</Link>,
+          ángulos distintos. Abajo, veintitrés documentos largos — dos ensayos, quince referencias
+          técnicas, cuatro análisis cultural (tres de ficción, uno de estética visual) y dos teorías
+          científicas disputadas — que bajan hasta el detalle: partículas, mente, lenguaje,
+          alimentación, el principio holográfico, ciencia cognitiva, dinero (economía, psicología
+          conductual y neuroventas, con el mismo cuidado de separar Nobel real de desarrollo
+          personal), metacognición (diálogo interno y cómo identificar los propios errores de
+          pensamiento), semiótica (el signo y el simulacro de Baudrillard), hermenéutica (la
+          interpretación, desde Schleiermacher hasta Gadamer), autoorganización (Prigogine, Lorenz,
+          Barabási — ciencia que ya corre en vivo en el sitio), cibernética (Wiener, Ashby,
+          Bertalanffy — el vocabulario real detrás de "organismo vivo"), computación cuántica
+          (qubits y entrelazamiento, con la supremacía cuántica tratada como la controversia real
+          que es), redes neuronales artificiales (de McCulloch-Pitts en 1943 al Nobel de Física 2024
+          de Hopfield), y ADN (de Watson-Crick-Franklin a CRISPR), filosofía; Ergo Proxy, Serial
+          Experiments Lain, Ghost in the Shell y Giger (la estética biomecánica, el cuarto pilar
+          visual que nombra CLAUDE.md) leídos con la misma vara que un paper; Jacobo Grinberg y
+          Garnier Malet, dos teorías reales que la ciencia nunca terminó de aceptar, separadas con
+          cuidado de lo que de verdad se pudo confirmar; y Síntesis, que no agrega un documento más
+          sino que lee doce de los otros veintidós juntos (los que ya existían cuando se escribió)
+          buscando qué dicen entre sí que ninguno dice solo. El <Link href="/knowledge/atlas" style={{ color: '#fff', textDecoration: 'underline' }}>Atlas</Link>,
           más abajo, pone a los ~70 nombres de esta página en una sola línea de tiempo real.
           Más abajo todavía, los nombres — y ahí la arquitectura se parte en dos a propósito.
           Primero, quienes se atrevieron a medir cada pieza de lo invisible, poniéndole una ecuación
@@ -251,7 +255,7 @@ export default function KnowledgePage() {
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          DIECINUEVE DOCUMENTOS
+          VEINTITRÉS DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
