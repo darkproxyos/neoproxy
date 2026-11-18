@@ -211,7 +211,10 @@ export default function KnowledgePage() {
           cuidado de lo que de verdad se pudo confirmar; y Síntesis, que no agrega un documento más
           sino que lee doce de los otros veintidós juntos (los que ya existían cuando se escribió)
           buscando qué dicen entre sí que ninguno dice solo. El <Link href="/knowledge/atlas" style={{ color: '#fff', textDecoration: 'underline' }}>Atlas</Link>,
-          más abajo, pone a los ~70 nombres de esta página en una sola línea de tiempo real.
+          más abajo, pone a los ~70 nombres de esta página en una sola línea de tiempo real — y el{' '}
+          <Link href="/knowledge/mapa" style={{ color: '#fff', textDecoration: 'underline' }}>Gran Mapa del Conocimiento</Link>{' '}
+          hace lo mismo hacia afuera: matemáticas, física, química, computación y biología enteras, no
+          solo lo que ya está en este Codex.
           Más abajo todavía, los nombres — y ahí la arquitectura se parte en dos a propósito.
           Primero, quienes se atrevieron a medir cada pieza de lo invisible, poniéndole una ecuación
           encima en vez de
