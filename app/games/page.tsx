@@ -98,6 +98,15 @@ const CATALOG: GameEntry[] = [
     blurb: 'Plataformero sobre una cinta de Möbius real (geometría paramétrica real, no un efecto de cámara pegado encima) — la normal de la superficie es tu "arriba", así que el giro se siente en el cuerpo al pasar la mitad del recorrido. Dos vueltas completas (4π) para cerrar el bucle de verdad.',
     controls: '←→ / A D CAMBIAR DE CARRIL — ESPACIO SALTAR',
   },
+  {
+    id: 'mimos-vs-payasos',
+    code: 'NPX-GAME-MIMOS',
+    title: 'MIMOS VS PAYASOS',
+    href: '/games/mimos-vs-payasos',
+    status: 'demo',
+    blurb: 'Idea vieja del usuario, retomada después de años. Vista cenital sobre un ring de circo: un mimo con dos gestos reales —empujón contra resistencia invisible, pared invisible que bloquea y rebota— contra oleadas de payasos que se acercan cuerpo a cuerpo o tiran tortas a distancia. Geometría placeholder.',
+    controls: 'WASD / FLECHAS MOVER — ESPACIO EMPUJAR — SHIFT/F PARED',
+  },
 ]
 
 export default function GamesHubPage() {
