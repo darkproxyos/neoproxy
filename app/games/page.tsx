@@ -99,6 +99,15 @@ const CATALOG: GameEntry[] = [
     controls: '←→ / A D CAMBIAR DE CARRIL — ESPACIO SALTAR',
   },
   {
+    id: 'freestyle-voz',
+    code: 'NPX-EXP-FREESTYLEVOZ',
+    title: 'FREESTYLE // VOZ',
+    href: '/realidad-aumentada/freestyle',
+    status: 'demo',
+    blurb: 'La misma mecánica de Freestyle, pero sin cámara: los conceptos del Proxyverse se acercan creciendo en pantalla y los sacás nombrándolos en voz alta mientras rapeás (reconocimiento de voz real, no botones). Cada frase que decís se analiza en vivo: rima final, rima interna, aliteración, anáfora, anadiplosis y repetición.',
+    controls: 'SOLO MICRÓFONO — SIN TECLADO',
+  },
+  {
     id: 'mimos-vs-payasos',
     code: 'NPX-GAME-MIMOS',
     title: 'MIMOS VS PAYASOS',

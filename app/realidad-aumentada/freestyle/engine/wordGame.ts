@@ -1,12 +1,10 @@
 import { ParticleSystem } from '../../neocam/engine/core'
-import { HandPoint } from '../../neocam/engine/vision'
+import { normalizeForMatch } from './voiceAnalysis'
 
-// Mismo patrón que HandGame (app/realidad-aumentada/neocam/engine/game.ts):
-// objetos que viven un rato, se tocan con la punta del dedo real (tracking
-// de mano de MediaPipe, no un click), y desaparecen con partículas. Acá en
-// vez de formas genéricas son palabras reales del Proxyverse, y en vez de
-// subir/bajar por gravedad, "se acercan a la cámara": la escala crece con
-// el tiempo hasta un máximo, momento en el que pasan de largo y se van solas.
+// Objetos que viven un rato y desaparecen con partículas -- palabras reales
+// del Proxyverse que "se acercan" (la escala crece con el tiempo hasta un
+// máximo, momento en el que pasan de largo y se van solas) y se sacan
+// nombrándolas en voz alta (ver tryPopByVoice más abajo), no tocándolas.
 export type WordTarget = {
   id: number
   text: string
@@ -88,24 +86,24 @@ export class WordGame {
     this.particles.update(dtFrames)
   }
 
-  // ctx hace falta para medir el ancho real del texto renderizado — un
-  // radio fijo no serviría igual para "D" que para "RUNTIME.PYTHON".
-  tryPop(points: HandPoint[], ctx: CanvasRenderingContext2D) {
-    for (const p of points) {
-      for (let i = this.words.length - 1; i >= 0; i--) {
-        const word = this.words[i]
-        const fontPx = BASE_FONT_PX * word.scale
-        ctx.font = `700 ${fontPx}px 'Space Mono', monospace`
-        const halfW = ctx.measureText(word.text).width / 2 + 14
-        const halfH = fontPx / 2 + 14
-        if (Math.abs(p.x - word.x) < halfW && Math.abs(p.y - word.y) < halfH) {
-          this.popped += 1
-          this.burst(word, word.color, 18)
-          this.words.splice(i, 1)
-          break
-        }
+  // spokenText: buffer normalizado (minúsculas, sin tildes, solo letras) con
+  // lo último que se escuchó por el micrófono -- transcripción final más la
+  // parcial en curso, para que la palabra se saque apenas se la nombra, sin
+  // esperar a que el reconocimiento la confirme como definitiva. Devuelve
+  // los textos sacados en esta llamada (para loguearlos en la UI).
+  tryPopByVoice(spokenText: string): string[] {
+    const popped: string[] = []
+    for (let i = this.words.length - 1; i >= 0; i--) {
+      const word = this.words[i]
+      const needle = normalizeForMatch(word.text)
+      if (needle && spokenText.includes(needle)) {
+        this.popped += 1
+        this.burst(word, word.color, 18)
+        popped.push(word.text)
+        this.words.splice(i, 1)
       }
     }
+    return popped
   }
 
   private burst(word: WordTarget, colorRgb: string, n: number) {
