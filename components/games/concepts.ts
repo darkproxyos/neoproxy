@@ -1,5 +1,5 @@
 // Pool de conceptos del Proxyverse — extraído de app/games/rap/page.tsx para
-// que lo reuse también la versión AR en app/realidad-aumentada/freestyle.
+// que lo reuse también la versión por voz en app/realidad-aumentada/freestyle.
 // Tomados del lore real del proyecto (nombres, roles y frases de cada agente
 // en components/proxyverse/agents.ts, más vocabulario propio de
 // fabricación/kernel y las referencias estéticas del manifiesto) — no son

@@ -17,6 +17,9 @@ interface ArEntry {
 // Máscara Kitsune y Modo Clásico salieron del catálogo a pedido explícito —
 // las rutas siguen vivas (/realidad-aumentada/mascara e
 // /realidad-aumentada/index.html), solo dejaron de listarse acá.
+// Freestyle AR se mudó al catálogo de /games a pedido explícito, después de
+// que dejó de usar cámara (ahora es reconocimiento de voz) — ya no entra en
+// esta sección. La ruta real sigue siendo /realidad-aumentada/freestyle.
 const CATALOG: ArEntry[] = [
   {
     id: 'neocam',
@@ -25,14 +28,6 @@ const CATALOG: ArEntry[] = [
     href: '/realidad-aumentada/neocam',
     blurb: 'La cámara con todos los efectos: 16 modos de imagen (neón, térmica, nocturna, glitch, matrix, holograma, toon, VHS, pixel, blueprint, calor, silueta, cuerpo, infrarrojo, aura) generados en vivo por código — sin filtros de terceros. Máscaras de privacidad facial, HUD, trails, ghost, reactividad a audio y movimiento, cubos físicos y un minijuego con las manos.',
     controls: 'REQUIERE CÁMARA (Y MICRÓFONO PARA AUDIO)',
-  },
-  {
-    id: 'freestyle',
-    code: 'NPX-AR-FREESTYLE',
-    title: 'FREESTYLE AR',
-    href: '/realidad-aumentada/freestyle',
-    blurb: 'Los conceptos del Proxyverse (mismo pool que /games/rap) se acercan a la cámara, creciendo en pantalla, y los sacás tocándolos con la mano — tracking real de dedos (MediaPipe), no clicks. Si no los tocás a tiempo, pasan de largo.',
-    controls: 'REQUIERE CÁMARA',
   },
   {
     id: 'marcador',

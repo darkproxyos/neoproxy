@@ -155,7 +155,7 @@ export default function RapPage() {
           <Link href="/realidad-aumentada/freestyle" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${VIOLET}aa`, textDecoration: 'none',
           }}>
-            → MODO AR (los conceptos se acercan a la cámara, tocalos con la mano para sacarlos)
+            → MODO VOZ (los conceptos se acercan, nombralos para sacarlos — análisis de rimas en vivo)
           </Link>
         </div>
       </div>
