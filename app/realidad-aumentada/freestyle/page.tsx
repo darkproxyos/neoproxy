@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { WordGame } from './engine/wordGame'
 import { analyzeNewBar, DetectedResource, normalizeForMatch } from './engine/voiceAnalysis'
-import { CONCEPTS } from '@/components/games/concepts'
+import { NEOPROXY_RHYME_GROUPS } from '@/components/games/neoproxyRhymeGroups'
 
 const mono = "'Space Mono', monospace"
 const VIOLET = '#b400ff'
@@ -29,16 +29,21 @@ const RESOURCE_COLOR: Record<DetectedResource['type'], string> = {
 
 type NamedWord = { text: string; t: number }
 
-// Mismo juego que /games/rap (los conceptos del Proxyverse se acercan y hay
-// que sacarlos antes de que pasen de largo), pero acá no hay cámara ni
-// tracking de mano: los sacás NOMBRÁNDOLOS en voz alta mientras rapeás
-// (Web Speech API, reconocimiento continuo), y de paso cada frase que decís
-// se analiza en vivo buscando recursos reales de rima y repetición (ver
-// engine/voiceAnalysis.ts) -- heurística de acentuación española estándar,
-// no un analizador fonético certificado.
+// Mismo juego que /games/rap (los conceptos se acercan y hay que sacarlos
+// antes de que pasen de largo), pero acá no hay cámara ni tracking de mano:
+// los sacás NOMBRÁNDOLOS en voz alta mientras rapeás (Web Speech API,
+// reconocimiento continuo). Igual que /games/rap-aprendizaje, el vocabulario
+// no es suelto -- está agrupado por terminación que rima, con palabras de
+// los temas propios de NeoProxy (ciberpunk-industrial, organismo vivo,
+// kernel/corrupción) en vez de filosofía/ciencia, y todas las palabras en
+// pantalla en un momento dado comparten SIEMPRE la misma terminación (ver
+// engine/wordGame.ts). De paso, cada frase que decís se analiza en vivo
+// buscando recursos reales de rima y repetición (ver engine/voiceAnalysis.ts)
+// -- heurística de acentuación española estándar, no un analizador
+// fonético certificado.
 export default function FreestyleVoicePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const wordGameRef = useRef(new WordGame(CONCEPTS))
+  const wordGameRef = useRef(new WordGame(NEOPROXY_RHYME_GROUPS))
   const rafRef = useRef<number | null>(null)
   const runningRef = useRef(false)
   const lastTimeRef = useRef(0)
@@ -58,6 +63,7 @@ export default function FreestyleVoicePage() {
   const [namedWords, setNamedWords] = useState<NamedWord[]>([])
   const [resources, setResources] = useState<DetectedResource[]>([])
   const [rhymeStreak, setRhymeStreak] = useState(0)
+  const [groupEnding, setGroupEnding] = useState(NEOPROXY_RHYME_GROUPS[0].ending)
 
   useEffect(() => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -100,6 +106,7 @@ export default function FreestyleVoicePage() {
     setNamedWords([])
     setResources([])
     setRhymeStreak(0)
+    setGroupEnding(wordGameRef.current.currentGroup.ending)
 
     const recognition = new SR()
     recognition.lang = 'es-AR'
@@ -189,6 +196,7 @@ export default function FreestyleVoicePage() {
     const id = window.setInterval(() => {
       setPopped(wordGameRef.current.popped)
       setMissed(wordGameRef.current.missed)
+      setGroupEnding(wordGameRef.current.currentGroup.ending)
     }, 200)
     return () => window.clearInterval(id)
   }, [])
@@ -230,14 +238,30 @@ export default function FreestyleVoicePage() {
 
       {isActive && (
         <>
+          {/* Terminación vigente + contador de palabras -- igual que el cartel
+              "RIMA: {ending}" de /games/rap-aprendizaje, centrado arriba. */}
+          <div style={{
+            position: 'fixed', top: 54, left: '50%', transform: 'translateX(-50%)', zIndex: 25,
+            display: 'flex', alignItems: 'center', gap: 14, padding: '7px 16px', borderRadius: 8,
+            background: 'rgba(10,14,24,0.78)', border: `1px solid ${CYAN}44`, whiteSpace: 'nowrap',
+          }}>
+            <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: CYAN, textShadow: `0 0 10px ${CYAN}88` }}>
+              RIMA: {groupEnding}
+            </span>
+            <span style={{ width: 1, height: 14, background: '#2a3a50' }} />
+            <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#00ffcc' }}>
+              PALABRAS: {popped}
+            </span>
+          </div>
+
           {/* Ticker de palabras del pool sacadas por voz -- distinto de las barras analizadas abajo. */}
           <div style={{
-            position: 'fixed', top: 54, left: 16, zIndex: 24, display: 'flex', flexWrap: 'wrap', gap: 6, maxWidth: 'min(480px, 70vw)',
+            position: 'fixed', top: 92, left: 16, zIndex: 24, display: 'flex', flexWrap: 'wrap', gap: 6, maxWidth: 'min(480px, 70vw)',
           }}>
             {namedWords.map((n) => (
               <span key={`${n.text}-${n.t}`} style={{
                 fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '4px 9px', borderRadius: 5,
-                background: `${CYAN}1a`, border: `1px solid ${CYAN}66`, color: CYAN,
+                background: '#00ffcc1a', border: '1px solid #00ffcc66', color: '#00ffcc',
                 animation: 'freestyleVozFadeIn 0.25s ease-out',
               }}>
                 ✓ {n.text}
@@ -297,8 +321,9 @@ export default function FreestyleVoicePage() {
           {status === 'idle' && (
             <>
               <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, maxWidth: 360, textAlign: 'center', lineHeight: 1.8 }}>
-                LOS CONCEPTOS DEL PROXYVERSE SE ACERCAN — NOMBRALOS EN VOZ ALTA MIENTRAS RAPEÁS ANTES DE QUE PASEN DE LARGO.
-                CADA FRASE QUE DECÍS SE ANALIZA EN VIVO BUSCANDO RIMAS Y OTROS RECURSOS. REQUIERE MICRÓFONO, NO CÁMARA.
+                PALABRAS DE LOS TEMAS DE NEOPROXY SE ACERCAN, TODAS CON LA MISMA TERMINACIÓN — NOMBRALAS RIMANDO EN VOZ ALTA
+                ANTES DE QUE PASEN DE LARGO. CADA FRASE QUE DECÍS TAMBIÉN SE ANALIZA BUSCANDO RIMAS Y OTROS RECURSOS.
+                REQUIERE MICRÓFONO, NO CÁMARA.
               </div>
               {!supported && (
                 <div style={{ fontFamily: mono, fontSize: 10, color: '#ff6666', letterSpacing: 1, maxWidth: 320, textAlign: 'center' }}>
