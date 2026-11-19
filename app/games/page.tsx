@@ -104,7 +104,7 @@ const CATALOG: GameEntry[] = [
     title: 'FREESTYLE // VOZ',
     href: '/realidad-aumentada/freestyle',
     status: 'demo',
-    blurb: 'La misma mecánica de Freestyle, pero sin cámara: los conceptos del Proxyverse se acercan creciendo en pantalla y los sacás nombrándolos en voz alta mientras rapeás (reconocimiento de voz real, no botones). Cada frase que decís se analiza en vivo: rima final, rima interna, aliteración, anáfora, anadiplosis y repetición.',
+    blurb: 'La misma mecánica de Freestyle, pero sin cámara y agrupada por rima (como el modo Aprendizaje): palabras de los temas de NeoProxy que siempre comparten la misma terminación se acercan creciendo en pantalla, y las sacás nombrándolas en voz alta mientras rapeás (reconocimiento de voz real) — al nombrarla cambia de color antes de desaparecer. Cada frase que decís también se analiza en vivo: rima final, rima interna, aliteración, anáfora, anadiplosis y repetición.',
     controls: 'SOLO MICRÓFONO — SIN TECLADO',
   },
   {

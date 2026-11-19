@@ -1,10 +1,15 @@
 import { ParticleSystem } from '../../neocam/engine/core'
 import { normalizeForMatch } from './voiceAnalysis'
+import { RhymeGroup } from '@/components/games/neoproxyRhymeGroups'
 
 // Objetos que viven un rato y desaparecen con partículas -- palabras reales
-// del Proxyverse que "se acercan" (la escala crece con el tiempo hasta un
-// máximo, momento en el que pasan de largo y se van solas) y se sacan
-// nombrándolas en voz alta (ver tryPopByVoice más abajo), no tocándolas.
+// de los temas de NeoProxy que "se acercan" (la escala crece con el tiempo
+// hasta un máximo, momento en el que pasan de largo y se van solas) y se
+// sacan nombrándolas en voz alta (ver tryPopByVoice más abajo), no
+// tocándolas. Igual que /games/rap-aprendizaje, en todo momento todas las
+// palabras en pantalla comparten la misma terminación que rima -- se van
+// sacando de un mazo barajado del grupo actual, y cuando se acaba se pasa
+// a otro grupo (currentGroup, expuesto para que la página lo muestre).
 export type WordTarget = {
   id: number
   text: string
@@ -13,6 +18,8 @@ export type WordTarget = {
   scale: number
   vScale: number
   color: string
+  popping: boolean
+  popT: number
 }
 
 const WORD_COLORS = ['0,212,255', '180,60,255', '255,45,180', '0,255,170', '255,210,40']
@@ -20,18 +27,35 @@ const START_SCALE = 0.22
 const MAX_SCALE = 2.2
 const BASE_FONT_PX = 46
 const MIN_SPACING = 160
+// Color al que vira la palabra apenas se la nombra, antes de desaparecer --
+// el mismo verde-cian "éxito" que usa el resto de la página (racha de rima).
+const POP_FLASH_RGB = '0,255,204'
+const POP_DURATION = 0.4
 
 let wordId = 0
+
+function shuffle<T>(arr: T[]): T[] {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy
+}
 
 export class WordGame {
   words: WordTarget[] = []
   particles = new ParticleSystem()
   popped = 0
   missed = 0
+  currentGroup: RhymeGroup
+  private queue: string[] = []
   private spawnAccumSec = 0
   private nextSpawnInSec = 0
 
-  constructor(private pool: string[]) {
+  constructor(private groups: RhymeGroup[]) {
+    this.currentGroup = this.pickGroup()
+    this.refillQueue()
     this.rollNextSpawn()
   }
 
@@ -44,6 +68,36 @@ export class WordGame {
 
   spawnEverySec = 2.2
   approachSec = 4.5
+
+  private pickGroup(excludeEnding?: string): RhymeGroup {
+    const options = excludeEnding ? this.groups.filter((g) => g.ending !== excludeEnding) : this.groups
+    const pool = options.length ? options : this.groups
+    return pool[Math.floor(Math.random() * pool.length)]
+  }
+
+  private refillQueue() {
+    this.queue = shuffle(this.currentGroup.words)
+  }
+
+  // Saca la próxima palabra del mazo del grupo actual -- cuando se acaba,
+  // pasa a otro grupo (nunca repite el mismo de inmediato) y lo rebaraja.
+  // Solo se llama cuando canSpawnNext() ya confirmó que es seguro (ver abajo).
+  private nextWordText(): string {
+    if (this.queue.length === 0) {
+      this.currentGroup = this.pickGroup(this.currentGroup.ending)
+      this.refillQueue()
+    }
+    return this.queue.pop()!
+  }
+
+  // Para que TODAS las palabras en pantalla compartan siempre la misma
+  // terminación (sin mezclar un resto del grupo anterior con uno nuevo), no
+  // se pasa a otro grupo hasta que la pantalla queda libre de palabras que
+  // todavía haya que nombrar -- una palabra "popping" ya fue dicha, no cuenta.
+  private canSpawnNext(): boolean {
+    if (this.queue.length > 0) return true
+    return this.words.every((w) => w.popping)
+  }
 
   private pickSpot(w: number, h: number): { x: number; y: number } {
     const marginX = w * 0.18, marginY = h * 0.22
@@ -59,23 +113,30 @@ export class WordGame {
   update(dtFrames: number, w: number, h: number) {
     const dtSec = dtFrames / 60
     this.spawnAccumSec += dtSec
-    if (this.spawnAccumSec > this.nextSpawnInSec && this.words.length < 5) {
+    if (this.spawnAccumSec > this.nextSpawnInSec && this.words.length < 5 && this.canSpawnNext()) {
       this.spawnAccumSec = 0
       this.rollNextSpawn()
       const { x, y } = this.pickSpot(w, h)
       wordId += 1
       this.words.push({
         id: wordId,
-        text: this.pool[Math.floor(Math.random() * this.pool.length)],
+        text: this.nextWordText(),
         x, y,
         scale: START_SCALE,
         vScale: (MAX_SCALE - START_SCALE) / this.approachSec,
         color: WORD_COLORS[Math.floor(Math.random() * WORD_COLORS.length)],
+        popping: false,
+        popT: 0,
       })
     }
 
     for (let i = this.words.length - 1; i >= 0; i--) {
       const word = this.words[i]
+      if (word.popping) {
+        word.popT += dtSec
+        if (word.popT >= POP_DURATION) this.words.splice(i, 1)
+        continue
+      }
       word.scale += word.vScale * dtSec
       if (word.scale >= MAX_SCALE) {
         this.missed += 1
@@ -89,18 +150,21 @@ export class WordGame {
   // spokenText: buffer normalizado (minúsculas, sin tildes, solo letras) con
   // lo último que se escuchó por el micrófono -- transcripción final más la
   // parcial en curso, para que la palabra se saque apenas se la nombra, sin
-  // esperar a que el reconocimiento la confirme como definitiva. Devuelve
-  // los textos sacados en esta llamada (para loguearlos en la UI).
+  // esperar a que el reconocimiento la confirme como definitiva. La palabra
+  // no desaparece de golpe: cambia de color (ver draw) y se queda un
+  // instante más antes de irse. Devuelve los textos sacados en esta llamada
+  // (para loguearlos en la UI).
   tryPopByVoice(spokenText: string): string[] {
     const popped: string[] = []
-    for (let i = this.words.length - 1; i >= 0; i--) {
-      const word = this.words[i]
+    for (const word of this.words) {
+      if (word.popping) continue
       const needle = normalizeForMatch(word.text)
       if (needle && spokenText.includes(needle)) {
         this.popped += 1
-        this.burst(word, word.color, 18)
+        word.popping = true
+        word.popT = 0
+        this.burst(word, POP_FLASH_RGB, 22)
         popped.push(word.text)
-        this.words.splice(i, 1)
       }
     }
     return popped
@@ -118,14 +182,26 @@ export class WordGame {
 
   draw(ctx: CanvasRenderingContext2D) {
     for (const word of this.words) {
-      const proximity = Math.min(1, word.scale / MAX_SCALE)
-      const danger = Math.max(0, (proximity - 0.75) / 0.25)
       const fontPx = BASE_FONT_PX * word.scale
       ctx.save()
       ctx.translate(word.x, word.y)
-      ctx.font = `700 ${fontPx}px 'Space Mono', monospace`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
+
+      if (word.popping) {
+        const p = Math.min(1, word.popT / POP_DURATION)
+        ctx.font = `700 ${fontPx * (1 + p * 0.45)}px 'Space Mono', monospace`
+        ctx.shadowColor = `rgba(${POP_FLASH_RGB},${1 - p})`
+        ctx.shadowBlur = 26
+        ctx.fillStyle = `rgba(${POP_FLASH_RGB},${1 - p})`
+        ctx.fillText(word.text, 0, 0)
+        ctx.restore()
+        continue
+      }
+
+      const proximity = Math.min(1, word.scale / MAX_SCALE)
+      const danger = Math.max(0, (proximity - 0.75) / 0.25)
+      ctx.font = `700 ${fontPx}px 'Space Mono', monospace`
       const rgb = danger > 0
         ? `${Math.round(255)},${Math.round(255 * (1 - danger) + 45 * danger)},${Math.round(255 * (1 - danger) + 85 * danger)}`
         : word.color
@@ -141,5 +217,7 @@ export class WordGame {
   clear() {
     this.words = []
     this.particles.clear()
+    this.currentGroup = this.pickGroup()
+    this.refillQueue()
   }
 }
