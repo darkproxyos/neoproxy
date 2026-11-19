@@ -683,6 +683,26 @@ body {
   .shooter-hitmarker { animation: none; opacity: 0; }
 }
 
+/* /games/mimos-vs-payasos -- vignette roja de pantalla completa cuando el
+   mimo recibe daño (contacto de un payaso o torta que no bloqueó la
+   pared). Mismo mecanismo que .shooter-hitmarker: se remonta con una key
+   nueva en cada golpe, no se agrega/saca la clase a mano. */
+@keyframes mimos-hurt-flash {
+  0% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+.mimos-hurt-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 18;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(255, 30, 30, 0.55) 100%);
+  animation: mimos-hurt-flash 0.35s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mimos-hurt-flash { animation: none; opacity: 0; }
+}
+
 /* Ritual de carga de /experimental/sigilo -- pulso durante la respiración
    guiada (el glifo "respira" con el ciclo), fractura al cerrar el ritual
    (se desarma visualmente justo cuando el texto dice "soltá el

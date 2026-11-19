@@ -1,9 +1,9 @@
 'use client'
 
 // MIMOS VS PAYASOS — idea vieja del usuario, de hace años, retomada a
-// pedido explícito ahora: "haz tu la primera versión". Primer corte,
-// geometría placeholder a propósito (mismo criterio que /games/shooter
-// y /games/mobius -- cajas y esferas con proporciones pensadas, no el
+// pedido explícito ahora: "haz tu la primera versión". Geometría
+// placeholder a propósito (mismo criterio que /games/shooter y
+// /games/mobius -- cajas y esferas con proporciones pensadas, no el
 // asset final).
 //
 // El contraste real entre los dos arquetipos es el motor del diseño:
@@ -16,6 +16,15 @@
 // de leer un combate de esquivar/bloquear contra varios enemigos que
 // se acercan, que un FPS con IA de persecución en primera persona.
 //
+// v1.1 ("mejoralo", a pedido): SFX propio (components/games/
+// mimosAudio.ts, mismo patrón Web Audio puro que shooterAudio.ts),
+// vignette roja de pantalla completa al recibir daño (.mimos-hurt-flash
+// en globals.css), ráfaga de confetti con gravedad y fade por partícula
+// al derrotar un payaso, y un tercer tipo de enemigo -- Payaso Globo:
+// rápido, de un solo golpe, con bamboleo perpendicular real en vez de
+// acercarse en línea recta -- para que las oleadas más altas no sean
+// solo "más de lo mismo".
+//
 // Mismo patrón imperativo de Babylon.js que /games/shooter (import
 // dinámico, sin SSR) y mismo esquema de input por e.code que /games/
 // wired -- TouchJoystick/TouchActionButton funcionan igual en touch y
@@ -24,21 +33,24 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { TouchJoystick, TouchActionButton, useIsTouchDevice } from '@/components/games/TouchControls'
+import { MimosSfx } from '@/components/games/mimosAudio'
 
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
 const RED = '#ff3b3b'
 const ORANGE = '#ff8c1a'
 const MAGENTA = '#ff2ecb'
+const GREEN = '#7bff3d'
 const WHITE = '#f0f0f5'
 
 type Status = 'playing' | 'gameover'
-type EnemyKind = 'bocina' | 'pastelero'
+type EnemyKind = 'bocina' | 'pastelero' | 'globo'
 type Enemy = {
   mesh: any; kind: EnemyKind; hp: number; maxHp: number
-  stunT: number; hitCooldown: number; throwCooldown: number
+  stunT: number; hitCooldown: number; throwCooldown: number; wobbleSeed: number
 }
 type Pie = { mesh: any; vx: number; vz: number; ttl: number }
+type Burst = { mesh: any; mat: any; vx: number; vy: number; vz: number; ttl: number }
 
 const ARENA_RADIUS = 13
 const PLAYER_SPEED = 6.6
@@ -63,11 +75,19 @@ const PASTELERO_PREF_RANGE = 6.5
 const PASTELERO_THROW_INTERVAL = 1.9
 const PASTELERO_DAMAGE = 11
 const PIE_SPEED = 7.4
+const GLOBO_HP = 16
+const GLOBO_SPEED = 4.7
+const GLOBO_CONTACT_RANGE = 1.1
+const GLOBO_DAMAGE = 5
+const GLOBO_HIT_INTERVAL = 0.5
+const GLOBO_WOBBLE_FREQ = 3.4
+const GLOBO_WOBBLE_AMP = 1.9
 
 export default function MimosVsPayasosGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const keysRef = useRef<Record<string, boolean>>({})
   const moveVecRef = useRef({ x: 0, y: 0 })
+  const sfxRef = useRef<MimosSfx | null>(null)
   const [health, setHealth] = useState(PLAYER_MAX_HEALTH)
   const [score, setScore] = useState(0)
   const [wave, setWave] = useState(1)
@@ -76,6 +96,7 @@ export default function MimosVsPayasosGame() {
   const [runId, setRunId] = useState(0)
   const [wallPct, setWallPct] = useState(100)
   const [pushPct, setPushPct] = useState(100)
+  const [hitFlash, setHitFlash] = useState(0)
   const isTouch = useIsTouchDevice()
 
   const toggleFullscreen = async () => {
@@ -97,8 +118,14 @@ export default function MimosVsPayasosGame() {
     return () => document.removeEventListener('fullscreenchange', onFsChange)
   }, [])
 
+  useEffect(() => () => {
+    sfxRef.current?.dispose()
+    try { (screen as any).orientation?.unlock?.() } catch { /* sin soporte */ }
+  }, [])
+
   useEffect(() => {
     if (isTouch === null || !canvasRef.current) return
+    if (!sfxRef.current) sfxRef.current = new MimosSfx()
     let engine: any
     let scene: any
     let disposed = false
@@ -234,24 +261,64 @@ export default function MimosVsPayasosGame() {
       const pasteleroMat = new B.StandardMaterial('pasteleroMat', scene)
       pasteleroMat.diffuseColor = B.Color3.Black()
       pasteleroMat.emissiveColor = B.Color3.FromHexString(MAGENTA).scale(0.75)
+      const globoMat = new B.StandardMaterial('globoMat', scene)
+      globoMat.diffuseColor = B.Color3.Black()
+      globoMat.emissiveColor = B.Color3.FromHexString(GREEN).scale(0.8)
       const pieMat = new B.StandardMaterial('pieMat', scene)
       pieMat.diffuseColor = B.Color3.Black()
       pieMat.emissiveColor = B.Color3.FromHexString('#ffe6a8').scale(0.8)
 
+      const enemyHp: Record<EnemyKind, number> = { bocina: BOCINA_HP, pastelero: PASTELERO_HP, globo: GLOBO_HP }
+      const enemyMat: Record<EnemyKind, any> = { bocina: bocinaMat, pastelero: pasteleroMat, globo: globoMat }
+      const enemyColor: Record<EnemyKind, string> = { bocina: ORANGE, pastelero: MAGENTA, globo: GREEN }
+
       function spawnEnemy(kind: EnemyKind) {
         const ang = Math.random() * Math.PI * 2
+        const name = `e_${Date.now()}_${Math.random()}`
         const mesh = kind === 'bocina'
-          ? B.MeshBuilder.CreateCapsule(`e_${Date.now()}_${Math.random()}`, { height: 1.5, radius: 0.46 }, scene)
-          : B.MeshBuilder.CreateBox(`e_${Date.now()}_${Math.random()}`, { size: 0.9 }, scene)
-        mesh.position.set(Math.cos(ang) * (ARENA_RADIUS - 0.5), kind === 'bocina' ? 0.75 : 0.5, Math.sin(ang) * (ARENA_RADIUS - 0.5))
-        mesh.material = kind === 'bocina' ? bocinaMat : pasteleroMat
+          ? B.MeshBuilder.CreateCapsule(name, { height: 1.5, radius: 0.46 }, scene)
+          : kind === 'globo'
+            ? B.MeshBuilder.CreateSphere(name, { diameter: 0.8 }, scene)
+            : B.MeshBuilder.CreateBox(name, { size: 0.9 }, scene)
+        const y = kind === 'bocina' ? 0.75 : kind === 'globo' ? 0.65 : 0.5
+        mesh.position.set(Math.cos(ang) * (ARENA_RADIUS - 0.5), y, Math.sin(ang) * (ARENA_RADIUS - 0.5))
+        mesh.material = enemyMat[kind]
         enemies.push({
-          mesh, kind, hp: kind === 'bocina' ? BOCINA_HP : PASTELERO_HP, maxHp: kind === 'bocina' ? BOCINA_HP : PASTELERO_HP,
-          stunT: 0, hitCooldown: 0, throwCooldown: 1 + Math.random(),
+          mesh, kind, hp: enemyHp[kind], maxHp: enemyHp[kind],
+          stunT: 0, hitCooldown: 0, throwCooldown: 1 + Math.random(), wobbleSeed: Math.random() * 1000,
         })
       }
 
-      for (let i = 0; i < enemiesThisWave; i++) spawnEnemy(Math.random() < 0.7 ? 'bocina' : 'pastelero')
+      function pickKind(waveN: number): EnemyKind {
+        const r = Math.random()
+        const globoChance = Math.min(0.3, 0.08 + waveN * 0.02)
+        const pasteleroChance = Math.min(0.35, 0.18 + waveN * 0.015)
+        if (r < globoChance) return 'globo'
+        if (r < globoChance + pasteleroChance) return 'pastelero'
+        return 'bocina'
+      }
+
+      // --- ráfaga de confetti al derrotar un payaso: unas pocas esferas
+      // chicas saliendo disparadas y cayendo, cada una con su propio
+      // material clonado para poder apagarla sola (alpha por partícula,
+      // no por tipo entero). ---
+      const bursts: Burst[] = []
+      function spawnBurst(x: number, y: number, z: number, colorHex: string) {
+        for (let i = 0; i < 7; i++) {
+          const mesh = B.MeshBuilder.CreateSphere(`burst_${Date.now()}_${i}`, { diameter: 0.16 }, scene)
+          mesh.position.set(x, y, z)
+          const mat = new B.StandardMaterial(`burstMat_${Date.now()}_${i}`, scene)
+          mat.diffuseColor = B.Color3.Black()
+          mat.emissiveColor = B.Color3.FromHexString(colorHex)
+          mat.alpha = 1
+          mesh.material = mat
+          const ang = Math.random() * Math.PI * 2
+          const speed = 2.2 + Math.random() * 2.4
+          bursts.push({ mesh, mat, vx: Math.cos(ang) * speed, vy: 2.6 + Math.random() * 2, vz: Math.sin(ang) * speed, ttl: 0.5 })
+        }
+      }
+
+      for (let i = 0; i < enemiesThisWave; i++) spawnEnemy(pickKind(1))
 
       const onKeyDown = (e: KeyboardEvent) => { keysRef.current[e.code] = true }
       const onKeyUp = (e: KeyboardEvent) => { keysRef.current[e.code] = false }
@@ -264,6 +331,8 @@ export default function MimosVsPayasosGame() {
         if (localStatus !== 'playing' || pushCd > 0) return
         pushCd = PUSH_COOLDOWN
         shockT = 0
+        sfxRef.current?.push()
+        let anyHit = false
         for (const en of enemies) {
           const dx = en.mesh.position.x - pPos.x
           const dz = en.mesh.position.z - pPos.z
@@ -275,12 +344,15 @@ export default function MimosVsPayasosGame() {
           en.mesh.position.x += (dx / dist) * PUSH_KNOCKBACK * 0.12
           en.mesh.position.z += (dz / dist) * PUSH_KNOCKBACK * 0.12
           en.stunT = Math.max(en.stunT, 0.35)
+          anyHit = true
         }
+        if (anyHit) sfxRef.current?.honk()
       }
       const doWall = () => {
         if (localStatus !== 'playing' || wallCd > 0) return
         wallCd = WALL_COOLDOWN
         wallT = WALL_DURATION
+        sfxRef.current?.wall()
       }
       const onCanvasClick = () => doPush()
       canvas.addEventListener('click', onCanvasClick)
@@ -350,6 +422,8 @@ export default function MimosVsPayasosGame() {
             if (en.hp <= 0) {
               pScore += 1; killsThisWave += 1
               setScore(pScore)
+              sfxRef.current?.clownDown()
+              spawnBurst(en.mesh.position.x, en.mesh.position.y, en.mesh.position.z, enemyColor[en.kind])
               en.mesh.dispose()
               enemies.splice(i, 1)
               continue
@@ -388,6 +462,28 @@ export default function MimosVsPayasosGame() {
                   en.hitCooldown = BOCINA_HIT_INTERVAL
                   pHealth -= BOCINA_DAMAGE
                   setHealth(Math.max(0, pHealth))
+                  setHitFlash((h) => h + 1)
+                  sfxRef.current?.hurt()
+                }
+              }
+            } else if (en.kind === 'globo') {
+              // erratico a proposito: avanza hacia el jugador pero con un
+              // bamboleo perpendicular real (globo de verdad no camina
+              // derecho), distinto del acercamiento recto de bocina.
+              const perpX = -dz / dist
+              const perpZ = dx / dist
+              const wobble = Math.sin(now / 1000 * GLOBO_WOBBLE_FREQ + en.wobbleSeed) * GLOBO_WOBBLE_AMP
+              if (dist > GLOBO_CONTACT_RANGE) {
+                en.mesh.position.x += ((dx / dist) * GLOBO_SPEED + perpX * wobble) * dt
+                en.mesh.position.z += ((dz / dist) * GLOBO_SPEED + perpZ * wobble) * dt
+              } else {
+                en.hitCooldown -= dt
+                if (en.hitCooldown <= 0) {
+                  en.hitCooldown = GLOBO_HIT_INTERVAL
+                  pHealth -= GLOBO_DAMAGE
+                  setHealth(Math.max(0, pHealth))
+                  setHitFlash((h) => h + 1)
+                  sfxRef.current?.hurt()
                 }
               }
             } else {
@@ -405,6 +501,7 @@ export default function MimosVsPayasosGame() {
                 pie.position.set(en.mesh.position.x, 0.9, en.mesh.position.z)
                 pie.material = pieMat
                 pies.push({ mesh: pie, vx: (dx / dist) * PIE_SPEED, vz: (dz / dist) * PIE_SPEED, ttl: 3 })
+                sfxRef.current?.pieThrow()
               }
             }
             en.mesh.lookAt(new B.Vector3(pPos.x, en.mesh.position.y, pPos.z))
@@ -431,8 +528,11 @@ export default function MimosVsPayasosGame() {
             if (!destroyed && dHit < 0.9) {
               pHealth -= PASTELERO_DAMAGE
               setHealth(Math.max(0, pHealth))
+              setHitFlash((h) => h + 1)
+              sfxRef.current?.hurt()
               destroyed = true
             }
+            if (destroyed) sfxRef.current?.splat()
             if (destroyed || pie.ttl <= 0) {
               pie.mesh.dispose()
               pies.splice(i, 1)
@@ -449,14 +549,28 @@ export default function MimosVsPayasosGame() {
             killsThisWave = 0
             enemiesThisWave = Math.min(16, 4 + waveNum * 2)
             setWave(waveNum)
+            sfxRef.current?.wave()
             const toSpawn = Math.min(enemiesThisWave, 5 + waveNum)
-            for (let i = 0; i < toSpawn; i++) {
-              spawnEnemy(Math.random() < Math.max(0.35, 0.7 - waveNum * 0.05) ? 'bocina' : 'pastelero')
-            }
+            for (let i = 0; i < toSpawn; i++) spawnEnemy(pickKind(waveNum))
           }
         }
 
-        // shockwave visual del empujón, corre siempre (incluso en game over, se apaga sola)
+        // ráfagas de confetti y shockwave del empujón -- corren siempre
+        // (incluso en game over, se apagan solas) para que una muerte o un
+        // empujón justo antes del fin no quede cortado a mitad de animación.
+        for (let i = bursts.length - 1; i >= 0; i--) {
+          const b = bursts[i]
+          b.ttl -= dt
+          b.vy -= 9 * dt
+          b.mesh.position.x += b.vx * dt
+          b.mesh.position.y += b.vy * dt
+          b.mesh.position.z += b.vz * dt
+          b.mat.alpha = Math.max(0, b.ttl / 0.5)
+          if (b.ttl <= 0 || b.mesh.position.y < -1) {
+            b.mesh.dispose(); b.mat.dispose()
+            bursts.splice(i, 1)
+          }
+        }
         if (shockT >= 0) {
           shockT += dt
           const t = shockT / 0.3
@@ -498,6 +612,8 @@ export default function MimosVsPayasosGame() {
   return (
     <div style={{ background: '#000', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100vh', display: 'block', touchAction: 'none' }} />
+
+      {hitFlash > 0 && <div key={hitFlash} className="mimos-hurt-flash" />}
 
       {isTouch && <TouchJoystick vecRef={moveVecRef} style={{ bottom: 36, left: 28 }} />}
       {isTouch && (
@@ -595,7 +711,7 @@ export default function MimosVsPayasosGame() {
 
       {!isTouch && (
         <div style={{ position: 'fixed', bottom: 6, left: 6, zIndex: 25, fontFamily: mono, fontSize: 8, letterSpacing: 0.5, color: `${CYAN}55` }}>
-          NPX-GAME-MIMOS // v1 — mimo (empujón + pared invisible) contra oleadas de payasos. Geometría placeholder.
+          NPX-GAME-MIMOS // v1.1 — mimo (empujón + pared invisible) contra oleadas de payasos (bocina, pastelero, globo). Geometría placeholder.
         </div>
       )}
     </div>
