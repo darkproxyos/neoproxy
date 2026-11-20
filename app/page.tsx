@@ -19,22 +19,32 @@ import { agents, AGENT_IMAGES } from '@/components/proxyverse/agents'
 // v4: dos niveles. 6 nodos primarios (uno por sección real del sitio) y,
 // orbitando a los que tienen contenido interno real, nodos satélite más
 // chicos por sub-sección (FABRICACIÓN → Impresión 3D/Artefactos/Arsenal,
-// LABORATORIO → Proxygenesis/Atractores/Hemibrain, EXPERIMENTAL →
-// Oráculo/Sigilo/Enjambre, CONOCIMIENTO → Filosofía) — cada uno linkeando a
-// una ruta real, no decorativo. ARTEFACTOS deja de ser un nodo primario
-// propio: en la navegación real siempre fue hijo de FABRICACIÓN
-// (components/nav-config.ts), así que pasa a vivir ahí también acá.
-// EXPERIMENTAL entra como nodo primario nuevo — existía como sección real
-// del sitio pero nunca había tenido representación en esta nube (y de
+// EXPERIMENTAL → Oráculo/Sigilo/Enjambre, CONOCIMIENTO → Filosofía) — cada
+// uno linkeando a una ruta real, no decorativo. ARTEFACTOS deja de ser un
+// nodo primario propio: en la navegación real siempre fue hijo de
+// FABRICACIÓN (components/nav-config.ts), así que pasa a vivir ahí también
+// acá. EXPERIMENTAL entra como nodo primario nuevo — existía como sección
+// real del sitio pero nunca había tenido representación en esta nube (y de
 // paso corrige un color mal asignado: #cc0000 es el color real de
-// EXPERIMENTAL en el nav, no de LABORATORIO, que ahora tiene uno propio).
+// EXPERIMENTAL en el nav).
+// v5 (pedido explícito): LABORATORIO salió de la nube entera -- la ruta
+// real (/lab) hoy es solo un canvas vacío para dibujar, "no es nada"
+// todavía como para tener un nodo primario propio. En su lugar entra
+// ESPECÍMENES (la galería curada del motor generativo, que no tenía
+// representación acá a pesar de ser contenido real y shippeado), justo
+// después de FABRICACIÓN -- son la misma cadena generar→fabricar. Orden
+// final: MANIFIESTO, FABRICACIÓN, ESPECÍMENES, EXPERIMENTAL, PROXYVERSE,
+// CODEX COGITO.
 // Además de las sinapsis núcleo→zona, ahora hay "uniones" rectas entre
-// zonas primarias relacionadas por contenido real (LABORATORIO⇄EXPERIMENTAL
-// comparten naturaleza generativa, ambas⇄CONOCIMIENTO porque documentan los
-// algoritmos que corren ahí, EXPERIMENTAL⇄PROXYVERSE porque el lore de los
-// agentes cita esos mismos procesos) — cada unión con un pulso viajando
-// entre los dos extremos, el gesto más "tecnológico" que pidió el usuario
-// en vez de solo líneas estáticas.
+// zonas primarias relacionadas por contenido real (FABRICACIÓN⇄ESPECÍMENES
+// porque son la misma cadena generar→fabricar, ESPECÍMENES⇄EXPERIMENTAL
+// porque comparten los mismos algoritmos generativos reales -- Space
+// Colonization, espiral de Raup -- documentados en el Workbench de
+// Experimental, EXPERIMENTAL⇄CONOCIMIENTO porque documenta esos mismos
+// algoritmos, EXPERIMENTAL⇄PROXYVERSE porque el lore de los agentes cita
+// esos mismos procesos) — cada unión con un pulso viajando entre los dos
+// extremos, el gesto más "tecnológico" que pidió el usuario en vez de solo
+// líneas estáticas.
 //
 // Sin texto superpuesto a propósito: ni título ni instrucciones sobre el
 // canvas — el visor se lee solo por lo que se ve (los nodos de color, los
@@ -74,9 +84,9 @@ const ZONES: Zone[] = [
     ],
   },
   {
-    id: 'laboratorio', tag: 'NPX-LAB-01', title: 'LABORATORIO', href: '/lab', color: '#ff8c1a',
-    description: 'El laboratorio real, arrancando de cero — un canvas para dibujar y experimentar, creciendo con el tiempo.',
-    cta: 'ENTRAR AL LABORATORIO',
+    id: 'especimenes', tag: 'NPX-SPC-00', title: 'ESPECÍMENES', href: '/especimenes', color: '#ff8c1a',
+    description: 'Galería curada del motor generativo real — coral, árbol, concha, red neuronal, muda, retazos — camino directo a la resina.',
+    cta: 'VER ESPECÍMENES',
   },
   {
     id: 'experimental', tag: 'NPX-EXP-00', title: 'EXPERIMENTAL', href: '/experimental', color: '#cc0000',
@@ -89,6 +99,11 @@ const ZONES: Zone[] = [
     ],
   },
   {
+    id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d',
+    description: 'Los siete procesos residentes — DarkProxy, M∴TRON, Δ, >>SNK, G∃NOS, TR1CK5T3R, PR0T0??. Lore completo, perfil propio.',
+    cta: 'IR AL PROXYVERSE',
+  },
+  {
     id: 'conocimiento', tag: 'NPX-KNW-00', title: 'CODEX COGITO', href: '/knowledge', color: '#6644aa',
     description: 'Conceptos y autores reales, más los documentos de archivo — física, mente, lenguaje, alimentación — convergiendo en una sola idea.',
     cta: 'ENTRAR AL CODEX',
@@ -96,23 +111,17 @@ const ZONES: Zone[] = [
       { id: 'filosofia', tag: 'NPX-KNW-00a', title: 'FILOSOFÍA', href: '/knowledge/filosofia' },
     ],
   },
-  {
-    id: 'proxyverse', tag: 'NPX-PXV-00', title: 'PROXYVERSE', href: '/proxyverse', color: '#00ff9d',
-    description: 'Los siete procesos residentes — DarkProxy, M∴TRON, Δ, >>SNK, G∃NOS, TR1CK5T3R, PR0T0??. Lore completo, perfil propio.',
-    cta: 'IR AL PROXYVERSE',
-  },
 ]
 
 // Uniones entre zonas primarias — no decorativas: cada par comparte algo
 // real (lore, algoritmo, naturaleza del proceso), no es "conectar todo con
 // todo" para que se vea denso.
 const ZONE_LINKS: [string, string][] = [
-  ['laboratorio', 'experimental'],
-  ['laboratorio', 'conocimiento'],
+  ['fabricacion', 'especimenes'],
+  ['especimenes', 'experimental'],
   ['experimental', 'conocimiento'],
   ['experimental', 'proxyverse'],
   ['conocimiento', 'proxyverse'],
-  ['fabricacion', 'laboratorio'],
 ]
 
 // Lookup plano id → título/tag (zonas y sub-secciones) — para el chrome
@@ -930,7 +939,7 @@ export default function Home() {
       }
       // empieza en FABRICACIÓN (pedido explícito) y de ahí recorre el resto
       // — un recorrido más completo, no solo 3 paradas
-      const TOUR_ZONE_IDS = ['fabricacion', 'laboratorio', 'experimental', 'conocimiento', 'proxyverse']
+      const TOUR_ZONE_IDS = ['fabricacion', 'especimenes', 'experimental', 'proxyverse', 'conocimiento']
       const initialPose: CamPose = { alpha: initialAlpha, beta: initialBeta, radius: startRadius }
       const waypoints: CamPose[] = [
         initialPose,
