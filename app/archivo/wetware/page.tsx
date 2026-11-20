@@ -157,6 +157,17 @@ export default function WetwarePage() {
             <span style={{ color: `${ACCENT}55` }}>ALCANCE</span><span style={{ color: TEXT }}>SISTEMA NERVIOSO → CIRCULATORIO → DIGESTIVO → INMUNE → GENÉTICO → ESTRUCTURAL → SENSORIAL → CICLO DE VIDA</span>
           </div>
 
+          <Link href="/lab/wetware" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none',
+            border: `1px solid ${ACCENT}55`, padding: '12px 18px', marginBottom: 28, maxWidth: 680,
+            background: `${ACCENT}0d`,
+          }}>
+            <span style={{ fontSize: 9, letterSpacing: 2, color: ACCENT }}>→ PROBAR LA VERSIÓN 3D</span>
+            <span style={{ fontSize: 9, letterSpacing: 1, color: TEXT_DIM }}>
+              holograma interactivo — 4 de estos 14 sistemas marcados sobre una figura orbitable
+            </span>
+          </Link>
+
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
             <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>

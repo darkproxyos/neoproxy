@@ -138,6 +138,14 @@ const CATALOG: ExperimentEntry[] = [
     controls: 'TOGGLES POR NEUROTRANSMISOR — CLICK ENFOCA NEURONA',
   },
   {
+    id: 'wetware-holograma',
+    code: 'NPX-XP-WETWARE',
+    title: 'WETWARE // HOLOGRAMA',
+    href: '/lab/wetware',
+    blurb: 'Primera prueba de una capa visual inmersiva encima del Codex: una figura humana holográfica (wireframe procedural, no anatomía importada) que orbitás con el mouse o el dedo, con 4 de los 14 sistemas de /archivo/wetware marcados como nodos — cerebro, circulatorio, digestivo, musculoesquelético. Tocar un nodo abre el contenido real de esa sección con link de vuelta al documento completo.',
+    controls: 'ARRASTRAR ORBITA — SCROLL ZOOM — TOCÁ UN NODO',
+  },
+  {
     id: 'wired',
     code: 'NPX-XP-WIRED',
     title: 'THE WIRED',
