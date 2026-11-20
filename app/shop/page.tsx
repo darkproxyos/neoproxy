@@ -141,8 +141,16 @@ export default function ShopPage() {
               CATÁLOGO EN CONSTRUCCIÓN
             </div>
             <p className="text-sm text-[#4a6080] max-w-xl mx-auto">
-              Insumos, impresión y modelos 3D todavía no tienen checkout propio — escribinos y
-              coordinamos directo. Arte generativo (Drop 01) ya funciona de punta a punta.
+              Insumos, impresión y modelos 3D todavía no tienen checkout propio —{' '}
+              <a
+                href="https://wa.me/56993550010?text=Hola%2C%20tengo%20una%20consulta%20sobre%20la%20tienda."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#00d4ff] underline hover:no-underline"
+              >
+                escribinos
+              </a>{' '}
+              y coordinamos directo. Arte generativo (Drop 01) ya funciona de punta a punta.
             </p>
           </div>
         </div>
