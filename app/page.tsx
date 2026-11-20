@@ -520,6 +520,10 @@ export default function Home() {
       '> SUB-NODES ⇄ UNIONS RESOLVING...',
       '> WAITING FOR USER INPUT...',
     ]
+    // Arranque acortado a pedido explícito -- el boot de texto + pausas
+    // tardaba ~4.4s antes de que aparezca el visor 3D, demasiado para un
+    // home. Mismo contenido y mismos tres tramos (tipeo, pausa "init",
+    // pausa antes del corte), cadencia más rápida: ~2.1s en total.
     let i = 0
     const interval = setInterval(() => {
       if (i < lines.length) { setBootText(prev => prev + lines[i] + '\n'); i++ }
@@ -534,10 +538,10 @@ export default function Home() {
             setCurrentScreen('content')
             setShowContent(true)
             setTimeout(() => setFlashCut(false), 260)
-          }, 1300)
-        }, 700)
+          }, 650)
+        }, 380)
       }
-    }, 340)
+    }, 170)
     return () => clearInterval(interval)
   }, [])
 
@@ -615,9 +619,53 @@ export default function Home() {
       // sinapsis quedan "bien definidos e iluminados" en vez de planos.
       // Las fotos de los agentes (su propia imagen hace de emissive, no
       // algo que deba brillar como un HUD) quedan afuera explícitamente.
+      // Bajado de 0.85 -- ahora hay bloom real de post-proceso encima (ver
+      // pipeline cinemático más abajo), dejar los dos al máximo lavaba todo
+      // a un halo parejo en vez de leerse como "rayos" de luz definidos.
       const glow = new B.GlowLayer('cloud-glow', scene, { mainTextureFixedSize: 1024, blurKernelSize: 48 })
-      const GLOW_BASE = 0.85
+      const GLOW_BASE = 0.55
       glow.intensity = GLOW_BASE
+
+      // --- pipeline cinemático: "conceptos de cine" pedido explícito --
+      // bloom real de post-proceso (resalta solo lo más brillante como un
+      // flare de lente, no un lavado parejo), viñeta y grano sutil. La
+      // sensación de profundidad real la da el fog aplicado al núcleo (ver
+      // core.applyFog más abajo), no depth of field: probado en esta misma
+      // verificación -- con la escala abstracta de esta escena (no 1
+      // unidad = 1 metro real), el cálculo físico de circle-of-confusion de
+      // Babylon desenfocaba la pantalla entera en vez de separar primer
+      // plano de fondo, así que se sacó en vez de dejarlo a medias.
+      // Más liviano en touch (móvil) -- mismo criterio que /lab/hemibrain
+      // con sus toggles de carga.
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      // hdr=false a propósito -- con hdr=true (lo que casi todo ejemplo de
+      // Babylon usa por defecto) toda la escena salía lavada a un gris
+      // violeta parejo, encima o no cada efecto individual (bloom/vignette/
+      // grain/fxaa) -- aislado en la verificación antes de este commit
+      // apagando los cuatro uno por uno y confirmando que el lavado seguía
+      // igual hasta cambiar este flag. Con hdr=false el negro vuelve a ser
+      // negro real.
+      const pipeline = new B.DefaultRenderingPipeline('cloud-cinematic', false, scene, [camera])
+      // threshold alto a propósito: con ~1200 aristas del politopo visibles
+      // a la vez, un threshold bajo sumaba el brillo de todas en un lavado
+      // parejo sobre toda la pantalla en vez de resaltar puntos puntuales
+      // (nodos, bordes de panel) como flares definidos -- visto y corregido
+      // en la verificación con capturas antes de este commit.
+      pipeline.bloomEnabled = true
+      pipeline.bloomThreshold = 0.65
+      pipeline.bloomWeight = 0.5
+      pipeline.bloomKernel = isTouchDevice ? 32 : 64
+      pipeline.bloomScale = 0.5
+
+      pipeline.fxaaEnabled = true
+
+      pipeline.vignetteEnabled = true
+      pipeline.vignetteWeight = 1.6
+      pipeline.vignetteColor = new B.Color4(0, 0, 0, 0)
+      pipeline.vignetteStretch = 0.4
+
+      pipeline.grainEnabled = true
+      pipeline.grain.intensity = 6
 
       // Un par de manchas de nebulosa muy lejos, de fondo — atmósfera sin
       // partículas (sacadas a pedido), acercándose al fondo con nubes de
@@ -671,6 +719,12 @@ export default function Home() {
       core.color = B.Color3.FromHexString(METATRON_COLOR)
       core.alpha = 0.5
       core.isPickable = false
+      // antes sin niebla aplicada -- las 1200 aristas del hexacosichoron se
+      // leían todas con el mismo brillo sin importar la distancia a
+      // cámara, que es la razón real de que la red se leyera como ruido
+      // plano en vez de una estructura con profundidad. Con esto, las
+      // aristas lejanas se hunden en el fondo como el resto de la escena.
+      core.applyFog = true
 
       // El target de click a "visitar a Metatron" queda chico y anclado al
       // origen -- antes escalaba con CORE_SCALE (2.1*2.3 ~ 4.8 de diámetro,
