@@ -134,6 +134,16 @@ export const ARCHIVE_DOCS: ArchiveDoc[] = [
     blurb: 'Unix, GNU y el mensaje real de Torvalds en 1991, el kernel por dentro (scheduler, memoria virtual, syscalls), namespaces/cgroups detrás de los contenedores, y un camino concreto a compilar el tuyo — cerrado con la distancia honesta entre NeoProxy y un OS real.',
   },
   {
+    id: 'edge-computing', code: 'NPX-ARC-18', title: 'EDGE COMPUTING', href: '/archivo/edge-computing',
+    color: '#ff4500', format: 'REFERENCIA TÉCNICA',
+    blurb: 'El límite real de la velocidad de la luz, el continuo nube-niebla-borde, 5G/MEC, IA en el borde, por qué una CDN ya era "edge" antes de que el nombre existiera — y el puente directo a FPGA.',
+  },
+  {
+    id: 'computacion-no-convencional', code: 'NPX-ARC-19', title: 'COMPUTACIÓN NO CONVENCIONAL', href: '/archivo/computacion-no-convencional',
+    color: '#9d4edd', format: 'REFERENCIA TÉCNICA',
+    blurb: 'Neuromórfica, memristores, fotónica, cómputo reversible, analógico y biológico real (neuronas vivas jugando al Pong) — con FPGA, la plataforma real para experimentar con todo esto, como sección central.',
+  },
+  {
     id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
     color: '#00d4ff', format: 'ENSAYO',
     blurb: 'Los otros doce documentos, leídos juntos — de la entropía de un agujero negro a una teoría que nadie pudo confirmar, todos preguntando lo mismo.',
