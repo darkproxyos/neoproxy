@@ -16,6 +16,7 @@ const NAV_COLORS: Record<string, string> = {
   HOME: '#00d4ff',
   MANIFIESTO: '#ffb800',
   FABRICACIÓN: '#5f95c9',
+  SUSTRATO: '#c87533',
   PROXYGAMES: '#b400ff',
   EXPERIMENTAL: '#cc0000',
   'CODEX COGITO': '#6644aa',
@@ -43,6 +44,8 @@ function NavIcon({ label, color }: { label: string; color: string }) {
       return <svg {...common} aria-hidden><path d="M4 1.5 V14.5" /><path d="M4 2.5 H12.5 L10.5 5 L12.5 7.5 H4" /></svg>
     case 'FABRICACIÓN':
       return <svg {...common} aria-hidden><path d="M8 1.5 L14 4.8 V11.2 L8 14.5 L2 11.2 V4.8 Z" /><path d="M2 4.8 L8 8 L14 4.8" /><path d="M8 8 V14.5" /></svg>
+    case 'SUSTRATO':
+      return <svg {...common} aria-hidden><rect x="4.5" y="4.5" width="7" height="7" /><path d="M6 4.5 V2 M10 4.5 V2 M6 11.5 V14 M10 11.5 V14 M4.5 6 H2 M4.5 10 H2 M11.5 6 H14 M11.5 10 H14" /></svg>
     case 'ESPECÍMENES':
       return <svg {...common} aria-hidden><path d="M8 1.5 L14 5 V11 L8 14.5 L2 11 V5 Z" /><circle cx="8" cy="8" r="1.4" fill={color} stroke="none" /></svg>
     case 'PROXYGAMES':
