@@ -15,26 +15,28 @@
 //                     y auditiva (pedido explícito: "pensemos como
 //                     cineastas, un concepto de entrada") — cámara
 //                     dirigida, sin control libre, audio 100% generativo.
-// Cada una sigue siendo una ruta real propia además de elegible acá —
-// sirve para linkear o probar una puntual sin depender del horario.
+// Las tres, además de elegibles acá, siguen siendo rutas reales propias,
+// y las tres están listadas (con su blurb real) en /home-galeria -- la
+// vista de catálogo pedida explícitamente, linkeada desde HOME en el menú.
 //
-// Regla de selección (deliberadamente simple y fácil de tocar, nada de
-// Mission/Intent/Pipeline para esto): franja horaria según la hora local
-// del visitante, repartida en tres tercios iguales de 8h — arbitrario a
-// propósito, se ajusta cambiando HOUR_RULES. /home-senal entra en el
-// tercio de la tarde (12-20h, más probable que haya alguien mirando con
-// sonido, no de madrugada con auriculares puestos sin querer). Override
-// manual con ?home=nube, ?home=grafico o ?home=senal (útil para demos y
-// para probar cualquiera sin esperar el horario). "Cierto estado del
-// sitio" (no solo hora) queda abierto para cuando haya una señal real del
-// sitio a la que atar esto — no se inventa una placeholder acá todavía.
+// Regla de selección: aleatoria, pedido explícito ("hagámoslo aleatorio
+// por ahora") en vez de la franja horaria que había antes -- ese código
+// (HOUR_RULES, reparto en tercios de 8h) se reemplaza entero por esto,
+// no queda comentado al lado ni como fallback silencioso. Override manual
+// con ?home=nube, ?home=grafico o ?home=senal sigue andando igual (útil
+// para demos o para linkear una puntual sin depender del azar) -- la
+// galería es la otra forma real de elegir a propósito. "Por ahora" porque
+// es explícitamente provisorio: el día que haya una señal real del
+// estado del sitio a la que atar esto, o se quiera volver a horario,
+// cambia acá nomás, en pickVariant.
 //
 // La decisión se toma recién en el cliente (useEffect, no en el primer
-// render) porque la hora del visitante no existe todavía en el server:
-// decidir durante el render mismo dispararía un hydration mismatch real
-// (mismo tipo de bug ya visto y corregido en /experimental/cartografia).
-// Primer pintado: un fondo neutro idéntico en server y cliente: luego del
-// mount se elige variante y recién ahí se monta (las tres con ssr:false).
+// render) porque un valor al azar (como la hora) no existe todavía en el
+// server: decidir durante el render mismo dispararía un hydration
+// mismatch real (mismo tipo de bug ya visto y corregido en
+// /experimental/cartografia). Primer pintado: un fondo neutro idéntico en
+// server y cliente; luego del mount se elige variante y recién ahí se
+// monta (las tres con ssr:false).
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -43,21 +45,15 @@ const HomeNube = dynamic(() => import('./home-3d/page'), { ssr: false })
 const HomeGrafico = dynamic(() => import('./home-grafico/page'), { ssr: false })
 const HomeSenal = dynamic(() => import('./home-senal/page'), { ssr: false })
 
-type Variant = 'nube' | 'grafico' | 'senal'
+export type HomeVariant = 'nube' | 'grafico' | 'senal'
+export const HOME_VARIANTS: HomeVariant[] = ['nube', 'grafico', 'senal']
 
-const HOUR_RULES: { from: number; to: number; variant: Variant }[] = [
-  { from: 20, to: 24, variant: 'nube' },
-  { from: 0, to: 4, variant: 'nube' },
-  { from: 4, to: 12, variant: 'grafico' },
-  { from: 12, to: 20, variant: 'senal' },
-]
-
-function pickByHour(hour: number): Variant {
-  return HOUR_RULES.find((r) => hour >= r.from && hour < r.to)?.variant ?? 'nube'
+function pickVariant(): HomeVariant {
+  return HOME_VARIANTS[Math.floor(Math.random() * HOME_VARIANTS.length)]
 }
 
 export default function HomeDispatcher() {
-  const [variant, setVariant] = useState<Variant | null>(null)
+  const [variant, setVariant] = useState<HomeVariant | null>(null)
 
   useEffect(() => {
     const override = new URLSearchParams(window.location.search).get('home')
@@ -65,7 +61,7 @@ export default function HomeDispatcher() {
       setVariant(override)
       return
     }
-    setVariant(pickByHour(new Date().getHours()))
+    setVariant(pickVariant())
   }, [])
 
   if (!variant) return <div style={{ background: '#01040a', minHeight: '100vh' }} />

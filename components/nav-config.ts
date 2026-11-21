@@ -17,7 +17,19 @@ export function isGroup(entry: NavEntry): entry is NavGroup {
 }
 
 export const navConfig: NavEntry[] = [
-  { label: 'HOME', href: '/', live: true },
+  // HOME pasó de link directo a grupo a pedido explícito: ahora hay tres
+  // home index reales (/home-3d, /home-grafico, /home-senal) que "/"
+  // elige al azar en cada visita -- ALEATORIO mantiene ese comportamiento
+  // de siempre (mismo href, "/"), GALERÍA abre /home-galeria, la vista de
+  // catálogo con las tres para entrar a cualquiera sin depender del azar.
+  {
+    label: 'HOME',
+    live: true,
+    items: [
+      { label: 'Aleatorio', href: '/', live: true },
+      { label: 'Galería', href: '/home-galeria', live: true },
+    ],
+  },
   { label: 'MANIFIESTO', href: '/manifesto', live: true },
   {
     label: 'FABRICACIÓN',
