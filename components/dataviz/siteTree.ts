@@ -8,7 +8,25 @@
 // /fibonacci, /npos/research, /system) quedan afuera a propósito -- no
 // pertenecen a ninguna rama real, listarlas acá colgadas de cualquier
 // lado sería inventar una jerarquía que no existe.
+//
+// SITE_BRANCH_COLOR vive acá (y no repetida en cada página que usa
+// SITE_TREE) para que /experimental/cartografia y /home-grafico pinten
+// exactamente las mismas ramas con el mismo color real -- un solo lugar
+// de verdad para "de qué color es cada sección".
 export type SiteNode = { name: string; href?: string; children?: SiteNode[] }
+
+export const SITE_BRANCH_COLOR: Record<string, string> = {
+  'MANIFIESTO': '#ffb800',
+  'FABRICACIÓN': '#5f95c9',
+  'PRIMER CUERPO': '#8aa0c9',
+  'ESPECÍMENES': '#ff8c1a',
+  'PROXYGAMES': '#00d4ff',
+  'REALIDAD AUMENTADA': '#b400ff',
+  'EXPERIMENTAL': '#cc0000',
+  'PROXYVERSE': '#00ff9d',
+  'CODEX COGITO': '#6644aa',
+  'TIENDA': '#00ffcc',
+}
 
 export const SITE_TREE: SiteNode = {
   name: 'NEOPROXY',
