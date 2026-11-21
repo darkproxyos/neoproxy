@@ -192,7 +192,7 @@ export default function KnowledgePage() {
         }}>
           Antes de la interfaz hay una pregunta que ninguna interfaz responde: qué es una señal,
           qué es un límite, qué es un yo. Acá conviven dos arquitecturas que la responden desde
-          ángulos distintos. Abajo, veinticuatro documentos largos — dos ensayos, dieciséis referencias
+          ángulos distintos. Abajo, veinticinco documentos largos — dos ensayos, diecisiete referencias
           técnicas, cuatro análisis cultural (tres de ficción, uno de estética visual) y dos teorías
           científicas disputadas — que bajan hasta el detalle: partículas, mente, lenguaje,
           alimentación, el principio holográfico, ciencia cognitiva, dinero (economía, psicología
@@ -204,9 +204,10 @@ export default function KnowledgePage() {
           Bertalanffy — el vocabulario real detrás de "organismo vivo"), computación cuántica
           (qubits y entrelazamiento, con la supremacía cuántica tratada como la controversia real
           que es), redes neuronales artificiales (de McCulloch-Pitts en 1943 al Nobel de Física 2024
-          de Hopfield), ADN (de Watson-Crick-Franklin a CRISPR), y wetware (el cuerpo entero
+          de Hopfield), ADN (de Watson-Crick-Franklin a CRISPR), wetware (el cuerpo entero
           reescrito como arquitectura de sistema, con el límite de esa traducción marcado a
-          propósito), filosofía; Ergo Proxy, Serial Experiments Lain, Ghost in the Shell y Giger (la
+          propósito), y Linux (Unix, GNU, el kernel por dentro y un camino real a compilar el
+          propio), filosofía; Ergo Proxy, Serial Experiments Lain, Ghost in the Shell y Giger (la
           estética biomecánica, el cuarto pilar visual que nombra CLAUDE.md) leídos con la misma vara
           que un paper; Jacobo Grinberg y Garnier Malet, dos teorías reales que la ciencia nunca
           terminó de aceptar, separadas con cuidado de lo que de verdad se pudo confirmar; y
@@ -260,7 +261,7 @@ export default function KnowledgePage() {
         </Link>
 
         <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
-          VEINTICUATRO DOCUMENTOS
+          VEINTICINCO DOCUMENTOS
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
