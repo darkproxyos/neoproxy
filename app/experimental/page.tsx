@@ -185,6 +185,14 @@ const CATALOG: ExperimentEntry[] = [
     blurb: 'Lector genérico de tags NFC (Web NFC): muestra el payload crudo de cualquier tag — tipo de registro, texto decodificado y hex. Todavía no hay un artefacto físico ni un esquema de datos propio detrás; es el punto de partida para cuando exista uno.',
     controls: 'REQUIERE CHROME PARA ANDROID + NFC',
   },
+  {
+    id: 'graficos',
+    code: 'NPX-XP-GRAFICOS',
+    title: 'GRÁFICOS',
+    href: '/experimental/graficos',
+    blurb: 'Galería jugable de D3: seis tipos de gráfico distintos (red de fuerzas, dispersión, donut, burbujas, barra radial, barra simple), cada uno sobre un dato real de NeoProxy — las zonas del Home, los algoritmos reales de este mismo catálogo por año de publicación, los especímenes curados, el Codex por cluster, PROXYGAMES por estado. La red de fuerzas es arrastrable de verdad.',
+    controls: 'HOVER PARA DETALLE — ARRASTRÁ LOS NODOS DE LA RED',
+  },
 ]
 
 export default function ExperimentalHubPage() {
