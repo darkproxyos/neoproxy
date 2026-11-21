@@ -129,6 +129,11 @@ export const ARCHIVE_DOCS: ArchiveDoc[] = [
     blurb: 'El cuerpo humano reescrito como arquitectura de sistema — anatomía real primero, analogía computacional después, con el límite de esa traducción marcado a propósito. Fase 1/3: solo texto.',
   },
   {
+    id: 'linux', code: 'NPX-ARC-17', title: 'LINUX', href: '/archivo/linux',
+    color: '#00ff41', format: 'REFERENCIA TÉCNICA',
+    blurb: 'Unix, GNU y el mensaje real de Torvalds en 1991, el kernel por dentro (scheduler, memoria virtual, syscalls), namespaces/cgroups detrás de los contenedores, y un camino concreto a compilar el tuyo — cerrado con la distancia honesta entre NeoProxy y un OS real.',
+  },
+  {
     id: 'sintesis', code: 'NPX-KNW-SIN', title: 'SÍNTESIS', href: '/knowledge/sintesis',
     color: '#00d4ff', format: 'ENSAYO',
     blurb: 'Los otros doce documentos, leídos juntos — de la entropía de un agujero negro a una teoría que nadie pudo confirmar, todos preguntando lo mismo.',
