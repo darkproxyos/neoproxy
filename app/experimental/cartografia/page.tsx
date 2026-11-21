@@ -6,7 +6,9 @@
 //
 //  I.  EL SITIO ENTERO — cada ruta real del sitio (components/dataviz/
 //      siteTree.ts, verificado contra nav-config.ts y el catálogo propio
-//      de cada sección), 95 nodos.
+//      de cada sección), 100 nodos (el conteo real es dinámico --
+//      {countNodes(SITE_TREE)} más abajo -- este número es solo
+//      documentación, se actualiza solo con el árbol).
 //  II. EL CODEX ENTERO — los 88 nombres reales de /knowledge
 //      (components/knowledge/entries.ts), agrupados por sus 7 clusters
 //      reales -- "las ramas de todos los conceptos" pedidas.

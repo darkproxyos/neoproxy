@@ -16,6 +16,7 @@
 export type SiteNode = { name: string; href?: string; children?: SiteNode[] }
 
 export const SITE_BRANCH_COLOR: Record<string, string> = {
+  'HOME': '#00d4ff',
   'MANIFIESTO': '#ffb800',
   'FABRICACIÓN': '#5f95c9',
   'PRIMER CUERPO': '#8aa0c9',
@@ -32,6 +33,15 @@ export const SITE_TREE: SiteNode = {
   name: 'NEOPROXY',
   href: '/',
   children: [
+    {
+      name: 'HOME', href: '/',
+      children: [
+        { name: 'NUBE', href: '/home-3d' },
+        { name: 'MAPA', href: '/home-grafico' },
+        { name: 'SEÑAL', href: '/home-senal' },
+        { name: 'GALERÍA', href: '/home-galeria' },
+      ],
+    },
     { name: 'MANIFIESTO', href: '/manifesto' },
     {
       name: 'FABRICACIÓN', href: '/fabrication',
