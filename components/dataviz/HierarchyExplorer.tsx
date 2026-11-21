@@ -33,7 +33,24 @@ export function HierarchyExplorer({
   const [layout, setLayout] = useState<ExplorerLayout>('radial')
   const [transform, setTransform] = useState({ x: 0, y: 0, k: 1 })
   const svgRef = useRef<SVGSVGElement>(null)
-  const panRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+  // espejo síncrono de `transform` -- lo necesita recomputeGesture() para
+  // leer el valor MÁS RECIENTE en medio de un gesto ya en curso (un dedo
+  // se levanta durante un pinch y hay que retomar como pan desde ahí), sin
+  // depender del closure de cuando empezó el gesto, que para entonces
+  // puede estar desactualizado.
+  const transformRef = useRef(transform)
+  transformRef.current = transform
+  // un puntero por dedo real en pantalla -- antes se asumía un solo dedo
+  // (un pinch de dos dedos generaba dos pointerdown independientes que se
+  // pisaban entre sí y terminaba leyendo un ref ya en null: el crash real
+  // reportado al hacer zoom en mobile, reproducido con Playwright
+  // simulando dos punteros reales antes de este fix).
+  const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map())
+  const gestureRef = useRef<
+    | { mode: 'pan'; startX: number; startY: number; origX: number; origY: number }
+    | { mode: 'pinch'; startDist: number; origK: number }
+    | null
+  >(null)
 
   const W = 900, H = 900
 
@@ -77,20 +94,60 @@ export function HierarchyExplorer({
     setTransform((t) => ({ ...t, k: Math.min(6, Math.max(0.25, t.k * factor)) }))
   }
 
+  // recalcula el origen del gesto activo a partir de los punteros que
+  // quedan vivos en pointersRef -- se llama tanto al agregar un dedo
+  // (pasar de pan a pinch) como al sacar uno (de pinch de vuelta a pan,
+  // retomando desde la posición y escala actuales, sin salto).
+  const recomputeGesture = () => {
+    const pts = [...pointersRef.current.values()]
+    if (pts.length === 1) {
+      gestureRef.current = { mode: 'pan', startX: pts[0].x, startY: pts[0].y, origX: transformRef.current.x, origY: transformRef.current.y }
+    } else if (pts.length >= 2) {
+      const dist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) || 1
+      gestureRef.current = { mode: 'pinch', startDist: dist, origK: transformRef.current.k }
+    } else {
+      gestureRef.current = null
+    }
+  }
+
   const onPointerDownBg = (e: React.PointerEvent) => {
     if ((e.target as Element).closest('a')) return
-    panRef.current = { startX: e.clientX, startY: e.clientY, origX: transform.x, origY: transform.y }
+    pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    recomputeGesture()
+
     const onMove = (ev: PointerEvent) => {
-      if (!panRef.current) return
-      setTransform((t) => ({ ...t, x: panRef.current!.origX + (ev.clientX - panRef.current!.startX), y: panRef.current!.origY + (ev.clientY - panRef.current!.startY) }))
+      if (!pointersRef.current.has(ev.pointerId)) return
+      pointersRef.current.set(ev.pointerId, { x: ev.clientX, y: ev.clientY })
+      const g = gestureRef.current
+      if (!g) return
+      if (g.mode === 'pan') {
+        // números ya calculados acá, no refs leídos adentro del updater --
+        // la causa real del crash era leer panRef.current dentro del
+        // callback de setTransform, que puede ejecutarse después de que
+        // otro evento (el pointerup del otro dedo) ya lo puso en null.
+        const nx = g.origX + (ev.clientX - g.startX)
+        const ny = g.origY + (ev.clientY - g.startY)
+        setTransform((t) => ({ ...t, x: nx, y: ny }))
+      } else {
+        const pts = [...pointersRef.current.values()]
+        if (pts.length < 2) return
+        const dist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) || 1
+        const nk = Math.min(6, Math.max(0.25, g.origK * (dist / g.startDist)))
+        setTransform((t) => ({ ...t, k: nk }))
+      }
     }
-    const onUp = () => {
-      panRef.current = null
-      window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerup', onUp)
+    const onUpOrCancel = (ev: PointerEvent) => {
+      pointersRef.current.delete(ev.pointerId)
+      recomputeGesture()
+      if (pointersRef.current.size === 0) {
+        window.removeEventListener('pointermove', onMove)
+        window.removeEventListener('pointerup', onUpOrCancel)
+        window.removeEventListener('pointercancel', onUpOrCancel)
+      }
     }
     window.addEventListener('pointermove', onMove)
-    window.addEventListener('pointerup', onUp)
+    window.addEventListener('pointerup', onUpOrCancel)
+    window.addEventListener('pointercancel', onUpOrCancel)
   }
 
   const resetView = () => setTransform({ x: 0, y: 0, k: 1 })
@@ -123,7 +180,7 @@ export function HierarchyExplorer({
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
         width="100%"
-        style={{ minWidth: 320, maxHeight: '80vh', display: 'block', touchAction: 'none', cursor: panRef.current ? 'grabbing' : 'grab', background: 'radial-gradient(circle at center, #060a14 0%, #01040a 70%)' }}
+        style={{ minWidth: 320, maxHeight: '80vh', display: 'block', touchAction: 'none', cursor: gestureRef.current ? 'grabbing' : 'grab', background: 'radial-gradient(circle at center, #060a14 0%, #01040a 70%)' }}
         onWheel={onWheel}
         onPointerDown={onPointerDownBg}
       >
