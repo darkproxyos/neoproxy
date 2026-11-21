@@ -194,6 +194,14 @@ const CATALOG: ExperimentEntry[] = [
     controls: 'HOVER PARA DETALLE — ARRASTRÁ LOS NODOS DE LA RED',
   },
   {
+    id: 'anatomia',
+    code: 'NPX-XP-ANATOMIA',
+    title: 'ANATOMÍA',
+    href: '/experimental/anatomia',
+    blurb: 'El mapa de la arquitectura técnica real de NeoProxy, no de su contenido: frontend, backend, base de datos, servicios externos (Mercado Pago, Pusher, Vercel Cron) y el kernel narrativo (Memory/hub.json), con las 35 rutas de API reales y las 13 tablas de Turso desglosadas por categoría. Cada caja del diagrama es verificable tocándola.',
+    controls: 'TOCÁ UNA CAJA PARA VER EL DETALLE',
+  },
+  {
     id: 'cartografia',
     code: 'NPX-XP-CARTOGRAFIA',
     title: 'CARTOGRAFÍA',
