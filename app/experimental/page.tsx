@@ -193,6 +193,14 @@ const CATALOG: ExperimentEntry[] = [
     blurb: 'Galería jugable de D3: seis tipos de gráfico distintos (red de fuerzas, dispersión, donut, burbujas, barra radial, barra simple), cada uno sobre un dato real de NeoProxy — las zonas del Home, los algoritmos reales de este mismo catálogo por año de publicación, los especímenes curados, el Codex por cluster, PROXYGAMES por estado. La red de fuerzas es arrastrable de verdad.',
     controls: 'HOVER PARA DETALLE — ARRASTRÁ LOS NODOS DE LA RED',
   },
+  {
+    id: 'cartografia',
+    code: 'NPX-XP-CARTOGRAFIA',
+    title: 'CARTOGRAFÍA',
+    href: '/experimental/cartografia',
+    blurb: 'La continuación de GRÁFICOS a escala masiva: el sitio entero (95 rutas reales, cada sección y subsección) y el Codex entero (los 88 nombres reales de /knowledge, por cluster) — cada uno visto en 3 layouts de d3-hierarchy (árbol radial, círculos anidados, mosaico), con zoom y arrastre reales para navegar la densidad.',
+    controls: 'RUEDA: ZOOM — ARRASTRÁ: PAN — 3 LAYOUTS POR ÁRBOL',
+  },
 ]
 
 export default function ExperimentalHubPage() {
