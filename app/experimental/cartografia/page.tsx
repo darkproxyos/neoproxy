@@ -24,7 +24,7 @@
 
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { SITE_TREE } from '@/components/dataviz/siteTree'
+import { SITE_TREE, SITE_BRANCH_COLOR } from '@/components/dataviz/siteTree'
 import { entries, clusters, type Cluster } from '@/components/knowledge/entries'
 import type { HNode } from '@/components/dataviz/HierarchyExplorer'
 
@@ -33,19 +33,6 @@ const HierarchyExplorer = dynamic(() => import('@/components/dataviz/HierarchyEx
 const mono = "'Space Mono', monospace"
 const CYAN = '#00d4ff'
 const RED = '#cc0000'
-
-const SITE_BRANCH_COLOR: Record<string, string> = {
-  'MANIFIESTO': '#ffb800',
-  'FABRICACIÓN': '#5f95c9',
-  'PRIMER CUERPO': '#8aa0c9',
-  'ESPECÍMENES': '#ff8c1a',
-  'PROXYGAMES': '#00d4ff',
-  'REALIDAD AUMENTADA': '#b400ff',
-  'EXPERIMENTAL': '#cc0000',
-  'PROXYVERSE': '#00ff9d',
-  'CODEX COGITO': '#6644aa',
-  'TIENDA': '#00ffcc',
-}
 
 const CLUSTER_ORDER: Cluster[] = ['informacion', 'mente', 'autoorganizacion', 'sistemas', 'computacion', 'estetica', 'geometria']
 
