@@ -19,6 +19,7 @@ export const SITE_BRANCH_COLOR: Record<string, string> = {
   'HOME': '#00d4ff',
   'MANIFIESTO': '#ffb800',
   'FABRICACIÓN': '#5f95c9',
+  'SUSTRATO': '#c87533',
   'PRIMER CUERPO': '#8aa0c9',
   'ESPECÍMENES': '#ff8c1a',
   'PROXYGAMES': '#00d4ff',
@@ -48,6 +49,19 @@ export const SITE_TREE: SiteNode = {
       children: [
         { name: 'IMPRESIÓN 3D', href: '/fabrication' },
         { name: 'ARTEFACTOS', href: '/artifacts' },
+      ],
+    },
+    {
+      name: 'SUSTRATO', href: '/sustrato',
+      children: [
+        { name: 'FUNDAMENTOS', href: '/sustrato/fundamentos' },
+        { name: 'ARDUINO', href: '/sustrato/arduino' },
+        { name: 'SENSORES', href: '/sustrato/sensores' },
+        { name: 'RASPBERRY PI', href: '/sustrato/raspberry-pi' },
+        { name: 'JETSON', href: '/sustrato/jetson' },
+        { name: 'STM32', href: '/sustrato/stm32' },
+        { name: 'FPGA', href: '/sustrato/fpga' },
+        { name: 'COMPARATIVA', href: '/sustrato/comparativa' },
       ],
     },
     { name: 'PRIMER CUERPO', href: '/lab/primercuerpo' },

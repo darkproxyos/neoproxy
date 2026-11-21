@@ -427,7 +427,12 @@ export default function ComputacionNoConvencionalPage() {
               <code>.rbf</code> vía <code>quartus_cpf -c</code>) para un TRNG (generador de números
               aleatorios reales por hardware) — ese trabajo vive en otro repo
               (<code>neoproxy-lab</code>/<code>digitalseed</code>, no en este), pero es el punto de
-              partida real y ya en marcha, no hipotético, para indagar en serio con esto.
+              partida real y ya en marcha, no hipotético, para indagar en serio con esto. La bajada
+              práctica de todo esto (qué placa comprar, qué toolchain instalar, el primer proyecto real)
+              vive aparte, en{' '}
+              <Link href="/sustrato/fpga" style={{ color: '#fff', textDecoration: 'underline' }}>
+                /sustrato/fpga
+              </Link>.
             </Caption>
           </Panel>
         </div>

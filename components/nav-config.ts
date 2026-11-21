@@ -41,6 +41,14 @@ export const navConfig: NavEntry[] = [
       // en /arsenal, se vuelve a listar acá cuando esté lista para mostrarse.
     ],
   },
+  // SUSTRATO: sección completa de electrónica/robótica pedida explícita
+  // (Arduino, sensores/periféricos, Raspberry Pi, Jetson, STM32, FPGA) --
+  // nombre elegido a propósito, no "Electrónica/Robótica" literal: el
+  // sitio ya usa el lenguaje de "organismo vivo" (wetware, NeoProxy OS);
+  // sustrato es la capa física real debajo de ese organismo. Leaf simple
+  // a un hub propio (mismo patrón que EXPERIMENTAL/CODEX COGITO: una
+  // página catálogo adentro reúne las sub-páginas, no un dropdown).
+  { label: 'SUSTRATO', href: '/sustrato', live: true },
   // PRIMER CUERPO: generador real del Espécimen 001 (primer artefacto físico
   // de la marca) -- entrada propia a pedido explícito, antes de ESPECÍMENES.
   { label: 'PRIMER CUERPO', href: '/lab/primercuerpo', live: true },
