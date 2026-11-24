@@ -65,7 +65,7 @@ export default function AtlasPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/knowledge" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/knowledge" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER AL CODEX
         </Link>
 

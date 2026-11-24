@@ -236,7 +236,7 @@ export default function WetwareHologramPage() {
         <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: CYAN }}>
           NEOPROXY // WETWARE — HOLOGRAMA
         </span>
-        <Link href="/archivo/wetware" style={{ color: CYAN, textDecoration: 'none', fontFamily: mono, fontSize: 9, border: `1px solid ${CYAN}66`, padding: '6px 10px', borderRadius: 4 }}>
+        <Link href="/archivo/wetware" className="press" style={{ color: CYAN, textDecoration: 'none', fontFamily: mono, fontSize: 9, border: `1px solid ${CYAN}66`, padding: '6px 10px', borderRadius: 4 }}>
           EXIT
         </Link>
       </div>

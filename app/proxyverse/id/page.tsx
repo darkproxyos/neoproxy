@@ -22,7 +22,7 @@ export default function ProxyIdPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/proxyverse" style={{
+        <Link href="/proxyverse" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -54,11 +54,11 @@ export default function ProxyIdPage() {
               Todavía no hay señal. Tu Proxy ID se arma solo con lo que hagas en el sitio:
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 10 }}>
-              <Link href="/proxyverse" style={{ color: CYAN }}>→ Hablá con un proceso en Proxyverse</Link>
-              <Link href="/realidad-aumentada/neocam" style={{ color: CYAN }}>→ Sacate un retrato en NeoCam</Link>
-              <Link href="/lab/proxygenesis" style={{ color: CYAN }}>→ Generá una pieza en Proxygenesis</Link>
-              <Link href="/games/trickster" style={{ color: CYAN }}>→ Jugá una partida de Trickster</Link>
-              <Link href="/experimental/scan" style={{ color: CYAN }}>→ Escaneá un tag NFC</Link>
+              <Link href="/proxyverse" className="press" style={{ color: CYAN }}>→ Hablá con un proceso en Proxyverse</Link>
+              <Link href="/realidad-aumentada/neocam" className="press" style={{ color: CYAN }}>→ Sacate un retrato en NeoCam</Link>
+              <Link href="/lab/proxygenesis" className="press" style={{ color: CYAN }}>→ Generá una pieza en Proxygenesis</Link>
+              <Link href="/games/trickster" className="press" style={{ color: CYAN }}>→ Jugá una partida de Trickster</Link>
+              <Link href="/experimental/scan" className="press" style={{ color: CYAN }}>→ Escaneá un tag NFC</Link>
             </div>
           </div>
         )}
@@ -87,19 +87,19 @@ export default function ProxyIdPage() {
                   <div style={{ fontSize: 11, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.7, marginBottom: 18 }}>
                     "{identity.dominant.quote}"
                   </div>
-                  <Link href={`/proxyverse/${identity.dominant.id}`} style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <Link href={`/proxyverse/${identity.dominant.id}`} className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER SU PERFIL →
                   </Link>
                   <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
-                  <Link href="/proxyverse/voluntad" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <Link href="/proxyverse/voluntad" className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
                     LEER LA CARTA →
                   </Link>
                   <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
-                  <Link href="/proxyverse/constelacion" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <Link href="/proxyverse/constelacion" className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER CONSTELACIÓN →
                   </Link>
                   <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
-                  <Link href="/proxyverse/topologia" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <Link href="/proxyverse/topologia" className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER TOPOLOGÍA →
                   </Link>
                 </>

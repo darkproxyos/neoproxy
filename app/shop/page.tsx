@@ -62,7 +62,7 @@ export default function ShopPage() {
       {/* Header */}
       <header className="relative z-10 p-8 border-b border-[#0f1f35]">
         <div className="max-w-7xl mx-auto">
-          <Link href="/" className="text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block">
+          <Link href="/" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block">
             ← BACK TO NEOPROXY OS
           </Link>
           <h1 className="font-sans text-5xl md:text-7xl font-extrabold leading-none tracking-tight">
@@ -98,7 +98,7 @@ export default function ShopPage() {
 
                 {cat.id === 'insumos' && (
                   <div className="flex gap-6 items-end mb-6 pb-6 border-b border-[#0f1f35]">
-                    <Link href="/shop/esp32" className="text-center group">
+                    <Link href="/shop/esp32" className="press text-center group">
                       <Esp32Icon color={cat.color} />
                       <div
                         className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2 group-hover:underline"
@@ -127,7 +127,7 @@ export default function ShopPage() {
                 <Link
                   href={cat.cta.href}
                   {...(cat.cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border transition-colors"
+                  className="press inline-block font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border transition-colors"
                   style={{ color: cat.color, borderColor: `${cat.color}66` }}
                 >
                   [ {cat.cta.label} ]

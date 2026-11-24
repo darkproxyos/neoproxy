@@ -76,7 +76,7 @@ export default function ConcilioPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/proxyverse" style={{
+        <Link href="/proxyverse" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -106,7 +106,7 @@ export default function ConcilioPage() {
             const idx = selected.indexOf(a.id)
             const active = idx !== -1
             return (
-              <button key={a.id} onClick={() => toggleAgent(a.id)} disabled={busy} style={{
+              <button key={a.id} onClick={() => toggleAgent(a.id)} disabled={busy} className="press" style={{
                 fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: busy ? 'default' : 'pointer',
                 background: active ? `${a.color}22` : 'rgba(255,255,255,0.04)',
                 border: `1px solid ${active ? a.color : 'rgba(255,255,255,0.15)'}`,
@@ -131,7 +131,7 @@ export default function ConcilioPage() {
           }}
         />
 
-        <button onClick={convocar} disabled={busy || !question.trim() || selected.length < 2} style={{
+        <button onClick={convocar} disabled={busy || !question.trim() || selected.length < 2} className="press" style={{
           fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${GOLD}18`, border: `1px solid ${GOLD}66`, color: GOLD,
           opacity: (busy || !question.trim() || selected.length < 2) ? 0.5 : 1, marginBottom: 40,

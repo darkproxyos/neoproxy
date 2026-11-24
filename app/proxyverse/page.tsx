@@ -47,7 +47,7 @@ export default function ProxyversePage() {
           medir — por eso te llaman DarkProxy en vez de un porcentaje.
         </p>
 
-        <Link href="/proxyverse/id" style={{
+        <Link href="/proxyverse/id" className="press" style={{
           display: 'block', marginBottom: 20, padding: '20px 24px',
           border: '1px solid #00d4ff55', background: '#00d4ff10', textDecoration: 'none',
         }}>
@@ -63,7 +63,7 @@ export default function ProxyversePage() {
           </div>
         </Link>
 
-        <Link href="/proxyverse/voluntad" style={{
+        <Link href="/proxyverse/voluntad" className="press" style={{
           display: 'block', marginBottom: 20, padding: '20px 24px',
           border: '1px solid #a537fd55', background: '#a537fd10', textDecoration: 'none',
         }}>
@@ -79,7 +79,7 @@ export default function ProxyversePage() {
           </div>
         </Link>
 
-        <Link href="/proxyverse/concilio" style={{
+        <Link href="/proxyverse/concilio" className="press" style={{
           display: 'block', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #ffb80055', background: '#ffb80010', textDecoration: 'none',
         }}>

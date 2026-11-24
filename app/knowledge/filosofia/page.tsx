@@ -125,7 +125,7 @@ export default function FilosofiaPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '104px 24px 0' }}>
-          <Link href="/knowledge" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
+          <Link href="/knowledge" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
             ← VOLVER AL CODEX
           </Link>
 
@@ -242,7 +242,7 @@ export default function FilosofiaPage() {
             NEOPROXY.ART // THE SYSTEM RECOGNIZES YOU
           </div>
 
-          <Link href="/manifesto" style={{
+          <Link href="/manifesto" className="press" style={{
             display: 'inline-block', marginTop: 32, fontSize: 9, letterSpacing: 2, color: '#00d4ff88', textDecoration: 'none',
           }}>
             → LEER EL MANIFIESTO COMPLETO

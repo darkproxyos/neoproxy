@@ -218,7 +218,7 @@ export default function ExperimentalHubPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/" style={{
+        <Link href="/" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -256,7 +256,7 @@ export default function ExperimentalHubPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, marginBottom: 56 }}>
           {LAB_MODES.map((mode, i) => (
-            <Link key={mode.id} href={mode.href} className="fade-in" style={{
+            <Link key={mode.id} href={mode.href} className="fade-in press" style={{
               display: 'block', textDecoration: 'none', color: 'inherit', padding: 24,
               background: 'rgba(2,4,8,0.8)', border: `1px solid ${mode.color}33`,
               borderLeft: `3px solid ${mode.color}`, animationDelay: `${i * 0.08}s`, opacity: 0,

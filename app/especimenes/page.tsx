@@ -61,7 +61,7 @@ export default function EspecimenesPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '104px 32px 100px' }}>
-        <Link href="/fabrication" style={{
+        <Link href="/fabrication" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -83,7 +83,7 @@ export default function EspecimenesPage() {
           crecer solo. Cada pieza acá es un STL real y persistido, con los datos exactos de su propia
           corrida: semilla, nodos, velocidad, parámetros.
         </p>
-        <Link href="/lab/proxygenesis" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
+        <Link href="/lab/proxygenesis" className="press" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
           → Generar los tuyos en el laboratorio
         </Link>
 
@@ -108,10 +108,10 @@ export default function EspecimenesPage() {
               const c = m === 'all' ? AUTOORG : MODE_COLOR[m]
               const label = m === 'all' ? 'TODOS' : MODE_LABEL[m]
               return (
-                <button key={m} onClick={() => setFilter(m)} style={{
+                <button key={m} onClick={() => setFilter(m)} className="press" style={{
                   fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 12px', cursor: 'pointer',
-                  background: active ? `${c}22` : 'transparent', border: `1px solid ${active ? c : '#1a2b3f'}`,
-                  color: active ? c : '#4a6080',
+                  background: active ? `${c}22` : 'transparent', border: `1px solid ${active ? c : '#4a6080'}`,
+                  color: active ? c : '#8fa8c4',
                 }}>
                   {label} ({counts[m]})
                 </button>
@@ -201,9 +201,9 @@ export default function EspecimenesPage() {
             <div className="specimen-modal-text" style={{ padding: 24, overflowY: 'auto', position: 'relative' }}>
               <Corner pos="tr" color={MODE_COLOR[open.mode]} />
               <Corner pos="br" color={MODE_COLOR[open.mode]} />
-              <button onClick={() => setOpen(null)} style={{
-                fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#4a6080', background: 'transparent',
-                border: '1px solid #4a608044', padding: '4px 10px', cursor: 'pointer', marginBottom: 20,
+              <button onClick={() => setOpen(null)} className="press" style={{
+                fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#8fa8c4', background: 'transparent',
+                border: '1px solid #4a6080', padding: '4px 10px', cursor: 'pointer', marginBottom: 20,
               }}>
                 ✕ CERRAR
               </button>
@@ -231,7 +231,7 @@ export default function EspecimenesPage() {
                   const t = THINKERS[id]
                   if (!t) return null
                   return (
-                    <Link key={id} href={`/knowledge?entry=${id}`} style={{
+                    <Link key={id} href={`/knowledge?entry=${id}`} className="press" style={{
                       display: 'block', fontSize: 8, letterSpacing: 0.5, color: `${MODE_COLOR[open.mode]}dd`, textDecoration: 'none',
                       border: `1px solid ${MODE_COLOR[open.mode]}33`, padding: '6px 10px', lineHeight: 1.5,
                     }}>
@@ -290,6 +290,7 @@ export default function EspecimenesPage() {
         }
         .specimen-card { transition: border-color 0.25s ease, transform 0.25s ease; }
         .specimen-card:hover { transform: translateY(-3px); }
+        .specimen-card:active { transform: translateY(-1px) scale(0.98); }
         .specimen-thumb img { transition: transform 0.5s ease, filter 0.35s ease; filter: saturate(1.1) contrast(1.05); }
         .specimen-card:hover .specimen-thumb img { transform: scale(1.06); filter: saturate(1.3) contrast(1.12) brightness(1.05); }
         .specimen-tag { opacity: 0; transition: opacity 0.2s ease; }

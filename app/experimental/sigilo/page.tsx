@@ -162,7 +162,7 @@ export default function SigiloPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" style={{
+        <Link href="/experimental" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -205,7 +205,7 @@ export default function SigiloPage() {
         />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
           {SUGGESTED.map(q => (
-            <button key={q} onClick={() => setIntention(q)} disabled={busy} style={{
+            <button key={q} onClick={() => setIntention(q)} disabled={busy} className="press" style={{
               fontFamily: mono, fontSize: 8, letterSpacing: 0.5, padding: '6px 10px', cursor: busy ? 'default' : 'pointer',
               background: 'rgba(255,255,255,0.04)', border: `1px solid ${GREEN}33`, color: '#8fb8d6',
               opacity: busy ? 0.5 : 1,
@@ -215,7 +215,7 @@ export default function SigiloPage() {
           ))}
         </div>
 
-        <button onClick={forjar} disabled={busy} style={{
+        <button onClick={forjar} disabled={busy} className="press" style={{
           fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${GREEN}18`, border: `1px solid ${GREEN}66`, color: GREEN,
           opacity: busy ? 0.5 : 1, marginBottom: 40,
@@ -266,14 +266,14 @@ export default function SigiloPage() {
 
             {status === 'done' && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                <button onClick={guardar} disabled={saved} style={{
+                <button onClick={guardar} disabled={saved} className="press" style={{
                   fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px',
                   cursor: saved ? 'default' : 'pointer', background: saved ? `${GREEN}18` : 'transparent',
                   border: `1px solid ${GREEN}66`, color: GREEN, opacity: saved ? 0.7 : 1,
                 }}>
                   {saved ? '◉ GUARDADO' : '✦ GUARDAR EN GALERÍA'}
                 </button>
-                <button onClick={cargar} style={{
+                <button onClick={cargar} className="press" style={{
                   fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
                   background: 'transparent', border: `1px solid ${GOLD}66`, color: GOLD,
                 }}>
@@ -311,14 +311,14 @@ export default function SigiloPage() {
                   "olvidar", no "repetir".
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                  <button onClick={guardar} disabled={saved} style={{
+                  <button onClick={guardar} disabled={saved} className="press" style={{
                     fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px',
                     cursor: saved ? 'default' : 'pointer', background: saved ? `${GREEN}18` : 'transparent',
                     border: `1px solid ${GREEN}66`, color: GREEN, opacity: saved ? 0.7 : 1,
                   }}>
                     {saved ? '◉ GUARDADO' : '✦ GUARDAR EN GALERÍA'}
                   </button>
-                  <button onClick={() => { setStatus('idle'); setGlyph(null); setReduced(null); setInstruction(null); setIntention('') }} style={{
+                  <button onClick={() => { setStatus('idle'); setGlyph(null); setReduced(null); setInstruction(null); setIntention('') }} className="press" style={{
                     fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
                     background: 'transparent', border: `1px solid ${GOLD}66`, color: GOLD,
                   }}>
@@ -384,7 +384,7 @@ export default function SigiloPage() {
                     <div style={{ fontSize: 8, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6, wordBreak: 'break-word' }}>
                       {s.intention}
                     </div>
-                    <button onClick={() => borrar(s.id)} style={{
+                    <button onClick={() => borrar(s.id)} className="press" style={{
                       fontFamily: mono, fontSize: 7, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
                       background: 'transparent', border: '1px solid rgba(255,45,85,0.4)', color: '#ff2d55',
                     }}>

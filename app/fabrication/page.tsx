@@ -194,7 +194,7 @@ export default function FabricationPage() {
         <div style={{ marginBottom: 80 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 12, marginBottom: 22 }}>
             <div style={{ fontSize: 10, color: '#00ffcc', letterSpacing: 4 }}>TRABAJOS_DESTACADOS</div>
-            <Link href="/artifacts" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1.5, textDecoration: 'none' }}>
+            <Link href="/artifacts" className="press" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1.5, textDecoration: 'none' }}>
               VER GALERÍA COMPLETA →
             </Link>
           </div>
@@ -237,7 +237,7 @@ export default function FabricationPage() {
         </div>
 
         {/* Genos — el proceso que ejecuta esto en Proxyverse */}
-        <Link href={`/proxyverse/${genos.id}`} style={{
+        <Link href={`/proxyverse/${genos.id}`} className="press" style={{
           display: 'block', marginBottom: 80, padding: '20px 24px',
           border: `1px solid ${genos.color}33`, background: `${genos.color}0a`, textDecoration: 'none',
         }}>

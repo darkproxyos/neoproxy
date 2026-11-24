@@ -44,7 +44,7 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
   const entry = entries.find((e) => e.id === entryId)
   if (!entry) return null
   return (
-    <Link href={`/knowledge?entry=${entry.id}`} style={{
+    <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
@@ -201,7 +201,7 @@ export default function MudaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" style={{
+        <Link href="/experimental" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -255,7 +255,7 @@ export default function MudaPage() {
             </p>
             <AuthorCard entryId="aristidou-fabrik" accent={SNAKE_GREEN} />
 
-            <button onClick={exportSTL} style={{
+            <button onClick={exportSTL} className="press" style={{
               display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 10,
               letterSpacing: 1, padding: '10px 0', background: `${SNAKE_GREEN}15`,
               border: `1px solid ${SNAKE_GREEN}66`, color: SNAKE_GREEN, cursor: 'pointer', fontFamily: mono,

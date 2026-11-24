@@ -52,7 +52,7 @@ export default function TricksterCasinoPage() {
       )}
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/proxyverse/trickster" style={{
+        <Link href="/proxyverse/trickster" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${COLOR}88`, textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -91,6 +91,7 @@ export default function TricksterCasinoPage() {
           </div>
           <button
             onClick={reset}
+            className="press"
             style={{
               fontFamily: mono, fontSize: 9, letterSpacing: 1.5, color: '#8fb8d6', background: 'transparent',
               border: '1px solid #4a6080', padding: '10px 16px', cursor: 'pointer',
@@ -125,7 +126,7 @@ export default function TricksterCasinoPage() {
               <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080', marginBottom: 4 }}>
                 MERCADO POSEÍDO POR
               </div>
-              <Link href={agent ? `/proxyverse/${agent.id}` : '#'} style={{
+              <Link href={agent ? `/proxyverse/${agent.id}` : '#'} className="press" style={{
                 fontFamily: mono, fontSize: 12, letterSpacing: 1, color: marketColor, textDecoration: 'none',
               }}>
                 {agent?.name ?? '···'}
@@ -149,6 +150,7 @@ export default function TricksterCasinoPage() {
             </div>
             <button
               onClick={resetStats}
+              className="press"
               style={{
                 fontFamily: mono, fontSize: 8, letterSpacing: 1, color: '#4a6080', background: 'transparent',
                 border: '1px solid #0f1f35', padding: '4px 10px', cursor: 'pointer',

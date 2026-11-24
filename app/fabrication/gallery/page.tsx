@@ -93,7 +93,7 @@ export default function FabricationGallery() {
               <h3>{specimen.name}</h3>
               <p>{specimen.size}</p>
               <p>{specimen.modified}</p>
-              <button onClick={() => setSelectedSpecimen(specimen)}>
+              <button onClick={() => setSelectedSpecimen(specimen)} className="press">
                 VIEW_SPECIMEN
               </button>
             </div>
@@ -107,7 +107,7 @@ export default function FabricationGallery() {
           <p>Size: {selectedSpecimen.size}</p>
           <p>Modified: {selectedSpecimen.modified}</p>
           <p>Path: {selectedSpecimen.path}</p>
-          <button onClick={() => setSelectedSpecimen(null)}>
+          <button onClick={() => setSelectedSpecimen(null)} className="press">
             CLOSE
           </button>
         </div>

@@ -82,6 +82,7 @@ function KnowledgeRow({ entry, color, isOpen, onToggle }: {
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
+        className="press"
         style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
           width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer',
@@ -135,7 +136,7 @@ function KnowledgeRow({ entry, color, isOpen, onToggle }: {
           </div>
 
           {agent && (
-            <Link href={`/proxyverse/${agent.id}`} style={{
+            <Link href={`/proxyverse/${agent.id}`} className="press" style={{
               display: 'block', marginTop: 20, paddingTop: 16, maxWidth: 640,
               borderTop: `1px solid ${agent.color}33`, textDecoration: 'none',
             }}>
@@ -229,7 +230,7 @@ export default function KnowledgePage() {
           vara que un teórico, nunca como decoración.
         </p>
 
-        <Link href="/lab/codex" style={{
+        <Link href="/lab/codex" className="press" style={{
           display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #00d4ff44', background: 'linear-gradient(135deg, #00d4ff0f, transparent)',
         }}>
@@ -246,7 +247,7 @@ export default function KnowledgePage() {
           </p>
         </Link>
 
-        <Link href="/knowledge/arcanum" style={{
+        <Link href="/knowledge/arcanum" className="press" style={{
           display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #c9a24d44', background: 'linear-gradient(135deg, #c9a24d0f, transparent)',
         }}>

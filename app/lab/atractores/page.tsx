@@ -182,7 +182,7 @@ export default function GenerativeLab() {
       {/* Top Bar */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40px', background: 'rgba(5, 10, 20, 0.8)', borderBottom: '1px solid var(--neo-glow, rgba(0, 212, 255, 0.4))', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', zIndex: 100, backdropFilter: 'blur(5px)' }}>
         <span style={{ fontSize: '12px', letterSpacing: '2px', color: 'var(--neo-primary, #00d4ff)' }}>NEOPROXY // R&D // GENERATIVE_LAB.v3</span>
-        <Link href="/" style={{ color: 'var(--neo-primary, #00d4ff)', textDecoration: 'none', fontSize: '10px', border: '1px solid var(--neo-glow, rgba(0, 212, 255, 0.4))', padding: '2px 8px' }}>EXIT_PROTOCOL</Link>
+        <Link href="/" className="press" style={{ color: 'var(--neo-primary, #00d4ff)', textDecoration: 'none', fontSize: '10px', border: '1px solid var(--neo-glow, rgba(0, 212, 255, 0.4))', padding: '2px 8px' }}>EXIT_PROTOCOL</Link>
       </div>
 
       {isClient && (
@@ -260,7 +260,7 @@ export default function GenerativeLab() {
                   </div>
 
                   {selectedAlgo === 'lorenz' && (
-                    <Link href="/knowledge?entry=lorenz" style={{
+                    <Link href="/knowledge?entry=lorenz" className="press" style={{
                       display: 'block', fontSize: '8px', color: '#00d4ff', letterSpacing: '1px',
                       textDecoration: 'none', marginBottom: '10px',
                     }}>
@@ -348,7 +348,7 @@ export default function GenerativeLab() {
               </div>
 
               {selectedAlgo === 'lorenz' && (
-                <Link href="/knowledge?entry=lorenz" style={{
+                <Link href="/knowledge?entry=lorenz" className="press" style={{
                   display: 'block', fontSize: '9px', color: '#00d4ff', letterSpacing: '1px',
                   textDecoration: 'none', marginBottom: '15px',
                 }}>

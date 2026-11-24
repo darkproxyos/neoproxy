@@ -541,10 +541,10 @@ export default function ProxygenesisPage() {
       }}>
         <span style={{ fontSize: 11, letterSpacing: 2, color: accent }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Link href="/lab/proxygenesis/galeria" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+          <Link href="/lab/proxygenesis/galeria" className="press" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
             GALERÍA ▸
           </Link>
-          <Link href="/lab" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+          <Link href="/lab" className="press" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
             ← LABORATORIO
           </Link>
         </div>

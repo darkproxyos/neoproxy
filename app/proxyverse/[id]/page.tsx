@@ -106,7 +106,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/proxyverse" style={{
+        <Link href="/proxyverse" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -190,7 +190,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         </div>
 
         {agent.id === 'darkproxy' && (
-          <Link href="/admin/darkproxy" style={{
+          <Link href="/admin/darkproxy" className="press" style={{
             display: 'block', marginBottom: 40, padding: '20px 24px',
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
@@ -208,7 +208,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         )}
 
         {agent.id === 'trickster' && (
-          <Link href="/proxyverse/trickster/casino" style={{
+          <Link href="/proxyverse/trickster/casino" className="press" style={{
             display: 'block', marginBottom: 40, padding: '20px 24px',
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
@@ -241,7 +241,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                   <div key={entry.id} style={{
                     border: `1px solid ${agent.color}33`, background: `${agent.color}0a`, padding: '14px 18px',
                   }}>
-                    <Link href={`/knowledge?entry=${entry.id}`} style={{ display: 'block', textDecoration: 'none' }}>
+                    <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{ display: 'block', textDecoration: 'none' }}>
                       <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5, marginBottom: 2 }}>
                         {entry.name} <span style={{ color: `${agent.color}aa` }}>→</span>
                       </div>
@@ -252,7 +252,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                     {liveSpots && (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
                         {liveSpots.map(spot => (
-                          <Link key={spot.href} href={spot.href} style={{
+                          <Link key={spot.href} href={spot.href} className="press" style={{
                             fontFamily: mono, fontSize: 8, letterSpacing: 1, textDecoration: 'none',
                             color: agent.color, border: `1px solid ${agent.color}55`, padding: '5px 10px',
                           }}>
@@ -269,7 +269,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         )}
 
         {agent.id === 'prototype' && (
-          <Link href="/lab/primercuerpo" style={{
+          <Link href="/lab/primercuerpo" className="press" style={{
             display: 'block', marginBottom: 40, padding: '20px 24px',
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
@@ -310,7 +310,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                 </div>
               ))}
             </div>
-            <Link href="/proxyverse/suenos" style={{
+            <Link href="/proxyverse/suenos" className="press" style={{
               display: 'inline-block', marginTop: 14, fontFamily: mono, fontSize: 9, letterSpacing: 2,
               color: `${agent.color}aa`, textDecoration: 'none',
             }}>
@@ -327,7 +327,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {others.map(o => (
-              <Link key={o.id} href={`/proxyverse/${o.id}`} style={{
+              <Link key={o.id} href={`/proxyverse/${o.id}`} className="press" style={{
                 fontFamily: mono, fontSize: 10, letterSpacing: 1, color: o.color, textDecoration: 'none',
                 border: `1px solid ${o.color}33`, padding: '8px 14px', background: `${o.color}0a`,
               }}>

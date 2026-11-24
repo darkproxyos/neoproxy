@@ -38,7 +38,7 @@ export default function Chat() {
 
   return (
     <>
-      <button onClick={() => setOpen(!open)} style={{
+      <button onClick={() => setOpen(!open)} className="press" style={{
         position:'fixed', bottom:24, right:24, zIndex:1000,
         background:'#020c18', border:'1px solid #00d4ff44',
         color:'#00d4ff', fontFamily:'monospace',
@@ -87,7 +87,7 @@ export default function Chat() {
                 color:'#00d4ff', fontFamily:'monospace', fontSize:10,
                 padding:'6px 10px', outline:'none', letterSpacing:2 }}
             />
-            <button onClick={send} style={{
+            <button onClick={send} className="press" style={{
               background:'#00d4ff11', border:'1px solid #00d4ff33',
               color:'#00d4ff', fontFamily:'monospace',
               fontSize:9, letterSpacing:2, padding:'6px 12px', cursor:'pointer',
