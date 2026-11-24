@@ -66,7 +66,12 @@ export const SITE_TREE: SiteNode = {
       ],
     },
     { name: 'PRIMER CUERPO', href: '/lab/primercuerpo' },
-    { name: 'ESPECÍMENES', href: '/especimenes' },
+    {
+      name: 'ESPECÍMENES', href: '/especimenes',
+      children: [
+        { name: 'LABORATORIO', href: '/especimenes/laboratorio' },
+      ],
+    },
     {
       name: 'PROXYGAMES', href: '/games',
       children: [
