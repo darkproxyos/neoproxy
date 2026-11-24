@@ -83,9 +83,14 @@ export default function EspecimenesPage() {
           crecer solo. Cada pieza acá es un STL real y persistido, con los datos exactos de su propia
           corrida: semilla, nodos, velocidad, parámetros.
         </p>
-        <Link href="/lab/proxygenesis" className="press" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
-          → Generar los tuyos en el laboratorio
-        </Link>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
+          <Link href="/lab/proxygenesis" className="press" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
+            → Generar los tuyos en el laboratorio
+          </Link>
+          <Link href="/especimenes/laboratorio" className="press" style={{ fontSize: 10, color: '#00ffcc', letterSpacing: 1 }}>
+            → 150 formas experimentales listas para imprimir (rotan cada semana)
+          </Link>
+        </div>
 
         <p style={{ fontSize: 10, color: `${AUTOORG}99`, letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 680, marginTop: 20, fontStyle: 'italic' }}>
           Cada espécimen trae su propia lectura — qué pensador real conecta con el algoritmo y los
