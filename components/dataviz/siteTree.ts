@@ -48,6 +48,7 @@ export const SITE_TREE: SiteNode = {
       name: 'FABRICACIÓN', href: '/fabrication',
       children: [
         { name: 'IMPRESIÓN 3D', href: '/fabrication' },
+        { name: 'PEDIR IMPRESIÓN', href: '/imprimir' },
         { name: 'ARTEFACTOS', href: '/artifacts' },
       ],
     },

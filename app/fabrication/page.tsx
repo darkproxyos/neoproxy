@@ -182,8 +182,16 @@ export default function FabricationPage() {
               [ PEDIR COTIZACIÓN ]
             </a>
             <Link
+              href="/imprimir"
+              className="press"
+              style={{ fontSize: 10, color: '#8fa8c4', letterSpacing: 1.5, textDecoration: 'none' }}
+            >
+              CÓMO SE PIDE, PLA VS RESINA →
+            </Link>
+            <Link
               href="/artifacts"
-              style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1.5, textDecoration: 'none' }}
+              className="press"
+              style={{ fontSize: 10, color: '#8fa8c4', letterSpacing: 1.5, textDecoration: 'none' }}
             >
               VER TRABAJOS REALIZADOS →
             </Link>
