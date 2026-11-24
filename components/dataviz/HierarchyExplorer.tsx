@@ -74,7 +74,11 @@ export function HierarchyExplorer({
   // los mismos nodos de `root` -- este bloque solo dispara el recálculo al
   // cambiar de layout, la lectura real pasa en el JSX de abajo.
   if (layout === 'radial') {
-    d3cluster().size([Math.PI * 2, 420])(root as any)
+    // separation() más ancha que el default de d3 (1 entre hermanos, 2
+    // entre primos) -- con ramas de muchos hijos (ej. COMPUTACIÓN), el
+    // default dejaba las etiquetas de hojas adyacentes superpuestas en el
+    // borde exterior (bug de legibilidad real, no densidad buscada).
+    d3cluster().size([Math.PI * 2, 420]).separation((a: any, b: any) => (a.parent === b.parent ? 1.6 : 2.8))(root as any)
   } else if (layout === 'pack') {
     d3pack().size([W, H]).padding(3)(root as any)
   } else {
@@ -159,18 +163,23 @@ export function HierarchyExplorer({
           <button
             key={l.id}
             onClick={() => changeLayout(l.id)}
+            className="press"
             style={{
               fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '7px 12px', borderRadius: 6, cursor: 'pointer',
               background: layout === l.id ? `${accent}33` : 'transparent',
-              border: `1px solid ${layout === l.id ? accent : '#2a3a50'}`,
-              color: layout === l.id ? accent : '#4a6080',
+              // antes #2a3a50/#4a6080 en el estado inactivo -- leía como
+              // deshabilitado, no como una opción disponible todavía sin
+              // elegir (problema de affordance real, revisado contra la
+              // skill de diseño).
+              border: `1px solid ${layout === l.id ? accent : '#4a6080'}`,
+              color: layout === l.id ? accent : '#8fa8c4',
             }}
           >
             {l.label}
           </button>
         ))}
         <span style={{ flex: 1 }} />
-        <button onClick={resetView} style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '7px 12px', borderRadius: 6, cursor: 'pointer', background: 'transparent', border: '1px solid #2a3a50', color: '#4a6080' }}>
+        <button onClick={resetView} className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '7px 12px', borderRadius: 6, cursor: 'pointer', background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4' }}>
           RESET VISTA
         </button>
         <span style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>{totalLeaves} HOJAS</span>

@@ -518,6 +518,14 @@ export default function Home() {
   const [tourStop, setTourStop] = useState<string | null>(null)
   const tourStopRef = useRef<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
+  // panel de zona: antes se montaba/desmontaba con key={tourStop} -- al
+  // terminar el recorrido guiado (tourStop -> null) desaparecía de golpe,
+  // sin salida (revisión de diseño real: "nada en el mundo real desaparece
+  // sin transición"). renderedZone sostiene el último contenido real
+  // mientras panelVisible dirige una transición CSS real (no @keyframes,
+  // interrumpible si el tour avanza de nuevo antes de que termine).
+  const [renderedZone, setRenderedZone] = useState<typeof ZONES[number] | undefined>(undefined)
+  const [panelVisible, setPanelVisible] = useState(false)
 
   useEffect(() => {
     const lines = [
@@ -1219,7 +1227,11 @@ export default function Home() {
         metatronPlane.position.set(metatronOrbitRadius, 0, 0)
         glow.addExcludedMesh(metatronPlane)
 
-        const metatronLabelTex = makeZoneLabelTexture(B, scene, 'metatron', 'M∴TRON', 'EL ORQUESTADOR', METATRON_COLOR)
+        // 'METATRON' plano, no 'M∴TRON' -- el símbolo ∴ es un glifo angosto;
+        // el spaced() de abajo (letter-spacing simulado a puro espacio) le
+        // mete el mismo hueco a los dos lados que a una letra latina normal,
+        // y queda descuadrado (revisión de diseño real, no decorativo).
+        const metatronLabelTex = makeZoneLabelTexture(B, scene, 'metatron', 'METATRON', 'EL ORQUESTADOR', METATRON_COLOR)
         metatronLabel = B.MeshBuilder.CreatePlane('metatron-label', { width: 3.6, height: 0.81 }, scene)
         metatronLabel.billboardMode = B.Mesh.BILLBOARDMODE_ALL
         const metatronLabelMat = new B.StandardMaterial('metatron-labelmat', scene)
@@ -1585,6 +1597,37 @@ export default function Home() {
   const mono = "'Space Mono', monospace"
   const tourStopZone = tourStop ? ZONE_BY_ID[tourStop] : undefined
 
+  const renderedZoneIdRef = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    const currentId = renderedZoneIdRef.current
+    if (tourStopZone) {
+      if (currentId && currentId !== tourStopZone.id) {
+        // cambio directo de una zona a otra: salida breve + entrada con el
+        // contenido nuevo, en vez de reemplazar el texto de golpe a mitad
+        // de pantalla.
+        setPanelVisible(false)
+        const t = setTimeout(() => {
+          renderedZoneIdRef.current = tourStopZone.id
+          setRenderedZone(tourStopZone)
+          setPanelVisible(true)
+        }, 160)
+        return () => clearTimeout(t)
+      }
+      renderedZoneIdRef.current = tourStopZone.id
+      setRenderedZone(tourStopZone)
+      setPanelVisible(true)
+      return
+    }
+    if (currentId) {
+      setPanelVisible(false)
+      const t = setTimeout(() => {
+        renderedZoneIdRef.current = undefined
+        setRenderedZone(undefined)
+      }, 220)
+      return () => clearTimeout(t)
+    }
+  }, [tourStopZone])
+
   return (
     <div style={{ background: '#000205', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <div className="crt-scanlines" />
@@ -1672,38 +1715,46 @@ export default function Home() {
               de relleno), con la estética de panel recortado + CTA real
               a la ruta de esa zona — el mismo gesto que un click directo
               sobre el nodo, no una ventana modal aparte. */}
-          {tourStopZone && (
-            <div key={tourStop} style={{
-              position: 'fixed', top: 'calc(8vh + 28px)', left: '50%', transform: 'translateX(-50%)',
-              width: 'min(420px, calc(100vw - 48px))', zIndex: 45, pointerEvents: 'auto',
+          {renderedZone && (
+            <div style={{
+              position: 'fixed', top: 'calc(8vh + 28px)', left: '50%',
+              width: 'min(420px, calc(100vw - 48px))', zIndex: 45,
+              pointerEvents: panelVisible ? 'auto' : 'none',
               // antes 0.86 -- dejaba pasar suficiente del canvas 3D de atrás
               // como para que una línea del grafo cruzara justo por encima
               // del título (bug de legibilidad real, no efecto buscado).
               background: 'rgba(6, 9, 17, 0.97)', backdropFilter: 'blur(6px)',
-              border: `1px solid ${tourStopZone.color}99`,
-              boxShadow: `0 0 36px ${tourStopZone.color}2e, inset 0 0 24px rgba(0,0,0,0.3)`,
+              border: `1px solid ${renderedZone.color}99`,
+              boxShadow: `0 0 36px ${renderedZone.color}2e, inset 0 0 24px rgba(0,0,0,0.3)`,
               clipPath: 'polygon(0 16px, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)',
               padding: '22px 24px 20px',
-              animation: 'panel-in 520ms cubic-bezier(0.2,0.8,0.2,1) forwards',
+              // transición CSS real, no @keyframes -- interrumpible si el
+              // tour avanza de nuevo antes de terminar (revisión de diseño:
+              // antes desaparecía de golpe al terminar el recorrido, sin
+              // ninguna salida).
+              opacity: panelVisible ? 1 : 0,
+              transform: `translateX(-50%) translateY(${panelVisible ? '0' : '-10px'}) scale(${panelVisible ? 1 : 0.97})`,
+              transition: 'opacity 220ms var(--ease-out), transform 220ms var(--ease-out)',
             }}>
-              <div style={{ fontFamily: mono, fontSize: 11, color: tourStopZone.color, letterSpacing: 3 }}>
-                {tourStopZone.tag}
+              <div style={{ fontFamily: mono, fontSize: 11, color: renderedZone.color, letterSpacing: 3 }}>
+                {renderedZone.tag}
               </div>
-              <div style={{ fontFamily: mono, fontSize: 21, fontWeight: 700, color: '#f2f8fc', letterSpacing: 2.5, marginTop: 7, marginBottom: 13, textShadow: `0 0 14px ${tourStopZone.color}66` }}>
-                {tourStopZone.title}
+              <div style={{ fontFamily: mono, fontSize: 21, fontWeight: 700, color: '#f2f8fc', letterSpacing: 2.5, marginTop: 7, marginBottom: 13, textShadow: `0 0 14px ${renderedZone.color}66` }}>
+                {renderedZone.title}
               </div>
               <div style={{ fontFamily: mono, fontSize: 13.5, color: '#c7d6e2', lineHeight: 1.75, letterSpacing: 0.3 }}>
-                {tourStopZone.description}
+                {renderedZone.description}
               </div>
               <button
-                onClick={() => router.push(tourStopZone.href)}
+                onClick={() => router.push(renderedZone.href)}
+                className="press"
                 style={{
                   marginTop: 18, width: '100%', padding: '12px 0', background: 'transparent',
-                  border: `1px solid ${tourStopZone.color}aa`, color: tourStopZone.color,
+                  border: `1px solid ${renderedZone.color}aa`, color: renderedZone.color,
                   fontFamily: mono, fontSize: 12, letterSpacing: 2.5, cursor: 'pointer',
                 }}
               >
-                {tourStopZone.cta}
+                {renderedZone.cta}
               </button>
             </div>
           )}
@@ -1713,7 +1764,6 @@ export default function Home() {
       <style>{`
         @keyframes boot-load { from { width: 0%; } to { width: 100%; } }
         @keyframes cinema-flash { from { opacity: 0.92; } to { opacity: 0; } }
-        @keyframes panel-in { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
       `}</style>
     </div>
   )
