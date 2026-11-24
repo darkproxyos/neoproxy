@@ -316,6 +316,47 @@ body {
   animation: fadeIn 0.8s ease forwards;
 }
 
+/* --- Press feedback compartido (pedido explícito: "todo el sitio para
+   mejorarlo") ---
+   Antes: casi ningún botón/tarjeta clickeable del sitio tenía :hover o
+   :active reales -- la mayoría se estiliza con style={{}} inline (color
+   condicional vía JS), que no puede expresar pseudo-clases. Esta clase es
+   el primitivo compartido real: se agrega como className="press" a
+   cualquier elemento clickeable (además de su style inline normal, que
+   sigue manejando color/layout) y le suma press-feedback consistente en
+   todo el sitio desde un solo lugar.
+   Curvas propias (nunca el ease nativo, que es débil) + :active en vez de
+   :hover para el feedback de "escucha al usuario" -- la regla real es
+   scale(0.97), nunca desde 0, nunca con transition > 200ms acá. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.press {
+  transition: transform 160ms var(--ease-out), filter 160ms var(--ease-out);
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .press:hover {
+    filter: brightness(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press,
+  .press:active,
+  .press:hover {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 @keyframes blinkCursor {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }

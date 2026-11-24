@@ -123,11 +123,17 @@ function SenalScene() {
       // --- el teseracto real: 16 vértices, 32 aristas (components/geometry/polytopes4d.ts) ---
       const poly = tesseract()
       const aXY = 0.4, aZW = 0.7, aXW = 0.3
-      const targets = poly.vertices.map((v) => {
+      const rawTargets = poly.vertices.map((v) => {
         const r = rotate4D(v as Vec4, aXY, aZW, aXW)
         const p = foldWTo3D(r, 2.6)
         return new B.Vector3(p.x * 3.2, p.y * 3.2, p.z * 3.2)
       })
+      // el pliegue 4D->3D no deja los vértices centrados en el origen del
+      // mundo (la cámara sí apunta fijo ahí) -- sin esto la forma queda
+      // descuadrada en cuadro según el ángulo de rotación, un defecto de
+      // composición real, no "el ruido la movió" (revisión de diseño).
+      const centroid = rawTargets.reduce((acc, v) => acc.addInPlace(v), B.Vector3.Zero()).scale(1 / rawTargets.length)
+      const targets = rawTargets.map((v) => v.subtract(centroid))
 
       // --- point cloud: 1200 puntos, 75 por vértice, dispersos al azar al arrancar ---
       const pcs = new B.PointsCloudSystem('noise', 6, scene)
