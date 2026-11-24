@@ -72,7 +72,7 @@ export default function AnatomiaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/experimental" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
@@ -132,7 +132,7 @@ export default function AnatomiaPage() {
                 </p>
               ))}
               {selectedBox.href && (
-                <Link href={selectedBox.href} style={{ fontSize: 9, letterSpacing: 1, color: selectedBox.color, textDecoration: 'underline' }}>
+                <Link href={selectedBox.href} className="press" style={{ fontSize: 9, letterSpacing: 1, color: selectedBox.color, textDecoration: 'underline' }}>
                   → VER /archivo/linux (LA COMPARACIÓN HONESTA CON UN KERNEL REAL)
                 </Link>
               )}

@@ -55,7 +55,7 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
   const entry = entries.find((e) => e.id === entryId)
   if (!entry) return null
   return (
-    <Link href={`/knowledge?entry=${entry.id}`} style={{
+    <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
@@ -324,7 +324,7 @@ export default function RedPage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
         <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-RED</div>
@@ -337,7 +337,7 @@ export default function RedPage() {
       }}>
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
           {(['aleatoria', 'bayesiana'] as Mode[]).map((m) => (
-            <button key={m} onClick={() => setMode(m)} style={{
+            <button key={m} onClick={() => setMode(m)} className="press" style={{
               flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
               background: mode === m ? `${RED}22` : 'transparent',
               border: `1px solid ${mode === m ? RED : '#2a3a50'}`,
@@ -352,7 +352,7 @@ export default function RedPage() {
           <>
             <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
               {(['er', 'ba'] as GraphType[]).map((gt) => (
-                <button key={gt} onClick={() => setGraphType(gt)} style={{
+                <button key={gt} onClick={() => setGraphType(gt)} className="press" style={{
                   flex: 1, fontFamily: mono, fontSize: 8, padding: '7px 5px', cursor: 'pointer', letterSpacing: 0.5,
                   background: graphType === gt ? `${gt === 'er' ? RED : CYAN}22` : 'transparent',
                   border: `1px solid ${graphType === gt ? (gt === 'er' ? RED : CYAN) : '#2a3a50'}`,
@@ -368,7 +368,7 @@ export default function RedPage() {
             ) : (
               <Slider label="M (aristas por nodo nuevo)" value={baM} min={1} max={6} step={1} onChange={setBaM} accent={accent} />
             )}
-            <button onClick={regenerateGraph} disabled={generating} style={{
+            <button onClick={regenerateGraph} disabled={generating} className="press" style={{
               width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginTop: 6, marginBottom: 14,
               cursor: generating ? 'default' : 'pointer', background: accent, color: '#020408', border: 'none',
               opacity: generating ? 0.5 : 1, letterSpacing: 1,
@@ -403,7 +403,7 @@ export default function RedPage() {
             <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>
               EVIDENCIA ACTUAL: {Object.keys(evidence).length === 0 ? 'ninguna' : NODE_ORDER.filter(id => id in evidence).map(id => `${NODE_LABEL[id]}=${evidence[id] ? 'SÍ' : 'NO'}`).join(', ')}
             </div>
-            <button onClick={() => { setEvidence({}); redrawAllBayesNodes({}) }} style={{
+            <button onClick={() => { setEvidence({}); redrawAllBayesNodes({}) }} className="press" style={{
               width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginBottom: 14,
               cursor: 'pointer', background: 'transparent', border: `1px solid ${CYAN}`, color: CYAN, letterSpacing: 1,
             }}>

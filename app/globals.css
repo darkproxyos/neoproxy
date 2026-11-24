@@ -267,13 +267,20 @@ body {
 .artifact-card {
   background: rgba(2, 4, 8, 0.8);
   border: 1px solid rgba(0, 212, 255, 0.1);
-  transition: all 0.3s ease;
+  /* antes "transition: all" -- evitar esa propiedad es parte de la
+     revisión de diseño real (emil-design-eng), no solo estilo: "all"
+     anima efectos no buscados si algún día cambia otra propiedad acá. */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 160ms var(--ease-out, ease);
 }
 
 .artifact-card:hover {
   border-color: var(--neon-cyan);
   box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
   transform: translateY(-4px);
+}
+
+.artifact-card:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
 /* Navigation styles */

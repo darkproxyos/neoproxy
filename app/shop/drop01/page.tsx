@@ -251,16 +251,20 @@ export default function Drop01Page() {
           <button
             key={f}
             onClick={() => setFilter(f)}
+            className="press"
             style={{
               fontFamily: "'DM Mono', monospace",
               fontSize: 8,
               letterSpacing: '0.2em',
               padding: '6px 14px',
-              border: `1px solid ${filter === f ? '#b400ff' : '#0d0d1a'}`,
+              // antes #0d0d1a/#2a2a44 en inactivo -- casi sin contraste
+              // contra el fondo, leía como deshabilitado (mismo problema
+              // revisado en HierarchyExplorer).
+              border: `1px solid ${filter === f ? '#b400ff' : '#3a3a54'}`,
               background: filter === f ? 'rgba(180,0,255,0.08)' : 'transparent',
-              color: filter === f ? '#b400ff' : '#2a2a44',
+              color: filter === f ? '#b400ff' : '#6a6a94',
               cursor: 'pointer',
-              transition: 'all 0.15s',
+              transition: 'background 150ms ease, border-color 150ms ease, color 150ms ease',
             }}
           >
             {label}
@@ -375,6 +379,7 @@ export default function Drop01Page() {
                     </a>
                     <button
                       onClick={e => { e.stopPropagation(); handleBuy(item) }}
+                      className="press"
                       style={{
                         fontFamily: "'DM Mono', monospace",
                         fontSize: 7, letterSpacing: '0.15em',
@@ -383,7 +388,6 @@ export default function Drop01Page() {
                         background: 'rgba(180,0,255,0.08)',
                         color: '#b400ff',
                         cursor: 'pointer',
-                        transition: 'all 0.15s',
                       }}
                     >
                       ADQUIRIR // ${item.price} USD

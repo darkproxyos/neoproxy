@@ -111,7 +111,7 @@ export default function DialecticaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" style={{
+        <Link href="/experimental" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -143,7 +143,7 @@ export default function DialecticaPage() {
             const b = entries.find(e => e.id === t.bId)!
             const active = t.id === tensionId
             return (
-              <button key={t.id} onClick={() => selectTension(t.id)} disabled={busy} style={{
+              <button key={t.id} onClick={() => selectTension(t.id)} disabled={busy} className="press" style={{
                 textAlign: 'left', fontFamily: mono, padding: '12px 14px', cursor: busy ? 'default' : 'pointer',
                 background: active ? `${RED}18` : 'rgba(255,255,255,0.04)',
                 border: `1px solid ${active ? RED : 'rgba(255,255,255,0.15)'}`,
@@ -174,7 +174,7 @@ export default function DialecticaPage() {
           vacío = usa la pregunta sugerida de arriba
         </div>
 
-        <button onClick={abrir} disabled={busy} style={{
+        <button onClick={abrir} disabled={busy} className="press" style={{
           fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${RED}18`, border: `1px solid ${RED}66`, color: RED,
           opacity: busy ? 0.5 : 1, marginBottom: 40,

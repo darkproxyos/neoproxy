@@ -52,7 +52,7 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
   const entry = entries.find((e) => e.id === entryId)
   if (!entry) return null
   return (
-    <Link href={`/knowledge?entry=${entry.id}`} style={{
+    <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
@@ -294,7 +294,7 @@ export default function WorkbenchPage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
         <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-WORKBENCH</div>
@@ -308,7 +308,7 @@ export default function WorkbenchPage() {
         <div style={{ fontSize: 10, letterSpacing: 3, color: RED, marginBottom: 10 }}>BASE // ESQUELETO</div>
         <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
           {(['colonization', 'shell'] as BaseType[]).map((bt) => (
-            <button key={bt} onClick={() => setBaseType(bt)} style={{
+            <button key={bt} onClick={() => setBaseType(bt)} className="press" style={{
               flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
               background: baseType === bt ? `${accent}22` : 'transparent',
               border: `1px solid ${baseType === bt ? accent : '#2a3a50'}`,
@@ -348,7 +348,7 @@ export default function WorkbenchPage() {
           <div style={{ marginBottom: 16, paddingLeft: 4 }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>
               {Object.entries(RD_PRESETS).map(([key, p]) => (
-                <button key={key} onClick={() => setPatternPreset(key as keyof typeof RD_PRESETS)} style={{
+                <button key={key} onClick={() => setPatternPreset(key as keyof typeof RD_PRESETS)} className="press" style={{
                   fontFamily: mono, fontSize: 8, padding: '5px 8px', cursor: 'pointer', letterSpacing: 0.5,
                   background: patternPreset === key ? `${CYAN}22` : 'transparent',
                   border: `1px solid ${patternPreset === key ? CYAN : '#2a3a50'}`,
@@ -389,14 +389,14 @@ export default function WorkbenchPage() {
           </div>
         )}
 
-        <button onClick={regenerate} disabled={generating} style={{
+        <button onClick={regenerate} disabled={generating} className="press" style={{
           width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginTop: 8,
           cursor: generating ? 'default' : 'pointer', background: accent, color: '#020408', border: 'none',
           opacity: generating ? 0.5 : 1, letterSpacing: 1,
         }}>
           {generating ? `COMPONIENDO... ${Math.round(progress * 100)}%` : '▲ GENERAR'}
         </button>
-        <button onClick={handleExportSTL} disabled={!ready || generating} style={{
+        <button onClick={handleExportSTL} disabled={!ready || generating} className="press" style={{
           width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginTop: 8,
           cursor: (!ready || generating) ? 'default' : 'pointer', background: 'transparent',
           border: `1px solid ${accent}`, color: accent, opacity: (!ready || generating) ? 0.4 : 1, letterSpacing: 1,

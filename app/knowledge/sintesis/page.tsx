@@ -153,7 +153,7 @@ export default function SintesisPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '104px 24px 0' }}>
-          <Link href="/knowledge" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
+          <Link href="/knowledge" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
             ← VOLVER AL CODEX
           </Link>
 
@@ -244,13 +244,13 @@ export default function SintesisPage() {
 
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 140px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, borderTop: '1px solid #00d4ff14', paddingTop: 40 }}>
-            <Link href="/knowledge/filosofia" style={{ fontSize: 9, letterSpacing: 2, color: '#b06bffaa', textDecoration: 'none' }}>
+            <Link href="/knowledge/filosofia" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#b06bffaa', textDecoration: 'none' }}>
               → LA MISMA PREGUNTA EN PERSONAS: FILOSOFÍA
             </Link>
-            <Link href="/lab/codex" style={{ fontSize: 9, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none' }}>
+            <Link href="/lab/codex" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none' }}>
               → LA MISMA PREGUNTA EN PUNTOS DE LUZ: EL ESPACIO 3D
             </Link>
-            <Link href="/manifesto" style={{ fontSize: 9, letterSpacing: 2, color: '#ffb800aa', textDecoration: 'none' }}>
+            <Link href="/manifesto" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#ffb800aa', textDecoration: 'none' }}>
               → LEER EL MANIFIESTO COMPLETO
             </Link>
           </div>

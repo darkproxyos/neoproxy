@@ -39,8 +39,9 @@ export default function CheckoutSuccessPage() {
         }}>
           // ARTEFACTO ADQUIRIDO // ENVÍO DE DATOS INICIADO
         </p>
-        <Link 
-          href="/shop/drop01" 
+        <Link
+          href="/shop/drop01"
+          className="press"
           style={{
             display: 'inline-block',
             padding: '12px 24px',

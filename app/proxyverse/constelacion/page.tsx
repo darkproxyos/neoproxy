@@ -85,7 +85,7 @@ export default function ConstelacionPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/proxyverse" style={{
+        <Link href="/proxyverse" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -142,7 +142,7 @@ export default function ConstelacionPage() {
                 </div>
               )
               return s.href ? (
-                <Link key={s.id} href={s.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link key={s.id} href={s.href} className="press" style={{ textDecoration: 'none', color: 'inherit' }}>
                   {content}
                 </Link>
               ) : (

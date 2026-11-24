@@ -84,9 +84,9 @@ function NavLink({ item, pathname, onClick, style, activeColor = '#00d4ff' }: {
 }) {
   const color = isActive(pathname, item.href) ? activeColor : '#8fb8d6'
   if (item.href.endsWith('.html')) {
-    return <a href={item.href} onClick={onClick} style={{ ...style, color }}>{item.label}</a>
+    return <a href={item.href} onClick={onClick} className="press" style={{ ...style, color }}>{item.label}</a>
   }
-  return <Link href={item.href} onClick={onClick} style={{ ...style, color }}>{item.label}</Link>
+  return <Link href={item.href} onClick={onClick} className="press" style={{ ...style, color }}>{item.label}</Link>
 }
 
 // Nodo + axón — indicador orgánico de vida, no solo un cambio de color.
@@ -156,6 +156,7 @@ function SessionBlock({ compact }: { compact?: boolean }) {
         </span>
         <button
           onClick={() => signOut()}
+          className="press"
           style={{
             color: '#ff4444', background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'inherit', fontSize: 'inherit', letterSpacing: 'inherit', minHeight: compact ? 'auto' : 44,
@@ -168,7 +169,7 @@ function SessionBlock({ compact }: { compact?: boolean }) {
   }
 
   return (
-    <Link href="/login" style={{ color: '#00d4ff88', textDecoration: 'none' }}>
+    <Link href="/login" className="press" style={{ color: '#00d4ff88', textDecoration: 'none' }}>
       OPERATOR: ANONYMOUS // [ACCESO]
     </Link>
   )
@@ -218,7 +219,7 @@ export default function SiteNav() {
     }}>
       <div className="nav-pulse-line" aria-hidden style={{ ['--pulse-color' as any]: accent }} />
 
-      <Link href="/" style={{
+      <Link href="/" className="press" style={{
         fontFamily: mono, fontSize: 13, color: '#00d4ff', letterSpacing: 4, textDecoration: 'none',
         flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8,
       }}>
@@ -242,7 +243,7 @@ export default function SiteNav() {
                 <button
                   onClick={() => setOpenGroup(open ? null : entry.label)}
                   aria-expanded={open}
-                  className="site-nav-link"
+                  className="site-nav-link press"
                   style={{
                     fontFamily: mono, fontSize: 12, letterSpacing: 2, whiteSpace: 'nowrap',
                     background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0',
@@ -325,7 +326,7 @@ export default function SiteNav() {
           const entryColor = NAV_COLORS[entry.label] ?? '#00d4ff'
           const active = isActive(pathname, entry.href)
           return (
-            <Link key={entry.href} href={entry.href} className="site-nav-link" style={{
+            <Link key={entry.href} href={entry.href} className="site-nav-link press" style={{
               fontFamily: mono, fontSize: 12, letterSpacing: 2, textDecoration: 'none', whiteSpace: 'nowrap',
               color: active ? entryColor : '#a9c0d6', display: 'flex', alignItems: 'center', gap: 7,
             }}>
@@ -342,14 +343,14 @@ export default function SiteNav() {
         }}>
           <SessionBlock compact />
         </div>
-        <Link href="/shop" style={{
+        <Link href="/shop" className="press" style={{
           fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 3, textDecoration: 'none',
           border: '1px solid #00d4ff66', padding: '8px 16px', flexShrink: 0
         }}>
           TIENDA
         </Link>
         <button
-          className="site-nav-toggle"
+          className="site-nav-toggle press"
           onClick={() => setMobileOpen(true)}
           aria-label="Abrir menú"
           style={{
@@ -392,7 +393,7 @@ export default function SiteNav() {
             <button
               onClick={() => setMobileOpen(false)}
               aria-label="Cerrar menú"
-              className="glitch"
+              className="glitch press"
               style={{
                 background: 'none', border: `1px solid ${accent}66`, color: accent,
                 width: 44, height: 44, cursor: 'pointer', fontFamily: mono, fontSize: 16,

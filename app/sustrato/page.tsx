@@ -104,10 +104,10 @@ export default function SustratoPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
           {CATALOG.map((e) => (
-            <Link key={e.id} href={e.href} style={{
+            <Link key={e.id} href={e.href} className="press" style={{
               display: 'block', textDecoration: 'none', color: 'inherit', padding: 24,
               background: 'rgba(2,4,8,0.8)', border: `1px solid ${e.color}33`,
-              borderLeft: `3px solid ${e.color}`, transition: 'all 0.25s ease',
+              borderLeft: `3px solid ${e.color}`,
             }}>
               <div style={{ fontSize: 9, letterSpacing: 2, color: `${e.color}aa`, marginBottom: 12 }}>{e.code}</div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{e.title}</div>

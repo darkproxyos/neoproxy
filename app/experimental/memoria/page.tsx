@@ -28,7 +28,7 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
   const entry = entries.find((e) => e.id === entryId)
   if (!entry) return null
   return (
-    <Link href={`/knowledge?entry=${entry.id}`} style={{
+    <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
@@ -164,7 +164,7 @@ export default function MemoriaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" style={{
+        <Link href="/experimental" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -192,7 +192,7 @@ export default function MemoriaPage() {
             <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 10 }}>PATRÓN</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 18 }}>
               {PATTERN_DEFS.map((d) => (
-                <button key={d.id} onClick={() => loadPattern(d.id)} disabled={running} style={{
+                <button key={d.id} onClick={() => loadPattern(d.id)} disabled={running} className="press" style={{
                   fontFamily: mono, fontSize: 9, padding: '7px 10px', cursor: running ? 'default' : 'pointer', letterSpacing: 0.5,
                   background: patternId === d.id ? `${accent}22` : 'transparent',
                   border: `1px solid ${patternId === d.id ? accent : '#2a3a50'}`,
@@ -221,13 +221,13 @@ export default function MemoriaPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-              <button onClick={handleCorrupt} disabled={running} style={{
+              <button onClick={handleCorrupt} disabled={running} className="press" style={{
                 flex: 1, fontFamily: mono, fontSize: 9, padding: 10, cursor: running ? 'default' : 'pointer', letterSpacing: 1,
                 background: 'transparent', border: `1px solid ${accent}`, color: accent, opacity: running ? 0.5 : 1,
               }}>
                 ⚡ CORROMPER ({Math.round(noiseLevel * 100)}%)
               </button>
-              <button onClick={converge} disabled={running} style={{
+              <button onClick={converge} disabled={running} className="press" style={{
                 flex: 1, fontFamily: mono, fontSize: 9, fontWeight: 700, padding: 10, cursor: running ? 'default' : 'pointer', letterSpacing: 1,
                 background: accent, color: '#020408', border: 'none', opacity: running ? 0.6 : 1,
               }}>

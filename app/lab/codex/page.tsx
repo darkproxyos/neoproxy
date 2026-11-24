@@ -87,7 +87,7 @@ function DetailPanel({ entry, onClose }: { entry: KnowledgeEntry; onClose: () =>
           <p style={{ fontSize: 11, lineHeight: 1.8, color: '#9fc4e0' }}>{entry.example}</p>
         </div>
         {agent && (
-          <Link href={`/proxyverse/${agent.id}`} style={{ display: 'block', marginTop: 18, paddingTop: 14, borderTop: `1px solid ${agent.color}33`, textDecoration: 'none' }}>
+          <Link href={`/proxyverse/${agent.id}`} className="press" style={{ display: 'block', marginTop: 18, paddingTop: 14, borderTop: `1px solid ${agent.color}33`, textDecoration: 'none' }}>
             <div style={{ fontSize: 8, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>ESTO YA VIVE EN PROXYVERSE</div>
             <div style={{ fontSize: 11, color: '#c8daf0' }}>{agent.name} — {agent.role} →</div>
           </Link>
@@ -293,7 +293,7 @@ export default function CodexSpacePage() {
         ))}
       </div>
 
-      <Link href="/knowledge" style={{
+      <Link href="/knowledge" className="press" style={{
         position: 'fixed', top: 16, left: 16, zIndex: 25,
         fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none',
         border: '1px solid #00d4ff44', padding: '6px 12px', background: '#00050aaa',

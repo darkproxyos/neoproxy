@@ -45,7 +45,7 @@ export default function CodexArcanumPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 120px' }}>
-        <Link href="/knowledge" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
@@ -92,7 +92,7 @@ export default function CodexArcanumPage() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14, marginBottom: 56 }}>
           {ARCANUM_DOCS.map((doc) => (
-            <Link key={doc.code} href={doc.href} style={{
+            <Link key={doc.code} href={doc.href} className="press" style={{
               display: 'block', padding: '20px 20px 22px', textDecoration: 'none',
               border: `1px solid ${doc.color}44`, background: `${doc.color}0f`,
             }}>
@@ -113,7 +113,7 @@ export default function CodexArcanumPage() {
           INSTRUMENTOS
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginBottom: 56 }}>
-          <Link href="/experimental/sigilo" style={{
+          <Link href="/experimental/sigilo" className="press" style={{
             display: 'block', textDecoration: 'none', padding: '20px 24px',
             border: `1px solid ${GOLD}44`, background: `linear-gradient(135deg, ${GOLD}0f, transparent)`,
           }}>
@@ -128,7 +128,7 @@ export default function CodexArcanumPage() {
               una rueda fija, y un ritual de carga cronometrado con respiración guiada.
             </p>
           </Link>
-          <Link href="/experimental/yijing" style={{
+          <Link href="/experimental/yijing" className="press" style={{
             display: 'block', textDecoration: 'none', padding: '20px 24px',
             border: `1px solid ${JADE}44`, background: `linear-gradient(135deg, ${JADE}0f, transparent)`,
           }}>

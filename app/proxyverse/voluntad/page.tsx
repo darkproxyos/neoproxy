@@ -97,7 +97,7 @@ export default function VoluntadPage() {
         <div className="crt-scanlines" />
         <div className="tech-grid" />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '104px 24px 80px' }}>
-          <Link href="/proxyverse" style={{
+          <Link href="/proxyverse" className="press" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
             display: 'inline-block', marginBottom: 32,
           }}>
@@ -127,7 +127,7 @@ export default function VoluntadPage() {
               { href: '/games/trickster', label: 'Jugar al menos una ronda de Trickster' },
               { href: '/experimental/scan', label: 'Escanear un tag NFC' },
             ].map(l => (
-              <Link key={l.href} href={l.href} style={{
+              <Link key={l.href} href={l.href} className="press" style={{
                 fontFamily: mono, fontSize: 11, color: CYAN, textDecoration: 'none',
                 border: `1px solid ${CYAN}33`, padding: '12px 16px', background: `${CYAN}0a`,
               }}>
@@ -238,7 +238,7 @@ export default function VoluntadPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/proxyverse" style={{
+        <Link href="/proxyverse" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -306,7 +306,7 @@ export default function VoluntadPage() {
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <button onClick={downloadCard} disabled={exporting} style={{
+          <button onClick={downloadCard} disabled={exporting} className="press" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 2, padding: '8px 18px', cursor: exporting ? 'default' : 'pointer',
             background: `${agent.color}11`, border: `1px solid ${agent.color}44`, color: agent.color,
             opacity: exporting ? 0.5 : 1,
@@ -363,7 +363,7 @@ export default function VoluntadPage() {
           </div>
         )}
 
-        <Link href="/proxyverse/id" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>
+        <Link href="/proxyverse/id" className="press" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>
           ver los números crudos detrás de esta carta →
         </Link>
       </div>

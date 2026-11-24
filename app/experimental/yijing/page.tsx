@@ -109,7 +109,7 @@ export default function YiJingOraclePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a7060', textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a7060', textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
@@ -143,7 +143,7 @@ export default function YiJingOraclePage() {
           }}
         />
 
-        <button onClick={lanzar} disabled={casting} style={{
+        <button onClick={lanzar} disabled={casting} className="press" style={{
           fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: casting ? 'default' : 'pointer',
           background: `${JADE}22`, border: `1px solid ${JADE_BRIGHT}88`, color: JADE_BRIGHT,
           opacity: casting ? 0.6 : 1, marginBottom: 40,

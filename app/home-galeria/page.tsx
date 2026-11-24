@@ -41,7 +41,7 @@ export default function HomeGaleriaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A HOME (ALEATORIO)
         </Link>
 
@@ -58,10 +58,10 @@ export default function HomeGaleriaPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
           {HOMES.map((h) => (
-            <Link key={h.id} href={h.href} style={{
+            <Link key={h.id} href={h.href} className="press" style={{
               display: 'block', textDecoration: 'none', color: 'inherit', padding: 24,
               background: 'rgba(2,4,8,0.8)', border: `1px solid ${h.color}33`,
-              borderLeft: `3px solid ${h.color}`, transition: 'all 0.25s ease',
+              borderLeft: `3px solid ${h.color}`,
             }}>
               <div style={{ fontSize: 9, letterSpacing: 2, color: `${h.color}aa`, marginBottom: 12 }}>{h.code}</div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{h.title}</div>

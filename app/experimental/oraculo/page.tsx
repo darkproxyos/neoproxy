@@ -89,7 +89,7 @@ export default function OraculoPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" style={{
+        <Link href="/experimental" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
@@ -126,7 +126,7 @@ export default function OraculoPage() {
         />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
           {SUGGESTED_QUESTIONS.map(q => (
-            <button key={q} onClick={() => setQuestion(q)} disabled={busy} style={{
+            <button key={q} onClick={() => setQuestion(q)} disabled={busy} className="press" style={{
               fontFamily: mono, fontSize: 8, letterSpacing: 0.5, padding: '6px 10px', cursor: busy ? 'default' : 'pointer',
               background: 'rgba(255,255,255,0.04)', border: `1px solid ${VIOLET}33`, color: '#8fb8d6',
               opacity: busy ? 0.5 : 1,
@@ -136,7 +136,7 @@ export default function OraculoPage() {
           ))}
         </div>
 
-        <button onClick={tirar} disabled={busy} style={{
+        <button onClick={tirar} disabled={busy} className="press" style={{
           fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${VIOLET}18`, border: `1px solid ${VIOLET}66`, color: VIOLET,
           opacity: busy ? 0.5 : 1, marginBottom: 40,

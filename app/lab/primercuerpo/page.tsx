@@ -623,7 +623,7 @@ export default function PrimerCuerpoPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '100px 24px 100px' }}>
-        <Link href="/proxyverse/prototype" style={{
+        <Link href="/proxyverse/prototype" className="press" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a8058', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>

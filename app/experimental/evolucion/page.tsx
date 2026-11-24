@@ -57,7 +57,7 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
   const entry = entries.find((e) => e.id === entryId)
   if (!entry) return null
   return (
-    <Link href={`/knowledge?entry=${entry.id}`} style={{
+    <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
@@ -450,12 +450,12 @@ export default function EvolucionPage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
         <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-EVOLUCIÓN</div>
         <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>una población, no una forma</div>
-        <button onClick={toggleAudio} title="Sonificar el fitness de cada generación" style={{
+        <button onClick={toggleAudio} title="Sonificar el fitness de cada generación" className="press" style={{
           marginLeft: 'auto', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
           background: audioOn ? `${CYAN}22` : 'transparent', border: `1px solid ${audioOn ? CYAN : '#2a3a50'}`,
           color: audioOn ? CYAN : '#4a6080',
@@ -470,7 +470,7 @@ export default function EvolucionPage() {
       }}>
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
           {(['seleccion', 'genetico', 'sintesis'] as Mode[]).map((m) => (
-            <button key={m} onClick={() => switchMode(m)} style={{
+            <button key={m} onClick={() => switchMode(m)} className="press" style={{
               flex: 1, fontFamily: mono, fontSize: 8, padding: '8px 4px', letterSpacing: 0.3, cursor: 'pointer',
               background: mode === m ? `${RED}22` : 'transparent',
               border: `1px solid ${mode === m ? RED : '#2a3a50'}`,
@@ -492,7 +492,7 @@ export default function EvolucionPage() {
               GENERACIÓN: <span style={{ color: RED }}>{selGeneration}</span>
               {selBuilding ? ' · creciendo...' : ''}
             </div>
-            <button onClick={restartLineage} disabled={selBuilding} style={{
+            <button onClick={restartLineage} disabled={selBuilding} className="press" style={{
               width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginBottom: 16,
               cursor: selBuilding ? 'default' : 'pointer', background: 'transparent', border: `1px solid ${RED}`, color: RED,
               opacity: selBuilding ? 0.5 : 1, letterSpacing: 1,
@@ -538,7 +538,7 @@ export default function EvolucionPage() {
               onChange={(e) => setGenCount(parseInt(e.target.value, 10))}
               style={{ width: '100%', accentColor: RED, marginBottom: 14 }} />
 
-            <button onClick={evolve} disabled={evolving} style={{
+            <button onClick={evolve} disabled={evolving} className="press" style={{
               width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginBottom: 14,
               cursor: evolving ? 'default' : 'pointer', background: RED, color: '#020408', border: 'none',
               opacity: evolving ? 0.6 : 1, letterSpacing: 1,
@@ -584,7 +584,7 @@ export default function EvolucionPage() {
             <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 8 }}>PATRÓN OBJETIVO</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
               {PATTERN_DEFS.map((d) => (
-                <button key={d.id} onClick={() => setTargetPatternId(d.id)} disabled={silEvolving} style={{
+                <button key={d.id} onClick={() => setTargetPatternId(d.id)} disabled={silEvolving} className="press" style={{
                   flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 2px', cursor: silEvolving ? 'default' : 'pointer', letterSpacing: 0.3,
                   background: targetPatternId === d.id ? `${RED}22` : 'transparent',
                   border: `1px solid ${targetPatternId === d.id ? RED : '#2a3a50'}`,
@@ -627,7 +627,7 @@ export default function EvolucionPage() {
               onChange={(e) => setGenCount(parseInt(e.target.value, 10))}
               style={{ width: '100%', accentColor: RED, marginBottom: 14 }} />
 
-            <button onClick={evolveSynthesis} disabled={silEvolving} style={{
+            <button onClick={evolveSynthesis} disabled={silEvolving} className="press" style={{
               width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginBottom: 14,
               cursor: silEvolving ? 'default' : 'pointer', background: RED, color: '#020408', border: 'none',
               opacity: silEvolving ? 0.6 : 1, letterSpacing: 1,
