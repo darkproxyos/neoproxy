@@ -25,6 +25,7 @@ export type ViewerApi = {
   setSlice(rgba: Uint8Array | null, w: number, h: number): void
   setEvents(ev: ViewerEvent[]): void
   setMarkers(on: boolean): void
+  setPalette(p: 'tiempo' | 'resina'): void
   zoom(factor: number): void
   reset(): void
   snapshot(): string | null
@@ -97,6 +98,8 @@ export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | nu
     let markers: { inst: InstancedMesh; slice: number }[] = []
     let eventsRaw: ViewerEvent[] = []
     let markersOn = true
+    let palette: 'tiempo' | 'resina' = 'tiempo'
+    let lastMesh: ViewerMesh | null = null, lastLaw: LawId = 'coral'
     let fitted = false, lastH = 0
 
     const yOf = (slice: number) => (info ? (slice - info.sliceOfZ.s0) / info.sliceOfZ.k : 0)
@@ -126,13 +129,13 @@ export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | nu
     const api: ViewerApi = {
       setMesh(m, law) {
         const prev = body, prevBand = band
-        info = m
+        info = m; lastMesh = m; lastLaw = law
         if (!m) { body = null; band = null; prev?.dispose(); prevBand?.dispose(); slicePlane.isVisible = false; applyCut(); return }
         const n = m.positions.length / 3
         const pos = new Float32Array(m.positions.length), col = new Float32Array(n * 4), tmp: Rgb = [0, 0, 0]
         for (let i = 0; i < n; i++) {
           pos[i * 3] = m.positions[i * 3]; pos[i * 3 + 1] = m.positions[i * 3 + 2]; pos[i * 3 + 2] = m.positions[i * 3 + 1]
-          rampColor(law, m.times[i] / Math.max(1, m.planned - 1), tmp)
+          if (palette === 'resina') { tmp[0] = 206; tmp[1] = 209; tmp[2] = 214 } else rampColor(law, m.times[i] / Math.max(1, m.planned - 1), tmp)
           col[i * 4] = tmp[0] / 255; col[i * 4 + 1] = tmp[1] / 255; col[i * 4 + 2] = tmp[2] / 255; col[i * 4 + 3] = 1
         }
         const idx = new Uint32Array(m.indices.length)
@@ -173,6 +176,12 @@ export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | nu
       },
       setEvents(ev) { eventsRaw = ev; rebuildMarkers() },
       setMarkers(on) { markersOn = on; applyCut() },
+      setPalette(p) {
+        palette = p
+        mat.specularColor = p === 'resina' ? new Color3(0.55, 0.55, 0.6) : new Color3(0.3, 0.3, 0.32)
+        mat.specularPower = p === 'resina' ? 70 : 40
+        if (lastMesh) api.setMesh(lastMesh, lastLaw) // recolorea la malla que ya está
+      },
       zoom(factor) { zoomBy(cam, factor) },
       reset() { cam.alpha = home.alpha; cam.beta = home.beta; cam.radius = home.radius; cam.target.set(0, home.targetY, 0) },
       snapshot() { try { return canvas.toDataURL('image/png') } catch { return null } },

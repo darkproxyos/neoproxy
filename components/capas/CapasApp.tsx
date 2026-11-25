@@ -8,6 +8,7 @@ import { colorizeField, LAW_STYLE } from '@/lib/capas/style'
 import { Mesher, exportInWorker } from '@/lib/capas/client'
 import { boxWidthMm, ASPECT_MAX, ASPECT_MIN } from '@/lib/capas/mesh'
 import { SHAPES, footprint, type Shape } from '@/lib/capas/volume'
+import { PRESETS, presetRecipe } from '@/lib/capas/presets'
 import type { Timeline as TL } from '@/lib/capas/events'
 import type { Metrics } from '@/lib/specimens/analyze'
 import Timeline, { EVENT_COLOR, EVENT_LABEL } from './Timeline'
@@ -20,6 +21,7 @@ const WA = '56993550010'
 const SIZE_MM = 60, RES_LIVE = 64, RES_SETTLED = 104
 const EXPORT_RES = { borrador: 110, normal: 150, fina: 200 } as const
 const MAX_STROKES = 600
+const REPLAY_LAYERS_PER_SEC = 72 // la reproducción de la impresión: unas 3,3 s para 240 capas, vaya a los fps que vaya
 const fmt = (n: number, d = 1) => n.toFixed(d).replace('.', ',')
 const pct = (n: number, d = 1) => `${fmt(100 * n, d)} %`
 
@@ -50,7 +52,7 @@ function Chip({ on, onClick, children, color, title }: { on: boolean; onClick: (
 function Stat({ k, v, hint, warn }: { k: string; v: string; hint?: string; warn?: boolean }) {
   return (
     <div style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }} title={hint}>
-      <div style={{ fontSize: 8.5, letterSpacing: 1.8, color: '#6f86a3', marginBottom: 5 }}>{k}</div>
+      <div style={{ fontSize: 9.5, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div>
       <div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div>
     </div>
   )
@@ -81,7 +83,9 @@ export default function CapasApp() {
   const [strokesN, setStrokesN] = useState(0)
   const [exp, setExp] = useState<{ res: keyof typeof EXPORT_RES; state: 'idle' | 'busy' | 'error' }>({ res: 'normal', state: 'idle' })
   const [copied, setCopied] = useState(false)
-  const [markers, setMarkers] = useState(true)
+  const [markers, setMarkers] = useState(false) // los marcadores de eventos tapan la pieza: se activan a pedido
+  const [palette, setPalette] = useState<'tiempo' | 'resina'>('tiempo')
+  const [presetId, setPresetId] = useState<string | null>(null)
   const [replay, setReplay] = useState(false)
 
   const st = useRef({
@@ -110,7 +114,7 @@ export default function CapasApp() {
     const s = st.current
     s.sess = new Session(rec, true)
     s.ff = ff; s.follow = true; s.replay = false; s.cut = 0; s.dirty = true; s.lastRes = 0
-    setParams(paramsOf(rec)); setKnob(rec.knob); setFollow(true); setReplay(false)
+    setParams(paramsOf(rec)); setKnob(rec.knob); setFollow(true); setReplay(false); setPresetId(null)
     setTl(null); setInfo(null); setCount(1); setCutUi(0)
     viewerRef.current?.setMesh(null, rec.law)
     viewerRef.current?.setEvents([])
@@ -152,7 +156,7 @@ export default function CapasApp() {
 
   // ---- lazo: avanza el mundo, lo dibuja y actualiza el visor ------------------------
   useEffect(() => {
-    let raf = 0, n = 0, lastCount = 0
+    let raf = 0, n = 0, lastCount = 0, lastT = performance.now()
     const off = document.createElement('canvas'); off.width = off.height = WORLD
     const offCtx = off.getContext('2d')!
     const img = offCtx.createImageData(WORLD, WORLD)
@@ -163,10 +167,14 @@ export default function CapasApp() {
       const s = st.current, sess = s.sess, p = paramsRef.current
       if (!sess) return
       n++
-      if (s.ff > sess.count) sess.advance(Math.min(16, s.ff - sess.count))
-      else if (s.playing && !sess.full) sess.advance(s.speed)
+      const t0 = performance.now(), dt = Math.min(0.1, (t0 - lastT) / 1000); lastT = t0
+      // la simulación tiene un presupuesto de tiempo por cuadro: en un equipo lento avanza menos capas
+      // por cuadro (la velocidad es un tope), pero la página no se congela
+      let want = s.ff > sess.count ? Math.min(16, s.ff - sess.count) : s.playing && !sess.full ? s.speed : 0
+      const budget = s.ff > sess.count ? 30 : 10
+      while (want-- > 0 && !sess.full) { sess.advance(1); if (performance.now() - t0 > budget) break }
       if (s.replay) {
-        s.cut += 1.1
+        s.cut += REPLAY_LAYERS_PER_SEC * dt
         if (s.cut >= sess.count - 1) { s.replay = false; s.follow = true; setReplay(false); setFollow(true) }
       }
       const cutVal = s.follow ? sess.count - 1 : Math.min(s.cut, sess.count - 1)
@@ -206,10 +214,10 @@ export default function CapasApp() {
         colorizeField(field, WORLD, WORLD, p.theta, p.law, planeBuf, { plane: true, rlim2 })
         v.setSlice(planeBuf, WORLD, WORLD)
       }
-      // reflejo en la interfaz, ~10 veces por segundo
-      if (n % 6 === 0) {
+      // reflejo en la interfaz, ~7 veces por segundo
+      if (n % 8 === 0) {
         setCount(sess.count); setCutUi(cutVal); setFfUi(s.ff > sess.count ? sess.count : 0)
-        if (p.law === 'defectos') setCharge(topologicalCharge(sess.world)); else setCharge(null)
+        if (p.law === 'defectos') { const q = topologicalCharge(sess.world); setCharge((c) => (c && c.plus === q.plus && c.minus === q.minus ? c : q)) } else setCharge((c) => (c ? null : c))
       }
     }
     raf = requestAnimationFrame(frame)
@@ -251,6 +259,7 @@ export default function CapasApp() {
   }, [])
 
   useEffect(() => { viewerRef.current?.setMarkers(markers) }, [markers])
+  useEffect(() => { viewerRef.current?.setPalette(palette) }, [palette])
 
   // ---- pincel ------------------------------------------------------------------------
   const cell = (e: React.PointerEvent<HTMLCanvasElement>): [number, number] => {
@@ -316,7 +325,7 @@ export default function CapasApp() {
       impresion_sugerida: {
         tecnologia: 'resina (SLA/MSLA)', capa_um: 50, base_incluida: r.base, soportes_necesarios_por_nacimientos: tl?.counts.birth ?? null,
         capas_de_impresion_por_capa_de_simulacion: Number((info.layerMm / 0.05).toFixed(1)),
-        advertencia: 'Sin pruebas de impresión real todavía: validar con una pieza de ensayo antes de producir.',
+        advertencia: 'Sin pruebas de impresión real todavía: validar con una pieza de ensayo antes de producir. La pieza es maciza (sin vaciado ni drenajes) y la base abarca todo su ancho: en resina conviene vaciar con drenajes, inclinar o usar balsa para reducir la succión al despegar.',
       },
     }
     download(new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' }), `capas-${recipeId(r)}-${r.law}.json`)
@@ -339,12 +348,21 @@ export default function CapasApp() {
             {LAW_IDS.map((id) => {
               const c = LAW_STYLE[id].accent, on = id === params.law
               return (
-                <button key={id} role="tab" aria-selected={on} className="press" onClick={() => setLaw(id)} style={{ minHeight: 44, fontFamily: mono, fontSize: 10, letterSpacing: 1.6, cursor: 'pointer', background: on ? `${c}22` : '#080c12', border: `1px solid ${on ? c : '#ffffff1a'}`, borderTop: `2px solid ${c}`, color: on ? c : '#8fa8c4' }}>
+                <button key={id} role="tab" aria-selected={on} className="press" onClick={() => setLaw(id)} style={{ minHeight: 44, fontFamily: mono, fontSize: 10, letterSpacing: 1.6, cursor: 'pointer', background: on ? `${c}22` : '#080c12', borderStyle: 'solid', borderWidth: '2px 1px 1px 1px', borderColor: `${c} ${on ? c : '#ffffff1a'} ${on ? c : '#ffffff1a'} ${on ? c : '#ffffff1a'}`, color: on ? c : '#8fa8c4' }}>
                   {LAWS[id].label}
                 </button>
               )
             })}
           </div>
+          {PRESETS.some((x) => x.law === params.law) && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, margin: '0 0 10px', alignItems: 'center' }}>
+              <span style={{ fontSize: 10, letterSpacing: 1.5, color: '#8fa8c4' }}>SEMILLAS</span>
+              <Chip on={presetId === null} onClick={() => setLaw(params.law)} color={accent} title="Una sola semilla, en el centro">DE FÁBRICA</Chip>
+              {PRESETS.filter((x) => x.law === params.law).map((x) => (
+                <Chip key={x.id} on={presetId === x.id} color={accent} title={x.hint} onClick={() => { start(presetRecipe(x, st.current.sess?.recipe.seed ?? 7), 0); setPresetId(x.id) }}>{x.label}</Chip>
+              ))}
+            </div>
+          )}
           <div style={{ position: 'relative', border: `1px solid ${accent}44`, background: '#03060a' }}>
             <canvas
               ref={canvasRef} width={512} height={512}
@@ -357,7 +375,7 @@ export default function CapasApp() {
               style={{ display: 'block', width: '100%', aspectRatio: '1 / 1', cursor: 'crosshair', touchAction: 'none' }}
               aria-label={`Mundo 2D de la ley ${L.label}: arrastra para ${L.seedLabel[0].toLowerCase()}`}
             />
-            <div style={{ position: 'absolute', left: 10, bottom: 8, fontSize: 9, letterSpacing: 1.6, color: '#ffffffaa', textShadow: '0 1px 3px #000' }}>
+            <div style={{ position: 'absolute', left: 10, bottom: 8, fontSize: 10, letterSpacing: 1.6, color: '#ffffffcc', textShadow: '0 1px 3px #000' }}>
               MUNDO {WORLD}×{WORLD} · EL TIEMPO PRESENTE
             </div>
             {ffBusy && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: '#000000a0', fontSize: 11, letterSpacing: 2, color: accent }}>RECONSTRUYENDO UNIVERSO · {ffUi}/{params.slices}</div>}
@@ -375,7 +393,7 @@ export default function CapasApp() {
           </div>
           {charge && (
             <div style={{ marginTop: 8, padding: '8px 12px', background: '#080c12', border: '1px solid #ffffff12', fontSize: 10, letterSpacing: 1.2, color: '#9fb4cc' }}>
-              CARGA TOPOLÓGICA · vórtices + <b style={{ color: '#ffd27c' }}>{charge.plus}</b> · vórtices − <b style={{ color: '#7fd7ff' }}>{charge.minus}</b> · total <b style={{ color: charge.total === 0 ? '#7cf0b0' : '#ff6677' }}>{charge.total}</b> {charge.total === 0 ? '(se conserva)' : '(¡no debería!)'}
+              CARGA TOPOLÓGICA · vórtices + <b style={{ color: '#ffd27c' }}>{charge.plus}</b> · vórtices − <b style={{ color: '#7fd7ff' }}>{charge.minus}</b> · total <b style={{ color: charge.total === 0 ? '#7cf0b0' : '#ff6677' }}>{charge.total}</b> {charge.total === 0 ? '(siempre 0 en un toroide)' : '(error del contador)'}
             </div>
           )}
         </section>
@@ -383,16 +401,17 @@ export default function CapasApp() {
         {/* ---- escultura 3D ---- */}
         <section style={{ minWidth: 0 }}>
           <div style={{ position: 'relative', height: 'min(640px, 78vh)', minHeight: 360, background: '#03060a', border: `1px solid ${accent}33` }}>
-            <CapasViewer onReady={(api) => { viewerRef.current = api; if (api) api.setMarkers(markers) }} />
+            <CapasViewer onReady={(api) => { viewerRef.current = api; if (api) { api.setMarkers(markers); api.setPalette(palette) } }} />
             <div style={{ position: 'absolute', left: 12, top: 10, fontSize: 9.5, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
               <div style={{ color: accent }}>{L.label} · {rid || '…'}</div>
               <div>CAPA {Math.round(cutUi) + 1} / {params.slices}{info ? ` · ${fmt(cutUi * info.layerMm, 1)} mm` : ''}</div>
               {meshing && <div style={{ color: '#7f96b2' }}>calculando malla…</div>}
             </div>
             <div style={{ position: 'absolute', right: 10, top: 8, display: 'flex', gap: 6 }}>
+              <Chip on={palette === 'resina'} onClick={() => setPalette((v) => (v === 'resina' ? 'tiempo' : 'resina'))} title="Muestra la pieza como saldrá: de un solo color, sin la escala de tiempo">RESINA</Chip>
               <Chip on={markers} onClick={() => setMarkers((v) => !v)} title="Marcadores de nacimientos, divisiones, fusiones y muertes">EVENTOS</Chip>
             </div>
-            <div style={{ position: 'absolute', left: 12, bottom: 10, display: 'flex', flexWrap: 'wrap', gap: '4px 12px', fontSize: 9, letterSpacing: 1.2, color: '#9fb4cc', pointerEvents: 'none', textShadow: '0 1px 3px #000' }}>
+            <div style={{ position: 'absolute', left: 12, bottom: 10, display: 'flex', flexWrap: 'wrap', gap: '4px 12px', fontSize: 10, letterSpacing: 1.2, color: '#9fb4cc', pointerEvents: 'none', textShadow: '0 1px 3px #000' }}>
               {(Object.keys(EVENT_COLOR) as (keyof typeof EVENT_COLOR)[]).map((k) => (
                 <span key={k}><i style={{ display: 'inline-block', width: 7, height: 7, borderRadius: 4, background: EVENT_COLOR[k], marginRight: 5 }} />{EVENT_LABEL[k]} {tl ? tl.counts[k] : 0}</span>
               ))}
@@ -416,7 +435,7 @@ export default function CapasApp() {
 
       {/* ---- ficha de la ley y perillas ---- */}
       <div className="cap-grid2" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 22, marginTop: 26 }}>
-        <section style={{ background: '#080c12', border: `1px solid ${accent}2a`, borderLeft: `3px solid ${accent}`, padding: '18px 20px' }}>
+        <section style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '1px 1px 1px 3px', borderColor: `${accent}2a ${accent}2a ${accent}2a ${accent}`, padding: '18px 20px' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: accent, marginBottom: 6 }}>{L.label} — {L.tagline.toUpperCase()}</div>
           <div style={{ fontSize: 11, color: '#fff', margin: '0 0 12px', lineHeight: 1.8, fontFamily: mono }}>{L.equation}</div>
           <p style={{ fontSize: 11, lineHeight: 1.95, color: '#a9bdd4', margin: '0 0 10px' }}>{L.concept}</p>
@@ -490,6 +509,11 @@ export default function CapasApp() {
           <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE UNIVERSO'}</button>
           <a href={`https://wa.me/${WA}?text=${encodeURIComponent(waText)}`} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
         </div>
+        {m && m.components > 1 && (
+          <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#ffb86b', margin: '12px 0 0' }}>
+            El STL omite {m.components - 1} partes sueltas ({pct(m.droppedVolumeFrac)} del volumen): no tocan la pieza principal y no se imprimirían.
+          </p>
+        )}
         <p style={{ fontSize: 9.5, lineHeight: 1.9, color: '#6f86a3', margin: '12px 0 0' }}>
           El enlace contiene la receta completa (ley, semilla, constantes, cada pinceladas y cada giro de perilla con su capa): quien lo abra reconstruye la misma pila de capas, bit a bit. La pieza se imprime de pie, con la base en la cama y sin reorientar.
         </p>

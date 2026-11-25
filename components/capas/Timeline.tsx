@@ -66,7 +66,7 @@ export default function Timeline({ pop, solid, peak, events, planned, count, cut
     g.strokeStyle = '#fff'; g.lineWidth = 1.5
     g.beginPath(); g.moveTo(xc, plotTop - 8); g.lineTo(xc, H - 2); g.stroke()
     g.fillStyle = '#fff'; g.beginPath(); g.moveTo(xc - 5, plotTop - 12); g.lineTo(xc + 5, plotTop - 12); g.lineTo(xc, plotTop - 5); g.closePath(); g.fill()
-    g.font = `8px ${mono}`; g.fillStyle = '#6f86a3'
+    g.font = `9.5px ${mono}`; g.fillStyle = '#6f86a3'
     g.fillText('BASE · PASADO', x0, 9); g.textAlign = 'center'; g.fillText('línea: partes vivas · discontinua: área sólida', (x0 + x1) / 2, 9); g.textAlign = 'right'; g.fillText('CIMA · PRESENTE', x1, 9)
   }, [pop, solid, peak, events, planned, count, cut, accent])
 
