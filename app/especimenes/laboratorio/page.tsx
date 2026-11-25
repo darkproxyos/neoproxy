@@ -27,7 +27,7 @@ type PoolItem = {
   }
 }
 type Pool = {
-  generatedAt: string; seedBase: number; res: number; sizeMm: number
+  generatedAt: string; seedBase: number; res: number; viewRes?: number; stlRes?: number; sizeMm: number
   stats: {
     generated: number; measured: number; closed: number; printable: number; eliteCells: number
     byFamily: Record<string, { generated: number; viable: number; hall: number }>
@@ -104,7 +104,7 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
 
   useEffect(() => {
     setGen({ status: 'loading' })
-    const { promise, cancel } = generateInWorker(item.family, item.seed, pool.res)
+    const { promise, cancel } = generateInWorker(item.family, item.seed, pool.viewRes ?? pool.res)
     promise.then((data) => setGen({ status: 'ready', data })).catch((e) => setGen({ status: 'error', error: String(e.message ?? e) }))
     return cancel
   }, [item, pool.res])
@@ -120,7 +120,7 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
   const download = async () => {
     setDl('busy')
     try {
-      const { promise } = generateInWorker(item.family, item.seed, 96, true)
+      const { promise } = generateInWorker(item.family, item.seed, pool.stlRes ?? 96, true)
       const r = await promise
       const blob = new Blob([r.stl!], { type: 'model/stl' })
       const a = document.createElement('a')
@@ -189,7 +189,7 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
             <button onClick={download} disabled={dl === 'busy'} className="press"
               style={{ minHeight: 46, background: `${color}22`, border: `1px solid ${color}`, color, fontFamily: mono, fontSize: 11, letterSpacing: 2, cursor: dl === 'busy' ? 'wait' : 'pointer' }}>
-              {dl === 'busy' ? 'GENERANDO STL…' : dl === 'error' ? 'REINTENTAR DESCARGA' : `DESCARGAR STL (${pool.sizeMm} MM)`}
+              {dl === 'busy' ? 'GENERANDO STL EN ALTA RESOLUCIÓN…' : dl === 'error' ? 'REINTENTAR DESCARGA' : `DESCARGAR STL (${pool.sizeMm} MM)`}
             </button>
             <a href={`https://wa.me/${WA}?text=${encodeURIComponent(waText)}`} target="_blank" rel="noopener noreferrer" className="press"
               style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none' }}>

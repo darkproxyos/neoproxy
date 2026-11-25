@@ -1,4 +1,4 @@
-// Diecisiete algoritmos generativos puros y una familia de cruces (simbiosis). Cada una convierte una semilla en
+// Veintiséis algoritmos generativos puros y una familia de cruces (simbiosis). Cada una convierte una semilla en
 // una receta (parámetros JSON) y cada receta en un campo escalar (f<0 adentro).
 // Todas pasan por el mismo guard: la forma nunca toca el borde de la grilla y,
 // con cierta probabilidad, lleva un corte plano abajo (base de apoyo).
@@ -16,6 +16,11 @@ import {
   sampleTuring, turingField, sampleAutomaton, automatonField, sampleKIFS, kifsField,
   sampleAutopoiesis, autopoiesisField,
 } from './fields-pattern'
+import {
+  sampleReaction, reactionField, sampleHilbert, hilbertField, samplePhyllotaxis, phyllotaxisField,
+  sampleRuffle, ruffleField, sampleMandelbox, mandelboxField, sampleApollonian, apollonianField,
+  sampleFlow, flowField, sampleVessel, vesselField, sampleFiligree, filigreeField,
+} from './fields-art'
 import { sampleSymbiosis, symbiosisField } from './symbiosis'
 
 export type Family =
@@ -23,20 +28,46 @@ export type Family =
   | 'twist' | 'mandelbulb' | 'voronoi' | 'knot'
   | 'colonization' | 'shell' | 'turing' | 'automaton' | 'kifs'
   | 'network' | 'attractor' | 'dla' | 'autopoiesis'
+  | 'reaction' | 'hilbert' | 'phyllotaxis' | 'ruffle' | 'mandelbox' | 'apollonian' | 'flow' | 'vessel' | 'filigree'
   | 'symbiosis'
 
 // Algoritmos puros: son los únicos que pueden ser padres de un cruce.
 export const PURE_FAMILIES: readonly Family[] = [
   'tpms', 'metaballs', 'harmonics', 'superformula', 'twist', 'mandelbulb', 'voronoi', 'knot',
   'colonization', 'shell', 'turing', 'automaton', 'kifs', 'network', 'attractor', 'dla', 'autopoiesis',
+  'reaction', 'hilbert', 'phyllotaxis', 'ruffle', 'mandelbox', 'apollonian', 'flow', 'vessel', 'filigree',
 ]
 export const FAMILIES: readonly Family[] = [...PURE_FAMILIES, 'symbiosis']
+
+// Peso de cada familia al repartir cupos del salón (se puede ajustar sin tocar
+// las recetas; ver PARENT_WEIGHT para el muestreo). Se fijó mirando hojas de contactos de cada algoritmo: lo que da piezas
+// de obra (jarrones, filigrana, fibras, curvas) pesa más; lo que da grumos o
+// cubos repetidos, menos. No es un juicio sobre los autores sino sobre lo que
+// esta implementación produce.
+export const FAMILY_WEIGHT: Record<Family, number> = {
+  tpms: 1, metaballs: 0.4, harmonics: 0.25, superformula: 0.5, twist: 0.8, mandelbulb: 1, voronoi: 1, knot: 1,
+  colonization: 0.8, shell: 0.9, turing: 1, automaton: 0.8, kifs: 1, network: 1, attractor: 1, dla: 0.9, autopoiesis: 1,
+  reaction: 1.4, hilbert: 1.6, phyllotaxis: 0.5, ruffle: 0.35, mandelbox: 0.35, apollonian: 0.25, flow: 1.6, vessel: 2.2, filigree: 2,
+  symbiosis: 1.6,
+}
+
+// Pesos de MUESTREO: deciden qué padres elige un cruce al derivar la receta de
+// su semilla. Forman parte de la receta: cambiarlos cambia las piezas que ya
+// existen, así que están congelados. Para ajustar qué entra al salón se toca
+// FAMILY_WEIGHT, nunca esta tabla.
+export const PARENT_WEIGHT: Record<Family, number> = {
+  tpms: 1, metaballs: 0.6, harmonics: 0.5, superformula: 0.8, twist: 0.8, mandelbulb: 1, voronoi: 1, knot: 1,
+  colonization: 0.8, shell: 0.9, turing: 1, automaton: 0.8, kifs: 1, network: 1, attractor: 1, dla: 0.9, autopoiesis: 1,
+  reaction: 1.4, hilbert: 1.6, phyllotaxis: 0.6, ruffle: 0.5, mandelbox: 0.5, apollonian: 0.4, flow: 1.6, vessel: 2.2, filigree: 2,
+  symbiosis: 1.6,
+}
 
 // Autor (id de THINKERS en components/proxygenesis/curated.ts) de cada familia.
 export const AUTHOR_ID: Partial<Record<Family, string>> = {
   mandelbulb: 'mandelbrot', kifs: 'mandelbrot', colonization: 'runions-lane-prusinkiewicz',
   shell: 'raup', turing: 'prigogine', automaton: 'kauffman', network: 'barabasi',
   attractor: 'lorenz', dla: 'witten-sander', autopoiesis: 'maturana_varela', symbiosis: 'margulis',
+  reaction: 'prigogine', hilbert: 'mandelbrot', mandelbox: 'mandelbrot', apollonian: 'mandelbrot', flow: 'lorenz',
 }
 
 export const FAMILY_LABEL: Record<Family, string> = {
@@ -44,6 +75,8 @@ export const FAMILY_LABEL: Record<Family, string> = {
   twist: 'TORSIÓN', mandelbulb: 'MANDELBULB', voronoi: 'VORONOI', knot: 'NUDO',
   colonization: 'COLONIZACIÓN', shell: 'CONCHA', turing: 'TURING', automaton: 'AUTÓMATA', kifs: 'FRACTAL PLEGADO',
   network: 'RED', attractor: 'ATRACTOR', dla: 'DLA', autopoiesis: 'AUTOPOIESIS', symbiosis: 'SIMBIOSIS',
+  reaction: 'REACCIÓN-DIFUSIÓN', hilbert: 'HILBERT', phyllotaxis: 'FILOTAXIS', ruffle: 'VOLANTES', mandelbox: 'MANDELBOX',
+  apollonian: 'APOLONIANA', flow: 'FLUJO', vessel: 'JARRÓN', filigree: 'FILIGRANA',
 }
 
 export const FAMILY_COLOR: Record<Family, string> = {
@@ -51,6 +84,8 @@ export const FAMILY_COLOR: Record<Family, string> = {
   twist: '#b400ff', mandelbulb: '#ff6b35', voronoi: '#7bff3d', knot: '#5f95c9',
   colonization: '#e0ff4f', shell: '#ffd9a0', turing: '#ff9ecf', automaton: '#9d7bff', kifs: '#ff3b3b',
   network: '#4fffe0', attractor: '#ff7a7a', dla: '#b8e0ff', autopoiesis: '#ffa94d', symbiosis: '#f2f0ff',
+  reaction: '#ff8fb1', hilbert: '#59d8ff', phyllotaxis: '#c3ff68', ruffle: '#ff9bdc', mandelbox: '#ff5c5c',
+  apollonian: '#ffc15c', flow: '#7cf0ff', vessel: '#e8d5a8', filigree: '#ffe9a8',
 }
 
 export const FAMILY_BLURB: Record<Family, string> = {
@@ -71,6 +106,15 @@ export const FAMILY_BLURB: Record<Family, string> = {
   attractor: 'Atractor extraño (Lorenz, 1963, y sistemas afines: Rössler, Halvorsen, Chen): una trayectoria que nunca se repite, engrosada en un tubo.',
   dla: 'Agregación limitada por difusión (Witten & Sander, 1981): partículas que vagan al azar y se pegan al primer contacto. Crecen dendritas fractales.',
   autopoiesis: 'Célula autopoiética (Maturana & Varela): una membrana que encierra, con poros, y un núcleo sostenido por espigas. Metáfora geométrica, no simulación de autopoiesis.',
+  reaction: 'Reacción-difusión 3D (Gray–Scott): simulación real de dos sustancias que se difunden y reaccionan. Según los parámetros aparecen manchas que se dividen, gusanos, laberintos o coral. Es el proceso del que hablaba Prigogine, no una imitación.',
+  hilbert: 'Curva de Hilbert en 3D: una sola línea que recorre todo un volumen sin cortarse. Se redondean sus esquinas, se deforma el cubo (esfera, torsión, cono, toro) y el grosor pulsa a lo largo.',
+  phyllotaxis: 'Filotaxis (Vogel, 1979): escamas puestas en ángulo áureo, de 137,5°, que crecen con la distancia al centro. Alcachofa, piña, protea o erizo según el perfil.',
+  ruffle: 'Lámina hiperbólica: el borde crece más rápido que el centro y se pliega en ondas cada vez más finas, como una lechuga, un coral o una flor. Varias láminas giradas forman una rosa.',
+  mandelbox: 'Mandelbox (Tom Lowe, 2010): pliegues de caja y de esfera repetidos con escala. Arquitectura fractal tallada de un bloque.',
+  apollonian: 'Espuma apoloniana: inversiones sucesivas en esferas generan un empaquetamiento infinito de burbujas; la pieza es un trozo tallado de esa espuma.',
+  flow: 'Haz de líneas de flujo: cientos de fibras nacen de un disco y siguen un campo sin divergencia con una corriente ascendente y un giro. Se trenzan como una llama o una medusa.',
+  vessel: 'Jarrón o lámpara paramétrico: perfil de revolución con vientre y cuello, estrías con giro, costillas, borde y pie; la pared puede calarse (rombos, giroide o espuma de Voronoi).',
+  filigree: 'Filigrana: una cáscara fina (esfera, huevo, domo o toro) calada por un patrón de ondas con simetría de mandala y bandas de latitud. Encaje de luz y sombra; los polos quedan macizos.',
   symbiosis: 'Simbiogénesis (Margulis): dos algoritmos se fusionan y nace una forma que ninguno daba solo. Siete modos de cruce; a veces el segundo padre ya es un híbrido.',
 }
 
@@ -87,6 +131,10 @@ function commonParams(r: Rng): Params {
   return {
     env: pick(r, ENVELOPES),
     zCut: r() < 0.6 ? range(r, -0.78, -0.5) : -2,
+    // acabado (se aplica a cualquier familia): simetría en caleidoscopio y micro-relieve
+    fold: r() < 0.3 ? int(r, 3, 10) : 1,
+    skin: pick(r, ['none', 'none', 'ridges', 'bands', 'pores'] as const),
+    skinAmp: range(r, 0.008, 0.02), skinF: range(r, 16, 42),
   }
 }
 
@@ -104,8 +152,17 @@ export function sampleRecipe(family: Family, seed: number, depth = 0): Recipe {
     case 'attractor': params = sampleAttractor(r, base); break
     case 'dla': params = sampleDLA(r, base); break
     case 'autopoiesis': params = sampleAutopoiesis(r, base); break
+    case 'reaction': params = sampleReaction(r, base); break
+    case 'hilbert': params = sampleHilbert(r, base); break
+    case 'phyllotaxis': params = samplePhyllotaxis(r, base); break
+    case 'ruffle': params = sampleRuffle(r, base); break
+    case 'mandelbox': params = sampleMandelbox(r, base); break
+    case 'apollonian': params = sampleApollonian(r, base); break
+    case 'flow': params = sampleFlow(r, base); break
+    case 'vessel': params = sampleVessel(r, base); break
+    case 'filigree': params = sampleFiligree(r, base); break
     case 'symbiosis': {
-      const sym = sampleSymbiosis(r, base, depth, PURE_FAMILIES, sampleRecipe)
+      const sym = sampleSymbiosis(r, base, depth, PURE_FAMILIES, sampleRecipe, (f) => PARENT_WEIGHT[f] ** 2)
       return { family, seed, params: sym.params, parents: sym.parents }
     }
     case 'tpms':
@@ -387,6 +444,8 @@ const BUILDERS: Record<Exclude<Family, 'symbiosis'>, (p: Params) => Field> = {
   colonization: colonizationField, shell: shellField, turing: turingField, automaton: automatonField,
   kifs: kifsField, network: networkField, attractor: attractorField, dla: dlaField,
   autopoiesis: autopoiesisField,
+  reaction: reactionField, hilbert: hilbertField, phyllotaxis: phyllotaxisField, ruffle: ruffleField,
+  mandelbox: mandelboxField, apollonian: apollonianField, flow: flowField, vessel: vesselField, filigree: filigreeField,
 }
 
 // Campo de una receta sin el guard final: así lo usan los padres de un cruce.
@@ -400,9 +459,30 @@ export function rawField(recipe: Recipe): Field {
 
 export function buildField(recipe: Recipe): Field {
   const raw = rawField(recipe)
-  const zCut = num(recipe.params, 'zCut')
+  const P = recipe.params
+  const zCut = num(P, 'zCut')
+  const foldN = (P.fold as number) ?? 1
+  const sector = TAU / foldN
+  const skin = (P.skin as string) ?? 'none'
+  const skinAmp = (P.skinAmp as number) ?? 0, skinF = (P.skinF as number) ?? 0
   return (x, y, z) => {
-    let f = smax(raw(x, y, z), sdRoundBox(x, y, z, 0.93, 0.93, 0.93, 0.05), 0.02)
+    let px = x, py = y
+    if (foldN > 1) {
+      // simetría dihedral de orden foldN: se pliega el ángulo a medio sector
+      const rho = Math.hypot(x, y)
+      let th = Math.atan2(y, x)
+      th -= sector * Math.floor(th / sector)
+      if (th > sector / 2) th = sector - th
+      px = rho * Math.cos(th); py = rho * Math.sin(th)
+    }
+    let f = raw(px, py, z)
+    if (skin !== 'none') {
+      const sx = skinF
+      f += skinAmp * (skin === 'ridges' ? Math.sin(sx * Math.hypot(px, py, z))
+        : skin === 'bands' ? Math.sin(sx * z + 3 * Math.atan2(py, px))
+        : (Math.sin(sx * px) * Math.cos(sx * py) + Math.sin(sx * py) * Math.cos(sx * z) + Math.sin(sx * z) * Math.cos(sx * px)) / 1.5)
+    }
+    f = smax(f, sdRoundBox(x, y, z, 0.93, 0.93, 0.93, 0.05), 0.02)
     if (zCut > -1) f = smax(f, zCut - z, 0.03)
     return f
   }

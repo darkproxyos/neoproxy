@@ -59,20 +59,23 @@ export function fitSegs(segs: number[], limit = 0.86): number[] {
 const REACH = 0.12
 export function segField(segs: number[], k: number): Field {
   const n = segs.length / SEG
-  const G = 20, cs = 2 / G, cr = cs * 0.87
-  const lists: Int32Array[] = new Array(G * G * G)
-  for (let cz = 0; cz < G; cz++) for (let cy = 0; cy < G; cy++) for (let cx = 0; cx < G; cx++) {
-    const x = -1 + (cx + 0.5) * cs, y = -1 + (cy + 0.5) * cs, z = -1 + (cz + 0.5) * cs
-    const ids: number[] = []
-    for (let i = 0, o = 0; i < n; i++, o += SEG) {
-      const d = Math.hypot(x - segs[o + 6], y - segs[o + 7], z - segs[o + 8]) - segs[o + 9] - segs[o + 10] - cr
-      if (d < REACH + k) ids.push(o)
+  const G = 24, cs = 2 / G, cr = cs * 0.87
+  const buckets: number[][] = new Array(G * G * G)
+  for (let i = 0; i < buckets.length; i++) buckets[i] = []
+  const idx = (v: number) => Math.max(0, Math.min(G - 1, Math.floor((v + 1) / cs)))
+  for (let i = 0, o = 0; i < n; i++, o += SEG) {
+    const reach = segs[o + 9] + segs[o + 10] + REACH + k + cr
+    const mx = segs[o + 6], my = segs[o + 7], mz = segs[o + 8]
+    const x0 = idx(mx - reach), x1 = idx(mx + reach), y0 = idx(my - reach), y1 = idx(my + reach), z0 = idx(mz - reach), z1 = idx(mz + reach)
+    for (let cz = z0; cz <= z1; cz++) for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) {
+      const x = -1 + (cx + 0.5) * cs, y = -1 + (cy + 0.5) * cs, z = -1 + (cz + 0.5) * cs
+      const d = Math.hypot(x - mx, y - my, z - mz) - segs[o + 9] - segs[o + 10] - cr
+      if (d < REACH + k) buckets[(cz * G + cy) * G + cx].push(o)
     }
-    lists[(cz * G + cy) * G + cx] = Int32Array.from(ids)
   }
-  const cell = (v: number) => Math.max(0, Math.min(G - 1, Math.floor((v + 1) / cs)))
+  const lists = buckets.map((b) => Int32Array.from(b))
   return (x, y, z) => {
-    const ids = lists[(cell(z) * G + cell(y)) * G + cell(x)]
+    const ids = lists[(idx(z) * G + idx(y)) * G + idx(x)]
     let d = 1e9
     for (let q = 0; q < ids.length; q++) {
       const s = ids[q]

@@ -8,12 +8,13 @@
 // el vector de descriptores, ponderada por la calidad de cada pieza. Así cada
 // familia aporta sus formas más distintas entre sí, no sus mejores clones.
 
-import type { Recipe } from './families'
+import type { Recipe, Family } from './families'
+import { FAMILY_WEIGHT } from './families'
 import type { Metrics } from './analyze'
 
 export type Candidate = { id: string; recipe: Recipe; metrics: Metrics }
 
-export const MIN_PRINT_SCORE = 0.45
+export const MIN_PRINT_SCORE = 0.5
 
 const descriptor = (m: Metrics) => [
   m.complexityN, m.genusN, m.elongation, m.entropy, Math.min(1, m.overhangFrac * 2), m.richness,
@@ -46,9 +47,9 @@ function pickDiverse(items: Candidate[], quota: number): Candidate[] {
 export const groupKey = (c: Candidate) =>
   c.recipe.family === 'symbiosis' ? `symbiosis:${c.recipe.params.op as string}` : c.recipe.family
 
-// Los cruces pesan más: son donde "emergen" formas que ningún algoritmo da solo.
-const HYBRID_WEIGHT = 1.5
-const weightOf = (key: string) => (key.startsWith('symbiosis:') ? HYBRID_WEIGHT : 1)
+// El peso sale de FAMILY_WEIGHT; los cruces pesan más porque ahí "emergen"
+// formas que ningún algoritmo da solo.
+const weightOf = (key: string) => (key.startsWith('symbiosis:') ? FAMILY_WEIGHT.symbiosis : FAMILY_WEIGHT[key as Family] ?? 1)
 
 export function selectHall(cands: Candidate[], hallSize = 200): Candidate[] {
   const viable = cands.filter((c) => c.metrics.printScore >= MIN_PRINT_SCORE)
