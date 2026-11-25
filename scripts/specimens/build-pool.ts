@@ -1,15 +1,17 @@
 // Genera el pool de especímenes experimentales.
 //
-//   npx tsx scripts/specimens/build-pool.ts [--count 2030] [--seed 2027] [--res 56] [--hall 200]
+//   scripts/specimens/build-pool.sh [--count 2200] [--seed 2028] [--res 56] [--hall 240]
 //
-// En paralelo (4 núcleos): lanzar `--shard k --of 4` para k = 0..3 y luego
-// `--merge 4` (ver scripts/specimens/build-pool.sh).
+// Tres etapas, cada una repartida en 4 núcleos (ver build-pool.sh):
+//   --shard k --of 4   mide los candidatos i con i % 4 == k
+//   --merge 4          junta, elige el salón y escribe pool.json
+//   --thumbs k --of 4  renderiza las miniaturas del salón a THUMB_RES
 //
-// 1. Genera `count` recetas: 17 algoritmos puros a partes iguales y, en cada
-//    ciclo de 29, 12 cruces (simbiosis) entre ellos.
+// 1. Genera `count` recetas: los 26 algoritmos puros a partes iguales y, en
+//    cada ciclo de 44, 18 cruces (simbiosis) entre ellos.
 // 2. Cada una se convierte en malla y se mide (lib/specimens/analyze.ts).
-// 3. Se elige un salón de `hall` piezas con cuota pareja por familia y, dentro
-//    de cada una, máxima distancia entre formas ponderada por calidad (ver
+// 3. Se elige un salón de `hall` piezas con cupos según FAMILY_WEIGHT y, dentro
+//    de cada grupo, máxima distancia entre formas ponderada por calidad (ver
 //    lib/specimens/select.ts): no las `hall` que más puntúan, que serían casi
 //    todas iguales.
 // 4. Solo el salón se persiste: miniaturas + {familia, semilla, métricas}. No se
@@ -31,16 +33,21 @@ const arg = (name: string, def: number) => {
   const i = process.argv.indexOf(`--${name}`)
   return i >= 0 ? Number(process.argv[i + 1]) : def
 }
-const COUNT = arg('count', 2030)
-const SEED = arg('seed', 2027)
+const COUNT = arg('count', 2200)
+const SEED = arg('seed', 2028)
 const RES = arg('res', 56)
-const HALL = arg('hall', 200)
+const HALL = arg('hall', 240)
+// resoluciones: se puntúa a RES (barato), se ve a VIEW_RES y se exporta a STL_RES
+const VIEW_RES = arg('viewres', 96)
+const STL_RES = arg('stlres', 144)
+const THUMB_RES = arg('thumbres', 112)
+const THUMB = process.argv.includes('--thumbs') ? arg('thumbs', 0) : -1
 const SHARD = process.argv.includes('--shard') ? arg('shard', 0) : -1
 const OF = arg('of', 1)
 const MERGE = process.argv.includes('--merge') ? arg('merge', 0) : 0
 
-// ciclo de 29: 17 algoritmos puros y 12 cruces
-const familyAt = (i: number): Family => (i % 29 < 17 ? PURE_FAMILIES[i % 29] : 'symbiosis')
+// ciclo de 44: 26 algoritmos puros y 18 cruces
+const familyAt = (i: number): Family => (i % 44 < PURE_FAMILIES.length ? PURE_FAMILIES[i % 44] : 'symbiosis')
 const shardFile = (k: number) => path.join(os.tmpdir(), `np-pool-${SEED}-${COUNT}-${RES}-shard${k}.json`)
 const OUT = path.join(process.cwd(), 'public/proxygenesis')
 const THUMBS = path.join(OUT, 'pool-thumbs')
@@ -59,16 +66,36 @@ function compact(m: Metrics) {
   }
 }
 
-function evaluate(family: Family, seed: number) {
+function evaluate(family: Family, seed: number, res = RES) {
   const recipe = sampleRecipe(family, seed)
-  const grid = sampleGrid(buildField(recipe), RES)
-  const res = analyze(polygonize(grid), grid, DEFAULT_SIZE_MM)
-  return { recipe, res }
+  const grid = sampleGrid(buildField(recipe), res)
+  const out = analyze(polygonize(grid), grid, DEFAULT_SIZE_MM)
+  return { recipe, res: out }
+}
+
+async function thumbsStage() {
+  const pool = JSON.parse(fs.readFileSync(path.join(OUT, 'pool.json'), 'utf8'))
+  fs.mkdirSync(THUMBS, { recursive: true })
+  let n = 0
+  for (let i = 0; i < pool.hall.length; i++) {
+    if (i % OF !== THUMB) continue
+    const it = pool.hall[i]
+    // la regeneración a la resolución de puntaje debe coincidir con lo medido
+    const check = evaluate(it.family, it.seed)
+    if (!check.res || check.res.metrics.tris !== it.m.tris) throw new Error(`regeneración no determinista en ${it.id}`)
+    const { res } = evaluate(it.family, it.seed, THUMB_RES)
+    if (!res) throw new Error(`no se pudo regenerar ${it.id} a ${THUMB_RES}`)
+    const oriented = orientForPrint(res.mesh, res.metrics.up, DEFAULT_SIZE_MM)
+    const raw = renderMesh(oriented, { size: T * 2, color: hex(FAMILY_COLOR[it.family as Family]) })
+    await sharp(Buffer.from(raw), { raw: { width: T * 2, height: T * 2, channels: 4 } })
+      .resize(T, T).webp({ quality: 84 }).toFile(path.join(THUMBS, `${it.id}.webp`))
+    if (++n % 10 === 0) console.log(`  [miniaturas ${THUMB}] ${n}`)
+  }
+  console.log(`miniaturas ${THUMB}: ${n}`)
 }
 
 async function main() {
-  fs.mkdirSync(THUMBS, { recursive: true })
-  for (const f of fs.readdirSync(THUMBS)) fs.unlinkSync(path.join(THUMBS, f))
+  if (THUMB >= 0) return thumbsStage()
 
   const cands: Candidate[] = []
   const rejected: Record<string, number> = { 'sin volumen o vacía': 0 }
@@ -126,25 +153,14 @@ async function main() {
   const eliteCells = new Set(viable.map((c) => c.metrics.cell)).size
   const fit = hall.map((c) => c.metrics.fitness).sort((a, b) => a - b)
 
-  // miniaturas del salón (se regenera la malla: nada se guarda en memoria)
-  const items = []
-  for (let n = 0; n < hall.length; n++) {
-    const c = hall[n]
-    const { res } = evaluate(c.recipe.family, c.recipe.seed)
-    if (!res) throw new Error(`no se pudo regenerar ${c.id}`)
-    if (res.metrics.tris !== c.metrics.tris) throw new Error(`regeneración no determinista en ${c.id}`)
-    const oriented = orientForPrint(res.mesh, res.metrics.up, DEFAULT_SIZE_MM)
-    const raw = renderMesh(oriented, { size: T * 2, color: hex(FAMILY_COLOR[c.recipe.family]) })
-    await sharp(Buffer.from(raw), { raw: { width: T * 2, height: T * 2, channels: 4 } })
-      .resize(T, T).webp({ quality: 82 }).toFile(path.join(THUMBS, `${c.id}.webp`))
-    items.push({ id: c.id, family: c.recipe.family, seed: c.recipe.seed, m: compact(c.metrics) })
-    if ((n + 1) % 25 === 0) console.log(`  miniaturas ${n + 1}/${hall.length}`)
-  }
+  fs.mkdirSync(THUMBS, { recursive: true })
+  for (const f of fs.readdirSync(THUMBS)) fs.unlinkSync(path.join(THUMBS, f))
+  const items = hall.map((c) => ({ id: c.id, family: c.recipe.family, seed: c.recipe.seed, m: compact(c.metrics) }))
 
   const pool = {
-    version: 1,
+    version: 2,
     generatedAt: new Date().toISOString(),
-    seedBase: SEED, res: RES, sizeMm: DEFAULT_SIZE_MM,
+    seedBase: SEED, res: RES, viewRes: VIEW_RES, stlRes: STL_RES, sizeMm: DEFAULT_SIZE_MM,
     stats: {
       generated: COUNT, measured: cands.length, closed: closedCount, printable: viable.length,
       eliteCells, rejected, byFamily, byOp,
@@ -153,7 +169,7 @@ async function main() {
     hall: items,
   }
   fs.writeFileSync(path.join(OUT, 'pool.json'), JSON.stringify(pool))
-  console.log(`pool.json: ${(fs.statSync(path.join(OUT, 'pool.json')).size / 1024).toFixed(0)} KB | miniaturas: ${fs.readdirSync(THUMBS).length}`)
+  console.log(`pool.json: ${(fs.statSync(path.join(OUT, 'pool.json')).size / 1024).toFixed(0)} KB (miniaturas: etapa --thumbs)`)
   console.log(`total ${((Date.now() - t0) / 1000).toFixed(0)}s`)
 }
 

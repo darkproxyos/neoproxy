@@ -34,14 +34,23 @@ const unit = (r: Rng): [number, number, number] => {
   }
 }
 
+function pickWeighted(r: Rng, items: readonly Family[], weight: (f: Family) => number): Family {
+  let total = 0
+  for (const f of items) total += weight(f)
+  let x = r() * total
+  for (const f of items) { x -= weight(f); if (x <= 0) return f }
+  return items[items.length - 1]
+}
+
 export function sampleSymbiosis(
   r: Rng, base: Params, depth: number, pure: readonly Family[],
   sampleParent: (family: Family, seed: number, depth: number) => Recipe,
+  weight: (f: Family) => number = () => 1,
 ): { params: Params; parents: Recipe[] } {
   const op = pick(r, OPS)
-  const fa = pick(r, pure)
-  let fb: Family = pick(r, pure)
-  for (let i = 0; i < 8 && fb === fa; i++) fb = pick(r, pure)
+  const fa = pickWeighted(r, pure, weight)
+  let fb: Family = pickWeighted(r, pure, weight)
+  for (let i = 0; i < 8 && fb === fa; i++) fb = pickWeighted(r, pure, weight)
   const seedA = Math.floor(r() * 1e9) + 1, seedB = Math.floor(r() * 1e9) + 1
   const nest = depth === 0 && r() < 0.3 // un trío: el segundo padre ya es híbrido
   const A = sampleParent(fa, seedA, depth + 1)
