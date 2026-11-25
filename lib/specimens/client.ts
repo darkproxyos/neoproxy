@@ -1,6 +1,6 @@
 'use client'
 
-import type { Family } from './families'
+import type { Genome } from './genome'
 import type { Metrics } from './analyze'
 import type { WorkerRequest, WorkerResponse } from './worker'
 
@@ -10,7 +10,7 @@ let nextId = 1
 
 // Un worker por pedido: se descarta al terminar, así un espécimen pesado
 // (mandelbulb, voronoi a resolución alta) nunca congela la página.
-export function generateInWorker(family: Family, seed: number, res: number, stl = false): { promise: Promise<ClientResult>; cancel: () => void } {
+export function generateInWorker(genome: Genome, res: number, stl = false): { promise: Promise<ClientResult>; cancel: () => void } {
   const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
   const id = nextId++
   const promise = new Promise<ClientResult>((resolve, reject) => {
@@ -21,7 +21,7 @@ export function generateInWorker(family: Family, seed: number, res: number, stl 
       } else reject(new Error(e.data.error))
     }
     worker.onerror = (e) => { worker.terminate(); reject(new Error(e.message || 'Error en el worker')) }
-    worker.postMessage({ id, family, seed, res, stl } satisfies WorkerRequest)
+    worker.postMessage({ id, genome, res, stl } satisfies WorkerRequest)
   })
   return { promise, cancel: () => worker.terminate() }
 }

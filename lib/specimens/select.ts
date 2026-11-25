@@ -19,10 +19,10 @@ export const MIN_PRINT_SCORE = 0.5
 // compite la mitad superior por calidad: la diversidad elige entre las mejores.
 export const HALL_MIN_PRINT = 0.6
 
-const descriptor = (m: Metrics) => [
+export const descriptor = (m: Metrics) => [
   m.complexityN, m.genusN, m.elongation, m.entropy, Math.min(1, m.overhangFrac * 2), m.richness,
 ]
-const dist = (a: number[], b: number[]) => Math.sqrt(a.reduce((s, v, i) => s + (v - b[i]) ** 2, 0))
+export const dist = (a: number[], b: number[]) => Math.sqrt(a.reduce((s, v, i) => s + (v - b[i]) ** 2, 0))
 
 function pickDiverse(items: Candidate[], quota: number): Candidate[] {
   if (items.length <= quota) return items

@@ -4,11 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
-import { FAMILIES, PURE_FAMILIES, AUTHOR_ID, FAMILY_COLOR, FAMILY_LABEL, FAMILY_BLURB, sampleRecipe, type Family, type Recipe } from '@/lib/specimens/families'
+import { FAMILIES, PURE_FAMILIES, AUTHOR_ID, FAMILY_COLOR, FAMILY_LABEL, FAMILY_BLURB, type Family, type Recipe } from '@/lib/specimens/families'
 import { OP_LABEL, OP_BLURB, type SymOp } from '@/lib/specimens/symbiosis'
 import { THINKERS } from '@/components/proxygenesis/curated'
 import { SHOW_COUNT, ROTATE_STEP, weekIndex, nextRotationAt, visibleIndices } from '@/lib/specimens/select'
 import { generateInWorker, type ClientResult } from '@/lib/specimens/client'
+import { resolveGenome, type Genome } from '@/lib/specimens/genome'
 
 const PoolViewer = dynamic(() => import('@/components/especimenes/PoolViewer'), { ssr: false })
 
@@ -16,17 +17,21 @@ const mono = "'Space Mono', monospace"
 const ACCENT = '#00ffcc'
 const WA = '56993550010'
 
+type Kind = 'nacida' | 'mutante' | 'cruce'
 type PoolItem = {
   id: string
   family: Family
   seed: number
+  g?: Genome; gen?: number; kind?: Kind; parents?: string[]
   m: {
     printScore: number; richness: number; fitness: number; up: string
     overhangFrac: number; contactFrac: number; wallP10Mm: number; thinFrac: number
     material: 'PLA o resina' | 'resina'; bboxMm: number[]; genus: number; tris: number; sizeMm: number
   }
 }
+type Hist = { gen: number; date: string; hall: number; survivors: number; died: number; born: { mutante: number; cruce: number; nacida: number } }
 type Pool = {
+  generation?: number; history?: Hist[]
   generatedAt: string; seedBase: number; res: number; viewRes?: number; stlRes?: number; sizeMm: number
   stats: {
     generated: number; measured: number; closed: number; printable: number; eliteCells: number
@@ -60,6 +65,7 @@ function Row({ k, v }: { k: string; v: string }) {
   )
 }
 
+const itemGenome = (it: PoolItem): Genome => it.g ?? { f: it.family, s: it.seed }
 const authorOf = (f: Family) => { const id = AUTHOR_ID[f]; return id ? THINKERS[id] : undefined }
 
 // Árbol de ascendencia de una receta: de qué algoritmos (y autores) viene.
@@ -73,7 +79,7 @@ function lineage(r: Recipe): string {
 }
 
 function Dna({ item, color }: { item: PoolItem; color: string }) {
-  const rec = useMemo(() => sampleRecipe(item.family, item.seed), [item.family, item.seed])
+  const rec = useMemo(() => resolveGenome(itemGenome(item)), [item])
   const author = authorOf(item.family)
   const box = { margin: '0 0 16px', padding: '12px 14px', border: `1px solid ${color}33`, background: `${color}0b`, fontSize: 10, lineHeight: 1.8, color: '#b6c8de' } as const
   if (rec.family === 'symbiosis') {
@@ -99,7 +105,38 @@ function Dna({ item, color }: { item: PoolItem; color: string }) {
   )
 }
 
-function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; onClose: () => void }) {
+function Lineage({ item, pool, color, onOpen }: { item: PoolItem; pool: Pool; color: string; onOpen: (id: string) => void }) {
+  const born = item.gen ?? 0, now = pool.generation ?? 0
+  const kind = item.kind ?? 'nacida'
+  const mut = (itemGenome(item).m ?? [])
+  const alive = (id: string) => pool.hall.some((h) => h.id === id)
+  const parent = (id: string) => {
+    const ok = alive(id)
+    return (
+      <span key={id}>
+        {ok
+          ? <button onClick={() => onOpen(id)} className="press" style={{ background: 'none', border: 'none', color, fontFamily: 'inherit', fontSize: 'inherit', padding: 0, cursor: 'pointer', textDecoration: 'underline' }}>{id.toUpperCase()}</button>
+          : <span style={{ color: '#8fa8c4' }}>{id.toUpperCase()}</span>}
+        <span style={{ color: ok ? '#6fd89b' : '#7a6f6f' }}> ({ok ? 'viva' : 'desaparecida'})</span>
+      </span>
+    )
+  }
+  const ps = item.parents ?? []
+  const box = { margin: '0 0 12px', padding: '10px 14px', border: `1px solid ${color}33`, fontSize: 10, lineHeight: 1.8, color: '#b6c8de' } as const
+  return (
+    <div style={box}>
+      <div style={{ fontSize: 9, letterSpacing: 2.5, color }}>
+        GENERACIÓN {born}{now > born ? ` · VIVE DESDE HACE ${now - born} ${now - born === 1 ? 'GENERACIÓN' : 'GENERACIONES'}` : now > 0 ? ' · NACIÓ ESTA SEMANA' : ''}
+      </div>
+      {kind === 'nacida' && <div>Nacida de cero: sin ascendencia en este salón.</div>}
+      {kind === 'mutante' && <div>Mutante, hija de {ps[0] ? parent(ps[0]) : 'una pieza anterior'}. Lleva {mut.length} {mut.length === 1 ? 'mutación acumulada' : 'mutaciones acumuladas'}{mut.length ? `; la última, de fuerza ${mut[mut.length - 1][1]}` : ''}.</div>}
+      {kind === 'cruce' && <div>Cruce de {ps[0] ? parent(ps[0]) : '…'} × {ps[1] ? parent(ps[1]) : '…'}.</div>}
+      <div style={{ color: '#6f86a3', marginTop: 4 }}>Todo el salón es efímero: lo que sobrevive hoy puede desaparecer en la próxima generación.</div>
+    </div>
+  )
+}
+
+function SpecimenModal({ item, pool, onClose, onOpen }: { item: PoolItem; pool: Pool; onClose: () => void; onOpen: (id: string) => void }) {
   const [gen, setGen] = useState<{ status: 'loading' | 'ready' | 'error'; data?: ClientResult; error?: string }>({ status: 'loading' })
   const [dl, setDl] = useState<'idle' | 'busy' | 'error'>('idle')
   const [copied, setCopied] = useState(false)
@@ -107,7 +144,7 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
 
   useEffect(() => {
     setGen({ status: 'loading' })
-    const { promise, cancel } = generateInWorker(item.family, item.seed, pool.viewRes ?? pool.res)
+    const { promise, cancel } = generateInWorker(itemGenome(item), pool.viewRes ?? pool.res)
     promise.then((data) => setGen({ status: 'ready', data })).catch((e) => setGen({ status: 'error', error: String(e.message ?? e) }))
     return cancel
   }, [item, pool.res])
@@ -123,7 +160,7 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
   const download = async () => {
     setDl('busy')
     try {
-      const { promise } = generateInWorker(item.family, item.seed, pool.stlRes ?? 96, true)
+      const { promise } = generateInWorker(itemGenome(item), pool.stlRes ?? 96, true)
       const r = await promise
       const blob = new Blob([r.stl!], { type: 'model/stl' })
       const a = document.createElement('a')
@@ -178,6 +215,7 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
               style={{ width: 40, height: 40, background: 'transparent', border: '1px solid #4a6080', color: '#c8daf0', cursor: 'pointer', fontSize: 16 }}>✕</button>
           </div>
           <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb4cc', margin: '14px 0 14px' }}>{FAMILY_BLURB[item.family]}</p>
+          <Lineage item={item} pool={pool} color={color} onOpen={onOpen} />
           <Dna item={item} color={color} />
 
           <Row k="Imprimibilidad" v={`${pct(item.m.printScore)} (más es mejor)`} />
@@ -287,6 +325,7 @@ export default function LaboratorioPage() {
               <Stat n={pool.stats.generated.toLocaleString('es-CL')} t="GENERADAS" sub={`${PURE_FAMILIES.length} algoritmos y sus cruces`} />
               <Stat n={pool.stats.printable} t="IMPRIMIBLES" sub={`${Math.round((pool.stats.printable / pool.stats.measured) * 100)}% pasa el umbral`} />
               <Stat n={pool.hall.length} t="EN EL SALÓN" sub="repartido entre algoritmos y modos de cruce" />
+              <Stat n={pool.generation ?? 0} t="GENERACIÓN" sub={(() => { const h = pool.history?.[pool.history.length - 1]; return h ? `nacieron ${h.born.mutante + h.born.cruce + h.born.nacida} · desaparecieron ${h.died}` : 'primera población' })()} />
               <Stat n={SHOW_COUNT} t="A LA VISTA" sub={nextDate ? `cambian ${ROTATE_STEP} el ${nextDate}` : undefined} />
             </div>
 
@@ -309,7 +348,13 @@ export default function LaboratorioPage() {
                   <strong style={{ color: '#fff' }}>Diversidad:</strong> cada algoritmo aporta la misma cantidad de piezas, y cada modo de cruce un cupo 1,5 veces mayor (es donde emerge lo nuevo). Dentro de un grupo
                   se elige primero la mejor y después, una a una, la que más se aleja de las ya elegidas (complejidad, agujeros, alargamiento,
                   voladizos), ponderada por su calidad. Un primer intento con celdas tipo MAP-Elites dejaba el salón dominado por dos familias.
-                  Ninguna pieza se guarda como archivo: cada una es una receta (algoritmo + semilla) que se regenera casi idéntica en tu navegador.
+                  Ninguna pieza se guarda como archivo: cada una es un genoma (algoritmo, semilla y mutaciones) que se regenera casi idéntico en tu navegador.
+                </p>
+                <p style={{ margin: '10px 0 0' }}>
+                  <strong style={{ color: '#fff' }}>Evolución:</strong> cada renovación del salón es una generación. Sobreviven las piezas más aptas y
+                  más distintas entre sí, con desgaste por edad: nada se eterniza. El resto desaparece, y con ellas sus enlaces. Las vacantes las llenan
+                  hijas: mutantes (la madre con sus parámetros perturbados, ◈), cruces de dos piezas vivas (✕) y algunas nacidas de cero. Abre una pieza
+                  y verás de quién desciende y si sus madres siguen vivas.
                 </p>
               </div>
             )}
@@ -342,7 +387,7 @@ export default function LaboratorioPage() {
                     <img src={`/proxygenesis/pool-thumbs/${it.id}.webp`} alt={`${FAMILY_LABEL[it.family]}, imprimibilidad ${pct(it.m.printScore)}`} loading="lazy" width={256} height={256}
                       style={{ display: 'block', width: '100%', height: 'auto', aspectRatio: '1 / 1', background: '#070a10' }} />
                     <div style={{ padding: '10px 12px 12px' }}>
-                      <div style={{ fontSize: 10, letterSpacing: 1.5, color: c }}>{FAMILY_LABEL[it.family]}</div>
+                      <div style={{ fontSize: 10, letterSpacing: 1.5, color: c }}>{it.kind === 'mutante' ? '◈ ' : it.kind === 'cruce' ? '✕ ' : ''}{FAMILY_LABEL[it.family]}{pool.generation && it.gen === pool.generation ? <span style={{ color: '#6fd89b' }}> · NUEVA</span> : null}</div>
                       <div style={{ fontSize: 9.5, color: '#8fa8c4', marginTop: 5, lineHeight: 1.6 }}>
                         imprimible {pct(it.m.printScore)} · {it.m.material}
                       </div>
@@ -356,7 +401,7 @@ export default function LaboratorioPage() {
         )}
       </div>
 
-      {open && pool && <SpecimenModal item={open} pool={pool} onClose={() => openItem(null)} />}
+      {open && pool && <SpecimenModal item={open} pool={pool} onClose={() => openItem(null)} onOpen={(id) => { const hit = pool.hall.find((x) => x.id === id); if (hit) openItem(hit) }} />}
 
       <style>{`
         @media (max-width: 760px) { .lab-modal { grid-template-columns: 1fr !important; } }
