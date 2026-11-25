@@ -8,8 +8,7 @@
 // el vector de descriptores, ponderada por la calidad de cada pieza. Así cada
 // familia aporta sus formas más distintas entre sí, no sus mejores clones.
 
-import type { Recipe, Family } from './families'
-import { FAMILIES } from './families'
+import type { Recipe } from './families'
 import type { Metrics } from './analyze'
 
 export type Candidate = { id: string; recipe: Recipe; metrics: Metrics }
@@ -41,36 +40,54 @@ function pickDiverse(items: Candidate[], quota: number): Candidate[] {
   return chosen
 }
 
-export function selectHall(cands: Candidate[], hallSize = 150): Candidate[] {
+// Un cruce cuenta por su operador (cada modo de simbiosis es un grupo propio);
+// un algoritmo puro, por su familia. Así la cuota reparte entre "maneras de
+// producir una forma", no solo entre nombres de familia.
+export const groupKey = (c: Candidate) =>
+  c.recipe.family === 'symbiosis' ? `symbiosis:${c.recipe.params.op as string}` : c.recipe.family
+
+// Los cruces pesan más: son donde "emergen" formas que ningún algoritmo da solo.
+const HYBRID_WEIGHT = 1.5
+const weightOf = (key: string) => (key.startsWith('symbiosis:') ? HYBRID_WEIGHT : 1)
+
+export function selectHall(cands: Candidate[], hallSize = 200): Candidate[] {
   const viable = cands.filter((c) => c.metrics.printScore >= MIN_PRINT_SCORE)
-  const byFamily = new Map<Family, Candidate[]>(FAMILIES.map((f) => [f, viable.filter((c) => c.recipe.family === f)]))
-  // cuota pareja; lo que una familia no puede llenar (pocas imprimibles) se
-  // reparte entre las que sí tienen de sobra
-  const quota = new Map<Family, number>(FAMILIES.map((f) => [f, 0]))
+  const byGroup = new Map<string, Candidate[]>()
+  for (const c of viable) {
+    const k = groupKey(c)
+    byGroup.set(k, [...(byGroup.get(k) ?? []), c])
+  }
+  const keys = [...byGroup.keys()].sort()
+  // cuota proporcional al peso; lo que un grupo no puede llenar (pocas
+  // imprimibles) se reparte entre los que sí tienen de sobra
+  const quota = new Map<string, number>(keys.map((k) => [k, 0]))
   let left = hallSize
   while (left > 0) {
-    const open = FAMILIES.filter((f) => quota.get(f)! < byFamily.get(f)!.length)
+    const open = keys.filter((k) => quota.get(k)! < byGroup.get(k)!.length)
     if (!open.length) break
-    const share = Math.max(1, Math.floor(left / open.length))
-    for (const f of open) {
-      const add = Math.min(share, byFamily.get(f)!.length - quota.get(f)!, left)
-      quota.set(f, quota.get(f)! + add)
-      left -= add
-      if (left <= 0) break
+    const totalW = open.reduce((a, k) => a + weightOf(k), 0)
+    let given = 0
+    for (const k of open) {
+      const want = Math.max(1, Math.floor((left * weightOf(k)) / totalW))
+      const add = Math.min(want, byGroup.get(k)!.length - quota.get(k)!, left - given)
+      quota.set(k, quota.get(k)! + add)
+      given += add
+      if (given >= left) break
     }
+    left -= given
+    if (given === 0) break
   }
-  const chosen = FAMILIES.flatMap((f) => pickDiverse(byFamily.get(f)!, quota.get(f)!))
-  return interleaveByFamily(chosen)
+  const chosen = keys.flatMap((k) => pickDiverse(byGroup.get(k)!, quota.get(k)!))
+  return interleaveByGroup(chosen)
 }
 
-// Round-robin entre familias (cada una ordenada por fitness): cualquier ventana
-// contigua del salón mezcla algoritmos distintos.
-export function interleaveByFamily(items: Candidate[]): Candidate[] {
-  const groups = new Map<Family, Candidate[]>()
+// Round-robin entre grupos (cada uno ordenado por fitness): cualquier ventana
+// contigua del salón mezcla algoritmos y modos de cruce distintos.
+export function interleaveByGroup(items: Candidate[]): Candidate[] {
+  const groups = new Map<string, Candidate[]>()
   for (const c of items) {
-    const g = groups.get(c.recipe.family) ?? []
-    g.push(c)
-    groups.set(c.recipe.family, g)
+    const k = groupKey(c)
+    groups.set(k, [...(groups.get(k) ?? []), c])
   }
   const lists = [...groups.values()]
     .map((g) => g.sort((a, b) => b.metrics.fitness - a.metrics.fitness))

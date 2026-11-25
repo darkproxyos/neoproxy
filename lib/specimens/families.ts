@@ -1,4 +1,4 @@
-// Ocho familias de algoritmos generativos. Cada una convierte una semilla en
+// Diecisiete algoritmos generativos puros y una familia de cruces (simbiosis). Cada una convierte una semilla en
 // una receta (parámetros JSON) y cada receta en un campo escalar (f<0 adentro).
 // Todas pasan por el mismo guard: la forma nunca toca el borde de la grilla y,
 // con cierta probabilidad, lleva un corte plano abajo (base de apoyo).
@@ -8,23 +8,49 @@ import {
   type Field, type EnvelopeKind, ENVELOPES, envelope, smax, smin,
   sdCapsule, sdRoundBox,
 } from './sdf'
+import {
+  sampleColonization, colonizationField, sampleShell, shellField, sampleNetwork, networkField,
+  sampleAttractor, attractorField, sampleDLA, dlaField,
+} from './fields-grow'
+import {
+  sampleTuring, turingField, sampleAutomaton, automatonField, sampleKIFS, kifsField,
+  sampleAutopoiesis, autopoiesisField,
+} from './fields-pattern'
+import { sampleSymbiosis, symbiosisField } from './symbiosis'
 
 export type Family =
   | 'tpms' | 'metaballs' | 'harmonics' | 'superformula'
   | 'twist' | 'mandelbulb' | 'voronoi' | 'knot'
+  | 'colonization' | 'shell' | 'turing' | 'automaton' | 'kifs'
+  | 'network' | 'attractor' | 'dla' | 'autopoiesis'
+  | 'symbiosis'
 
-export const FAMILIES: readonly Family[] = [
+// Algoritmos puros: son los únicos que pueden ser padres de un cruce.
+export const PURE_FAMILIES: readonly Family[] = [
   'tpms', 'metaballs', 'harmonics', 'superformula', 'twist', 'mandelbulb', 'voronoi', 'knot',
+  'colonization', 'shell', 'turing', 'automaton', 'kifs', 'network', 'attractor', 'dla', 'autopoiesis',
 ]
+export const FAMILIES: readonly Family[] = [...PURE_FAMILIES, 'symbiosis']
+
+// Autor (id de THINKERS en components/proxygenesis/curated.ts) de cada familia.
+export const AUTHOR_ID: Partial<Record<Family, string>> = {
+  mandelbulb: 'mandelbrot', kifs: 'mandelbrot', colonization: 'runions-lane-prusinkiewicz',
+  shell: 'raup', turing: 'prigogine', automaton: 'kauffman', network: 'barabasi',
+  attractor: 'lorenz', dla: 'witten-sander', autopoiesis: 'maturana_varela', symbiosis: 'margulis',
+}
 
 export const FAMILY_LABEL: Record<Family, string> = {
   tpms: 'TPMS', metaballs: 'METABOLAS', harmonics: 'ARMÓNICOS', superformula: 'SUPERFÓRMULA',
   twist: 'TORSIÓN', mandelbulb: 'MANDELBULB', voronoi: 'VORONOI', knot: 'NUDO',
+  colonization: 'COLONIZACIÓN', shell: 'CONCHA', turing: 'TURING', automaton: 'AUTÓMATA', kifs: 'FRACTAL PLEGADO',
+  network: 'RED', attractor: 'ATRACTOR', dla: 'DLA', autopoiesis: 'AUTOPOIESIS', symbiosis: 'SIMBIOSIS',
 }
 
 export const FAMILY_COLOR: Record<Family, string> = {
   tpms: '#00d4ff', metaballs: '#00ff9d', harmonics: '#ffb800', superformula: '#ff5e9e',
   twist: '#b400ff', mandelbulb: '#ff6b35', voronoi: '#7bff3d', knot: '#5f95c9',
+  colonization: '#e0ff4f', shell: '#ffd9a0', turing: '#ff9ecf', automaton: '#9d7bff', kifs: '#ff3b3b',
+  network: '#4fffe0', attractor: '#ff7a7a', dla: '#b8e0ff', autopoiesis: '#ffa94d', symbiosis: '#f2f0ff',
 }
 
 export const FAMILY_BLURB: Record<Family, string> = {
@@ -36,11 +62,21 @@ export const FAMILY_BLURB: Record<Family, string> = {
   mandelbulb: 'El fractal 3D de potencia n (White & Nylander, 2009), extraído por distancia estimada.',
   voronoi: 'Espuma o red de puntales a partir de celdas de Voronoi con puntos jitterizados.',
   knot: 'Tubos que siguen nudos tóricos (p,q): geometría de una sola línea cerrada sobre sí misma.',
+  colonization: 'Colonización de espacio (Runions, Lane & Prusinkiewicz, 2007): la rama crece hacia nubes de atractores que desaparecen al ser alcanzados; el grosor sigue el modelo de tuberías.',
+  shell: 'Enrollamiento de conchas de Raup: un círculo generador que se expande, se aleja del eje y se traslada. Tres números (W, D, T) recorren un morfoespacio entero de conchas.',
+  turing: 'Patrón tipo Turing: ondas planas de igual longitud con fases al azar (la solución lineal de Swift–Hohenberg). La superficie es la frontera entre las dos fases. No simula reacción-difusión completa.',
+  automaton: 'Autómata celular 3D: una semilla simétrica evoluciona con una regla de nacimiento y supervivencia hasta fijarse. Orden que nadie dibujó.',
+  kifs: 'IFS caleidoscópico: plegar, rotar y escalar una y otra vez; la estimación de distancia da la superficie. Autosimilitud al estilo Mandelbrot.',
+  network: 'Red libre de escala (Barabási–Albert): cada nodo nuevo se une de preferencia a los más conectados. El radio de cada nodo crece con su grado.',
+  attractor: 'Atractor extraño (Lorenz, 1963, y sistemas afines: Rössler, Halvorsen, Chen): una trayectoria que nunca se repite, engrosada en un tubo.',
+  dla: 'Agregación limitada por difusión (Witten & Sander, 1981): partículas que vagan al azar y se pegan al primer contacto. Crecen dendritas fractales.',
+  autopoiesis: 'Célula autopoiética (Maturana & Varela): una membrana que encierra, con poros, y un núcleo sostenido por espigas. Metáfora geométrica, no simulación de autopoiesis.',
+  symbiosis: 'Simbiogénesis (Margulis): dos algoritmos se fusionan y nace una forma que ninguno daba solo. Siete modos de cruce; a veces el segundo padre ya es un híbrido.',
 }
 
 export type ParamValue = number | string | number[]
 export type Params = Record<string, ParamValue>
-export type Recipe = { family: Family; seed: number; params: Params }
+export type Recipe = { family: Family; seed: number; params: Params; parents?: Recipe[] }
 
 const num = (p: Params, k: string) => p[k] as number
 const arr = (p: Params, k: string) => p[k] as number[]
@@ -54,11 +90,24 @@ function commonParams(r: Rng): Params {
   }
 }
 
-export function sampleRecipe(family: Family, seed: number): Recipe {
+export function sampleRecipe(family: Family, seed: number, depth = 0): Recipe {
   const r = mulberry32(seed)
   const base = commonParams(r)
   let params: Params
   switch (family) {
+    case 'colonization': params = sampleColonization(r, base); break
+    case 'shell': params = sampleShell(r, base); break
+    case 'turing': params = sampleTuring(r, base); break
+    case 'automaton': params = sampleAutomaton(r, base); break
+    case 'kifs': params = sampleKIFS(r, base); break
+    case 'network': params = sampleNetwork(r, base); break
+    case 'attractor': params = sampleAttractor(r, base); break
+    case 'dla': params = sampleDLA(r, base); break
+    case 'autopoiesis': params = sampleAutopoiesis(r, base); break
+    case 'symbiosis': {
+      const sym = sampleSymbiosis(r, base, depth, PURE_FAMILIES, sampleRecipe)
+      return { family, seed, params: sym.params, parents: sym.parents }
+    }
     case 'tpms':
       params = {
         ...base,
@@ -331,14 +380,26 @@ function knotField(p: Params): Field {
   }
 }
 
-const BUILDERS: Record<Family, (p: Params) => Field> = {
+const BUILDERS: Record<Exclude<Family, 'symbiosis'>, (p: Params) => Field> = {
   tpms: tpmsField, metaballs: metaballsField, harmonics: harmonicsField,
   superformula: superformulaField, twist: twistField, mandelbulb: mandelbulbField,
   voronoi: voronoiField, knot: knotField,
+  colonization: colonizationField, shell: shellField, turing: turingField, automaton: automatonField,
+  kifs: kifsField, network: networkField, attractor: attractorField, dla: dlaField,
+  autopoiesis: autopoiesisField,
+}
+
+// Campo de una receta sin el guard final: así lo usan los padres de un cruce.
+export function rawField(recipe: Recipe): Field {
+  if (recipe.family === 'symbiosis') {
+    const [a, b] = recipe.parents!
+    return symbiosisField(recipe.params, rawField(a), rawField(b))
+  }
+  return BUILDERS[recipe.family](recipe.params)
 }
 
 export function buildField(recipe: Recipe): Field {
-  const raw = BUILDERS[recipe.family](recipe.params)
+  const raw = rawField(recipe)
   const zCut = num(recipe.params, 'zCut')
   return (x, y, z) => {
     let f = smax(raw(x, y, z), sdRoundBox(x, y, z, 0.93, 0.93, 0.93, 0.05), 0.02)

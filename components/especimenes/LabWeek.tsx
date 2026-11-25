@@ -4,7 +4,7 @@
 // ambas páginas muestran exactamente las mismas piezas.
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { FAMILY_COLOR, FAMILY_LABEL, type Family } from '@/lib/specimens/families'
+import { FAMILY_COLOR, FAMILY_LABEL, PURE_FAMILIES, type Family } from '@/lib/specimens/families'
 import { SHOW_COUNT, ROTATE_STEP, weekIndex, nextRotationAt, visibleIndices } from '@/lib/specimens/select'
 
 type Item = { id: string; family: Family; m: { printScore: number; material: string } }
@@ -41,9 +41,10 @@ export default function LabWeek() {
             {SHOW_COUNT} FORMAS EXPERIMENTALES DE LA SEMANA
           </h2>
           <p style={{ fontSize: 10.5, lineHeight: 1.9, color: '#8fb8d6', margin: 0 }}>
-            Ocho algoritmos generaron {pool ? pool.stats.generated.toLocaleString('es-CL') : '1.000'} formas; se midieron como sólidos
-            imprimibles y se eligió un salón de {pool ? pool.hall.length : 150}, repartido entre familias. Cada semana
-            salen {ROTATE_STEP} y entran {ROTATE_STEP} nuevas{next ? ` (próximo cambio: ${next})` : ''}.
+            {PURE_FAMILIES.length} algoritmos, cada uno atado a un autor del sitio, y sus cruces (simbiosis) generaron{' '}
+            {pool ? pool.stats.generated.toLocaleString('es-CL') : '2.030'} formas; se midieron como sólidos imprimibles y se
+            eligió un salón de {pool ? pool.hall.length : 200}. Cada semana salen {ROTATE_STEP} y entran {ROTATE_STEP} nuevas
+            {next ? ` (próximo cambio: ${next})` : ''}.
           </p>
         </div>
         <Link href="/especimenes/laboratorio" className="press"

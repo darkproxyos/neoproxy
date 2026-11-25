@@ -1,8 +1,12 @@
 // Genera el pool de especímenes experimentales.
 //
-//   npx tsx scripts/specimens/build-pool.ts [--count 1000] [--seed 2026] [--res 56] [--hall 150]
+//   npx tsx scripts/specimens/build-pool.ts [--count 2030] [--seed 2027] [--res 56] [--hall 200]
 //
-// 1. Genera `count` recetas repartidas parejo entre las 8 familias.
+// En paralelo (4 núcleos): lanzar `--shard k --of 4` para k = 0..3 y luego
+// `--merge 4` (ver scripts/specimens/build-pool.sh).
+//
+// 1. Genera `count` recetas: 17 algoritmos puros a partes iguales y, en cada
+//    ciclo de 29, 12 cruces (simbiosis) entre ellos.
 // 2. Cada una se convierte en malla y se mide (lib/specimens/analyze.ts).
 // 3. Se elige un salón de `hall` piezas con cuota pareja por familia y, dentro
 //    de cada una, máxima distancia entre formas ponderada por calidad (ver
@@ -17,20 +21,27 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import sharp from 'sharp'
-import { FAMILIES, FAMILY_COLOR, sampleRecipe, buildField, type Family } from '../../lib/specimens/families'
+import { FAMILIES, PURE_FAMILIES, FAMILY_COLOR, sampleRecipe, buildField, type Family } from '../../lib/specimens/families'
 import { sampleGrid, polygonize } from '../../lib/specimens/polygonize'
 import { analyze, orientForPrint, DEFAULT_SIZE_MM, type Metrics } from '../../lib/specimens/analyze'
-import { selectHall, MIN_PRINT_SCORE, type Candidate } from '../../lib/specimens/select'
+import { selectHall, groupKey, MIN_PRINT_SCORE, type Candidate } from '../../lib/specimens/select'
 import { renderMesh } from './raster'
 
 const arg = (name: string, def: number) => {
   const i = process.argv.indexOf(`--${name}`)
   return i >= 0 ? Number(process.argv[i + 1]) : def
 }
-const COUNT = arg('count', 1000)
-const SEED = arg('seed', 2026)
+const COUNT = arg('count', 2030)
+const SEED = arg('seed', 2027)
 const RES = arg('res', 56)
-const HALL = arg('hall', 150)
+const HALL = arg('hall', 200)
+const SHARD = process.argv.includes('--shard') ? arg('shard', 0) : -1
+const OF = arg('of', 1)
+const MERGE = process.argv.includes('--merge') ? arg('merge', 0) : 0
+
+// ciclo de 29: 17 algoritmos puros y 12 cruces
+const familyAt = (i: number): Family => (i % 29 < 17 ? PURE_FAMILIES[i % 29] : 'symbiosis')
+const shardFile = (k: number) => path.join(os.tmpdir(), `np-pool-${SEED}-${COUNT}-${RES}-shard${k}.json`)
 const OUT = path.join(process.cwd(), 'public/proxygenesis')
 const THUMBS = path.join(OUT, 'pool-thumbs')
 const T = 256
@@ -59,33 +70,43 @@ async function main() {
   fs.mkdirSync(THUMBS, { recursive: true })
   for (const f of fs.readdirSync(THUMBS)) fs.unlinkSync(path.join(THUMBS, f))
 
-  // cache de lo ya medido: ajustar solo la selección no obliga a remedir las 1000
-  const cacheFile = path.join(os.tmpdir(), `np-pool-${SEED}-${COUNT}-${RES}.json`)
-  const reuse = process.argv.includes('--reuse') && fs.existsSync(cacheFile)
   const cands: Candidate[] = []
   const rejected: Record<string, number> = { 'sin volumen o vacía': 0 }
   const generated: Record<string, number> = {}
   const t0 = Date.now()
 
-  if (reuse) {
-    const c = JSON.parse(fs.readFileSync(cacheFile, 'utf8'))
-    cands.push(...c.cands); Object.assign(rejected, c.rejected); Object.assign(generated, c.generated)
-    console.log(`usando cache: ${cands.length} candidatos medidos`)
-  }
-  for (let i = 0; i < (reuse ? 0 : COUNT); i++) {
-    const family = FAMILIES[i % FAMILIES.length]
-    const seed = SEED * 100003 + i * 7919
-    generated[family] = (generated[family] ?? 0) + 1
-    const { recipe, res } = evaluate(family, seed)
-    if (!res) { rejected['sin volumen o vacía']++; continue }
-    cands.push({ id: `${family.slice(0, 3)}-${seed.toString(36)}`, recipe, metrics: res.metrics })
-    if ((i + 1) % 50 === 0) {
-      const el = (Date.now() - t0) / 1000
-      console.log(`  ${i + 1}/${COUNT}  ${el.toFixed(0)}s  (faltan ~${((el / (i + 1)) * (COUNT - i - 1)).toFixed(0)}s)`)
+  if (MERGE) {
+    for (let k = 0; k < MERGE; k++) {
+      const c = JSON.parse(fs.readFileSync(shardFile(k), 'utf8'))
+      cands.push(...c.cands)
+      for (const [f, n] of Object.entries(c.rejected)) rejected[f] = (rejected[f] ?? 0) + (n as number)
+      for (const [f, n] of Object.entries(c.generated)) generated[f] = (generated[f] ?? 0) + (n as number)
+    }
+    console.log(`fusionados ${MERGE} fragmentos: ${cands.length} candidatos medidos`)
+  } else {
+    const mine = (i: number) => (SHARD < 0 ? true : i % OF === SHARD)
+    for (let i = 0; i < COUNT; i++) {
+      if (!mine(i)) continue
+      const family = familyAt(i)
+      const seed = SEED * 100003 + i * 7919
+      generated[family] = (generated[family] ?? 0) + 1
+      const { recipe, res } = evaluate(family, seed)
+      if (!res) { rejected['sin volumen o vacía']++; continue }
+      cands.push({ id: `${family.slice(0, 3)}-${seed.toString(36)}`, recipe, metrics: res.metrics })
+      if (generated[family] && Object.values(generated).reduce((a, b) => a + b, 0) % 50 === 0) {
+        const done = Object.values(generated).reduce((a, b) => a + b, 0)
+        const total = SHARD < 0 ? COUNT : Math.ceil(COUNT / OF)
+        const el = (Date.now() - t0) / 1000
+        console.log(`  [${SHARD < 0 ? 'solo' : SHARD}] ${done}/${total}  ${el.toFixed(0)}s  (faltan ~${((el / done) * (total - done)).toFixed(0)}s)`)
+      }
+    }
+    if (SHARD >= 0) {
+      fs.writeFileSync(shardFile(SHARD), JSON.stringify({ cands, rejected, generated }))
+      console.log(`fragmento ${SHARD}: ${cands.length} medidos en ${((Date.now() - t0) / 1000).toFixed(0)}s`)
+      return
     }
   }
 
-  if (!reuse) fs.writeFileSync(cacheFile, JSON.stringify({ cands, rejected, generated }))
   const viable = cands.filter((c) => c.metrics.printScore >= MIN_PRINT_SCORE)
   const closedCount = cands.filter((c) => c.metrics.closed).length
   const hall = selectHall(cands, HALL)
@@ -99,6 +120,9 @@ async function main() {
       hall: hall.filter((c) => c.recipe.family === f).length,
     }
   }
+  const byOp: Record<string, { viable: number; hall: number }> = {}
+  for (const c of viable) { const k = groupKey(c); if (k.startsWith('symbiosis:')) byOp[k.slice(10)] = { viable: (byOp[k.slice(10)]?.viable ?? 0) + 1, hall: 0 } }
+  for (const c of hall) { const k = groupKey(c); if (k.startsWith('symbiosis:')) byOp[k.slice(10)].hall++ }
   const eliteCells = new Set(viable.map((c) => c.metrics.cell)).size
   const fit = hall.map((c) => c.metrics.fitness).sort((a, b) => a - b)
 
@@ -123,7 +147,7 @@ async function main() {
     seedBase: SEED, res: RES, sizeMm: DEFAULT_SIZE_MM,
     stats: {
       generated: COUNT, measured: cands.length, closed: closedCount, printable: viable.length,
-      eliteCells, rejected, byFamily,
+      eliteCells, rejected, byFamily, byOp,
       hallFitness: { min: r3(fit[0]), median: r3(fit[Math.floor(fit.length / 2)]), max: r3(fit[fit.length - 1]) },
     },
     hall: items,
