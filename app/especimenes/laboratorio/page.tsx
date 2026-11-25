@@ -4,7 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
-import { FAMILIES, FAMILY_COLOR, FAMILY_LABEL, FAMILY_BLURB, type Family } from '@/lib/specimens/families'
+import { FAMILIES, PURE_FAMILIES, AUTHOR_ID, FAMILY_COLOR, FAMILY_LABEL, FAMILY_BLURB, sampleRecipe, type Family, type Recipe } from '@/lib/specimens/families'
+import { OP_LABEL, OP_BLURB, type SymOp } from '@/lib/specimens/symbiosis'
+import { THINKERS } from '@/components/proxygenesis/curated'
 import { SHOW_COUNT, ROTATE_STEP, weekIndex, nextRotationAt, visibleIndices } from '@/lib/specimens/select'
 import { generateInWorker, type ClientResult } from '@/lib/specimens/client'
 
@@ -51,6 +53,45 @@ function Row({ k, v }: { k: string; v: string }) {
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 10.5, padding: '6px 0', borderBottom: '1px solid #ffffff10' }}>
       <span style={{ color: '#8fa8c4' }}>{k}</span>
       <span style={{ color: '#fff', textAlign: 'right' }}>{v}</span>
+    </div>
+  )
+}
+
+const authorOf = (f: Family) => { const id = AUTHOR_ID[f]; return id ? THINKERS[id] : undefined }
+
+// Árbol de ascendencia de una receta: de qué algoritmos (y autores) viene.
+function lineage(r: Recipe): string {
+  if (r.family !== 'symbiosis') {
+    const a = authorOf(r.family)
+    return a ? `${FAMILY_LABEL[r.family]} (${a.name})` : FAMILY_LABEL[r.family]
+  }
+  const [x, y] = r.parents!
+  return `${OP_LABEL[r.params.op as SymOp]}[ ${lineage(x)} × ${lineage(y)} ]`
+}
+
+function Dna({ item, color }: { item: PoolItem; color: string }) {
+  const rec = useMemo(() => sampleRecipe(item.family, item.seed), [item.family, item.seed])
+  const author = authorOf(item.family)
+  const box = { margin: '0 0 16px', padding: '12px 14px', border: `1px solid ${color}33`, background: `${color}0b`, fontSize: 10, lineHeight: 1.8, color: '#b6c8de' } as const
+  if (rec.family === 'symbiosis') {
+    const op = rec.params.op as SymOp
+    const [a, b] = rec.parents!
+    const m = THINKERS[AUTHOR_ID.symbiosis!]
+    return (
+      <div style={box}>
+        <div style={{ fontSize: 9, letterSpacing: 2.5, color }}>ADN · {OP_LABEL[op]}</div>
+        <div style={{ margin: '4px 0 8px' }}>{OP_BLURB[op]}</div>
+        <div><span style={{ color: '#6f86a3' }}>PADRE A · </span>{lineage(a)}</div>
+        <div><span style={{ color: '#6f86a3' }}>PADRE B · </span>{lineage(b)}</div>
+        {m && <div style={{ marginTop: 8, fontStyle: 'italic', color: '#8fa8c4' }}>{m.name}: «{m.line}»</div>}
+      </div>
+    )
+  }
+  if (!author) return null
+  return (
+    <div style={box}>
+      <div style={{ fontSize: 9, letterSpacing: 2.5, color }}>AUTOR · {author.name.toUpperCase()}</div>
+      <div style={{ marginTop: 4, fontStyle: 'italic', color: '#8fa8c4' }}>«{author.line}»</div>
     </div>
   )
 }
@@ -133,7 +174,8 @@ function SpecimenModal({ item, pool, onClose }: { item: PoolItem; pool: Pool; on
             <button onClick={onClose} className="press" aria-label="Cerrar"
               style={{ width: 40, height: 40, background: 'transparent', border: '1px solid #4a6080', color: '#c8daf0', cursor: 'pointer', fontSize: 16 }}>✕</button>
           </div>
-          <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb4cc', margin: '14px 0 16px' }}>{FAMILY_BLURB[item.family]}</p>
+          <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb4cc', margin: '14px 0 14px' }}>{FAMILY_BLURB[item.family]}</p>
+          <Dna item={item} color={color} />
 
           <Row k="Imprimibilidad" v={`${pct(item.m.printScore)} (más es mejor)`} />
           <Row k="Riqueza formal" v={pct(item.m.richness)} />
@@ -226,10 +268,12 @@ export default function LaboratorioPage() {
           LABORATORIO DE ESPECÍMENES
         </h1>
         <p style={{ fontSize: 12, lineHeight: 2, color: '#9fb4cc', maxWidth: 760, margin: '0 0 28px' }}>
-          Ocho algoritmos generan mil formas candidatas. Cada una se mide como sólido imprimible. El salón se reparte
-          entre las ocho familias y, dentro de cada una, se eligen las formas más distintas entre sí, no las que más
-          puntúan, que serían casi todas iguales. De ese salón de 150, {SHOW_COUNT} están a la vista cada semana:
-          salen {ROTATE_STEP} y entran {ROTATE_STEP} nuevas.
+          {PURE_FAMILIES.length} algoritmos, cada uno atado a un autor del sitio, generan formas, y la familia SIMBIOSIS
+          (Margulis) las cruza de a dos, a veces de a tres, de siete maneras distintas: ahí emergen formas que ningún
+          algoritmo da solo. Cada candidata se mide como sólido imprimible. El salón se reparte entre algoritmos y modos
+          de cruce y, dentro de cada grupo, se eligen las formas más distintas entre sí, no las que más puntúan, que
+          serían casi todas iguales. De ese salón de {pool ? pool.hall.length : '…'}, {SHOW_COUNT} están a la vista cada
+          semana: salen {ROTATE_STEP} y entran {ROTATE_STEP} nuevas.
         </p>
 
         {error && <p style={{ color: '#ff8a8a', fontSize: 12 }}>No se pudo cargar el salón. Recarga la página.</p>}
@@ -237,9 +281,9 @@ export default function LaboratorioPage() {
         {pool && (
           <>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, padding: '20px 22px', border: `1px solid ${ACCENT}33`, background: 'rgba(255,255,255,0.02)', marginBottom: 14 }}>
-              <Stat n={pool.stats.generated.toLocaleString('es-CL')} t="GENERADAS" sub="8 algoritmos, semillas distintas" />
+              <Stat n={pool.stats.generated.toLocaleString('es-CL')} t="GENERADAS" sub={`${PURE_FAMILIES.length} algoritmos y sus cruces`} />
               <Stat n={pool.stats.printable} t="IMPRIMIBLES" sub={`${Math.round((pool.stats.printable / pool.stats.measured) * 100)}% pasa el umbral`} />
-              <Stat n={pool.hall.length} t="EN EL SALÓN" sub="repartido entre las 8 familias" />
+              <Stat n={pool.hall.length} t="EN EL SALÓN" sub="repartido entre algoritmos y modos de cruce" />
               <Stat n={SHOW_COUNT} t="A LA VISTA" sub={nextDate ? `cambian ${ROTATE_STEP} el ${nextDate}` : undefined} />
             </div>
 
@@ -259,7 +303,7 @@ export default function LaboratorioPage() {
                   pasantes y variedad de orientaciones de la superficie. Es una heurística, no un juicio de belleza.
                 </p>
                 <p style={{ margin: 0 }}>
-                  <strong style={{ color: '#fff' }}>Diversidad:</strong> cada familia aporta la misma cantidad de piezas. Dentro de una familia
+                  <strong style={{ color: '#fff' }}>Diversidad:</strong> cada algoritmo aporta la misma cantidad de piezas, y cada modo de cruce un cupo 1,5 veces mayor (es donde emerge lo nuevo). Dentro de un grupo
                   se elige primero la mejor y después, una a una, la que más se aleja de las ya elegidas (complejidad, agujeros, alargamiento,
                   voladizos), ponderada por su calidad. Un primer intento con celdas tipo MAP-Elites dejaba el salón dominado por dos familias.
                   Ninguna pieza se guarda como archivo: cada una es una receta (algoritmo + semilla) que se regenera casi idéntica en tu navegador.
