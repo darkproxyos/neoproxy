@@ -8,6 +8,7 @@ import { clusters } from '@/components/knowledge/entries'
 import type { SpecimenViewerHandle } from '@/components/proxygenesis/SpecimenViewer'
 import AudioReactivePlayer from '@/components/proxygenesis/AudioReactivePlayer'
 
+import LabWeek from '@/components/especimenes/LabWeek'
 const SpecimenViewer = dynamic(() => import('@/components/proxygenesis/SpecimenViewer'), { ssr: false })
 
 const mono = "'Space Mono', monospace"
@@ -87,15 +88,14 @@ export default function EspecimenesPage() {
           <Link href="/lab/proxygenesis" className="press" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
             → Generar los tuyos en el laboratorio
           </Link>
-          <Link href="/especimenes/laboratorio" className="press" style={{ fontSize: 10, color: '#00ffcc', letterSpacing: 1 }}>
-            → 150 formas experimentales listas para imprimir (rotan cada semana)
-          </Link>
         </div>
 
         <p style={{ fontSize: 10, color: `${AUTOORG}99`, letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 680, marginTop: 20, fontStyle: 'italic' }}>
           Cada espécimen trae su propia lectura — qué pensador real conecta con el algoritmo y los
           parámetros de ESA corrida en particular, no un texto genérico pegado a todos. Abrí uno para verla.
         </p>
+
+        <LabWeek />
 
         {/* Stats bar + filtros */}
         <div style={{
