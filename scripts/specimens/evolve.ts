@@ -18,7 +18,8 @@ import { resolveGenome, genomeId, type Genome } from '../../lib/specimens/genome
 import { sampleGrid, polygonize } from '../../lib/specimens/polygonize'
 import { analyze, orientForPrint, DEFAULT_SIZE_MM, type Metrics } from '../../lib/specimens/analyze'
 import { descriptor, HALL_MIN_PRINT } from '../../lib/specimens/select'
-import { pickSurvivors, breed, fillSlots, type Member, type Offspring, type Kind } from '../../lib/specimens/evolution'
+import { pickSurvivors, breed, fillSlots, coverage, type Member, type Offspring, type Kind, type ArchiveEntry } from '../../lib/specimens/evolution'
+import { inheritedTaste, type Votes } from '../../lib/specimens/votes'
 import { renderMesh } from './raster'
 
 const arg = (n: string, d: number) => { const i = process.argv.indexOf(`--${n}`); return i >= 0 ? Number(process.argv[i + 1]) : d }
@@ -27,12 +28,14 @@ const OF = arg('of', 4)
 const RES = 56, THUMB_RES = 112, T = 256
 const OUT = path.join(process.cwd(), 'public/proxygenesis')
 const POOL = path.join(OUT, 'pool.json')
+const ARCHIVE = path.join(OUT, 'archive.json')
 const THUMBS = path.join(OUT, 'pool-thumbs')
 const tmp = (name: string) => path.join(os.tmpdir(), `np-evo-${name}.json`)
 const hex = (h: string): [number, number, number] => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]
 const r3 = (v: number) => Math.round(v * 1000) / 1000
 
 type Item = {
+  nov?: number
   id: string; family: Family; seed: number; g?: Genome; gen?: number; kind?: Kind; parents?: string[]
   m: ReturnType<typeof compact>; d?: number[]
 }
@@ -58,6 +61,27 @@ const readPool = () => JSON.parse(fs.readFileSync(POOL, 'utf8'))
 const readTmp = (name: string) => JSON.parse(fs.readFileSync(tmp(name), 'utf8'))
 const writeTmp = (name: string, v: unknown) => fs.writeFileSync(tmp(name), JSON.stringify(v))
 
+const readArchive = (): ArchiveEntry[] => (fs.existsSync(ARCHIVE) ? JSON.parse(fs.readFileSync(ARCHIVE, 'utf8')).entries : [])
+const kcode = (k: Kind): 'n' | 'm' | 'c' => (k === 'mutante' ? 'm' : k === 'cruce' ? 'c' : 'n')
+
+// Votos de los visitantes: se leen del sitio publicado (conteos agregados, sin
+// datos personales). Si no hay red o la ruta no responde, la generación corre
+// sin votos (el gusto es neutral), y se avisa; nunca se inventan.
+async function loadVotes(): Promise<Record<string, Votes>> {
+  const url = process.env.VOTES_URL ?? 'https://neoproxy.art/api/specimens/votes?all=1'
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const j = await res.json()
+    if (!j.ok) throw new Error('respuesta sin ok')
+    console.log(`votos leídos de ${url}: ${Object.keys(j.votes).length} piezas con votos`)
+    return j.votes
+  } catch (e) {
+    console.log(`SIN VOTOS (${(e as Error).message}): la selección corre con gusto neutral`)
+    return {}
+  }
+}
+
 // ---- etapas --------------------------------------------------------------------
 
 function stageMeasure(k: number) {
@@ -72,10 +96,11 @@ function stageMeasure(k: number) {
   console.log(`medición ${k}: ${Object.keys(out).length} miembros`)
 }
 
-function stageSelect() {
+async function stageSelect() {
   const pool = readPool()
   const dMap: Record<string, number[] | null> = {}
   for (let k = 0; k < OF; k++) Object.assign(dMap, readTmp(`pop-${k}`))
+  const votes = await loadVotes()
   const G = (pool.generation ?? 0) + 1
   const members: Member[] = []
   const items: Record<string, Item> = {}
@@ -84,7 +109,7 @@ function stageSelect() {
     const d = it.d ?? dMap[it.id]
     if (!d) { lost++; continue }   // ya no se regenera igual: no puede sobrevivir
     items[it.id] = { ...it, d }
-    members.push({ id: it.id, g: genomeOf(it), gen: it.gen ?? 0, kind: it.kind ?? 'nacida', parents: it.parents, fit: it.m.fitness, printScore: it.m.printScore, d })
+    members.push({ id: it.id, g: genomeOf(it), gen: it.gen ?? 0, kind: it.kind ?? 'nacida', parents: it.parents, fit: it.m.fitness, printScore: it.m.printScore, d, votes: votes[it.id] })
   }
   const hallSize = pool.hall.length
   const survN = Math.round(hallSize * 0.55)
@@ -92,8 +117,8 @@ function stageSelect() {
   const slots = hallSize - survivors.length
   const offspring = breed(survivors, G, slots * 3)
   const dead = members.filter((m) => !survivors.includes(m)).map((m) => m.id)
-  writeTmp('state', { G, hallSize, slots, survivors, items, offspring, dead, lost })
-  console.log(`generación ${G}: ${members.length} vivos (${lost} perdidos) -> sobreviven ${survivors.length}, desaparecen ${dead.length}; se crían ${offspring.length} hijas para ${slots} vacantes`)
+  writeTmp('state', { G, hallSize, slots, survivors, items, offspring, dead, lost, votes })
+  console.log(`archivo histórico: ${readArchive().length} piezas | generación ${G}: ${members.length} vivos (${lost} perdidos) -> sobreviven ${survivors.length}, desaparecen ${dead.length}; se crían ${offspring.length} hijas para ${slots} vacantes`)
 }
 
 function stageOffspring(k: number) {
@@ -103,7 +128,8 @@ function stageOffspring(k: number) {
     if (i % OF !== k) return
     const res = evaluateGenome(o.g)
     if (!res) return
-    out.push({ id: genomeId(o.g), g: o.g, gen: st.G, kind: o.kind, parents: o.parents, fit: res.metrics.fitness, printScore: res.metrics.printScore, d: descriptor(res.metrics).map(r3), m: compact(res.metrics) })
+    const tf = inheritedTaste((o.parents ?? []).map((pid) => st.votes[pid]))
+    out.push({ id: genomeId(o.g), g: o.g, gen: st.G, kind: o.kind, parents: o.parents, tf, fit: res.metrics.fitness, printScore: res.metrics.printScore, d: descriptor(res.metrics).map(r3), m: compact(res.metrics) })
   })
   writeTmp(`off-${k}`, out)
   console.log(`hijas ${k}: ${out.length} medidas`)
@@ -132,7 +158,11 @@ function stageMerge() {
     if (c.printScore < HALL_MIN_PRINT || seen.has(c.id)) continue
     seen.add(c.id); cands.push(c)
   }
-  const born = fillSlots(survivors, cands, st.slots) as (Member & { m: ReturnType<typeof compact> })[]
+  const archive = readArchive()
+  const born = fillSlots(survivors, cands, st.slots, archive) as (Member & { m: ReturnType<typeof compact> })[]
+  // novedad histórica: distancia a lo más parecido que existió alguna vez (o vive)
+  const refs = [...archive, ...survivors]
+  const novelty = (d: number[]) => Math.min(...refs.map((r) => Math.sqrt(r.d.reduce((a, v, i) => a + (v - d[i]) ** 2, 0))))
 
   const kept: Item[] = survivors.map((s) => {
     const it: Item = st.items[s.id]
@@ -140,9 +170,18 @@ function stageMerge() {
   })
   const fresh: Item[] = born.map((b) => ({
     id: b.id, family: b.g.f, seed: b.g.s, ...(b.g.m || b.g.x ? { g: b.g } : {}),
-    gen: G, kind: b.kind, ...(b.parents ? { parents: b.parents } : {}), m: b.m, d: b.d,
+    gen: G, kind: b.kind, ...(b.parents ? { parents: b.parents } : {}), m: b.m, d: b.d, nov: r3(novelty(b.d)),
   }))
   const hall = interleave([...kept, ...fresh])
+
+  // archivo: se cierra a las muertas, se agregan las nacidas (y las vivas que faltaran)
+  const deadSet = new Set<string>(st.dead)
+  const known = new Set(archive.map((a) => a.id))
+  const updated: ArchiveEntry[] = archive.map((a) => (deadSet.has(a.id) && a.x === undefined ? { ...a, x: G } : a))
+  for (const it of [...kept, ...fresh]) if (!known.has(it.id)) {
+    updated.push({ id: it.id, f: it.family, b: it.gen ?? 0, k: kcode(it.kind ?? 'nacida'), ...(it.parents ? { p: it.parents } : {}), d: it.d!, s: it.m.fitness, ...(it.nov !== undefined ? { nov: it.nov } : {}) })
+  }
+  fs.writeFileSync(ARCHIVE, JSON.stringify({ version: 1, generation: G, entries: updated }))
 
   const pool = readPool()
   const count = (k: Kind) => fresh.filter((f) => f.kind === k).length
@@ -151,6 +190,7 @@ function stageMerge() {
   pool.history = [...(pool.history ?? []), {
     gen: G, date: pool.generatedAt, hall: hall.length, survivors: kept.length, died: st.dead.length + st.lost,
     born: { mutante: count('mutante'), cruce: count('cruce'), nacida: count('nacida') }, measured,
+    archive: updated.length, coverage: coverage(updated), novelty: r3(fresh.reduce((a, f) => a + (f.nov ?? 0), 0) / Math.max(1, fresh.length)),
   }]
   for (const f of Object.keys(pool.stats.byFamily)) pool.stats.byFamily[f].hall = hall.filter((h) => h.family === f).length
   pool.hall = hall
@@ -182,7 +222,35 @@ async function stageThumbs(k: number) {
   console.log(`miniaturas ${k}: ${n}`)
 }
 
+// Reconstruye el archivo histórico la primera vez (a partir del salón actual y de
+// la población anterior, si se indica con --gen0 <pool.json>).
+function stageBootstrap() {
+  if (fs.existsSync(ARCHIVE)) { console.log('el archivo histórico ya existe'); return }
+  const pool = readPool()
+  const gi = process.argv.indexOf('--gen0')
+  const entries: ArchiveEntry[] = []
+  const seen = new Set<string>()
+  if (gi >= 0) {
+    const gen0 = JSON.parse(fs.readFileSync(process.argv[gi + 1], 'utf8'))
+    const dMap: Record<string, number[] | null> = {}
+    for (let k = 0; k < OF; k++) Object.assign(dMap, readTmp(`pop-${k}`))
+    const alive = new Set((pool.hall as Item[]).map((h) => h.id))
+    for (const it of gen0.hall as Item[]) {
+      const d = it.d ?? dMap[it.id]
+      if (!d) continue
+      seen.add(it.id)
+      entries.push({ id: it.id, f: it.family, b: 0, ...(alive.has(it.id) ? {} : { x: pool.generation ?? 1 }), k: 'n', d, s: it.m.fitness })
+    }
+  }
+  for (const it of pool.hall as Item[]) if (!seen.has(it.id) && it.d) {
+    entries.push({ id: it.id, f: it.family, b: it.gen ?? 0, k: kcode(it.kind ?? 'nacida'), ...(it.parents ? { p: it.parents } : {}), d: it.d, s: it.m.fitness })
+  }
+  fs.writeFileSync(ARCHIVE, JSON.stringify({ version: 1, generation: pool.generation ?? 0, entries }))
+  console.log(`archivo histórico creado: ${entries.length} piezas (${entries.filter((e) => e.x !== undefined).length} ya desaparecidas), cobertura ${coverage(entries)} celdas`)
+}
+
 async function main() {
+  if (has('bootstrap')) return stageBootstrap()
   if (has('measure')) return stageMeasure(arg('measure', 0))
   if (has('select')) return stageSelect()
   if (has('offspring')) return stageOffspring(arg('offspring', 0))

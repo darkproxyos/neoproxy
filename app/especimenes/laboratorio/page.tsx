@@ -10,6 +10,8 @@ import { THINKERS } from '@/components/proxygenesis/curated'
 import { SHOW_COUNT, ROTATE_STEP, weekIndex, nextRotationAt, visibleIndices } from '@/lib/specimens/select'
 import { generateInWorker, type ClientResult } from '@/lib/specimens/client'
 import { resolveGenome, type Genome } from '@/lib/specimens/genome'
+import type { Votes } from '@/lib/specimens/votes'
+import { getVoterId } from '@/components/proxyverse/identity'
 
 const PoolViewer = dynamic(() => import('@/components/especimenes/PoolViewer'), { ssr: false })
 
@@ -43,7 +45,10 @@ type Pool = {
 const pct = (v: number) => `${Math.round(v * 100)}%`
 // piezas de obra: lo que más se parece a un objeto terminado
 const OBRAS = new Set<Family>(['vessel', 'filigree', 'flow', 'hilbert', 'reaction'])
-const inFilter = (it: PoolItem, f: Family | 'all' | 'obras') => f === 'all' || (f === 'obras' ? OBRAS.has(it.family) : it.family === f)
+type FilterKey = Family | 'all' | 'obras' | 'queridas'
+const loved = (v?: Votes) => !!v && v.l > v.d
+const inFilter = (it: PoolItem, f: FilterKey, votes: Record<string, Votes>) =>
+  f === 'all' || (f === 'obras' ? OBRAS.has(it.family) : f === 'queridas' ? loved(votes[it.id]) : it.family === f)
 const label = (it: PoolItem) => `${FAMILY_LABEL[it.family]} · ${it.id.split('-')[1].toUpperCase()}`
 
 function Stat({ n, t, sub }: { n: string | number; t: string; sub?: string }) {
@@ -105,6 +110,21 @@ function Dna({ item, color }: { item: PoolItem; color: string }) {
   )
 }
 
+function VoteBar({ votes, my, onVote, color }: { votes?: Votes; my: number; onVote: (v: number) => void; color: string }) {
+  const btn = (v: 1 | -1, text: string, n: number) => (
+    <button onClick={() => onVote(my === v ? 0 : v)} className="press" aria-pressed={my === v}
+      style={{ flex: 1, minHeight: 42, background: my === v ? `${color}2a` : 'transparent', border: `1px solid ${my === v ? color : '#4a6080'}`, color: my === v ? color : '#8fa8c4', fontFamily: mono, fontSize: 10, letterSpacing: 1.5, cursor: 'pointer' }}>
+      {text} · {n}
+    </button>
+  )
+  return (
+    <div style={{ margin: '0 0 14px' }}>
+      <div style={{ fontSize: 9, letterSpacing: 2.5, color: '#6f86a3', marginBottom: 6 }}>TU GUSTO CUENTA: LA PRÓXIMA GENERACIÓN LO LEE</div>
+      <div style={{ display: 'flex', gap: 8 }}>{btn(1, 'ME GUSTA', votes?.l ?? 0)}{btn(-1, 'NO ME GUSTA', votes?.d ?? 0)}</div>
+    </div>
+  )
+}
+
 function Lineage({ item, pool, color, onOpen }: { item: PoolItem; pool: Pool; color: string; onOpen: (id: string) => void }) {
   const born = item.gen ?? 0, now = pool.generation ?? 0
   const kind = item.kind ?? 'nacida'
@@ -136,7 +156,7 @@ function Lineage({ item, pool, color, onOpen }: { item: PoolItem; pool: Pool; co
   )
 }
 
-function SpecimenModal({ item, pool, onClose, onOpen }: { item: PoolItem; pool: Pool; onClose: () => void; onOpen: (id: string) => void }) {
+function SpecimenModal({ item, pool, onClose, onOpen, votes, my, onVote }: { item: PoolItem; pool: Pool; onClose: () => void; onOpen: (id: string) => void; votes: Record<string, Votes> | null; my: number; onVote: (v: number) => void }) {
   const [gen, setGen] = useState<{ status: 'loading' | 'ready' | 'error'; data?: ClientResult; error?: string }>({ status: 'loading' })
   const [dl, setDl] = useState<'idle' | 'busy' | 'error'>('idle')
   const [copied, setCopied] = useState(false)
@@ -215,6 +235,7 @@ function SpecimenModal({ item, pool, onClose, onOpen }: { item: PoolItem; pool: 
               style={{ width: 40, height: 40, background: 'transparent', border: '1px solid #4a6080', color: '#c8daf0', cursor: 'pointer', fontSize: 16 }}>✕</button>
           </div>
           <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb4cc', margin: '14px 0 14px' }}>{FAMILY_BLURB[item.family]}</p>
+          {votes && <VoteBar votes={votes[item.id]} my={my} onVote={onVote} color={color} />}
           <Lineage item={item} pool={pool} color={color} onOpen={onOpen} />
           <Dna item={item} color={color} />
 
@@ -257,9 +278,33 @@ export default function LaboratorioPage() {
   const [error, setError] = useState(false)
   const [now, setNow] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
-  const [filter, setFilter] = useState<Family | 'all' | 'obras'>('all')
+  const [filter, setFilter] = useState<FilterKey>('all')
   const [open, setOpen] = useState<PoolItem | null>(null)
   const [how, setHow] = useState(false)
+  const [votes, setVotes] = useState<Record<string, Votes>>({})
+  const [votesOk, setVotesOk] = useState(false)
+  const [mine, setMine] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    try { setMine(JSON.parse(localStorage.getItem('np-spec-votes') ?? '{}')) } catch { /* sin almacenamiento */ }
+    fetch('/api/specimens/votes?all=1').then((r) => (r.ok ? r.json() : Promise.reject())).then((j) => { if (j.ok) { setVotes(j.votes); setVotesOk(true) } }).catch(() => { /* sin votos: la página funciona igual */ })
+  }, [])
+
+  const saveMine = (m: Record<string, number>) => { try { localStorage.setItem('np-spec-votes', JSON.stringify(m)) } catch { /* idem */ } }
+  const castVote = useCallback(async (piece: string, v: number) => {
+    const prev = mine[piece] ?? 0
+    const next = { ...mine }
+    if (v === 0) delete next[piece]; else next[piece] = v
+    setMine(next); saveMine(next)
+    try {
+      const res = await fetch('/api/specimens/votes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ piece, voter: getVoterId(), v }) })
+      const j = await res.json()
+      if (!j.ok) throw new Error('voto rechazado')
+      setVotes((vs) => ({ ...vs, [piece]: j.votes }))
+    } catch {
+      setMine((m) => { const r = { ...m }; if (prev === 0) delete r[piece]; else r[piece] = prev; saveMine(r); return r })
+    }
+  }, [mine])
 
   useEffect(() => {
     setNow(Date.now())
@@ -280,7 +325,7 @@ export default function LaboratorioPage() {
     if (showAll) return pool.hall
     return visibleIndices(pool.hall.length, week).map((i) => pool.hall[i])
   }, [pool, week, showAll])
-  const shown = useMemo(() => visible.filter((it) => inFilter(it, filter)), [visible, filter])
+  const shown = useMemo(() => visible.filter((it) => inFilter(it, filter, votes)), [visible, filter, votes])
   const counts = useMemo(() => {
     const c: Record<string, number> = {}
     visible.forEach((it) => { c[it.family] = (c[it.family] ?? 0) + 1 })
@@ -303,6 +348,9 @@ export default function LaboratorioPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 100px' }}>
         <Link href="/especimenes" className="press" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
           ← VOLVER A ESPECÍMENES
+        </Link>
+        <Link href="/especimenes/linaje" className="press" style={{ fontSize: 9, letterSpacing: 3, color: ACCENT, textDecoration: 'none', display: 'inline-block', margin: '0 0 28px 28px' }}>
+          VER EL ÁRBOL GENEALÓGICO →
         </Link>
         <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}99`, marginBottom: 14 }}>NPX-ESP-LAB // SELECCIÓN POR CALIDAD Y DIVERSIDAD</div>
         <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 42px)', letterSpacing: 4, color: ACCENT, textShadow: `0 0 40px ${ACCENT}44`, margin: '0 0 14px', lineHeight: 1.1 }}>
@@ -360,14 +408,14 @@ export default function LaboratorioPage() {
             )}
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '8px 0 22px' }}>
-              {(['all', 'obras', ...FAMILIES] as const).map((f) => {
+              {(['all', 'obras', ...(votesOk ? ['queridas' as const] : []), ...FAMILIES] as const).map((f) => {
                 const active = filter === f
-                const c = f === 'all' ? ACCENT : f === 'obras' ? '#ffe9a8' : FAMILY_COLOR[f]
-                const n = f === 'all' ? visible.length : f === 'obras' ? visible.filter((it) => OBRAS.has(it.family)).length : counts[f] ?? 0
+                const c = f === 'all' ? ACCENT : f === 'obras' ? '#ffe9a8' : f === 'queridas' ? '#ff9ecf' : FAMILY_COLOR[f]
+                const n = f === 'all' ? visible.length : f === 'obras' ? visible.filter((it) => OBRAS.has(it.family)).length : f === 'queridas' ? visible.filter((it) => loved(votes[it.id])).length : counts[f] ?? 0
                 return (
                   <button key={f} onClick={() => setFilter(f)} className="press" aria-pressed={active}
                     style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '9px 12px', minHeight: 40, cursor: 'pointer', background: active ? `${c}2a` : 'transparent', border: `1px solid ${active ? c : '#4a6080'}`, color: active ? c : '#8fa8c4' }}>
-                    {f === 'all' ? 'TODAS' : f === 'obras' ? 'OBRAS' : FAMILY_LABEL[f]} · {n}
+                    {f === 'all' ? 'TODAS' : f === 'obras' ? 'OBRAS' : f === 'queridas' ? '♥ QUERIDAS' : FAMILY_LABEL[f]} · {n}
                   </button>
                 )
               })}
@@ -387,7 +435,7 @@ export default function LaboratorioPage() {
                     <img src={`/proxygenesis/pool-thumbs/${it.id}.webp`} alt={`${FAMILY_LABEL[it.family]}, imprimibilidad ${pct(it.m.printScore)}`} loading="lazy" width={256} height={256}
                       style={{ display: 'block', width: '100%', height: 'auto', aspectRatio: '1 / 1', background: '#070a10' }} />
                     <div style={{ padding: '10px 12px 12px' }}>
-                      <div style={{ fontSize: 10, letterSpacing: 1.5, color: c }}>{it.kind === 'mutante' ? '◈ ' : it.kind === 'cruce' ? '✕ ' : ''}{FAMILY_LABEL[it.family]}{pool.generation && it.gen === pool.generation ? <span style={{ color: '#6fd89b' }}> · NUEVA</span> : null}</div>
+                      <div style={{ fontSize: 10, letterSpacing: 1.5, color: c }}>{it.kind === 'mutante' ? '◈ ' : it.kind === 'cruce' ? '✕ ' : ''}{FAMILY_LABEL[it.family]}{pool.generation && it.gen === pool.generation ? <span style={{ color: '#6fd89b' }}> · NUEVA</span> : null}{(votes[it.id]?.l ?? 0) > 0 ? <span style={{ color: '#ff9ecf' }}> · ♥ {votes[it.id].l}</span> : null}</div>
                       <div style={{ fontSize: 9.5, color: '#8fa8c4', marginTop: 5, lineHeight: 1.6 }}>
                         imprimible {pct(it.m.printScore)} · {it.m.material}
                       </div>
@@ -401,7 +449,7 @@ export default function LaboratorioPage() {
         )}
       </div>
 
-      {open && pool && <SpecimenModal item={open} pool={pool} onClose={() => openItem(null)} onOpen={(id) => { const hit = pool.hall.find((x) => x.id === id); if (hit) openItem(hit) }} />}
+      {open && pool && <SpecimenModal item={open} pool={pool} votes={votesOk ? votes : null} my={mine[open.id] ?? 0} onVote={(v) => castVote(open.id, v)} onClose={() => openItem(null)} onOpen={(id) => { const hit = pool.hall.find((x) => x.id === id); if (hit) openItem(hit) }} />}
 
       <style>{`
         @media (max-width: 760px) { .lab-modal { grid-template-columns: 1fr !important; } }

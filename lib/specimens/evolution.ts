@@ -14,6 +14,7 @@ import { mulberry32, range, pick, type Rng } from './rng'
 import { PURE_FAMILIES, type Family } from './families'
 import { dist } from './select'
 import { resolveGenome, leafCount, MAX_MUTATIONS, MAX_LEAVES, type Genome, type Mut } from './genome'
+import { tasteFactor, type Votes } from './votes'
 
 export type Kind = 'nacida' | 'mutante' | 'cruce'
 
@@ -26,7 +27,27 @@ export type Member = {
   fit: number          // fitness medido (imprimibilidad x riqueza)
   printScore: number
   d: number[]          // descriptor de forma (ver select.descriptor)
+  votes?: Votes        // votos de los visitantes (solo piezas ya vivas)
+  tf?: number          // gusto heredado de las madres (solo hijas)
 }
+
+// Archivo histórico: todo lo que alguna vez existió, vivo o muerto. Sirve para
+// medir novedad contra TODA la historia y para dibujar el árbol genealógico.
+export type ArchiveEntry = {
+  id: string; f: Family
+  b: number            // generación en que nació
+  x?: number           // generación en que desapareció (ausente si sigue viva)
+  k: 'n' | 'm' | 'c'   // nacida, mutante, cruce
+  p?: string[]         // madres
+  d: number[]          // descriptor de forma
+  s: number            // fitness al nacer
+  nov?: number         // novedad histórica al nacer
+}
+
+// Celdas de una grilla de 4 divisiones por dimensión: cuántas regiones distintas
+// del espacio de formas se han ocupado alguna vez (cobertura).
+export const coverage = (entries: { d: number[] }[]) =>
+  new Set(entries.map((e) => e.d.map((v) => Math.min(3, Math.max(0, Math.floor(v * 4)))).join(''))).size
 
 // Reparto de las nacidas nuevas: más de lo que da obra, menos de lo flojo.
 export const GEN_SHARE: Record<string, number> = {
@@ -49,15 +70,20 @@ const MIN_GAP = 0.08
 
 // El desgaste por edad evita que un linaje se eternice: arte efímero.
 const AGE_DECAY = 0.08
-export const adjusted = (m: Member, nowGen: number) => m.fit * Math.max(0.35, 1 - AGE_DECAY * Math.max(0, nowGen - 1 - m.gen))
+export const adjusted = (m: Member, nowGen: number) => m.fit * tasteFactor(m.votes) * Math.max(0.35, 1 - AGE_DECAY * Math.max(0, nowGen - 1 - m.gen))
 
 // Selección de máxima distancia ponderada por aptitud, empezando desde un
 // conjunto ya elegido (vacío para elegir sobrevivientes; los sobrevivientes
 // para elegir hijas).
 function farthest<T extends { d: number[] }>(
-  items: T[], fitOf: (t: T) => number, chosen: { d: number[] }[], count: number, gap = 0,
+  items: T[], fitOf: (t: T) => number, chosen: { d: number[] }[], count: number, gap = 0, archive: { d: number[] }[] = [],
 ): T[] {
-  const minD = items.map((it) => (chosen.length ? Math.min(...chosen.map((c) => dist(c.d, it.d))) : 1))
+  // la historia pesa algo menos que el presente: estar cerca de algo que ya
+  // existió resta, pero no tanto como estar cerca de algo vivo
+  const minD = items.map((it) => Math.min(
+    chosen.length ? Math.min(...chosen.map((c) => dist(c.d, it.d))) : 1,
+    archive.length ? 1.25 * Math.min(...archive.map((c) => dist(c.d, it.d))) : Infinity,
+  ))
   const taken = new Array<boolean>(items.length).fill(false)
   const out: T[] = []
   while (out.length < count) {
@@ -85,8 +111,8 @@ export function pickSurvivors(pop: Member[], n: number, nowGen: number): Member[
   return [first, ...rest]
 }
 
-export function fillSlots(survivors: Member[], cands: Member[], slots: number): Member[] {
-  return farthest(cands, (m) => m.fit, survivors, slots, MIN_GAP)
+export function fillSlots(survivors: Member[], cands: Member[], slots: number, archive: { d: number[] }[] = []): Member[] {
+  return farthest(cands, (m) => m.fit * (m.tf ?? 1), survivors, slots, MIN_GAP, archive)
 }
 
 // ---- cría --------------------------------------------------------------------

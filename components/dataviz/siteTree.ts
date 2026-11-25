@@ -70,6 +70,7 @@ export const SITE_TREE: SiteNode = {
       name: 'ESPECÍMENES', href: '/especimenes',
       children: [
         { name: 'LABORATORIO', href: '/especimenes/laboratorio' },
+        { name: 'LINAJE', href: '/especimenes/linaje' },
       ],
     },
     {
