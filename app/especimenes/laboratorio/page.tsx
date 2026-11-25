@@ -36,6 +36,9 @@ type Pool = {
 }
 
 const pct = (v: number) => `${Math.round(v * 100)}%`
+// piezas de obra: lo que más se parece a un objeto terminado
+const OBRAS = new Set<Family>(['vessel', 'filigree', 'flow', 'hilbert', 'reaction'])
+const inFilter = (it: PoolItem, f: Family | 'all' | 'obras') => f === 'all' || (f === 'obras' ? OBRAS.has(it.family) : it.family === f)
 const label = (it: PoolItem) => `${FAMILY_LABEL[it.family]} · ${it.id.split('-')[1].toUpperCase()}`
 
 function Stat({ n, t, sub }: { n: string | number; t: string; sub?: string }) {
@@ -216,7 +219,7 @@ export default function LaboratorioPage() {
   const [error, setError] = useState(false)
   const [now, setNow] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
-  const [filter, setFilter] = useState<Family | 'all'>('all')
+  const [filter, setFilter] = useState<Family | 'all' | 'obras'>('all')
   const [open, setOpen] = useState<PoolItem | null>(null)
   const [how, setHow] = useState(false)
 
@@ -239,7 +242,7 @@ export default function LaboratorioPage() {
     if (showAll) return pool.hall
     return visibleIndices(pool.hall.length, week).map((i) => pool.hall[i])
   }, [pool, week, showAll])
-  const shown = useMemo(() => visible.filter((it) => filter === 'all' || it.family === filter), [visible, filter])
+  const shown = useMemo(() => visible.filter((it) => inFilter(it, filter)), [visible, filter])
   const counts = useMemo(() => {
     const c: Record<string, number> = {}
     visible.forEach((it) => { c[it.family] = (c[it.family] ?? 0) + 1 })
@@ -312,14 +315,14 @@ export default function LaboratorioPage() {
             )}
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '8px 0 22px' }}>
-              {(['all', ...FAMILIES] as const).map((f) => {
+              {(['all', 'obras', ...FAMILIES] as const).map((f) => {
                 const active = filter === f
-                const c = f === 'all' ? ACCENT : FAMILY_COLOR[f]
-                const n = f === 'all' ? visible.length : counts[f] ?? 0
+                const c = f === 'all' ? ACCENT : f === 'obras' ? '#ffe9a8' : FAMILY_COLOR[f]
+                const n = f === 'all' ? visible.length : f === 'obras' ? visible.filter((it) => OBRAS.has(it.family)).length : counts[f] ?? 0
                 return (
                   <button key={f} onClick={() => setFilter(f)} className="press" aria-pressed={active}
                     style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '9px 12px', minHeight: 40, cursor: 'pointer', background: active ? `${c}2a` : 'transparent', border: `1px solid ${active ? c : '#4a6080'}`, color: active ? c : '#8fa8c4' }}>
-                    {f === 'all' ? 'TODAS' : FAMILY_LABEL[f]} · {n}
+                    {f === 'all' ? 'TODAS' : f === 'obras' ? 'OBRAS' : FAMILY_LABEL[f]} · {n}
                   </button>
                 )
               })}

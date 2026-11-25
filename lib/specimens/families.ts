@@ -46,9 +46,9 @@ export const FAMILIES: readonly Family[] = [...PURE_FAMILIES, 'symbiosis']
 // esta implementación produce.
 export const FAMILY_WEIGHT: Record<Family, number> = {
   tpms: 1, metaballs: 0.4, harmonics: 0.25, superformula: 0.5, twist: 0.8, mandelbulb: 1, voronoi: 1, knot: 1,
-  colonization: 0.8, shell: 0.9, turing: 1, automaton: 0.8, kifs: 1, network: 1, attractor: 1, dla: 0.9, autopoiesis: 1,
-  reaction: 1.4, hilbert: 1.6, phyllotaxis: 0.5, ruffle: 0.35, mandelbox: 0.35, apollonian: 0.25, flow: 1.6, vessel: 2.2, filigree: 2,
-  symbiosis: 1.6,
+  colonization: 0.8, shell: 0.9, turing: 1, automaton: 0.8, kifs: 1, network: 1.4, attractor: 1.3, dla: 1.8, autopoiesis: 1.2,
+  reaction: 1.8, hilbert: 1.8, phyllotaxis: 0.5, ruffle: 0.35, mandelbox: 0.35, apollonian: 0.25, flow: 2, vessel: 1.6, filigree: 1.6,
+  symbiosis: 2.2,
 }
 
 // Pesos de MUESTREO: deciden qué padres elige un cruce al derivar la receta de
