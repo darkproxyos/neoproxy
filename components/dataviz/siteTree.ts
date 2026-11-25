@@ -22,6 +22,7 @@ export const SITE_BRANCH_COLOR: Record<string, string> = {
   'SUSTRATO': '#c87533',
   'PRIMER CUERPO': '#8aa0c9',
   'ESPECÍMENES': '#ff8c1a',
+  'GEOMETRÍAS': '#9fe8ff',
   'PROXYGAMES': '#00d4ff',
   'REALIDAD AUMENTADA': '#b400ff',
   'EXPERIMENTAL': '#cc0000',
@@ -71,6 +72,19 @@ export const SITE_TREE: SiteNode = {
       children: [
         { name: 'LABORATORIO', href: '/especimenes/laboratorio' },
         { name: 'LINAJE', href: '/especimenes/linaje' },
+      ],
+    },
+    {
+      name: 'GEOMETRÍAS', href: '/geometrias',
+      children: [
+        { name: 'POLIEDROS DE CONWAY', href: '/geometrias/conway' },
+        { name: 'POLITOPOS 4D', href: '/geometrias/polytope' },
+        { name: 'FIBRACIÓN DE HOPF', href: '/geometrias/hopf' },
+        { name: 'SUPERFICIES', href: '/geometrias/surface' },
+        { name: 'ORBITALES', href: '/geometrias/orbital' },
+        { name: 'CRISTALES', href: '/geometrias/crystal' },
+        { name: 'RADIOLARIOS', href: '/geometrias/radiolarian' },
+        { name: 'INTERFERENCIA', href: '/geometrias/interference' },
       ],
     },
     {

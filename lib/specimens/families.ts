@@ -21,6 +21,11 @@ import {
   sampleRuffle, ruffleField, sampleMandelbox, mandelboxField, sampleApollonian, apollonianField,
   sampleFlow, flowField, sampleVessel, vesselField, sampleFiligree, filigreeField,
 } from './fields-art'
+import {
+  sampleCrystal, crystalField, sampleRadiolarian, radiolarianField, sampleConway, conwayField,
+  samplePolytope, polytopeField, sampleSurface, surfaceField, sampleHopf, hopfField,
+  sampleOrbital, orbitalField, sampleInterference, interferenceField,
+} from './fields-geo'
 import { sampleSymbiosis, symbiosisField } from './symbiosis'
 
 export type Family =
@@ -29,7 +34,14 @@ export type Family =
   | 'colonization' | 'shell' | 'turing' | 'automaton' | 'kifs'
   | 'network' | 'attractor' | 'dla' | 'autopoiesis'
   | 'reaction' | 'hilbert' | 'phyllotaxis' | 'ruffle' | 'mandelbox' | 'apollonian' | 'flow' | 'vessel' | 'filigree'
+  | 'crystal' | 'radiolarian' | 'conway' | 'polytope' | 'surface' | 'hopf' | 'orbital' | 'interference'
   | 'symbiosis'
+
+// GEOMETRÍAS: objetos exactos que se exploran a mano (sección /geometrias). No
+// están en PURE_FAMILIES a propósito: no entran al salón ni a la evolución, y así
+// no alteran ninguna receta existente.
+export const GEOMETRY_FAMILIES = ['crystal', 'radiolarian', 'conway', 'polytope', 'surface', 'hopf', 'orbital', 'interference'] as const
+export type GeometryFamily = (typeof GEOMETRY_FAMILIES)[number]
 
 // Algoritmos puros: son los únicos que pueden ser padres de un cruce.
 export const PURE_FAMILIES: readonly Family[] = [
@@ -49,6 +61,7 @@ export const FAMILY_WEIGHT: Record<Family, number> = {
   colonization: 0.8, shell: 0.9, turing: 1, automaton: 0.8, kifs: 1, network: 1.4, attractor: 1.3, dla: 1.8, autopoiesis: 1.2,
   reaction: 1.8, hilbert: 1.8, phyllotaxis: 0.5, ruffle: 0.35, mandelbox: 0.35, apollonian: 0.25, flow: 2, vessel: 1.6, filigree: 1.6,
   symbiosis: 2.2,
+  crystal: 0, radiolarian: 0, conway: 0, polytope: 0, surface: 0, hopf: 0, orbital: 0, interference: 0,
 }
 
 // Pesos de MUESTREO: deciden qué padres elige un cruce al derivar la receta de
@@ -60,6 +73,7 @@ export const PARENT_WEIGHT: Record<Family, number> = {
   colonization: 0.8, shell: 0.9, turing: 1, automaton: 0.8, kifs: 1, network: 1, attractor: 1, dla: 0.9, autopoiesis: 1,
   reaction: 1.4, hilbert: 1.6, phyllotaxis: 0.6, ruffle: 0.5, mandelbox: 0.5, apollonian: 0.4, flow: 1.6, vessel: 2.2, filigree: 2,
   symbiosis: 1.6,
+  crystal: 0, radiolarian: 0, conway: 0, polytope: 0, surface: 0, hopf: 0, orbital: 0, interference: 0,
 }
 
 // Autor (id de THINKERS en components/proxygenesis/curated.ts) de cada familia.
@@ -77,6 +91,7 @@ export const FAMILY_LABEL: Record<Family, string> = {
   network: 'RED', attractor: 'ATRACTOR', dla: 'DLA', autopoiesis: 'AUTOPOIESIS', symbiosis: 'SIMBIOSIS',
   reaction: 'REACCIÓN-DIFUSIÓN', hilbert: 'HILBERT', phyllotaxis: 'FILOTAXIS', ruffle: 'VOLANTES', mandelbox: 'MANDELBOX',
   apollonian: 'APOLONIANA', flow: 'FLUJO', vessel: 'JARRÓN', filigree: 'FILIGRANA',
+  crystal: 'CRISTAL', radiolarian: 'RADIOLARIO', conway: 'POLIEDRO DE CONWAY', polytope: 'POLITOPO 4D', surface: 'SUPERFICIE', hopf: 'HOPF', orbital: 'ORBITAL', interference: 'INTERFERENCIA',
 }
 
 export const FAMILY_COLOR: Record<Family, string> = {
@@ -86,6 +101,7 @@ export const FAMILY_COLOR: Record<Family, string> = {
   network: '#4fffe0', attractor: '#ff7a7a', dla: '#b8e0ff', autopoiesis: '#ffa94d', symbiosis: '#f2f0ff',
   reaction: '#ff8fb1', hilbert: '#59d8ff', phyllotaxis: '#c3ff68', ruffle: '#ff9bdc', mandelbox: '#ff5c5c',
   apollonian: '#ffc15c', flow: '#7cf0ff', vessel: '#e8d5a8', filigree: '#ffe9a8',
+  crystal: '#9fe8ff', radiolarian: '#ffd6a5', conway: '#c9b6ff', polytope: '#8fb8ff', surface: '#ffb3c7', hopf: '#a6ffcb', orbital: '#ffe08a', interference: '#9ad1ff',
 }
 
 export const FAMILY_BLURB: Record<Family, string> = {
@@ -114,6 +130,14 @@ export const FAMILY_BLURB: Record<Family, string> = {
   apollonian: 'Espuma apoloniana: inversiones sucesivas en esferas generan un empaquetamiento infinito de burbujas; la pieza es un trozo tallado de esa espuma.',
   flow: 'Haz de líneas de flujo: cientos de fibras nacen de un disco y siguen un campo sin divergencia con una corriente ascendente y un giro. Se trenzan como una llama o una medusa.',
   vessel: 'Jarrón o lámpara paramétrico: perfil de revolución con vientre y cuello, estrías con giro, costillas, borde y pie; la pared puede calarse (rombos, giroide o espuma de Voronoi).',
+  crystal: 'Cristal con hábito: intersección de planos cuyas normales salen de la simetría de un sistema cristalino (cúbico, hexagonal, tetragonal, trigonal). Las distancias fijan qué caras crecen más; los racimos nacen de una base como en un geoda.',
+  radiolarian: 'Radiolario (Haeckel): cáscaras de red con espinas, una dentro de otra y unidas por puntales. La malla sale de puntos en espiral de Fibonacci unidos a sus vecinos más cercanos.',
+  conway: 'Poliedro de Conway (notación de George Hart): un sólido base y una cadena de operaciones (dual, kis, ambo, truncar, expandir, bisel, join, ortho, meta) aplicadas de derecha a izquierda. El genoma es un texto.',
+  polytope: 'Politopo 4D proyectado: pentacoro, teseracto, 16-celdas, 24-celdas o 600-celdas, girado en las seis direcciones de rotación 4D y proyectado en perspectiva como un marco de tubos.',
+  surface: 'Superficie matemática engrosada: botella de Klein, superficie de Boy, Dini, Enneper, banda de Möbius y la familia catenoide-helicoide, una deformación isométrica real.',
+  hopf: 'Fibración de Hopf: la esfera S³ es una unión de círculos enlazados dos a dos; proyectada estereográficamente da toros anidados de círculos que se enlazan.',
+  orbital: 'Orbitales del átomo de hidrógeno: ψ = R(r)·Y(θ,φ) de uno o varios estados superpuestos. La pieza es el nivel |ψ| = c.',
+  interference: 'Interferencia de ondas: suma de ondas esféricas desde varios focos; la pieza es un nivel de la suma, capas concéntricas que se cruzan.',
   filigree: 'Filigrana: una cáscara fina (esfera, huevo, domo o toro) calada por un patrón de ondas con simetría de mandala y bandas de latitud. Encaje de luz y sombra; los polos quedan macizos.',
   symbiosis: 'Simbiogénesis (Margulis): dos algoritmos se fusionan y nace una forma que ninguno daba solo. Siete modos de cruce; a veces el segundo padre ya es un híbrido.',
 }
@@ -161,6 +185,14 @@ export function sampleRecipe(family: Family, seed: number, depth = 0): Recipe {
     case 'flow': params = sampleFlow(r, base); break
     case 'vessel': params = sampleVessel(r, base); break
     case 'filigree': params = sampleFiligree(r, base); break
+    case 'crystal': params = sampleCrystal(r, base); break
+    case 'radiolarian': params = sampleRadiolarian(r, base); break
+    case 'conway': params = sampleConway(r, base); break
+    case 'polytope': params = samplePolytope(r, base); break
+    case 'surface': params = sampleSurface(r, base); break
+    case 'hopf': params = sampleHopf(r, base); break
+    case 'orbital': params = sampleOrbital(r, base); break
+    case 'interference': params = sampleInterference(r, base); break
     case 'symbiosis': {
       const sym = sampleSymbiosis(r, base, depth, PURE_FAMILIES, sampleRecipe, (f) => PARENT_WEIGHT[f] ** 2)
       return { family, seed, params: sym.params, parents: sym.parents }
@@ -446,6 +478,8 @@ const BUILDERS: Record<Exclude<Family, 'symbiosis'>, (p: Params) => Field> = {
   autopoiesis: autopoiesisField,
   reaction: reactionField, hilbert: hilbertField, phyllotaxis: phyllotaxisField, ruffle: ruffleField,
   mandelbox: mandelboxField, apollonian: apollonianField, flow: flowField, vessel: vesselField, filigree: filigreeField,
+  crystal: crystalField, radiolarian: radiolarianField, conway: conwayField, polytope: polytopeField,
+  surface: surfaceField, hopf: hopfField, orbital: orbitalField, interference: interferenceField,
 }
 
 // Campo de una receta sin el guard final: así lo usan los padres de un cruce.

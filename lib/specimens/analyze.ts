@@ -128,7 +128,7 @@ function keepLargestComponent(mesh: Mesh): { mesh: Mesh; components: number; dro
   }
 }
 
-export function analyze(raw: Mesh, grid: Grid, sizeMm = DEFAULT_SIZE_MM): { mesh: Mesh; metrics: Metrics } | null {
+export function analyze(raw: Mesh, grid: Grid, sizeMm = DEFAULT_SIZE_MM, opts: { minFill?: number } = {}): { mesh: Mesh; metrics: Metrics } | null {
   if (raw.indices.length < 3 * 200) return null
   const { mesh, components, droppedVolumeFrac } = keepLargestComponent(raw)
   const P = mesh.positions, I = mesh.indices
@@ -190,7 +190,7 @@ export function analyze(raw: Mesh, grid: Grid, sizeMm = DEFAULT_SIZE_MM): { mesh
   const maxDim = Math.max(...dims), minDim = Math.min(...dims)
   const mmScale = sizeMm / maxDim
   const bboxVolume = dims[0] * dims[1] * dims[2]
-  if (volume / bboxVolume < 0.015) return null
+  if (volume / bboxVolume < (opts.minFill ?? 0.015)) return null   // marcos de alambre: las geometrías bajan este umbral
 
   // género (Euler) — solo tiene sentido si la malla está cerrada
   const Ecount = edges.size
