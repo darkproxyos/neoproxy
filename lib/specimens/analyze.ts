@@ -128,7 +128,7 @@ function keepLargestComponent(mesh: Mesh): { mesh: Mesh; components: number; dro
   }
 }
 
-export function analyze(raw: Mesh, grid: Grid, sizeMm = DEFAULT_SIZE_MM, opts: { minFill?: number } = {}): { mesh: Mesh; metrics: Metrics } | null {
+export function analyze(raw: Mesh, grid: Grid, sizeMm = DEFAULT_SIZE_MM, opts: { minFill?: number; up?: Up } = {}): { mesh: Mesh; metrics: Metrics } | null {
   if (raw.indices.length < 3 * 200) return null
   const { mesh, components, droppedVolumeFrac } = keepLargestComponent(raw)
   const P = mesh.positions, I = mesh.indices
@@ -199,7 +199,7 @@ export function analyze(raw: Mesh, grid: Grid, sizeMm = DEFAULT_SIZE_MM, opts: {
 
   // orientación de impresión: la que menos voladizo da con base estable
   let best = { up: '+z' as Up, oh: 1, contact: 0, stable: false, score: -1 }
-  for (const up of UPS) {
+  for (const up of opts.up ? [opts.up] : UPS) {
     const u = UP_VEC[up]
     let minH = Infinity, maxH = -Infinity
     for (let i = 0; i < V; i++) {
