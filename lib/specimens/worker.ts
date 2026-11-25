@@ -1,17 +1,17 @@
 /// <reference lib="webworker" />
 import { generateOriented } from './generate'
 import { meshToBinarySTL } from './stl'
-import type { Family } from './families'
+import type { Genome } from './genome'
 
-export type WorkerRequest = { id: number; family: Family; seed: number; res: number; stl: boolean }
+export type WorkerRequest = { id: number; genome: Genome; res: number; stl: boolean }
 export type WorkerResponse =
   | { id: number; ok: true; positions: Float32Array; indices: Uint32Array; metrics: unknown; stl?: ArrayBuffer }
   | { id: number; ok: false; error: string }
 
 self.onmessage = (e: MessageEvent<WorkerRequest>) => {
-  const { id, family, seed, res, stl } = e.data
+  const { id, genome, res, stl } = e.data
   try {
-    const g = generateOriented(family, seed, res)
+    const g = generateOriented(genome, res)
     if (!g) {
       ;(self as unknown as Worker).postMessage({ id, ok: false, error: 'La receta no produjo un sólido imprimible.' } satisfies WorkerResponse)
       return
