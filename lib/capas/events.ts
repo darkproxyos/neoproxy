@@ -56,7 +56,8 @@ function label(bin: Uint8Array, w: number, h: number, minCells: number, lab: Int
 }
 
 // `fp`: silueta de la pieza por capa (ver footprint); lo que cae fuera no es parte de la pieza
-export function analyzeTimeline(vol: Volume, theta: number, fp?: (slice: number) => number): Timeline {
+// `baseSlices`: capas que ocupa la base maciza; lo que nace dentro de ella queda apoyado y no es una isla
+export function analyzeTimeline(vol: Volume, theta: number, fp?: (slice: number) => number, baseSlices = 0): Timeline {
   const { w, h, t, data } = vol
   const th = Math.round(theta * 255), sl = w * h
   const minCells = Math.max(4, Math.round(0.0003 * sl))
@@ -92,7 +93,7 @@ export function analyzeTimeline(vol: Volume, theta: number, fp?: (slice: number)
         if (a && b) { parents[b].add(a); children[a].add(b) }
       }
       for (let b = 1; b <= nc; b++) {
-        if (parents[b].size === 0) events.push({ kind: 'birth', slice: s, x: cinfo.cx[b], y: cinfo.cy[b], area: cinfo.area[b] })
+        if (parents[b].size === 0) { if (s > baseSlices) events.push({ kind: 'birth', slice: s, x: cinfo.cx[b], y: cinfo.cy[b], area: cinfo.area[b] }) }
         else if (parents[b].size >= 2) events.push({ kind: 'merge', slice: s, x: cinfo.cx[b], y: cinfo.cy[b], area: cinfo.area[b] })
       }
       for (let a = 1; a <= np; a++) {
