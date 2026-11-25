@@ -12,6 +12,7 @@ type Pool = { hall: Item[]; stats: { generated: number; printable: number } }
 
 const mono = "'Space Mono', monospace"
 const ACCENT = '#00ffcc'
+const SHOWN = 48
 
 export default function LabWeek() {
   const [pool, setPool] = useState<Pool | null>(null)
@@ -56,7 +57,7 @@ export default function LabWeek() {
       <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))', gap: 8, minHeight: 120 }}>
         {pool === null
           ? <div style={{ gridColumn: '1 / -1', fontSize: 10, letterSpacing: 3, color: '#4a6080' }}>CARGANDO SALÓN…</div>
-          : items.map((it) => {
+          : items.slice(0, SHOWN).map((it) => {
               const c = FAMILY_COLOR[it.family]
               return (
                 <Link key={it.id} href={`/especimenes/laboratorio?id=${it.id}`} className="press"
@@ -71,6 +72,12 @@ export default function LabWeek() {
                 </Link>
               )
             })}
+        {pool !== null && items.length > SHOWN && (
+          <Link href="/especimenes/laboratorio" className="press"
+            style={{ display: 'grid', placeItems: 'center', aspectRatio: '1 / 1', border: `1px dashed ${ACCENT}66`, color: ACCENT, fontSize: 10, letterSpacing: 1.5, textAlign: 'center', textDecoration: 'none', padding: 6 }}>
+            +{items.length - SHOWN} MÁS EN EL LABORATORIO
+          </Link>
+        )}
       </div>
     </section>
   )

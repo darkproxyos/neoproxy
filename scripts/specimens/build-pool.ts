@@ -1,14 +1,14 @@
 // Genera el pool de especímenes experimentales.
 //
-//   scripts/specimens/build-pool.sh [--count 2200] [--seed 2028] [--res 56] [--hall 240]
+//   scripts/specimens/build-pool.sh [--count 6000] [--seed 2029] [--res 56] [--hall 400]
 //
 // Tres etapas, cada una repartida en 4 núcleos (ver build-pool.sh):
 //   --shard k --of 4   mide los candidatos i con i % 4 == k
 //   --merge 4          junta, elige el salón y escribe pool.json
 //   --thumbs k --of 4  renderiza las miniaturas del salón a THUMB_RES
 //
-// 1. Genera `count` recetas: los 26 algoritmos puros a partes iguales y, en
-//    cada ciclo de 44, 18 cruces (simbiosis) entre ellos.
+// 1. Genera `count` recetas: 60 % algoritmos puros (más de los que dan obra, ver
+//    GEN_SHARE) y 40 % cruces (simbiosis) entre ellos.
 // 2. Cada una se convierte en malla y se mide (lib/specimens/analyze.ts).
 // 3. Se elige un salón de `hall` piezas con cupos según FAMILY_WEIGHT y, dentro
 //    de cada grupo, máxima distancia entre formas ponderada por calidad (ver
@@ -28,15 +28,16 @@ import { sampleGrid, polygonize } from '../../lib/specimens/polygonize'
 import { analyze, orientForPrint, DEFAULT_SIZE_MM, type Metrics } from '../../lib/specimens/analyze'
 import { selectHall, groupKey, MIN_PRINT_SCORE, type Candidate } from '../../lib/specimens/select'
 import { renderMesh } from './raster'
+import { mulberry32 } from '../../lib/specimens/rng'
 
 const arg = (name: string, def: number) => {
   const i = process.argv.indexOf(`--${name}`)
   return i >= 0 ? Number(process.argv[i + 1]) : def
 }
-const COUNT = arg('count', 2200)
-const SEED = arg('seed', 2028)
+const COUNT = arg('count', 6000)
+const SEED = arg('seed', 2029)
 const RES = arg('res', 56)
-const HALL = arg('hall', 240)
+const HALL = arg('hall', 400)
 // resoluciones: se puntúa a RES (barato), se ve a VIEW_RES y se exporta a STL_RES
 const VIEW_RES = arg('viewres', 96)
 const STL_RES = arg('stlres', 144)
@@ -46,8 +47,22 @@ const SHARD = process.argv.includes('--shard') ? arg('shard', 0) : -1
 const OF = arg('of', 1)
 const MERGE = process.argv.includes('--merge') ? arg('merge', 0) : 0
 
-// ciclo de 44: 26 algoritmos puros y 18 cruces
-const familyAt = (i: number): Family => (i % 44 < PURE_FAMILIES.length ? PURE_FAMILIES[i % 44] : 'symbiosis')
+// Reparto de candidatas: se generan más de lo que da piezas de obra. Esto solo
+// decide QUÉ pares (familia, semilla) se evalúan; la receta depende únicamente
+// de la familia y la semilla, así que no afecta a las piezas ya medidas.
+const GEN_SHARE: Record<string, number> = {
+  vessel: 6, filigree: 5, flow: 3, hilbert: 3, reaction: 2.5,
+  tpms: 1.5, mandelbulb: 1.5, voronoi: 1.5, knot: 1.2, kifs: 1.5, network: 1.5, attractor: 1.5, turing: 1.5,
+  autopoiesis: 1.5, dla: 1.2, shell: 1.2, twist: 1, colonization: 0.5, automaton: 0.6,
+  metaballs: 0.5, harmonics: 0.3, superformula: 0.5, phyllotaxis: 0.5, ruffle: 0.3, mandelbox: 0.4, apollonian: 0.3,
+}
+const PURE_TOTAL = PURE_FAMILIES.reduce((a, f) => a + (GEN_SHARE[f] ?? 1), 0)
+const SYM_SHARE = PURE_TOTAL * (2 / 3) // 40 % de las candidatas son cruces
+const familyAt = (i: number): Family => {
+  let x = mulberry32(SEED * 131 + i)() * (PURE_TOTAL + SYM_SHARE)
+  for (const f of PURE_FAMILIES) { x -= GEN_SHARE[f] ?? 1; if (x <= 0) return f }
+  return 'symbiosis'
+}
 const shardFile = (k: number) => path.join(os.tmpdir(), `np-pool-${SEED}-${COUNT}-${RES}-shard${k}.json`)
 const OUT = path.join(process.cwd(), 'public/proxygenesis')
 const THUMBS = path.join(OUT, 'pool-thumbs')

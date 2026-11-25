@@ -15,6 +15,9 @@ import type { Metrics } from './analyze'
 export type Candidate = { id: string; recipe: Recipe; metrics: Metrics }
 
 export const MIN_PRINT_SCORE = 0.5
+// Al salón solo entran piezas claramente imprimibles, y dentro de cada grupo solo
+// compite la mitad superior por calidad: la diversidad elige entre las mejores.
+export const HALL_MIN_PRINT = 0.6
 
 const descriptor = (m: Metrics) => [
   m.complexityN, m.genusN, m.elongation, m.entropy, Math.min(1, m.overhangFrac * 2), m.richness,
@@ -51,8 +54,8 @@ export const groupKey = (c: Candidate) =>
 // formas que ningún algoritmo da solo.
 const weightOf = (key: string) => (key.startsWith('symbiosis:') ? FAMILY_WEIGHT.symbiosis : FAMILY_WEIGHT[key as Family] ?? 1)
 
-export function selectHall(cands: Candidate[], hallSize = 200): Candidate[] {
-  const viable = cands.filter((c) => c.metrics.printScore >= MIN_PRINT_SCORE)
+export function selectHall(cands: Candidate[], hallSize = 400): Candidate[] {
+  const viable = cands.filter((c) => c.metrics.printScore >= HALL_MIN_PRINT)
   const byGroup = new Map<string, Candidate[]>()
   for (const c of viable) {
     const k = groupKey(c)
@@ -78,7 +81,11 @@ export function selectHall(cands: Candidate[], hallSize = 200): Candidate[] {
     left -= given
     if (given === 0) break
   }
-  const chosen = keys.flatMap((k) => pickDiverse(byGroup.get(k)!, quota.get(k)!))
+  const chosen = keys.flatMap((k) => {
+    const q = quota.get(k)!
+    const sorted = [...byGroup.get(k)!].sort((a, b) => b.metrics.fitness - a.metrics.fitness)
+    return pickDiverse(sorted.slice(0, Math.max(q * 2, Math.ceil(sorted.length / 2))), q)
+  })
   return interleaveByGroup(chosen)
 }
 
@@ -102,8 +109,8 @@ export function interleaveByGroup(items: Candidate[]): Candidate[] {
 
 // ---- rotación ---------------------------------------------------------------
 
-export const SHOW_COUNT = 50
-export const ROTATE_STEP = 10
+export const SHOW_COUNT = 96
+export const ROTATE_STEP = 16
 const EPOCH_MS = Date.UTC(2026, 0, 5) // lunes
 const WEEK_MS = 7 * 24 * 3600 * 1000
 

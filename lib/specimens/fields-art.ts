@@ -415,7 +415,7 @@ export function sampleVessel(r: Rng, base: Params): Params {
   const mods: number[] = []
   for (let i = 0, nm = int(r, 1, 3); i < nm; i++) {
     const z0 = range(r, -0.7, 0.2)
-    mods.push(pick(r, [0, 0, 1] as const), int(r, 5, 16), range(r, 0.03, 0.11), z0, z0 + range(r, 0.4, 1.4), range(r, -3, 3))
+    mods.push(pick(r, [0, 0, 1, 2, 2] as const), int(r, 5, 16), range(r, 0.04, 0.13), z0, z0 + range(r, 0.4, 1.4), range(r, -3, 3))
   }
   // calados: [tipo, n, k, z0, z1, umbral, giro]
   const pats: number[] = []
@@ -478,7 +478,10 @@ export function vesselField(p: Params): Field {
     for (let i = 0; i < mods.length; i += 6) {
       const w = win(z, mods[i + 3], mods[i + 4])
       if (!w) continue
-      R += mods[i] === 0 ? R * mods[i + 2] * w * Math.cos(mods[i + 1] * th + mods[i + 5] * z) : mods[i + 2] * 0.5 * w * Math.cos(mods[i + 1] * z * 5)
+      const kind = mods[i], amp = mods[i + 2]
+      if (kind === 0) R += R * amp * w * Math.cos(mods[i + 1] * th + mods[i + 5] * z)
+      else if (kind === 1) R += amp * 0.5 * w * Math.cos(mods[i + 1] * z * 5)
+      else R += R * amp * 1.6 * w * (Math.abs(Math.cos(mods[i + 1] * th * 0.5)) ** 3 - 0.45)   // pétalos de loto
     }
     let shell = Math.abs(rho - R) - wall
     for (let i = 0; i < pats.length; i += 7) {
@@ -503,42 +506,62 @@ export function vesselField(p: Params): Field {
 // luz y sombra, como un farol de filigrana. Los polos quedan macizos.
 
 export function sampleFiligree(r: Rng, base: Params): Params {
-  const shape = pick(r, ['sphere', 'egg', 'dome', 'torus'] as const)
+  const shape = pick(r, ['sphere', 'egg', 'dome', 'torus', 'bowl'] as const)
   const terms: number[] = []
   for (let i = 0, nt = int(r, 2, 4); i < nt; i++) terms.push(range(r, 0.5, 1), int(r, 1, 3), int(r, 1, 6), range(r, 0, 6.28))
   return {
-    ...base, zCut: shape === 'torus' ? -2 : range(r, -0.78, -0.62), fold: 1,
+    ...base, zCut: shape === 'torus' || shape === 'bowl' ? -2 : range(r, -0.78, -0.62), fold: 1,
     shape, n: pick(r, [4, 5, 6, 7, 8, 9, 10, 12] as const), terms, wall: range(r, 0.032, 0.05),
     thr: range(r, 0.02, 0.45), R: range(r, 0.72, 0.84), bead: r() < 0.7 ? 1 : 0,
     egg: range(r, 0.1, 0.22), tube: range(r, 0.26, 0.36),
+    inner: shape === 'torus' ? 0 : (r() < 0.5 ? 1 : 0), thr2: range(r, 0.05, 0.4), inR: range(r, 0.66, 0.78), spokes: int(r, 5, 8), shift: range(r, 0.3, 1),
   }
 }
 
 export function filigreeField(p: Params): Field {
   const shape = p.shape as string, n = num(p, 'n'), terms = arr(p, 'terms'), wall = num(p, 'wall')
   const thr = num(p, 'thr'), R = num(p, 'R'), bead = num(p, 'bead') === 1, egg = num(p, 'egg'), tube = num(p, 'tube')
+  const inner = num(p, 'inner') === 1, thr2 = num(p, 'thr2'), inR = num(p, 'inR'), nSp = num(p, 'spokes'), shift = num(p, 'shift')
   const amps = terms.reduce((a, _v, i) => (i % 4 === 0 ? a + terms[i] : a), 0)
   const pat = (th: number, ph: number) => {
     let m = 0
     for (let i = 0; i < terms.length; i += 4) m += terms[i] * Math.cos(n * terms[i + 1] * th) * Math.cos(terms[i + 2] * ph + terms[i + 3])
     return m / amps
   }
+  // radios que unen la cáscara interior con la exterior (y con los polos)
+  const segs: number[] = []
+  if (inner) {
+    for (let k = 0; k < nSp; k++) {
+      const a = (k / nSp) * TAU
+      pushSeg(segs, [Math.cos(a) * R * inR, Math.sin(a) * R * inR, 0], [Math.cos(a) * R, Math.sin(a) * R, 0], 0.035)
+    }
+    pushSeg(segs, [0, 0, R * inR], [0, 0, R], 0.04)
+    pushSeg(segs, [0, 0, -R * inR], [0, 0, -R], 0.04)
+  }
+  const spokeF = inner ? segField(segs, 0.03) : null
+  const shellOf = (x: number, y: number, z: number, th: number, Rs: number, w: number, thrv: number, off: number): number => {
+    const rho = Math.hypot(x, y, z) + 1e-9, ph = Math.acos(Math.max(-1, Math.min(1, z / rho)))
+    const shell = Math.abs(rho - Rs) - w
+    const m = pat(th + off, ph) - 1.8 * (1 - smooth(0.0, 0.32, Math.sin(ph)))   // polos macizos
+    return smax(shell, (m - thrv) * 0.1, 0.015)
+  }
   return (x, y, z) => {
     const th = Math.atan2(y, x)
     if (shape === 'torus') {
       const q = Math.hypot(x, y) - R * 0.62, ps = Math.atan2(z, q), len = Math.hypot(q, z)
       const shell = Math.abs(len - tube * 2) - wall
-      const m = pat(th, ps * 1.0)
-      return smax(shell, (m - thr) * 0.1, 0.015)
+      return smax(shell, (pat(th, ps) - thr) * 0.1, 0.015)
     }
-    const rho = Math.hypot(x, y, z) + 1e-9, ph = Math.acos(Math.max(-1, Math.min(1, z / rho)))
+    const rho = Math.hypot(x, y, z) + 1e-9
     const Rs = shape === 'egg' ? R * (1 + egg * (z / rho)) : R
-    const shell = Math.abs(rho - Rs) - wall
-    const sinPh = Math.sin(ph)
-    const m = pat(th, ph) - 1.8 * (1 - smooth(0.0, 0.32, sinPh))   // polos macizos
-    let d = smax(shell, (m - thr) * 0.1, 0.015)
+    let d = shellOf(x, y, z, th, Rs, wall, thr, 0)
+    if (inner) {
+      d = smin(d, shellOf(x, y, z, th, Rs * inR, wall * 0.9, thr2, shift * Math.PI / n), 0.02)
+      d = smin(d, spokeF!(x, y, z), 0.03)
+    }
     if (bead) d = smin(d, sdTorus(x, y, z, Rs * 0.995, wall * 1.35), 0.025)       // aro ecuatorial
     if (shape === 'dome') d = smax(d, -z - 0.02, 0.02)
+    if (shape === 'bowl') d = smax(d, z - 0.1, 0.02)                              // cuenco abierto arriba
     return d
   }
 }
