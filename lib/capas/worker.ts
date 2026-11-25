@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 import { buildMesh, meshToBinarySTL, resolveAspect, type MeshParams, type MeshResult } from './mesh'
 import { analyzeTimeline, type Timeline } from './events'
-import { footprint, type Volume } from './volume'
+import { BASE_FRAC, footprint, type Volume } from './volume'
 
 export type CapasRequest = { id: number; vol: Volume; params: MeshParams; stl: boolean; timeline: boolean }
 export type CapasMeshOut = Omit<MeshResult, 'mesh'> & { positions: Float32Array; indices: Uint32Array }
@@ -17,7 +17,7 @@ self.onmessage = (e: MessageEvent<CapasRequest>) => {
   try {
     const res = buildMesh(vol, params)
     const aspect = res ? res.aspect : resolveAspect(vol, params.theta, params.aspect)
-    const tl = timeline ? analyzeTimeline(vol, params.theta, footprint(params.shape, aspect, params.planned)) : undefined
+    const tl = timeline ? analyzeTimeline(vol, params.theta, footprint(params.shape, aspect, params.planned), params.base ? Math.ceil(BASE_FRAC * (params.planned - 1)) : 0) : undefined
     if (!res) { post({ id, ok: true, out: null, timeline: tl, ms: Date.now() - t0 }); return }
     const { mesh, ...rest } = res
     const buf = stl ? meshToBinarySTL(mesh) : undefined

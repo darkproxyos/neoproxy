@@ -107,3 +107,25 @@ export function causalAspect(vol: Volume, theta: number, limit = 0.03): number {
   }
   return hi
 }
+
+// Cuántas veces cruza el mundo, durante toda la pieza, cada trozo de superficie.
+//
+// La isosuperficie {campo = θ} se mueve de lado a velocidad v = |∂campo/∂capa| / |∇ₓᵧ campo|
+// (celdas por capa). Durante las (t − 1) capas recorre v·(t − 1) celdas, o sea
+// v·(t − 1)/(w − 1) anchos del mundo. Una cara es voladizo exactamente cuando ese número
+// supera el aspecto (alto/ancho) de la pieza; por eso el aspecto causal es su cuantil
+// (1 − límite). Se calcula aparte de overhangFraction para poder comprobar la identidad.
+// Las caras que no miran hacia abajo cuentan 0 (nunca son voladizo).
+export function crossingDistribution(vol: Volume, theta: number): Float32Array {
+  const { w, h, t, data } = vol
+  const th = theta * 255, sl = w * h, k = (t - 1) / (w - 1)
+  const out: number[] = []
+  for (let s = 1; s < t - 1; s++) for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    const i = s * sl + y * w + x, c = data[i]
+    if ((c >= th) === (data[i + 1] >= th) && (c >= th) === (data[i + w] >= th) && (c >= th) === (data[i + sl] >= th)) continue
+    const gx = data[i + 1] - data[i - 1], gy = data[i + w] - data[i - w], gs = data[i + sl] - data[i - sl]
+    if (Math.sqrt(gx * gx + gy * gy + gs * gs) < 1e-6) continue
+    out.push(gs > 0 ? (gs / Math.max(1e-9, Math.sqrt(gx * gx + gy * gy))) * k : 0)
+  }
+  return Float32Array.from(out)
+}
