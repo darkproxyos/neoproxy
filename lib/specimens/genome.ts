@@ -3,6 +3,7 @@
 //   { f, s }                       un algoritmo con su semilla (una pieza "nacida")
 //   { f, s, m: [[mseed, k], ...] } lo mismo con mutaciones acumuladas, en orden
 //   { f:'symbiosis', s, x:[A, B] } un cruce de dos genomas concretos
+//   { f, s, o: { clave: valor } }   parámetros fijados a mano (explorador de GEOMETRÍAS)
 //
 // Una hija es su madre más UNA mutación: el genoma crece en dos números por
 // generación. Nada se guarda de la malla: se resuelve a receta y se mallan al vuelo.
@@ -13,9 +14,10 @@ import { mulberry32, pick, type Rng } from './rng'
 import { ENVELOPES } from './sdf'
 import { sampleRecipe, type Family, type Params, type Recipe } from './families'
 import { OPS } from './symbiosis'
+import { CONWAY_OPS, CONWAY_SOLIDS } from './fields-geo'
 
 export type Mut = [number, number] // [semilla de la mutación, fuerza]
-export type Genome = { f: Family; s: number; m?: Mut[]; x?: [Genome, Genome] }
+export type Genome = { f: Family; s: number; m?: Mut[]; x?: [Genome, Genome]; o?: Params }
 
 export const MAX_MUTATIONS = 10   // tope de mutaciones acumuladas en un linaje
 export const MAX_LEAVES = 3       // costo: algoritmos puros dentro de una receta
@@ -41,6 +43,15 @@ function mutNum(v: number, r: Rng, k: number, key: string): number {
   return v * (1 + 0.2 * k * gauss(r)) + 0.03 * k * gauss(r)
 }
 
+// Mutación de un genoma de texto (poliedros de Conway): cambiar, insertar o borrar una letra.
+function mutateText(v: string, r: Rng, k: number): string {
+  if (r() >= 0.6 * k + 0.15) return v
+  const letters = CONWAY_OPS.split(''), i = Math.floor(r() * (v.length + 1)), roll = r()
+  if (roll < 0.4 && v.length) return v.slice(0, i % v.length) + pick(r, letters) + v.slice((i % v.length) + 1)
+  if (roll < 0.8 && v.length < 6) return v.slice(0, i) + pick(r, letters) + v.slice(i)
+  return v.length > 1 ? v.slice(0, i % v.length) + v.slice((i % v.length) + 1) : v
+}
+
 function mutateParams(p: Params, r: Rng, k: number): Params {
   const out: Params = {}
   for (const [key, v] of Object.entries(p)) {
@@ -49,6 +60,8 @@ function mutateParams(p: Params, r: Rng, k: number): Params {
     else if (key === 'env') out[key] = r() < 0.12 * k ? pick(r, ENVELOPES) : v
     else if (key === 'skin') out[key] = r() < 0.12 * k ? pick(r, SKINS) : v
     else if (key === 'op') out[key] = r() < 0.1 * k ? pick(r, OPS) : v
+    else if (key === 'ops' && typeof v === 'string') out[key] = mutateText(v, r, k)
+    else if (key === 'solid') out[key] = r() < 0.2 * k ? pick(r, CONWAY_SOLIDS) : v
     else if (typeof v === 'number') out[key] = mutNum(v, r, k, key)
     else if (Array.isArray(v)) out[key] = v.map((e) => mutNum(e, r, k, key))
     else out[key] = v
@@ -68,6 +81,7 @@ export function mutateRecipe(rec: Recipe, mseed: number, k: number): Recipe {
 export function resolveGenome(g: Genome): Recipe {
   let rec = sampleRecipe(g.f, g.s)
   if (g.x) rec = { ...rec, parents: [resolveGenome(g.x[0]), resolveGenome(g.x[1])] }
+  if (g.o) rec = { ...rec, params: { ...rec.params, ...g.o } }   // lo fijado a mano va antes de las mutaciones
   for (const [ms, k] of g.m ?? []) rec = mutateRecipe(rec, ms, k)
   return rec
 }
@@ -84,7 +98,7 @@ const fnv = (str: string) => {
 // (`dla-3lj1ql`); mutantes y cruces llevan un sufijo con el hash de su genoma.
 export function genomeId(g: Genome): string {
   const base = `${g.f.slice(0, 3)}-${g.s.toString(36)}`
-  return g.m?.length || g.x ? `${base}.${fnv(JSON.stringify(g)).toString(36)}` : base
+  return g.m?.length || g.x || g.o ? `${base}.${fnv(JSON.stringify(g)).toString(36)}` : base
 }
 
 export const genomeDepth = (g: Genome): number => (g.m?.length ?? 0)

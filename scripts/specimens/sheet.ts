@@ -6,7 +6,7 @@
 // de generación, si la malla salió cerrada y su puntaje de imprimibilidad.
 
 import sharp from 'sharp'
-import { FAMILIES, FAMILY_COLOR, sampleRecipe, buildField, type Family } from '../../lib/specimens/families'
+import { FAMILIES, GEOMETRY_FAMILIES, FAMILY_COLOR, sampleRecipe, buildField, type Family } from '../../lib/specimens/families'
 import { sampleGrid, polygonize } from '../../lib/specimens/polygonize'
 import { analyze, orientForPrint, DEFAULT_SIZE_MM } from '../../lib/specimens/analyze'
 import { renderMesh } from './raster'
@@ -27,7 +27,7 @@ async function main() {
       const t0 = Date.now()
       const rec = sampleRecipe(f, seed)
       const grid = sampleGrid(buildField(rec), RES)
-      const res = analyze(polygonize(grid), grid, DEFAULT_SIZE_MM)
+      const res = analyze(polygonize(grid), grid, DEFAULT_SIZE_MM, { minFill: (GEOMETRY_FAMILIES as readonly string[]).includes(f) ? 0.003 : 0.015 })
       times.push(Date.now() - t0)
       if (!res) { scores.push('vacía'); continue }
       scores.push(`${res.metrics.printScore.toFixed(2)}${res.metrics.closed ? '' : '!'}`)
