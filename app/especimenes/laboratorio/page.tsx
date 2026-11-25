@@ -221,7 +221,7 @@ function SpecimenModal({ item, pool, onClose, onOpen, votes, my, onVote }: { ite
             </div>
           )}
           <div style={{ position: 'absolute', left: 12, bottom: 10, fontSize: 9, letterSpacing: 1.5, color: '#6f86a3', pointerEvents: 'none' }}>
-            ARRASTRA PARA GIRAR · RUEDA PARA ACERCAR · EL DISCO ES LA CAMA
+            ARRASTRA PARA GIRAR · RUEDA, PELLIZCO O +/− PARA ACERCAR · EL DISCO ES LA CAMA
           </div>
         </div>
 
