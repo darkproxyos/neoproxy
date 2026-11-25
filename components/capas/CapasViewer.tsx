@@ -6,6 +6,8 @@ import {
   VertexData, VertexBuffer, MeshBuilder, Plane, RawTexture, Texture, InstancedMesh,
 } from '@babylonjs/core'
 import { rampColor, type Rgb } from '@/lib/capas/style'
+import { tuneOrbitCamera, zoomBy } from '@/components/viewer/orbit'
+import ZoomControls from '@/components/viewer/ZoomControls'
 import type { LawId } from '@/lib/capas/laws'
 import type { EventKind } from '@/lib/capas/events'
 
@@ -23,6 +25,8 @@ export type ViewerApi = {
   setSlice(rgba: Uint8Array | null, w: number, h: number): void
   setEvents(ev: ViewerEvent[]): void
   setMarkers(on: boolean): void
+  zoom(factor: number): void
+  reset(): void
   snapshot(): string | null
 }
 
@@ -33,6 +37,7 @@ const BAND_MM = 0.7
 
 export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | null) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const apiRef = useRef<ViewerApi | null>(null)
   const readyRef = useRef(onReady)
   readyRef.current = onReady
 
@@ -45,7 +50,9 @@ export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | nu
     scene.setRenderingAutoClearDepthStencil(1, true) // los marcadores de eventos se ven a través del sólido
 
     const cam = new ArcRotateCamera('cam', -Math.PI / 3, Math.PI / 2.55, 130, new Vector3(0, 25, 0), scene)
-    cam.lowerRadiusLimit = 30; cam.upperRadiusLimit = 320; cam.wheelPrecision = 5; cam.minZ = 1; cam.maxZ = 2000
+    tuneOrbitCamera(cam, { min: 30, max: 320 }, 5)
+    cam.minZ = 1; cam.maxZ = 2000
+    const home = { alpha: -Math.PI / 3, beta: Math.PI / 2.55, radius: 130, targetY: 25 } // encuadre al que vuelve ⟲
     cam.attachControl(canvas, true)
     cam.useAutoRotationBehavior = true
     if (cam.autoRotationBehavior) { cam.autoRotationBehavior.idleRotationSpeed = 0.28; cam.autoRotationBehavior.idleRotationWaitTime = 2200 }
@@ -146,6 +153,7 @@ export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | nu
           const needed = Math.max(m.fullHeightMm, m.boxMm) * 1.75 + 14
           if (!fitted || needed > cam.radius * 1.12) cam.radius = needed // que la pieza completa siempre quepa
           fitted = true; lastH = m.fullHeightMm
+          home.radius = cam.radius; home.targetY = cam.target.y
         }
         rebuildMarkers()
         applyCut()
@@ -165,23 +173,33 @@ export default function CapasViewer({ onReady }: { onReady: (api: ViewerApi | nu
       },
       setEvents(ev) { eventsRaw = ev; rebuildMarkers() },
       setMarkers(on) { markersOn = on; applyCut() },
+      zoom(factor) { zoomBy(cam, factor) },
+      reset() { cam.alpha = home.alpha; cam.beta = home.beta; cam.radius = home.radius; cam.target.set(0, home.targetY, 0) },
       snapshot() { try { return canvas.toDataURL('image/png') } catch { return null } },
     }
+    apiRef.current = api
     readyRef.current(api)
 
     const t0 = performance.now()
     scene.onBeforeRenderObservable.add(() => {
       const k = 0.78 + 0.22 * Math.sin((performance.now() - t0) / 260)
       bandMat.emissiveColor.set(k, k * 0.96, k * 0.9)
+      canvas.dataset.camRadius = cam.radius.toFixed(2) // gancho de pruebas: el radio de la cámara
     })
     engine.runRenderLoop(() => scene.render())
     const ro = new ResizeObserver(() => engine.resize())
     ro.observe(canvas as unknown as Element) // Babylon amplía Element.requestPointerLock y rompe la compatibilidad de tipos
     return () => {
+      apiRef.current = null
       readyRef.current(null)
       ro.disconnect(); engine.stopRenderLoop(); scene.dispose(); engine.dispose()
     }
   }, [])
 
-  return <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none', outline: 'none' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none', outline: 'none' }} />
+      <ZoomControls onZoom={(f) => apiRef.current?.zoom(f)} onReset={() => apiRef.current?.reset()} />
+    </div>
+  )
 }

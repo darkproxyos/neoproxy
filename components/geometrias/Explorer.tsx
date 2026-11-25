@@ -146,13 +146,14 @@ export default function Explorer({ family }: { family: GeometryFamily }) {
 
         <div className="geo-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.25fr) minmax(300px, 1fr)', gap: 22, alignItems: 'start' }}>
           <div style={{ position: 'relative', minHeight: 420, background: '#03050a', border: `1px solid ${color}33` }}>
-            {gen.status === 'ready' && gen.data && <PoolViewer positions={gen.data.positions} indices={gen.data.indices} color={color} />}
+            {/* el visor sigue montado mientras se regenera: se ve la pieza anterior bajo el velo y el zoom del usuario no se pierde */}
+            {gen.data && gen.status !== 'error' && <PoolViewer positions={gen.data.positions} indices={gen.data.indices} color={color} />}
             {gen.status !== 'ready' && (
               <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 10, letterSpacing: 3, color: gen.status === 'error' ? '#ff8a8a' : '#8fa8c4', textAlign: 'center', padding: 24, background: gen.data ? 'rgba(3,5,10,0.55)' : 'transparent' }}>
                 {gen.status === 'error' ? `No se pudo generar esta combinación. ${gen.error ?? ''}` : 'GENERANDO…'}
               </div>
             )}
-            <div style={{ position: 'absolute', left: 12, bottom: 10, fontSize: 9, letterSpacing: 1.5, color: '#6f86a3', pointerEvents: 'none' }}>ARRASTRA PARA GIRAR · RUEDA PARA ACERCAR</div>
+            <div style={{ position: 'absolute', left: 12, bottom: 10, fontSize: 9, letterSpacing: 1.5, color: '#6f86a3', pointerEvents: 'none' }}>ARRASTRA PARA GIRAR · RUEDA, PELLIZCO O +/− PARA ACERCAR</div>
           </div>
 
           <div>
