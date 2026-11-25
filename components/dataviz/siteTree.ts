@@ -23,6 +23,7 @@ export const SITE_BRANCH_COLOR: Record<string, string> = {
   'PRIMER CUERPO': '#8aa0c9',
   'ESPECÍMENES': '#ff8c1a',
   'GEOMETRÍAS': '#9fe8ff',
+  'CAPAS': '#ff8fb4',
   'PROXYGAMES': '#00d4ff',
   'REALIDAD AUMENTADA': '#b400ff',
   'EXPERIMENTAL': '#cc0000',
@@ -87,6 +88,7 @@ export const SITE_TREE: SiteNode = {
         { name: 'INTERFERENCIA', href: '/geometrias/interference' },
       ],
     },
+    { name: 'CAPAS', href: '/capas' },
     {
       name: 'PROXYGAMES', href: '/games',
       children: [
