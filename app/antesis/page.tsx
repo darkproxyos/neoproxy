@@ -17,7 +17,7 @@ export default function AntesisPage() {
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
+      <div className="an-layer" style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
         <div style={{ fontSize: 11, letterSpacing: 6, color: `${ACCENT}aa`, marginBottom: 14 }}>NPX-ANTESIS // MECANISMO · <Link href="/geometrias" style={{ color: `${ACCENT}aa` }}>TALLER DE GEOMETRÍAS</Link></div>
         <h1 style={{ fontSize: 'clamp(36px, 9vw, 72px)', letterSpacing: 16, margin: '0 0 18px', lineHeight: 1.05, background: `linear-gradient(90deg,${ACCENT},#ffffff 55%,${PINK})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>ANTESIS</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 900, margin: '0 0 10px' }}>

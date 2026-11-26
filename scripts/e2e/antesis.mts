@@ -1,7 +1,7 @@
 // @ts-nocheck — Playwright no es dependencia del repo: se importa en caliente y no se tipa aquí.
 //
 // ANTESIS de punta a punta, en Chromium:
-//   1. la flor se calcula y se verifica (✓ ENGRANA Y GIRA SIN CHOCAR) y gira
+//   1. la flor se calcula y se verifica (✓ ENGRANA Y GIRA SIN CHOCAR) y gira; MODO REEL 9:16
 //   2. el enlace la reconstruye (simetría, semilla, dientes)
 //   3. DESCARGAR TODO: un ZIP con 7 STL (cerrados, sobre z = 0) y el JSON de parámetros
 //   4. en un teléfono: sin desborde horizontal
@@ -59,6 +59,13 @@ try {
   const a0 = Number(await p.$eval('canvas', (c) => c.dataset.angle)); await p.waitForTimeout(800)
   const a1 = Number(await p.$eval('canvas', (c) => c.dataset.angle))
   ok(a1 > a0, `gira (ángulo ${a0.toFixed(2)} → ${a1.toFixed(2)} rad)`)
+
+  await p.getByRole('button', { name: /MODO REEL/ }).click()
+  await p.waitForTimeout(4500)
+  const r = await p.evaluate(() => { const b = document.querySelector('.an-reel-box')?.getBoundingClientRect(); return { on: !!b, ratio: b ? b.height / b.width : 0, txt: document.querySelector('.an-reel')?.textContent || '' } })
+  ok(r.on && Math.abs(r.ratio - 16 / 9) < 0.02 && /ANTESIS/.test(r.txt), `MODO REEL: pantalla 9:16 (${r.ratio.toFixed(3)}) con su título`)
+  await p.keyboard.press('Escape'); await p.waitForTimeout(400)
+  ok(!(await p.$('.an-reel')), 'Esc sale del reel')
 
   console.log('2. el enlace')
   await p.goto(`${BASE}/antesis#s=tetra&d=70&f=5&a=1.8&r=1.35&p=resina&c=fucsia`, { waitUntil: 'load' })
