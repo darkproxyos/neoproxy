@@ -22,7 +22,7 @@ const mono = "'Space Mono', monospace"
 const ACCENT = '#22e06b'
 const TEXT = '#c8daf0'
 const TEXT_DIM = '#8fb8d6'
-const LABEL_DIM = '#4a6080'
+const LABEL_DIM = '#6f86a3'
 
 // ---------------------------------------------------------------------------
 // Bloques de layout reutilizables (mismo patrón que /archivo/alimentacion)

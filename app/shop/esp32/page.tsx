@@ -108,7 +108,7 @@ export default function Esp32TechPage() {
       <main className="relative z-10 px-8 pb-20">
         <div className="max-w-4xl mx-auto">
           {/* Índice */}
-          <nav className="flex flex-wrap gap-x-5 gap-y-2 py-8 text-[11px] font-mono tracking-[0.1em] uppercase text-[#4a6080]">
+          <nav className="flex flex-wrap gap-x-5 gap-y-2 py-8 text-[11px] font-mono tracking-[0.1em] uppercase text-[#6f86a3]">
             {[
               ['que-es', 'Qué es'],
               ['arquitectura', 'Arquitectura'],
@@ -178,35 +178,35 @@ export default function Esp32TechPage() {
               Confirmá siempre contra la serigrafía impresa en tu placa específica</strong> antes de cablear.
             </p>
 
-            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Entrada solamente — no se pueden usar como salida</h3>
-            <p className="text-[12px] text-[#4a6080] mb-1">Sin resistencia pull-up/down interna.</p>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#6f86a3] mt-8 mb-1">Entrada solamente — no se pueden usar como salida</h3>
+            <p className="text-[12px] text-[#6f86a3] mb-1">Sin resistencia pull-up/down interna.</p>
             <PinList items={INPUT_ONLY} />
 
-            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Strapping — definen el modo de arranque</h3>
-            <p className="text-[12px] text-[#4a6080] mb-3">Una carga externa acá puede impedir que arranque, o en el caso de GPIO12, dañar la flash.</p>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#6f86a3] mt-8 mb-1">Strapping — definen el modo de arranque</h3>
+            <p className="text-[12px] text-[#6f86a3] mb-3">Una carga externa acá puede impedir que arranque, o en el caso de GPIO12, dañar la flash.</p>
             <div className="space-y-1.5">
               {STRAPPING.map((s) => (
                 <div key={s.pin} className="text-[12px] font-mono text-[#8fb8d6] flex gap-3">
                   <span style={{ color: ACCENT }} className="shrink-0 w-32">{s.pin}</span>
-                  <span className="text-[#4a6080]">{s.note}</span>
+                  <span className="text-[#6f86a3]">{s.note}</span>
                 </div>
               ))}
             </div>
 
-            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Reservados para la flash interna — no usar para nada más</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#6f86a3] mt-8 mb-1">Reservados para la flash interna — no usar para nada más</h3>
             <PinList items={FLASH_PINS} />
 
-            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">ADC1 — entrada analógica, funciona con WiFi activo</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#6f86a3] mt-8 mb-1">ADC1 — entrada analógica, funciona con WiFi activo</h3>
             <PinList items={ADC1} />
 
-            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">ADC2 — comparte hardware con el radio WiFi</h3>
-            <p className="text-[12px] text-[#4a6080] mb-1">No confiable para lecturas analógicas mientras el WiFi está conectado — usá ADC1 en proyectos conectados a red.</p>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#6f86a3] mt-8 mb-1">ADC2 — comparte hardware con el radio WiFi</h3>
+            <p className="text-[12px] text-[#6f86a3] mb-1">No confiable para lecturas analógicas mientras el WiFi está conectado — usá ADC1 en proyectos conectados a red.</p>
             <PinList items={ADC2} />
 
-            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Touch — detectan contacto capacitivo directo</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#6f86a3] mt-8 mb-1">Touch — detectan contacto capacitivo directo</h3>
             <PinList items={TOUCH} />
 
-            <p className="text-[12px] text-[#4a6080] mt-8">
+            <p className="text-[12px] text-[#6f86a3] mt-8">
               Límite de corriente por pin: 12 mA recomendado, 40 mA máximo absoluto — por encima de
               eso el pin se degrada o el chip se resetea solo. Para motores, relés o tiras de LED
               siempre con un driver o transistor intermedio, nunca directo del GPIO.
@@ -222,7 +222,7 @@ export default function Esp32TechPage() {
               <li>Light sleep: ~0.8 mA</li>
               <li>Deep sleep: ~10 µA (algunos módulos bajan a 5 µA)</li>
             </ul>
-            <p className="text-[12px] text-[#4a6080] mt-4">
+            <p className="text-[12px] text-[#6f86a3] mt-4">
               Para diseño a batería, el deep sleep con wake periódico (timer o el coprocesador ULP
               leyendo un sensor) es lo que hace viable correr meses con una sola carga — el modo activo
               continuo con WiFi prendido vacía una batería chica en horas, no en días.
@@ -237,7 +237,7 @@ export default function Esp32TechPage() {
               <li><strong className="text-white">WROOM-32U</strong>: conector externo U.FL/IPEX para antena externa, mejor alcance si el gabinete bloquea señal</li>
               <li>Alcance típico en espacio abierto con línea de vista: 20–50 m; bastante menos atravesando paredes</li>
             </ul>
-            <p className="text-[12px] text-[#4a6080] mt-4">
+            <p className="text-[12px] text-[#6f86a3] mt-4">
               Si diseñás un gabinete o case para el módulo: nunca cubrir la zona de la antena con metal
               o con una capa gruesa de material — la señal se degrada fuerte aunque el chip siga
               funcionando perfecto por dentro.
@@ -248,7 +248,7 @@ export default function Esp32TechPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-[12px] text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-[#0f1f35] text-[11px] font-mono tracking-[0.1em] uppercase text-[#4a6080]">
+                  <tr className="border-b border-[#0f1f35] text-[11px] font-mono tracking-[0.1em] uppercase text-[#6f86a3]">
                     <th className="pb-2 pr-4">Modelo</th>
                     <th className="pb-2 pr-4">Antena</th>
                     <th className="pb-2 pr-4">Memoria</th>
@@ -267,7 +267,7 @@ export default function Esp32TechPage() {
                 </tbody>
               </table>
             </div>
-            <p className="text-[12px] text-[#4a6080] mt-4">
+            <p className="text-[12px] text-[#6f86a3] mt-4">
               Lo que vendemos como insumo base es el <strong className="text-[#8fb8d6]">WROOM-32</strong> en
               DevKit — es el modelo con más tutoriales, más compatibilidad con proyectos existentes y el
               que más rápido se revende.

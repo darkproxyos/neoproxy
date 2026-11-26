@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 
 const ARCombatSystem = dynamic(() => import('@/components/ARCombatSystem'), {
   ssr: false,
-  loading: () => <div style={{color: '#cc0000', fontFamily: 'monospace'}}>Loading AR Combat System...</div>
+  loading: () => <div style={{color: '#ff4d4d', fontFamily: 'monospace'}}>Loading AR Combat System...</div>
 })
 
 export default function ARPage() {

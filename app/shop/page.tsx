@@ -67,11 +67,11 @@ export default function ShopPage() {
           </Link>
           <h1 className="font-sans text-5xl md:text-7xl font-extrabold leading-none tracking-tight">
             <span className="text-[#00d4ff]">TIENDA</span>
-            <span className="block text-[0.35em] text-[#4a6080] tracking-[0.3em] uppercase font-normal mt-4">
+            <span className="block text-[0.35em] text-[#6f86a3] tracking-[0.3em] uppercase font-normal mt-4">
               Insumos, fabricación y arte
             </span>
           </h1>
-          <p className="mt-6 text-sm text-[#4a6080] max-w-2xl">
+          <p className="mt-6 text-sm text-[#6f86a3] max-w-2xl">
             Catálogo inicial del ecosistema NeoProxy: insumos electrónicos para tus propios builds,
             impresión y modelos 3D, y arte generativo certificado. Esta es la primera plantilla —
             va a crecer con precios, stock y checkout real por categoría.
@@ -118,7 +118,7 @@ export default function ShopPage() {
 
                 <ul className="mb-6 space-y-2">
                   {cat.items.map((item) => (
-                    <li key={item} className="text-[12px] font-mono text-[#4a6080] flex items-start gap-2">
+                    <li key={item} className="text-[12px] font-mono text-[#6f86a3] flex items-start gap-2">
                       <span style={{ color: cat.color }}>›</span> {item}
                     </li>
                   ))}
@@ -137,10 +137,10 @@ export default function ShopPage() {
           </div>
 
           <div className="text-center py-12 border-t border-[#0f1f35]">
-            <div className="text-[12px] font-mono text-[#4a6080] tracking-[0.2em] uppercase mb-4">
+            <div className="text-[12px] font-mono text-[#6f86a3] tracking-[0.2em] uppercase mb-4">
               CATÁLOGO EN CONSTRUCCIÓN
             </div>
-            <p className="text-sm text-[#4a6080] max-w-xl mx-auto">
+            <p className="text-sm text-[#6f86a3] max-w-xl mx-auto">
               Insumos, impresión y modelos 3D todavía no tienen checkout propio —{' '}
               <a
                 href="https://wa.me/56993550010?text=Hola%2C%20tengo%20una%20consulta%20sobre%20la%20tienda."
@@ -159,10 +159,10 @@ export default function ShopPage() {
       {/* Footer */}
       <footer className="relative z-10 p-8 border-t border-[#0f1f35] mt-8">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-[12px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
+          <div className="text-[12px] font-mono text-[#6f86a3] tracking-[0.2em] uppercase">
             NEOPROXY OS — TIENDA
           </div>
-          <div className="text-[12px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
+          <div className="text-[12px] font-mono text-[#6f86a3] tracking-[0.2em] uppercase">
             SANTIAGO, CHILE
           </div>
         </div>
