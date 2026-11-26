@@ -121,6 +121,12 @@ export default function DarkProxyTerminal() {
             <div style={{ fontSize: 11, color: '#7fa8b8', marginBottom: 10 }}>
               {status} {loading && '// PROCESANDO...'}
             </div>
+            <a href="/admin/radar" style={{
+              fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 16px', marginRight: 8, display: 'inline-block',
+              border: `1px solid ${AMBER}88`, color: AMBER, textDecoration: 'none',
+            }}>
+              RADAR // NEGOCIO →
+            </a>
             <button onClick={() => signOut({ callbackUrl: '/login' })} style={{
               fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
               background: 'transparent', border: `1px solid ${CYAN}44`, color: `${CYAN}aa`,
