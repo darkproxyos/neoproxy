@@ -22,6 +22,8 @@ import MoonPhaseField from '@/components/MoonPhaseField'
 import SteganoNoise from '@/components/SteganoNoise'
 import RepetitionCompression from '@/components/RepetitionCompression'
 import SandpileField from '@/components/SandpileField'
+import Clima from '@/components/zona/Clima'
+import { BOOT_SCRIPT } from '@/lib/zona/rutas'
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -38,7 +40,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: el guion de arranque marca el tramo en <html> antes de hidratar
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script id="tramo-boot" dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+      </head>
       <body className={`${spaceMono.variable} ${inter.variable} bg-[#020408] text-[#c8daf0] overflow-y-auto`}>
         <Providers>
           <SiteNav />
@@ -63,6 +69,7 @@ export default function RootLayout({
           <MoonPhaseField />
           <RepetitionCompression />
           <SandpileField />
+          <Clima />
         </Providers>
       </body>
     </html>

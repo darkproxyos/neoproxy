@@ -5,6 +5,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
 import { navConfig, isGroup, isNavHidden, type NavGroup, type NavEntry, type NavLeaf } from './nav-config'
 import { useSessionAgent } from './proxyverse/useSessionAgent'
+import { enSerie } from '@/lib/zona/rutas'
 
 const mono = "'Space Mono', monospace"
 
@@ -64,6 +65,8 @@ function NavIcon({ label, color }: { label: string; color: string }) {
 }
 
 function isActive(pathname: string, href: string) {
+  // FENÓMENOS entra por el Umbral: se enciende en el Umbral, el hub y cada fenómeno
+  if (href === '/umbral') return enSerie(pathname)
   return pathname === href || (href !== '/' && pathname.startsWith(href + '/'))
 }
 
