@@ -21,7 +21,7 @@ const mono = "'Space Mono', monospace"
 const ACCENT = '#4f6bff'
 const TEXT = '#c8daf0'
 const TEXT_DIM = '#8fb8d6'
-const LABEL_DIM = '#4a6080'
+const LABEL_DIM = '#6f86a3'
 
 function Panel({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (

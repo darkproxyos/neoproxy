@@ -26,7 +26,7 @@ const mono = "'Space Mono', monospace"
 const ACCENT = '#b4e61d'
 const TEXT = '#c8daf0'
 const TEXT_DIM = '#8fb8d6'
-const LABEL_DIM = '#4a6080'
+const LABEL_DIM = '#6f86a3'
 
 // ---------------------------------------------------------------------------
 // Bloques de layout reutilizables
