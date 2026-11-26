@@ -125,7 +125,7 @@ export default function StatusPage() {
           LAST UPDATE: {state?.lastUpdated ? new Date(state.lastUpdated).toLocaleString() : 'N/A'}
         </p>
         <div className="mt-4 flex gap-4">
-          <Link href="/" className="text-[#b400ff] hover:text-[#00ff9d] transition-colors">
+          <Link href="/" className="text-[#b400ff] hover:text-[#00ff9d] transition-colors tap-ext">
             ← RETURN TO SECTOR 0
           </Link>
           <Link href="/games/wired" className="text-[#b400ff] hover:text-[#00ff9d] transition-colors">

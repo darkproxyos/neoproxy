@@ -89,7 +89,7 @@ export default function FabricationQueuePage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-          <Link href="/fabrication" className="press" style={{
+          <Link href="/fabrication" className="press tap-ext" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           }}>
             ← VOLVER A FABRICACIÓN

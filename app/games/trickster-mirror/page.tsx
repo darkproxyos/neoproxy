@@ -298,7 +298,7 @@ export default function TricksterMirrorPage() {
         </div>
       )}
 
-      <a href="/games" style={{
+      <a className="tap-ext" href="/games" style={{
         position: 'absolute', top: 20, right: 20,
         fontFamily: 'monospace', color: `${VIOLET}66`,
         fontSize: 10, letterSpacing: 3, textDecoration: 'none',

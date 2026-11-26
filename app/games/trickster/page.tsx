@@ -1722,7 +1722,7 @@ export default function TricksterGame() {
         </div>
       )}
 
-      <a href="/games" style={isTouch ? {
+      <a className="tap-ext" href="/games" style={isTouch ? {
         // top-right en touch: bottom-right ya lo ocupan el botón de salto y el Chat global
         position: 'absolute', top: 20, right: 20,
         fontFamily: 'monospace', color: `${VIOLET}66`,

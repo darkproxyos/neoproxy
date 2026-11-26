@@ -39,7 +39,7 @@ export default function Digiz3D() {
         />
       </div>
 
-      <Link
+      <Link className="tap-ext"
         href="/games/digiz"
         style={{
           position: 'absolute', top: 14, left: 14, zIndex: 10,

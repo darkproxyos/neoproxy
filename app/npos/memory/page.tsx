@@ -26,7 +26,7 @@ export default function MemoryLab() {
         </div>
 
         <div style={{ marginTop: '3rem' }}>
-          <Link href="/npos" style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.75rem', color: '#4a6080', textDecoration: 'none' }}>← NPos OS</Link>
+          <Link className="tap-ext" href="/npos" style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.75rem', color: '#4a6080', textDecoration: 'none' }}>← NPos OS</Link>
         </div>
       </div>
     </div>

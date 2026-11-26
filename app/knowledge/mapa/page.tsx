@@ -116,7 +116,7 @@ export default function MapaConocimientoPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '104px 24px 40px' }}>
-          <Link href="/knowledge" className="press" style={{
+          <Link href="/knowledge" className="press tap-ext" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none',
             display: 'inline-block', marginBottom: 40,
           }}>

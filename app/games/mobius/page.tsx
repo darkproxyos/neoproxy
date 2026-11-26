@@ -335,7 +335,7 @@ export default function MobiusGame() {
         />
       )}
 
-      <Link href="/games" style={{
+      <Link className="tap-ext" href="/games" style={{
         position: 'fixed', top: 16, left: 16, zIndex: 25,
         fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${CYAN}aa`, textDecoration: 'none',
         border: `1px solid ${CYAN}44`, padding: '6px 12px', background: '#00050aaa',

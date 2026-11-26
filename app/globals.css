@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Newsreader:ital@1&display=swap');
+/* Las fuentes de Google se cargan con <link> en app/layout.tsx (en paralelo, con preconnect),
+   no con @import (que las encadenaba detrás de esta hoja). DM Mono y Bebas Neue solo las usa
+   /shop/drop01: se cargan ahí, con next/font. */
 @import "tailwindcss";
 
 :root {
@@ -303,6 +305,14 @@ html.tramo-boot .neo-organism-filter { transition: none; }
 .site-nav-link:hover {
   color: var(--neon-cyan);
 }
+
+/* Zona táctil ampliada sin mover el diseño: enlaces chicos como «← VOLVER A …» medían
+   14 px de alto; el área que recibe el toque crece 12 px arriba y abajo. */
+.tap-ext { position: relative; }
+.tap-ext::after { content: ''; position: absolute; inset: -12px -8px; }
+
+/* el texto largo de la sesión solo en pantallas muy anchas: le deja lugar al menú */
+@media (max-width: 1799px) { .nav-session-long { display: none; } }
 
 @media (max-width: 768px) {
   .site-nav-links,

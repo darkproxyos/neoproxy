@@ -1,6 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { DM_Mono, Bebas_Neue } from 'next/font/google'
+
+// solo esta página usa estas dos familias: se cargan aquí y no en todo el sitio
+const dmMono = DM_Mono({ subsets: ['latin'], weight: ['300', '400', '500'], style: ['normal', 'italic'] })
+const bebas = Bebas_Neue({ subsets: ['latin'], weight: '400' })
 
 // ── SEED ENGINE (same RNG as generator) ──────────────────────────────────────
 function mkRand(seed: number) {
@@ -179,7 +184,7 @@ export default function Drop01Page() {
       background: '#020205',
       minHeight: '100vh',
       color: '#aaaacc',
-      fontFamily: "'DM Mono', monospace",
+      fontFamily: dmMono.style.fontFamily,
     }}>
 
       {/* HERO */}
@@ -202,7 +207,7 @@ export default function Drop01Page() {
             ◈ NEOPROXY / SHOP / DROP_01
           </div>
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: bebas.style.fontFamily,
             fontSize: 'clamp(52px, 8vw, 96px)',
             lineHeight: 0.9,
             letterSpacing: '0.05em',
@@ -253,7 +258,7 @@ export default function Drop01Page() {
             onClick={() => setFilter(f)}
             className="press"
             style={{
-              fontFamily: "'DM Mono', monospace",
+              fontFamily: dmMono.style.fontFamily,
               fontSize: 8,
               letterSpacing: '0.2em',
               padding: '6px 14px',
@@ -309,7 +314,7 @@ export default function Drop01Page() {
                 {/* Rank */}
                 <div style={{
                   position: 'absolute', top: 8, left: 10,
-                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontFamily: bebas.style.fontFamily,
                   fontSize: 18, color: 'rgba(180,0,255,0.15)',
                 }}>
                   {String(idx + 1).padStart(2, '0')}
@@ -381,7 +386,7 @@ export default function Drop01Page() {
                       onClick={e => { e.stopPropagation(); handleBuy(item) }}
                       className="press"
                       style={{
-                        fontFamily: "'DM Mono', monospace",
+                        fontFamily: dmMono.style.fontFamily,
                         fontSize: 7, letterSpacing: '0.15em',
                         padding: '5px 10px',
                         border: '1px solid rgba(180,0,255,0.5)',
@@ -456,7 +461,7 @@ export default function Drop01Page() {
         <a
           href="/lab/atractores"
           style={{
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: dmMono.style.fontFamily,
             fontSize: 8, letterSpacing: '0.2em',
             padding: '10px 24px',
             border: '1px solid #1a1a2e',

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Space_Mono, Inter } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import SiteNav from '@/components/SiteNav'
 import Chat from '@/components/Chat'
@@ -24,7 +24,6 @@ import RepetitionCompression from '@/components/RepetitionCompression'
 import SandpileField from '@/components/SandpileField'
 import Clima from '@/components/zona/Clima'
 import { BOOT_SCRIPT } from '@/lib/zona/rutas'
-const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' })
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
@@ -41,11 +40,15 @@ export default function RootLayout({
 }) {
   return (
     // suppressHydrationWarning: el guion de arranque marca el tramo en <html> antes de hidratar
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <head>
         <script id="tramo-boot" dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+        {/* Space Mono por su nombre (lo usan estilos en línea y lienzos 2D en todo el sitio) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Newsreader:ital@1&display=swap" />
       </head>
-      <body className={`${spaceMono.variable} ${inter.variable} bg-[#020408] text-[#c8daf0] overflow-y-auto`}>
+      <body className={`${inter.variable} bg-[#020408] text-[#c8daf0] overflow-y-auto`}>
         <Providers>
           <SiteNav />
           <SteganoNoise />

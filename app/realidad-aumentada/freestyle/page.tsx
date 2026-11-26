@@ -349,7 +349,7 @@ export default function FreestyleVoicePage() {
               }}>
                 ACTIVAR MICRÓFONO
               </button>
-              <Link href="/games/rap" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, color: `${CYAN}88`, textDecoration: 'none' }}>
+              <Link className="tap-ext" href="/games/rap" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, color: `${CYAN}88`, textDecoration: 'none' }}>
                 ← modo sin voz, solo texto (/games/rap)
               </Link>
             </>

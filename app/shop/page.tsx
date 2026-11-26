@@ -62,7 +62,7 @@ export default function ShopPage() {
       {/* Header */}
       <header className="relative z-10 p-8 border-b border-[#0f1f35]">
         <div className="max-w-7xl mx-auto">
-          <Link href="/" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block">
+          <Link href="/" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block tap-ext">
             ← BACK TO NEOPROXY OS
           </Link>
           <h1 className="font-sans text-5xl md:text-7xl font-extrabold leading-none tracking-tight">

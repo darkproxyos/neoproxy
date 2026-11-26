@@ -346,7 +346,7 @@ export default function LaboratorioPage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/especimenes" className="press" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
+        <Link href="/especimenes" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
           ← VOLVER A ESPECÍMENES
         </Link>
         <Link href="/especimenes/linaje" className="press" style={{ fontSize: 9, letterSpacing: 3, color: ACCENT, textDecoration: 'none', display: 'inline-block', margin: '0 0 28px 28px' }}>

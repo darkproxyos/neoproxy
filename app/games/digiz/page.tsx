@@ -24,7 +24,7 @@ export default function DigizGame() {
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
         allow="autoplay"
       />
-      <Link
+      <Link className="tap-ext"
         href="/games"
         style={{
           position: 'absolute', top: 14, left: 14, zIndex: 10,

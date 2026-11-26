@@ -41,7 +41,7 @@ export default function FabricationPage() {
         borderBottom: '1px solid rgba(0, 212, 255, 0.1)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link
+          <Link className="tap-ext"
             href="/"
             style={{
               fontSize: 9,

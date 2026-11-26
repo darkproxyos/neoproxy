@@ -289,7 +289,7 @@ export default function SpaceshipGame() {
         </div>
       )}
 
-      <a href="/" style={isTouch ? {
+      <a className="tap-ext" href="/" style={isTouch ? {
         // bottom:90 -- arriba del botón de Chat global (bottom:24,right:24);
         // top:20,right:20 ya lo ocupa la lista de bandas del espectro
         position:'absolute', bottom:90, right:20,
