@@ -34,16 +34,16 @@ export default function StardustPage() {
           <div className="flex flex-col">
             <div className="text-2xl font-black tracking-[0.2em] flex items-center gap-3">
               <span className="text-cyan-400">NEO</span>PROXY
-              <span className="text-[10px] opacity-40 font-mono tracking-normal bg-white/5 px-2 py-1 rounded">STARDUST_v3.0_RT</span>
+              <span className="text-[11px] opacity-40 font-mono tracking-normal bg-white/5 px-2 py-1 rounded">STARDUST_v3.0_RT</span>
             </div>
             <div className="flex items-center gap-2 mt-1">
               <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-              <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold">Uplink: {isConnected ? 'Stable' : 'Unstable'}</span>
+              <span className="text-[10.5px] text-white/30 uppercase tracking-widest font-bold">Uplink: {isConnected ? 'Stable' : 'Unstable'}</span>
             </div>
           </div>
           <Link 
             href="/npos" 
-            className="pointer-events-auto border border-cyan-400/20 px-6 py-2 text-cyan-400 text-[10px] font-bold hover:bg-cyan-400 hover:text-black transition-all hover:border-cyan-400 rounded-full"
+            className="pointer-events-auto border border-cyan-400/20 px-6 py-2 text-cyan-400 text-[11px] font-bold hover:bg-cyan-400 hover:text-black transition-all hover:border-cyan-400 rounded-full"
           >
             TERMINATE SESSION
           </Link>
@@ -54,7 +54,7 @@ export default function StardustPage() {
           <Synthesis config={config} onChange={handleParamChange} />
         </main>
 
-        <footer className="mt-auto flex justify-between text-[10px] font-mono opacity-40 tracking-widest">
+        <footer className="mt-auto flex justify-between text-[11px] font-mono opacity-40 tracking-widest">
           <div className="flex gap-6">
             <span>{fps} FPS</span>
             <span>NODE: CORE-X1</span>

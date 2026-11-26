@@ -29,11 +29,11 @@ export default function KernelPage() {
           
           <div className="flex gap-8 text-right">
             <div>
-              <div className="text-[10px] text-cyan-700 uppercase">System Status</div>
+              <div className="text-[11px] text-cyan-700 uppercase">System Status</div>
               <div className="text-sm">{isConnected ? 'OPERATIONAL' : 'OFFLINE'}</div>
             </div>
             <div>
-              <div className="text-[10px] text-cyan-700 uppercase">Uplink</div>
+              <div className="text-[11px] text-cyan-700 uppercase">Uplink</div>
               <div className="text-sm">SOCKET.IO:4000</div>
             </div>
           </div>
@@ -46,7 +46,7 @@ export default function KernelPage() {
             <TelemetryPanel />
             
             <div className="p-4 bg-cyan-950/10 border border-cyan-900/20 rounded-lg">
-              <h3 className="text-[10px] uppercase text-cyan-500/50 mb-3 tracking-widest font-bold">Node Identification</h3>
+              <h3 className="text-[11px] uppercase text-cyan-500/50 mb-3 tracking-widest font-bold">Node Identification</h3>
               <div className="space-y-3">
                 {[
                   { name: 'Core Engine', status: 'ACTIVE', pid: 1436 },
@@ -54,7 +54,7 @@ export default function KernelPage() {
                   { name: 'EventBus', status: 'ACTIVE', pid: 1443 },
                   { name: 'Multiplayer', status: 'ACTIVE', pid: 41186 },
                 ].map((node) => (
-                  <div key={node.name} className="flex justify-between items-center text-[11px] border-b border-cyan-900/10 pb-1">
+                  <div key={node.name} className="flex justify-between items-center text-[12px] border-b border-cyan-900/10 pb-1">
                     <span className="text-cyan-100">{node.name}</span>
                     <div className="flex gap-3">
                       <span className="text-cyan-700">PID:{node.pid}</span>
@@ -76,14 +76,14 @@ export default function KernelPage() {
                <div className="text-cyan-900 text-xs text-center">
                  <div className="w-40 h-[1px] bg-cyan-900 mx-auto mb-2" />
                  TOPOLOGICAL STATE MAPPING INACTIVE
-                 <div className="text-[10px] mt-1">AWAITING STARDUST SYNC</div>
+                 <div className="text-[11px] mt-1">AWAITING STARDUST SYNC</div>
                </div>
             </div>
           </section>
         </div>
 
         {/* Footer Info */}
-        <footer className="pt-12 text-[9px] text-cyan-900 flex justify-between uppercase tracking-widest">
+        <footer className="pt-12 text-[10.5px] text-cyan-900 flex justify-between uppercase tracking-widest">
            <span>ProxyOS Collective :: DarkProxy Operator</span>
            <span>SECURE_LAYER_STABLE_SIGNAL_A92</span>
         </footer>

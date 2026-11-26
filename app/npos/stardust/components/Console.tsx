@@ -25,7 +25,7 @@ export default function Console({ onCommand }: ConsoleProps) {
       <p className="text-white/40 text-xs mb-4">Neural geometry sync active.</p>
 
       <div className="bg-black/60 border border-cyan-500/20 rounded-xl p-4 mb-4">
-        <div className="h-24 overflow-y-auto text-[10px] font-mono space-y-1 mb-2 custom-scrollbar">
+        <div className="h-24 overflow-y-auto text-[11px] font-mono space-y-1 mb-2 custom-scrollbar">
           {lines.map((l, i) => (
             <div key={i} className="opacity-80">
               <span className="text-cyan-600">[{l.time}]</span> <span className="text-cyan-100">{l.text}</span>
@@ -50,7 +50,7 @@ export default function Console({ onCommand }: ConsoleProps) {
           <button 
             key={btn}
             onClick={() => onCommand(btn.toLowerCase())}
-            className="bg-cyan-500/5 border border-cyan-500/10 hover:bg-cyan-500/20 text-cyan-500 text-[10px] py-2 rounded-lg transition-all"
+            className="bg-cyan-500/5 border border-cyan-500/10 hover:bg-cyan-500/20 text-cyan-500 text-[11px] py-2 rounded-lg transition-all"
           >
             {btn}
           </button>
