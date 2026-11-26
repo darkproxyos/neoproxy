@@ -55,6 +55,7 @@ export const navConfig: NavEntry[] = [
   { label: 'ESPECÍMENES', href: '/especimenes', live: true },
   { label: 'GEOMETRÍAS', href: '/geometrias', live: true },
   { label: 'CAPAS', href: '/capas', live: true },
+  { label: 'HUMO SÓLIDO', href: '/humo', live: true },
   { label: 'PROXYGAMES', href: '/games', live: true },
   // AUDIO: oculto del menú a pedido explícito — la página sigue viva en
   // /audio, se vuelve a agregar acá cuando esté lista para mostrarse.
