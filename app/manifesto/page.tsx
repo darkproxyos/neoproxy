@@ -376,6 +376,11 @@ export default function Manifesto() {
             NEOPROXY.ART // THE SYSTEM RECOGNIZES YOU
           </div>
 
+          {/* el viaje: del Afuera (aquí, en sepia) al Umbral y de ahí a la Zona */}
+          <Link href="/umbral" style={{ display: 'inline-block', marginTop: 34, fontSize: 11, letterSpacing: 6, color: '#c8daf0', border: '1px solid #ffffff2a', padding: '14px 22px', textDecoration: 'none' }}>
+            CRUZAR EL UMBRAL →
+          </Link>
+
           {/* aire al final — sin esto no hay suficiente scroll después del
               pico para que la corrupción termine de bajar a cero */}
           <div style={{ height: '60vh' }} aria-hidden="true" />

@@ -78,8 +78,19 @@ body {
    modal fixed se iba fuera de pantalla al abrirlo después de scrollear. */
 .neo-organism-filter {
   transition: filter 3s ease;
-  filter: contrast(calc(1 + var(--repeat-compress, 0) * 0.35)) saturate(calc(1 - var(--repeat-compress, 0) * 0.45));
+  filter: contrast(calc(1 + var(--repeat-compress, 0) * 0.35)) saturate(calc((1 - var(--repeat-compress, 0) * 0.45) * var(--tramo-sat, 1))) sepia(var(--tramo-sepia, 0));
 }
+
+/* El viaje (lib/zona/rutas.ts, components/zona/Clima.tsx): el Afuera en sepia, como el
+   mundo gastado de Stalker; el Umbral casi sin color, el gris de un televisor en un canal
+   muerto (Neuromante); la Zona con todo su color. El cambio usa la misma transición lenta
+   del filtro (3 s): al cruzar, el color vuelve de a poco. 'tramo-boot' la apaga en el
+   primer pintado para no ver la página destiñéndose al llegar. */
+html[data-tramo='afuera'] { --tramo-sepia: 0.62; --tramo-sat: 0.7; }
+html[data-tramo='umbral'] { --tramo-sepia: 0.08; --tramo-sat: 0.16; }
+html[data-tramo='zona'] { --tramo-sepia: 0; --tramo-sat: 1.06; }
+html[data-tramo='zona'] .neo-organism-filter { transition: filter 4.5s ease-in; }
+html.tramo-boot .neo-organism-filter { transition: none; }
 
 /* Scrollbar CRT: reemplaza la barra nativa por algo que se sienta parte
    del mismo artefacto que el resto del sitio, no un control de browser
