@@ -8,7 +8,7 @@ export default function SignalFeed() {
 
   return (
     <div className="flex flex-col gap-2 p-4 h-[300px] overflow-hidden bg-black/20 border border-cyan-900/10 rounded-lg">
-      <div className="text-[10px] uppercase text-cyan-500/30 mb-2 tracking-widest font-bold">Signal Stream</div>
+      <div className="text-[11px] uppercase text-cyan-500/30 mb-2 tracking-widest font-bold">Signal Stream</div>
       <div className="space-y-1 overflow-y-auto custom-scrollbar">
         <AnimatePresence initial={false}>
           {signals.map((signal) => (
@@ -17,7 +17,7 @@ export default function SignalFeed() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              className="flex items-center gap-3 py-1 px-2 text-[11px] font-mono border-l-2 border-cyan-500/20 bg-cyan-950/10 hover:bg-cyan-900/20 transition-colors"
+              className="flex items-center gap-3 py-1 px-2 text-[12px] font-mono border-l-2 border-cyan-500/20 bg-cyan-950/10 hover:bg-cyan-900/20 transition-colors"
             >
               <span className="text-cyan-700">[{new Date(signal.timestamp * 1000).toLocaleTimeString([], { hour12: false })}]</span>
               <span className={`px-1 rounded ${

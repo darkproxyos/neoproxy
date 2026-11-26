@@ -68,7 +68,7 @@ export default function GenerativeLab() {
 
   return (
     <div className="relative w-full h-screen bg-[#080a0e]">
-      <div className="absolute top-0 left-0 right-0 h-8 border-b border-white/10 flex items-center justify-between px-6 z-10 text-[11px] font-mono tracking-widest text-[#cccccc] uppercase">
+      <div className="absolute top-0 left-0 right-0 h-8 border-b border-white/10 flex items-center justify-between px-6 z-10 text-[12px] font-mono tracking-widest text-[#cccccc] uppercase">
         <span>NeoProxy Specimen Lab // Generative Sculpture Engine</span>
         <div className="w-2 h-2 rounded-full bg-[#c8f5a0] animate-pulse shadow-[0_0_10px_rgba(200,245,160,0.7)]" />
       </div>
@@ -78,7 +78,7 @@ export default function GenerativeLab() {
         className="w-full h-full outline-none touch-none"
       />
 
-      <div className="absolute bottom-0 left-0 right-0 h-8 border-t border-white/10 flex items-center justify-between px-6 z-10 text-[11px] font-mono text-[#cccccc]">
+      <div className="absolute bottom-0 left-0 right-0 h-8 border-t border-white/10 flex items-center justify-between px-6 z-10 text-[12px] font-mono text-[#cccccc]">
         <span>Status: <span className="text-[#c8f5a0]">Resonant</span></span>
         <span>Active: <span className="text-[#5ef0c0]">NPos Kernel Boot SEQUENCE</span></span>
       </div>

@@ -43,7 +43,7 @@ const VARIANTS = [
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-24 mb-16 border-t border-[#0f1f35] pt-10">
-      <h2 className="text-[11px] font-mono tracking-[0.25em] uppercase mb-6" style={{ color: ACCENT }}>
+      <h2 className="text-[12px] font-mono tracking-[0.25em] uppercase mb-6" style={{ color: ACCENT }}>
         {title}
       </h2>
       {children}
@@ -57,7 +57,7 @@ function PinList({ items }: { items: string[] }) {
       {items.map((p) => (
         <span
           key={p}
-          className="text-[11px] font-mono px-2.5 py-1 border"
+          className="text-[12px] font-mono px-2.5 py-1 border"
           style={{ color: ACCENT, borderColor: `${ACCENT}44`, background: `${ACCENT}0a` }}
         >
           {p}
@@ -80,7 +80,7 @@ export default function Esp32TechPage() {
 
       <header className="relative z-10 p-8 border-b border-[#0f1f35]">
         <div className="max-w-4xl mx-auto">
-          <Link href="/shop" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block tap-ext">
+          <Link href="/shop" className="press text-[12px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block tap-ext">
             ← VOLVER A LA TIENDA
           </Link>
           <div className="flex items-start gap-6">
@@ -88,7 +88,7 @@ export default function Esp32TechPage() {
               <Esp32Icon color={ACCENT} width={64} />
             </div>
             <div>
-              <div className="text-[11px] font-mono tracking-[0.2em] uppercase mb-2" style={{ color: ACCENT }}>
+              <div className="text-[12px] font-mono tracking-[0.2em] uppercase mb-2" style={{ color: ACCENT }}>
                 INSUMOS ELECTRÓNICOS — FICHA TÉCNICA
               </div>
               <h1 className="font-sans text-4xl md:text-6xl font-extrabold leading-none tracking-tight">
@@ -108,7 +108,7 @@ export default function Esp32TechPage() {
       <main className="relative z-10 px-8 pb-20">
         <div className="max-w-4xl mx-auto">
           {/* Índice */}
-          <nav className="flex flex-wrap gap-x-5 gap-y-2 py-8 text-[10px] font-mono tracking-[0.1em] uppercase text-[#4a6080]">
+          <nav className="flex flex-wrap gap-x-5 gap-y-2 py-8 text-[11px] font-mono tracking-[0.1em] uppercase text-[#4a6080]">
             {[
               ['que-es', 'Qué es'],
               ['arquitectura', 'Arquitectura'],
@@ -162,7 +162,7 @@ export default function Esp32TechPage() {
                 ['CAN (TWAI)', 'Controlador de bus CAN integrado'],
               ].map(([k, v]) => (
                 <div key={k} className="border border-[#0f1f35] p-3">
-                  <div className="font-mono text-[10px] tracking-[0.15em] uppercase mb-1" style={{ color: ACCENT }}>{k}</div>
+                  <div className="font-mono text-[11px] tracking-[0.15em] uppercase mb-1" style={{ color: ACCENT }}>{k}</div>
                   <div className="text-[12px]">{v}</div>
                 </div>
               ))}
@@ -178,11 +178,11 @@ export default function Esp32TechPage() {
               Confirmá siempre contra la serigrafía impresa en tu placa específica</strong> antes de cablear.
             </p>
 
-            <h3 className="text-[10px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Entrada solamente — no se pueden usar como salida</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Entrada solamente — no se pueden usar como salida</h3>
             <p className="text-[12px] text-[#4a6080] mb-1">Sin resistencia pull-up/down interna.</p>
             <PinList items={INPUT_ONLY} />
 
-            <h3 className="text-[10px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Strapping — definen el modo de arranque</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Strapping — definen el modo de arranque</h3>
             <p className="text-[12px] text-[#4a6080] mb-3">Una carga externa acá puede impedir que arranque, o en el caso de GPIO12, dañar la flash.</p>
             <div className="space-y-1.5">
               {STRAPPING.map((s) => (
@@ -193,17 +193,17 @@ export default function Esp32TechPage() {
               ))}
             </div>
 
-            <h3 className="text-[10px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Reservados para la flash interna — no usar para nada más</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Reservados para la flash interna — no usar para nada más</h3>
             <PinList items={FLASH_PINS} />
 
-            <h3 className="text-[10px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">ADC1 — entrada analógica, funciona con WiFi activo</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">ADC1 — entrada analógica, funciona con WiFi activo</h3>
             <PinList items={ADC1} />
 
-            <h3 className="text-[10px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">ADC2 — comparte hardware con el radio WiFi</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">ADC2 — comparte hardware con el radio WiFi</h3>
             <p className="text-[12px] text-[#4a6080] mb-1">No confiable para lecturas analógicas mientras el WiFi está conectado — usá ADC1 en proyectos conectados a red.</p>
             <PinList items={ADC2} />
 
-            <h3 className="text-[10px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Touch — detectan contacto capacitivo directo</h3>
+            <h3 className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#4a6080] mt-8 mb-1">Touch — detectan contacto capacitivo directo</h3>
             <PinList items={TOUCH} />
 
             <p className="text-[12px] text-[#4a6080] mt-8">
@@ -248,7 +248,7 @@ export default function Esp32TechPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-[12px] text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-[#0f1f35] text-[10px] font-mono tracking-[0.1em] uppercase text-[#4a6080]">
+                  <tr className="border-b border-[#0f1f35] text-[11px] font-mono tracking-[0.1em] uppercase text-[#4a6080]">
                     <th className="pb-2 pr-4">Modelo</th>
                     <th className="pb-2 pr-4">Antena</th>
                     <th className="pb-2 pr-4">Memoria</th>
@@ -282,7 +282,7 @@ export default function Esp32TechPage() {
                 ['MicroPython', 'Firmware que corre un intérprete Python en el chip — prototipado rápido, menos control fino.'],
               ].map(([k, v]) => (
                 <div key={k} className="border border-[#0f1f35] p-4">
-                  <div className="font-mono text-[10px] tracking-[0.15em] uppercase mb-2" style={{ color: ACCENT }}>{k}</div>
+                  <div className="font-mono text-[11px] tracking-[0.15em] uppercase mb-2" style={{ color: ACCENT }}>{k}</div>
                   <div className="text-[12px] text-[#8fb8d6] leading-relaxed">{v}</div>
                 </div>
               ))}
@@ -300,7 +300,7 @@ export default function Esp32TechPage() {
               href="https://wa.me/56993550010?text=Hola%2C%20tengo%20una%20consulta%20sobre%20el%20ESP32."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border"
+              className="inline-block font-mono text-[11px] tracking-[0.2em] uppercase px-5 py-3 border"
               style={{ color: ACCENT, borderColor: `${ACCENT}66` }}
             >
               [ CONSULTAR DISPONIBILIDAD ]

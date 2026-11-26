@@ -64,7 +64,9 @@ function NavIcon({ label, color }: { label: string; color: string }) {
   }
 }
 
-const GAP = 18
+// separación entre entradas del menú: 15 px y tracking 1,6 (antes 18 y 2) para que a 1440 px
+// quepan hasta FENÓMENOS antes de pasar a MÁS
+const GAP = 15
 const MORE = '__mas'
 
 function isActive(pathname: string, href: string) {
@@ -248,7 +250,7 @@ export default function SiteNav() {
                   aria-expanded={open}
                   className="site-nav-link press"
                   style={{
-                    fontFamily: mono, fontSize: 12, letterSpacing: 2, whiteSpace: 'nowrap',
+                    fontFamily: mono, fontSize: 12, letterSpacing: 1.6, whiteSpace: 'nowrap',
                     background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0',
                     color: active ? groupColor : '#a9c0d6',
                     display: 'flex', alignItems: 'center', gap: 7,
@@ -319,7 +321,7 @@ export default function SiteNav() {
           if (!entry.live) {
             return (
               <span key={entry.label} title="Próximamente" style={{
-                fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#6f86a3', cursor: 'default', whiteSpace: 'nowrap',
+                fontFamily: mono, fontSize: 12, letterSpacing: 1.6, color: '#6f86a3', cursor: 'default', whiteSpace: 'nowrap',
               }}>
                 {entry.label}
               </span>
@@ -330,7 +332,7 @@ export default function SiteNav() {
           const active = isActive(pathname, entry.href)
           return (
             <Link key={entry.href} href={entry.href} className="site-nav-link press" style={{
-              fontFamily: mono, fontSize: 12, letterSpacing: 2, textDecoration: 'none', whiteSpace: 'nowrap',
+              fontFamily: mono, fontSize: 12, letterSpacing: 1.6, textDecoration: 'none', whiteSpace: 'nowrap',
               color: active ? entryColor : '#a9c0d6', display: 'flex', alignItems: 'center', gap: 7,
             }}>
               <LifeNode color={entryColor} active={active} />
@@ -341,7 +343,7 @@ export default function SiteNav() {
 
   const moreButton = (open: boolean, active: boolean) => (
     <button onClick={() => setOpenGroup(open ? null : MORE)} aria-expanded={open} aria-haspopup="true" className="site-nav-link press"
-      style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, whiteSpace: 'nowrap', background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', color: active ? accent : '#a9c0d6', display: 'flex', alignItems: 'center', gap: 7 }}>
+      style={{ fontFamily: mono, fontSize: 12, letterSpacing: 1.6, whiteSpace: 'nowrap', background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', color: active ? accent : '#a9c0d6', display: 'flex', alignItems: 'center', gap: 7 }}>
       <LifeNode color={accent} active={active} />
       MÁS
       <SynapseChevron color={active || open ? accent : '#8fb8d6'} open={open} />

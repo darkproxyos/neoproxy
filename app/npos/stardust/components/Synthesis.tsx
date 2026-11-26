@@ -18,7 +18,7 @@ export default function Synthesis({ config, onChange }: SynthesisProps) {
         { label: 'SCALE', key: 'scale', min: 0.1, max: 5.0, step: 0.1, factor: 1 },
       ].map(row => (
         <div key={row.key} className="space-y-1">
-          <div className="flex justify-between text-[10px] text-white/40 tracking-widest">
+          <div className="flex justify-between text-[11px] text-white/40 tracking-widest">
             <span>{row.label}</span>
             <span className="text-cyan-400">{(config as any)[row.key]}</span>
           </div>
@@ -34,7 +34,7 @@ export default function Synthesis({ config, onChange }: SynthesisProps) {
         </div>
       ))}
 
-      <div className="mt-4 p-3 bg-white/5 rounded-xl flex justify-between items-center text-[10px]">
+      <div className="mt-4 p-3 bg-white/5 rounded-xl flex justify-between items-center text-[11px]">
         <span className="text-white/30 font-bold">SEED:</span>
         <span className="text-cyan-400 font-mono">#{config.seed}</span>
       </div>

@@ -62,7 +62,7 @@ export default function ShopPage() {
       {/* Header */}
       <header className="relative z-10 p-8 border-b border-[#0f1f35]">
         <div className="max-w-7xl mx-auto">
-          <Link href="/" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block tap-ext">
+          <Link href="/" className="press text-[12px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block tap-ext">
             ← BACK TO NEOPROXY OS
           </Link>
           <h1 className="font-sans text-5xl md:text-7xl font-extrabold leading-none tracking-tight">
@@ -89,7 +89,7 @@ export default function ShopPage() {
                 className="bg-[#080d14] border border-[#0f1f35] p-8 transition-all duration-200"
               >
                 <div
-                  className="text-[11px] font-mono tracking-[0.2em] uppercase mb-3"
+                  className="text-[12px] font-mono tracking-[0.2em] uppercase mb-3"
                   style={{ color: cat.color }}
                 >
                   {cat.label}
@@ -101,7 +101,7 @@ export default function ShopPage() {
                     <Link href="/shop/esp32" className="press text-center group">
                       <Esp32Icon color={cat.color} />
                       <div
-                        className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2 group-hover:underline"
+                        className="text-[10px] font-mono tracking-[0.15em] uppercase mt-2 group-hover:underline"
                         style={{ color: cat.color }}
                       >
                         ESP32 — FICHA TÉCNICA
@@ -109,7 +109,7 @@ export default function ShopPage() {
                     </Link>
                     <div className="text-center">
                       <ArduinoNanoIcon color={cat.color} />
-                      <div className="text-[8px] font-mono tracking-[0.15em] uppercase mt-2" style={{ color: cat.color }}>
+                      <div className="text-[10px] font-mono tracking-[0.15em] uppercase mt-2" style={{ color: cat.color }}>
                         ARDUINO NANO
                       </div>
                     </div>
@@ -127,7 +127,7 @@ export default function ShopPage() {
                 <Link
                   href={cat.cta.href}
                   {...(cat.cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="press inline-block font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border transition-colors"
+                  className="press inline-block font-mono text-[11px] tracking-[0.2em] uppercase px-5 py-3 border transition-colors"
                   style={{ color: cat.color, borderColor: `${cat.color}66` }}
                 >
                   [ {cat.cta.label} ]
@@ -137,7 +137,7 @@ export default function ShopPage() {
           </div>
 
           <div className="text-center py-12 border-t border-[#0f1f35]">
-            <div className="text-[11px] font-mono text-[#4a6080] tracking-[0.2em] uppercase mb-4">
+            <div className="text-[12px] font-mono text-[#4a6080] tracking-[0.2em] uppercase mb-4">
               CATÁLOGO EN CONSTRUCCIÓN
             </div>
             <p className="text-sm text-[#4a6080] max-w-xl mx-auto">
@@ -159,10 +159,10 @@ export default function ShopPage() {
       {/* Footer */}
       <footer className="relative z-10 p-8 border-t border-[#0f1f35] mt-8">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-[11px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
+          <div className="text-[12px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
             NEOPROXY OS — TIENDA
           </div>
-          <div className="text-[11px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
+          <div className="text-[12px] font-mono text-[#4a6080] tracking-[0.2em] uppercase">
             SANTIAGO, CHILE
           </div>
         </div>
