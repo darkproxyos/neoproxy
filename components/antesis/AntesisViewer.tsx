@@ -26,6 +26,11 @@ export type AntesisViewerApi = {
   nudge(rad: number): void
   zoom(f: number): void
   resetView(): void
+  // modo reel: la cámara la mueve una coreografía (órbita, altura, encuadre)
+  setReel(on: boolean): void
+  setOrbit(radPerSec: number): void
+  setBeta(beta: number): void
+  setFraming(scale: number, up: number): void
 }
 
 const hex = (h: string) => Color3.FromHexString(h)
@@ -88,6 +93,7 @@ export default function AntesisViewer({ onReady }: { onReady: (api: AntesisViewe
     type Unit = { spin: TransformNode; gear?: AbstractMesh; deco?: AbstractMesh; pin?: AbstractMesh; cls: 'A' | 'B' }
     let root: TransformNode | null = null, units: Unit[] = [], base: Mesh[] = [], core: AbstractMesh | null = null
     let ratio = 1, step = 6, spin = 0.6, angle = 0, explode = 0, explodeT = 0, bounds = 50, follow = true, userZoom = 1
+    let reel = false, orbit = 0, betaT = 1.05, frameScale = 1, frameUp = 0
     const hidden = new Set<string>()
 
     const layout = () => {
@@ -140,6 +146,16 @@ export default function AntesisViewer({ onReady }: { onReady: (api: AntesisViewe
       nudge(rad) { angle += rad },
       zoom(f) { userZoom = Math.min(4, Math.max(0.25, userZoom * f)); if (!follow) zoomBy(cam, f) },
       resetView() { userZoom = 1; follow = true },
+      setReel(on) {
+        reel = on; follow = true; userZoom = 1; frameScale = 1; frameUp = 0
+        if (cam.autoRotationBehavior) cam.autoRotationBehavior.idleRotationSpeed = on ? 0 : 0.12
+        // en pantalla completa vertical, nítido (hasta 2× la densidad de la pantalla)
+        engine.setHardwareScalingLevel(on ? 1 / Math.min(2, window.devicePixelRatio || 1) : 1)
+        engine.resize()
+      },
+      setOrbit(v) { orbit = v },
+      setBeta(b) { betaT = b },
+      setFraming(sc, up) { frameScale = sc; frameUp = up },
     }
     apiRef.current = api
     readyRef.current(api)
@@ -152,10 +168,17 @@ export default function AntesisViewer({ onReady }: { onReady: (api: AntesisViewe
       // A gira α; B gira −α·NA/NB (los dos vistos desde afuera, sobre su propio eje)
       for (const u of units) u.spin.rotation.y = u.cls === 'A' ? -angle : angle * ratio
       if (Math.abs(explode - explodeT) > 1e-4) { explode += (explodeT - explode) * Math.min(1, dt * 5); layout() }
+      if (reel) {
+        cam.alpha += orbit * dt
+        cam.beta += (betaT - cam.beta) * Math.min(1, dt * 1.2)
+      }
       if (follow) {
         const asp = Math.min(1, engine.getAspectRatio(cam))
-        const want = ((bounds + explode * step * 3) * 1.18) / Math.tan(cam.fov / 2) / asp
+        const want = (frameScale * (bounds + explode * step * 3) * 1.18) / Math.tan(cam.fov / 2) / asp
         cam.radius += (want * userZoom - cam.radius) * Math.min(1, dt * 2)
+        // subir el objeto en pantalla: bajar el punto que mira la cámara
+        const ty = -frameUp * cam.radius * Math.tan(cam.fov / 2)
+        cam.target.y += (ty - cam.target.y) * Math.min(1, dt * 2)
       }
       canvas.dataset.angle = angle.toFixed(3)
     })

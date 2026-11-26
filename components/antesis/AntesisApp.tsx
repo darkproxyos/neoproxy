@@ -51,6 +51,21 @@ const Panel = ({ title, color = ACCENT, children }: { title: string; color?: str
 
 type Built = Extract<AntesisMsg, { type: 'built' }>
 
+// ---- modo reel: 25 s en vertical, para grabar con el teléfono ----
+type ReelPhase = 'titulo' | 'gira' | 'desarma' | 'arma' | 'semillas' | 'fin'
+const REEL: { k: ReelPhase; t: number }[] = [
+  { k: 'titulo', t: 0 }, { k: 'gira', t: 3.2 }, { k: 'desarma', t: 7.6 }, { k: 'arma', t: 11.6 }, { k: 'semillas', t: 15 }, { k: 'fin', t: 21 },
+]
+const REEL_END = 25.5
+// otras flores que pasan en «cada número es otra flor»
+const EXTRA: { sym: Symmetry; size: number; seed: number; reach: number; pal: string }[] = [
+  { sym: 'octa', size: 64, seed: 3, reach: 1.72, pal: 'girasol' },
+  { sym: 'tetra', size: 64, seed: 6, reach: 1.8, pal: 'fucsia' },
+  { sym: 'icosa', size: 90, seed: 8, reach: 1.72, pal: 'violeta' },
+]
+const PREFETCH = 1_000_000
+const win = (t: number, a: number, b: number, f = 0.35) => Math.max(0, Math.min(1, (t - a) / f, (b - t) / f))
+
 function readHash(): Partial<AntesisOpts> & { pal?: string } {
   if (typeof window === 'undefined') return {}
   const q = new URLSearchParams(window.location.hash.slice(1)), o: Partial<AntesisOpts> & { pal?: string } = {}
@@ -78,6 +93,8 @@ export default function AntesisApp() {
   const exportReq = useRef(0)
   const seedRef = useRef(opts.seed)
   useEffect(() => { seedRef.current = opts.seed }, [opts.seed])
+  const [reel, setReel] = useState<{ phase: ReelPhase; flower: number; t0: number } | null>(null)
+  const reelScenes = useRef(new Map<number, Built>())
 
   const palette = PALETTES.find((p) => p.k === pal) ?? PALETTES[0]
 
@@ -98,6 +115,7 @@ export default function AntesisApp() {
     workerRef.current = w
     w.onmessage = (e: MessageEvent<AntesisMsg>) => {
       const m = e.data
+      if (m.type === 'built' && m.req >= PREFETCH) { reelScenes.current.set(m.req - PREFETCH, m); return }
       if (m.type === 'built') {
         if (m.req !== reqRef.current) return
         lastScene.current = m; setBuilt(m); setBusy('VERIFICANDO…'); pushScene(m)
@@ -152,6 +170,69 @@ export default function AntesisApp() {
   const share = async () => { try { await navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch { /* sin portapapeles */ } }
   const toggle = (k: string) => { const on = !!hidden[k]; setHidden((h) => ({ ...h, [k]: !on })); viewerRef.current?.setVisible(k, on) }
 
+  const palOf = (k: string) => (PALETTES.find((p) => p.k === k) ?? PALETTES[0]).c
+  const enterReel = () => {
+    const v = viewerRef.current, w = workerRef.current
+    if (!v || !w || !lastScene.current) return
+    reelScenes.current.clear()
+    EXTRA.forEach((x, i) => w.postMessage({ type: 'build', opts: { ...opts, sym: x.sym, size: x.size, seed: x.seed, reach: x.reach, combo: undefined, invert: false, quality: 'vista' }, req: PREFETCH + i, noVerify: true } satisfies AntesisCmd))
+    document.documentElement.classList.add('an-reel-on')
+    v.setReel(true)
+    setReel({ phase: 'titulo', flower: -1, t0: performance.now() })
+  }
+  const exitReel = useCallback(() => {
+    document.documentElement.classList.remove('an-reel-on')
+    const v = viewerRef.current
+    if (v) {
+      v.setReel(false)
+      if (lastScene.current) pushScene(lastScene.current)
+      v.setColors(palette.c); v.setSpin(spin ? speed : 0); v.setExplode(explode)
+    }
+    setReel(null)
+  }, [palette, spin, speed, explode, pushScene])
+  useEffect(() => () => { document.documentElement.classList.remove('an-reel-on') }, [])
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape' && reel) exitReel() }
+    window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
+  }, [reel, exitReel])
+
+  // la coreografía: cada fase mueve la cámara, el giro y el desarme; los textos entran y
+  // salen con el mismo reloj (requestAnimationFrame), así el reel también se puede grabar
+  // cuadro a cuadro
+  const reelOn = reel !== null, reelT0 = reel?.t0 ?? 0
+  useEffect(() => {
+    if (!reelOn) return
+    let raf = 0, last = ''
+    const t0 = reelT0
+    const apply = (ph: ReelPhase, fl: number) => {
+      const v = viewerRef.current; if (!v) return
+      if (ph === 'titulo') { v.setExplode(0); v.setSpin(0.35); v.setOrbit(0.22); v.setBeta(1.16); v.setFraming(1.5, 0.03) }
+      if (ph === 'gira') { v.setSpin(1.25); v.setOrbit(0.12); v.setBeta(0.98); v.setFraming(0.9, 0.02) }
+      if (ph === 'desarma') { v.setExplode(1.35); v.setSpin(0.5); v.setOrbit(0.2); v.setBeta(1.1); v.setFraming(0.95, 0.02) }
+      if (ph === 'arma') { v.setExplode(0); v.setSpin(0.9); v.setOrbit(0.16); v.setBeta(1.02); v.setFraming(0.92, 0.02) }
+      if (ph === 'semillas') {
+        const sc = reelScenes.current.get(fl)
+        if (sc) { pushScene(sc); v.setColors(palOf(EXTRA[fl].pal)) }
+        v.setSpin(1); v.setOrbit(0.3); v.setBeta(1.05); v.setFraming(1, 0.02)
+      }
+      if (ph === 'fin') {
+        if (lastScene.current) pushScene(lastScene.current)
+        v.setColors(palette.c); v.setSpin(0.45); v.setOrbit(0.18); v.setBeta(1.12); v.setFraming(1.3, 0.22)
+      }
+    }
+    const tick = () => {
+      const t = (performance.now() - t0) / 1000
+      let ph: ReelPhase = 'titulo'
+      for (const s of REEL) if (t >= s.t) ph = s.k
+      const fl = ph === 'semillas' ? Math.min(EXTRA.length - 1, Math.floor((t - 15) / 2)) : -1
+      const key = `${ph}${fl}`
+      if (key !== last) { last = key; apply(ph, fl); setReel((r) => (r ? { ...r, phase: ph, flower: fl } : r)) }
+      if (t < REEL_END) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [reelOn]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const b = built
   const partsCount = b ? b.parts.reduce((s, p) => s + p.count, 0) : 0
   const sizeOf = (p: PartOut) => `${fmt(p.sizeMm[0], 0)} × ${fmt(p.sizeMm[1], 0)} × ${fmt(p.sizeMm[2], 0)} mm`
@@ -160,8 +241,11 @@ export default function AntesisApp() {
 
   return (
     <div>
-      <div style={{ position: 'relative', height: 'min(80vh, 760px)', minHeight: 460, background: '#030306', border: '1px solid #ffffff14' }}>
+      <div className={reel ? 'an-reel' : ''} data-phase={reel?.phase} style={reel ? { position: 'fixed', inset: 0, zIndex: 400, background: '#000', display: 'grid', placeItems: 'center' } : {}}>
+      <div className={reel ? 'an-reel-box' : ''} style={reel ? { position: 'relative', height: 'min(100vh, 100vw * 16 / 9)', aspectRatio: '9 / 16', background: '#030306', overflow: 'hidden' } : { position: 'relative', height: 'min(80vh, 760px)', minHeight: 460, background: '#030306', border: '1px solid #ffffff14' }}>
         <AntesisViewer onReady={onViewer} />
+        {reel && <ReelOverlay reel={reel} b={b} partsCount={partsCount} seed={opts.seed} symLabel={sym.label}  onExit={exitReel} />}
+        {!reel && <>
         <div style={{ position: 'absolute', left: 14, top: 12, pointerEvents: 'none', textShadow: '0 1px 4px #000', fontSize: 11, letterSpacing: 1.8, color: '#ffffffcc', lineHeight: 1.8 }}>
           <div style={{ color: ACCENT }}>FLOR {opts.seed} · {sym.label} · {sym.sub}</div>
           {b && <div>{b.NA} : {b.NB} dientes · módulo {fmt(b.m, 2)} mm · Ø {fmt(totalMm, 0)} mm</div>}
@@ -172,6 +256,8 @@ export default function AntesisApp() {
           <Chip on={spin} onClick={() => setSpin((s) => !s)} title="Girar los engranajes">{spin ? '❚❚ PAUSA' : '▶ GIRAR'}</Chip>
           <Chip on={explode > 0} onClick={() => setExplode((e) => (e > 0 ? 0 : 1))} color={PINK} title="Separar las piezas a lo largo de cada eje: así se arman">{explode > 0 ? '◉ ARMAR' : '◎ DESARMAR'}</Chip>
         </div>
+        </>}
+      </div>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '12px 0 16px' }}>
@@ -180,6 +266,8 @@ export default function AntesisApp() {
         <Chip on={false} onClick={() => set({ seed: opts.seed + 1 })} title="Flor siguiente">→</Chip>
         <div style={{ minWidth: 200, flex: '0 1 260px' }}><Slider label="VELOCIDAD" value={speed} min={0.1} max={2} step={0.05} readout={`${fmt(speed, 2)} rad/s`} onChange={(v) => { setSpeed(v); setSpin(true) }} /></div>
         <div style={{ minWidth: 200, flex: '0 1 260px' }}><Slider label="DESARMAR" value={explode} min={0} max={1.6} step={0.05} readout={explode ? fmt(explode, 2) : 'armada'} onChange={setExplode} /></div>
+        <span style={{ flex: 1 }} />
+        <Chip on={!!reel} onClick={enterReel} disabled={!b} color="#ffd27c" title="Pantalla vertical de 25 segundos que corre sola: para grabarla con el teléfono">▣ MODO REEL</Chip>
       </div>
       {err && <p style={{ color: WARN, fontSize: 12 }}>{err}</p>}
 
@@ -278,7 +366,83 @@ export default function AntesisApp() {
         .an-range::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: ${ACCENT}; border: 2px solid #02060a; cursor: pointer; }
         .an-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: ${ACCENT}; border: 2px solid #02060a; cursor: pointer; }
         @media (max-width: 900px) { .an-grid { grid-template-columns: 1fr !important; } }
+        html.an-reel-on, html.an-reel-on body { overflow: hidden !important; }
+        html.an-reel-on .neo-organism-filter { filter: none !important; transition: none !important; }
+        html.an-reel-on .an-layer { z-index: 2000 !important; }
+        .an-reel button[aria-label="Acercar"], .an-reel button[aria-label="Alejar"], .an-reel button[aria-label="Restablecer la vista"] { display: none !important; }
       `}</style>
+    </div>
+  )
+}
+
+// fase y opacidades a partir del mismo reloj
+function reelClock(t: number) {
+  let ph: ReelPhase = 'titulo'
+  for (const s of REEL) if (t >= s.t) ph = s.k
+  const fl = ph === 'semillas' ? Math.min(EXTRA.length - 1, Math.floor((t - 15) / 2)) : -1
+  const i = REEL.findIndex((s) => s.k === ph), a = REEL[i].t, b = i + 1 < REEL.length ? REEL[i + 1].t : 1e9
+  const segA = ph === 'semillas' ? 15 + 2 * Math.max(0, fl) : a, segB = ph === 'semillas' ? segA + 2 : b
+  return {
+    black: Math.max(0, 1 - t / 1.2), title: win(t, 0.3, 3.0, 0.5),
+    cap: ph === 'titulo' || ph === 'fin' ? 0 : win(t, segA + 0.15, segB - 0.1, 0.3), fin: win(t, 21.3, 1e9, 0.7),
+  }
+}
+
+function ReelOverlay({ reel, b, partsCount, seed, symLabel, onExit }: {
+  reel: { phase: ReelPhase; flower: number; t0: number }; b: Built | null; partsCount: number; seed: number; symLabel: string
+  onExit: () => void
+}) {
+  // los textos entran y salen con el reloj de requestAnimationFrame (no con transiciones CSS):
+  // así el reel también se puede grabar cuadro a cuadro, con el tiempo controlado
+  const black = useRef<HTMLDivElement>(null), title = useRef<HTMLDivElement>(null), capRef = useRef<HTMLDivElement>(null), fin = useRef<HTMLDivElement>(null)
+  const t0 = reel.t0
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      const o = reelClock((performance.now() - t0) / 1000)
+      if (black.current) black.current.style.opacity = String(o.black)
+      if (title.current) title.current.style.opacity = String(o.title)
+      if (capRef.current) capRef.current.style.opacity = String(o.cap)
+      if (fin.current) fin.current.style.opacity = String(o.fin)
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [t0])
+  const gears = b ? Number(b.info.A) + Number(b.info.B) : 0, unions = b ? Number(b.info.uniones) : 0
+  const x = reel.flower >= 0 ? EXTRA[reel.flower] : null
+  const cap: Record<ReelPhase, [string, string]> = {
+    titulo: ['', ''], fin: ['', ''],
+    gira: ['Gira uno, giran todos.', `${gears} engranajes · ${unions} uniones · cero choques`],
+    desarma: [`${partsCount} piezas.`, 'núcleo · engranajes · pasadores · pétalos y coronas'],
+    arma: ['Se imprimen por separado.', 'y encajan: el diente, el pasador, el hexágono'],
+    semillas: ['Cada número es otra flor.', x ? `FLOR #${x.seed} · ${SYMS.find((s) => s.k === x.sym)?.label}` : ''],
+  }
+  const [big, small] = cap[reel.phase]
+  const vh = (n: number, min: number, max: number) => `clamp(${min}px, ${n}vh, ${max}px)`
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', fontFamily: mono, textAlign: 'center' }}>
+      <div ref={black} style={{ position: 'absolute', inset: 0, background: '#000' }} />
+      <div ref={title} style={{ position: 'absolute', top: '8%', left: 0, right: 0, padding: '0 6%', opacity: 0 }}>
+        <div style={{ fontSize: vh(1.5, 10, 15), letterSpacing: 5, color: ACCENT }}>NEO·PROXY // MECANISMO</div>
+        <div style={{ fontSize: vh(7.6, 34, 84), letterSpacing: '0.22em', fontWeight: 700, color: '#fff', textShadow: `0 0 40px ${ACCENT}aa`, margin: '0.25em 0 0.1em', paddingLeft: '0.22em' }}>ANTESIS</div>
+        <div style={{ fontSize: vh(2.1, 12, 21), color: '#e6dcff' }}>una flor que es un mecanismo</div>
+        <div style={{ fontSize: vh(1.5, 10, 15), letterSpacing: 3, color: '#ffffff99', marginTop: '0.8em' }}>FLOR #{seed} · {symLabel}</div>
+      </div>
+      <div ref={capRef} style={{ position: 'absolute', top: '7%', left: 0, right: 0, padding: '0 7%', opacity: 0, textShadow: '0 2px 10px #000' }}>
+        <div style={{ fontSize: vh(3.3, 18, 36), fontWeight: 700, color: '#fff', letterSpacing: 1, lineHeight: 1.25 }}>{big}</div>
+        <div style={{ fontSize: vh(1.75, 11, 18), color: PINK, letterSpacing: 1.5, marginTop: '0.7em' }}>{small}</div>
+      </div>
+      <div ref={fin} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '18% 7% 9%', opacity: 0, background: 'linear-gradient(transparent, #000000e6 38%)' }}>
+        <div style={{ fontSize: vh(6, 30, 66), letterSpacing: '0.22em', paddingLeft: '0.22em', fontWeight: 700, color: '#fff', textShadow: `0 0 34px ${ACCENT}aa` }}>ANTESIS</div>
+        <div style={{ fontSize: vh(2.5, 14, 26), color: '#fff', fontWeight: 700, marginTop: '0.7em' }}>Comenta un número:</div>
+        <div style={{ fontSize: vh(2.5, 14, 26), color: PINK, fontWeight: 700 }}>esa es tu flor.</div>
+        <div style={{ fontSize: vh(1.7, 11, 18), color: '#9fe8ff', letterSpacing: 2, marginTop: '1.1em' }}>neoproxy.art/antesis</div>
+      </div>
+      <div style={{ position: 'absolute', left: '6%', right: '6%', bottom: '2.6%', display: 'flex', justifyContent: 'space-between', fontSize: vh(1.25, 9, 13), letterSpacing: 3, color: '#ffffff66', opacity: reel.phase === 'fin' || reel.phase === 'titulo' ? 0 : 1 }}>
+        <span>NEO·PROXY</span><span>neoproxy.art/antesis</span>
+      </div>
+      <button type="button" className="an-reel-exit" onClick={onExit} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
     </div>
   )
 }

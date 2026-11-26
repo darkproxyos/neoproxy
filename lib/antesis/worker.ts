@@ -6,7 +6,7 @@ import type { Mesh } from './gear'
 
 export type PartOut = { key: string; name: string; count: number; color: string; positions: Float32Array; indices: Uint32Array; sizeMm: [number, number, number] }
 export type AntesisCmd =
-  | { type: 'build'; opts: AntesisOpts; req: number }
+  | { type: 'build'; opts: AntesisOpts; req: number; noVerify?: boolean }
   | { type: 'export'; opts: AntesisOpts; req: number }
 export type AntesisMsg =
   | {
@@ -73,6 +73,7 @@ self.onmessage = (e: MessageEvent<AntesisCmd>) => {
         explode: { gear: 1, deco: 2.1, pin: 0.55 },
         info: { A: arr.A.length, B: arr.B.length, uniones: arr.edges.length, sigma: (arr.sigma * 180) / Math.PI },
       }, tr)
+      if (c.noVerify) return
       const t1 = Date.now(), v = verify(b, true)
       post({ type: 'verified', req: c.req, v, ms: Date.now() - t1 })
     } else if (c.type === 'export') {
