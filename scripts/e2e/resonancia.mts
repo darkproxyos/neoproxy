@@ -5,7 +5,7 @@
 //   2. PLACA y COLUMNA: STL cerrado y manifold, apoyado en z = 0
 //   3. el enlace a una PLACA la reconstruye igual (mismos triángulos)
 //   4. MODO REEL en un teléfono: 9:16, por encima de todo, recorre todas las fases
-//   5. /fenomenos enlaza los cuatro fenómenos, con sus imágenes, y el menú lleva a él
+//   5. /fenomenos enlaza los fenómenos de la serie, con sus imágenes, y el menú lleva a él
 //
 //   npm run dev  (o next start)  y, en otra terminal:
 //   npx tsx scripts/e2e/resonancia.mts [--base http://localhost:3000]
@@ -101,10 +101,10 @@ console.log('\n== FENÓMENOS ==')
   const { ctx, page: p, errs } = await open({}, `${BASE}/fenomenos`)
   await p.waitForSelector('h1')
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a.fx-card')].map((a) => a.getAttribute('href')))
-  ok(JSON.stringify(hrefs) === JSON.stringify(['/capas', '/humo', '/trenza', '/resonancia']), `cuatro fenómenos: ${hrefs.join(' ')}`)
+  ok(JSON.stringify(hrefs) === JSON.stringify(['/capas', '/humo', '/trenza', '/resonancia', '/rayo']), `cinco fenómenos: ${hrefs.join(' ')}`)
   await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); await p.waitForTimeout(1500)
   const imgs = await p.evaluate(() => [...document.querySelectorAll('a.fx-card img')].map((i) => (i as HTMLImageElement).naturalWidth))
-  ok(imgs.length === 8 && imgs.every((w) => w > 0), `ocho imágenes cargadas (${imgs.join(',')})`)
+  ok(imgs.length === 10 && imgs.every((w) => w > 0), `diez imágenes cargadas (${imgs.join(',')})`)
   const navOk = await p.evaluate(() => [...document.querySelectorAll('a')].some((a) => a.getAttribute('href') === '/fenomenos' && /FENÓMENOS/.test(a.textContent ?? '')))
   ok(navOk, 'el menú lleva a FENÓMENOS')
   const m = await open({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }, `${BASE}/fenomenos`)

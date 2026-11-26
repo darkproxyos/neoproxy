@@ -95,6 +95,7 @@ export const SITE_TREE: SiteNode = {
         { name: 'HUMO SÓLIDO', href: '/humo' },
         { name: 'TRENZA', href: '/trenza' },
         { name: 'RESONANCIA', href: '/resonancia' },
+        { name: 'RAYO', href: '/rayo' },
       ],
     },
     {
