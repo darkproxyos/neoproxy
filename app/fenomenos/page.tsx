@@ -37,6 +37,13 @@ const SERIE: Entry[] = [
     piece: 'La figura en relieve sobre una baldosa, o el barrido entero apilado como columna.',
     tags: ['sonido', 'frecuencia → altura', 'reel con audio'],
   },
+  {
+    n: '05', id: 'rayo', href: '/rayo', name: 'RAYO', law: 'descargas · Niemeyer', color: '#a9b8ff',
+    hook: 'Una descarga avanza paso a paso hacia donde el campo eléctrico es más fuerte. Toca tierra, el canal principal se enciende y truena.',
+    measured: 'En el plano su dimensión fractal da 1,74 ± 0,02, contra el 1,75 ± 0,02 medido por Niemeyer y colaboradores (1984).',
+    piece: 'El rayo dado vuelta: un árbol que engorda como un río, sobre su base.',
+    tags: ['fractal', 'electricidad', 'reel con trueno'],
+  },
 ]
 
 const mono = "'Space Mono', monospace"
@@ -49,7 +56,7 @@ export default function FenomenosPage() {
         <div style={{ fontSize: 9.5, letterSpacing: 6, color: '#7f96b2', marginBottom: 14 }}>NPX-FENÓMENOS // SERIE</div>
         <h1 style={{ fontSize: 'clamp(34px, 8vw, 68px)', letterSpacing: 10, margin: '0 0 20px', lineHeight: 1.05, background: 'linear-gradient(90deg,#ff8fb4,#5fe3ff 40%,#ffc75a 70%,#7cf0d0)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>FENÓMENOS</h1>
         <p style={{ fontSize: 13.5, lineHeight: 2, color: '#c8daf0', maxWidth: 860, margin: '0 0 12px' }}>
-          Piezas que no se diseñan: se dejan caer de una ley de la naturaleza. Un mundo que crece, un fluido que gira, tres soles que se persiguen, una placa que suena.
+          Piezas que no se diseñan: se dejan caer de una ley de la naturaleza. Un mundo que crece, un fluido que gira, tres soles que se persiguen, una placa que suena, una descarga que busca tierra.
           Cada una se calcula en vivo en el navegador, se mide, dice lo que no sabe, y termina como un objeto que se puede imprimir.
         </p>
         <p style={{ fontSize: 10.5, lineHeight: 1.9, color: '#7f96b2', maxWidth: 860, margin: '0 0 46px' }}>
@@ -102,7 +109,7 @@ export default function FenomenosPage() {
             <div style={{ fontSize: 10.5, letterSpacing: 4, color: '#ffd27c', marginBottom: 16 }}>CÓMO GRABAR UN REEL</div>
             <ol style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11, lineHeight: 2.05, color: '#a9bdd4' }}>
               <li>Abre el fenómeno en el teléfono y elige una receta (una órbita, una nota, un experimento).</li>
-              <li>En RESONANCIA activa ♪ antes: el reel lleva el sonido de la placa.</li>
+              <li>En RESONANCIA y RAYO activa ♪ antes: el reel lleva el sonido de la placa o el trueno.</li>
               <li>Pulsa ▣ MODO REEL y empieza a grabar la pantalla: corre solo, en vertical 9:16, y termina con la dirección de la página.</li>
             </ol>
           </div>
