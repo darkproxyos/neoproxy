@@ -526,7 +526,7 @@ export default function DigizBabylon() {
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#00030a' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }} />
 
-      <Link
+      <Link className="tap-ext"
         href="/games/digiz"
         style={{
           position: 'absolute', top: 14, left: 14, zIndex: 10,

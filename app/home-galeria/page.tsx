@@ -41,7 +41,7 @@ export default function HomeGaleriaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A HOME (ALEATORIO)
         </Link>
 

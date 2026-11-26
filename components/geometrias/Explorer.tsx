@@ -138,7 +138,7 @@ export default function Explorer({ family }: { family: GeometryFamily }) {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/geometrias" className="press" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>← VOLVER A GEOMETRÍAS</Link>
+        <Link href="/geometrias" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>← VOLVER A GEOMETRÍAS</Link>
         <div style={{ fontSize: 9, letterSpacing: 6, color: `${color}aa`, marginBottom: 14 }}>NPX-GEO // {spec.tagline.toUpperCase()}</div>
         <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 42px)', letterSpacing: 4, color, textShadow: `0 0 40px ${color}44`, margin: '0 0 14px', lineHeight: 1.1 }}>{spec.title}</h1>
         <p style={{ fontSize: 12, lineHeight: 2, color: '#9fb4cc', maxWidth: 780, margin: '0 0 8px' }}>{spec.concept}</p>

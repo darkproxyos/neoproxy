@@ -148,7 +148,7 @@ export default function DrawCanvas() {
         }}>SAVE</button>
       </div>
 
-      <a href="/" style={{
+      <a className="tap-ext" href="/" style={{
         position: 'fixed', bottom: 20, left: 20,
         fontFamily: 'monospace', color: '#00d4ff22',
         fontSize: 10, letterSpacing: 3, textDecoration: 'none'

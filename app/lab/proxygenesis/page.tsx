@@ -544,7 +544,7 @@ export default function ProxygenesisPage() {
           <Link href="/lab/proxygenesis/galeria" className="press" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
             GALERÍA ▸
           </Link>
-          <Link href="/lab" className="press" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+          <Link href="/lab" className="press tap-ext" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
             ← LABORATORIO
           </Link>
         </div>

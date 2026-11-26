@@ -153,7 +153,7 @@ export default function SintesisPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '104px 24px 0' }}>
-          <Link href="/knowledge" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
+          <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
             ← VOLVER AL CODEX
           </Link>
 

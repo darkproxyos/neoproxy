@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { navConfig, isGroup, isNavHidden, type NavGroup, type NavEntry, type NavLeaf } from './nav-config'
 import { useSessionAgent } from './proxyverse/useSessionAgent'
 import { enSerie } from '@/lib/zona/rutas'
@@ -63,6 +63,9 @@ function NavIcon({ label, color }: { label: string; color: string }) {
       return null
   }
 }
+
+const GAP = 18
+const MORE = '__mas'
 
 function isActive(pathname: string, href: string) {
   // FENÓMENOS entra por el Umbral: se enciende en el Umbral, el hub y cada fenómeno
@@ -172,8 +175,8 @@ function SessionBlock({ compact }: { compact?: boolean }) {
   }
 
   return (
-    <Link href="/login" className="press" style={{ color: '#00d4ff88', textDecoration: 'none' }}>
-      OPERATOR: ANONYMOUS // [ACCESO]
+    <Link href="/login" className="press" style={{ color: '#00d4ffcc', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', minHeight: 44 }}>
+      <span className="nav-session-long">OPERATOR: ANONYMOUS // </span>[ACCESO]
     </Link>
   )
 }
@@ -183,6 +186,26 @@ export default function SiteNav() {
   const [openGroup, setOpenGroup] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const navRef = useRef<HTMLElement | null>(null)
+  const linksRef = useRef<HTMLDivElement | null>(null)
+  const measureRef = useRef<HTMLDivElement | null>(null)
+  const [fit, setFit] = useState(navConfig.length)
+  useLayoutEffect(() => {
+    const calc = () => {
+      const m = measureRef.current, l = linksRef.current
+      if (!m || !l) return
+      const w = [...m.children].map((c) => (c as HTMLElement).offsetWidth), more = w.pop() ?? 0, avail = l.clientWidth
+      const total = w.reduce((a, b) => a + b, 0) + GAP * (w.length - 1)
+      if (total <= avail) { setFit(w.length); return }
+      let used = 0, k = 0
+      for (let i = 0; i < w.length; i++) { const next = used + (i ? GAP : 0) + w[i]; if (next + GAP + more > avail) break; used = next; k++ }
+      setFit(k)
+    }
+    calc()
+    const ro = new ResizeObserver(calc)
+    if (linksRef.current) ro.observe(linksRef.current)
+    document.fonts?.ready.then(calc).catch(() => {})
+    return () => ro.disconnect()
+  }, [pathname])
   const sessionAgent = useSessionAgent()
   const accent = sessionAgent?.color ?? '#00d4ff'
 
@@ -213,30 +236,7 @@ export default function SiteNav() {
 
   if (!pathname || isNavHidden(pathname)) return null
 
-  return (
-    <>
-    <nav ref={navRef as any} className="site-nav" style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '16px 32px',
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
-      background: 'rgba(0, 2, 5, 0.85)', backdropFilter: 'blur(6px)',
-    }}>
-      <div className="nav-pulse-line" aria-hidden style={{ ['--pulse-color' as any]: accent }} />
-
-      <Link href="/" className="press" style={{
-        fontFamily: mono, fontSize: 13, color: '#00d4ff', letterSpacing: 4, textDecoration: 'none',
-        flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8,
-      }}>
-        <LifeNode color={accent} active size={7} />
-        NEO·PROXY
-      </Link>
-
-      {/* gap bajado de 24 a 18 para compensar el +1px de fontSize en cada
-          ítem -- a 12px el total ya pasaba el ancho disponible en laptops
-          de 1366px (PROXYVERSE quedaba cortado), no hay breakpoint
-          intermedio entre el nav completo y el menú hamburguesa (ver
-          globals.css, @media max-width: 768px). */}
-      <div className="site-nav-links" style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-        {navConfig.map((entry) => {
+  const renderEntry = (entry: NavEntry) => {
           if (isGroup(entry)) {
             const active = groupActive(pathname, entry)
             const open = openGroup === entry.label
@@ -337,7 +337,81 @@ export default function SiteNav() {
               {entry.label}
             </Link>
           )
-        })}
+  }
+
+  const moreButton = (open: boolean, active: boolean) => (
+    <button onClick={() => setOpenGroup(open ? null : MORE)} aria-expanded={open} aria-haspopup="true" className="site-nav-link press"
+      style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, whiteSpace: 'nowrap', background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', color: active ? accent : '#a9c0d6', display: 'flex', alignItems: 'center', gap: 7 }}>
+      <LifeNode color={accent} active={active} />
+      MÁS
+      <SynapseChevron color={active || open ? accent : '#8fb8d6'} open={open} />
+    </button>
+  )
+  const renderMore = (rest: NavEntry[]) => {
+    const open = openGroup === MORE
+    const active = rest.some((e) => (isGroup(e) ? groupActive(pathname, e) : isActive(pathname, e.href)))
+    const itemStyle: React.CSSProperties = { fontFamily: mono, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none', padding: '10px 18px', minHeight: 44, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', position: 'relative' }
+    return (
+      <div key={MORE} style={{ position: 'relative', flexShrink: 0 }}>
+        {moreButton(open, active)}
+        {open && (
+          <div className="nav-dropdown" style={{ position: 'absolute', top: '100%', right: 0, marginTop: 10, minWidth: 250, maxHeight: 'calc(100vh - 90px)', overflowY: 'auto', borderColor: `${accent}55`, ['--dd-color' as any]: accent }}>
+            <span className="nav-corner nav-corner-tl" />
+            <span className="nav-corner nav-corner-br" />
+            <div className="nav-dropdown-texture" aria-hidden />
+            <div style={{ position: 'relative', padding: '8px 0' }}>
+              {rest.map((e) => isGroup(e) ? (
+                <div key={e.label} style={{ padding: '4px 0' }}>
+                  <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#7f96b2', padding: '8px 18px 4px', whiteSpace: 'nowrap' }}>{e.label}</div>
+                  {e.items.filter((it): it is NavLeaf => !isGroup(it)).map((it) => (
+                    <div key={it.href} className="nav-dropdown-item"><NavLink item={it} pathname={pathname} activeColor={NAV_COLORS[e.label] ?? accent} style={{ ...itemStyle, paddingLeft: 30 }} /></div>
+                  ))}
+                </div>
+              ) : (
+                <div key={e.href} className="nav-dropdown-item"><NavLink item={e} pathname={pathname} activeColor={NAV_COLORS[e.label] ?? accent} style={itemStyle} /></div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+
+  return (
+    <>
+    <nav ref={navRef as any} className="site-nav" style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '16px 32px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
+      background: 'rgba(0, 2, 5, 0.85)', backdropFilter: 'blur(6px)',
+    }}>
+      <div className="nav-pulse-line" aria-hidden style={{ ['--pulse-color' as any]: accent }} />
+
+      <Link href="/" className="press" style={{
+        fontFamily: mono, fontSize: 13, color: '#00d4ff', letterSpacing: 4, textDecoration: 'none',
+        flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8, minHeight: 44, padding: '0 4px', margin: '-12px -4px',
+      }}>
+        <LifeNode color={accent} active size={7} />
+        NEO·PROXY
+      </Link>
+
+      {/* gap bajado de 24 a 18 para compensar el +1px de fontSize en cada
+          ítem -- a 12px el total ya pasaba el ancho disponible en laptops
+          de 1366px (PROXYVERSE quedaba cortado), no hay breakpoint
+          intermedio entre el nav completo y el menú hamburguesa (ver
+          globals.css, @media max-width: 768px). */}
+      {/* Prioridad+: se muestran las entradas que caben, en el orden del menú, y el resto
+          va a MÁS. Antes no había punto intermedio entre el menú completo (que necesita
+          ~2200 px) y la hamburguesa (≤768 px): de 769 a 2200 px los últimos ítems quedaban
+          cortados fuera de la pantalla. */}
+      <div ref={linksRef} className="site-nav-links" style={{ display: 'flex', gap: GAP, alignItems: 'center', justifyContent: 'center', flex: '1 1 0', minWidth: 0 }}>
+        {navConfig.slice(0, fit).map(renderEntry)}
+        {fit < navConfig.length && renderMore(navConfig.slice(fit))}
+      </div>
+      {/* medidor invisible: el ancho real de cada entrada (y del botón MÁS) */}
+      <div ref={measureRef} aria-hidden inert className="site-nav-measure" style={{ position: 'absolute', left: -10000, top: 0, display: 'flex', gap: GAP, visibility: 'hidden', pointerEvents: 'none' }}>
+        {navConfig.map((e) => <div key={'m' + e.label} style={{ display: 'flex' }}>{renderEntry(e)}</div>)}
+        <div style={{ display: 'flex' }}>{moreButton(false, false)}</div>
       </div>
 
       <div className="site-nav-side" style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>

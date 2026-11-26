@@ -275,7 +275,8 @@ export default function CodexSpacePage() {
     <div style={{ background: '#000', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100vh', display: 'block', touchAction: 'none' }} />
 
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+      {/* overflow hidden: las etiquetas que quedan fuera de cuadro no deben ensanchar la página (en el teléfono sobraban 435 px) */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
         {entries.map((entry, i) => (
           <div
             key={entry.id}
@@ -293,7 +294,7 @@ export default function CodexSpacePage() {
         ))}
       </div>
 
-      <Link href="/knowledge" className="press" style={{
+      <Link href="/knowledge" className="press tap-ext" style={{
         position: 'fixed', top: 16, left: 16, zIndex: 25,
         fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none',
         border: '1px solid #00d4ff44', padding: '6px 12px', background: '#00050aaa',

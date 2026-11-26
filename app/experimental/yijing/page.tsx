@@ -109,7 +109,7 @@ export default function YiJingOraclePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a7060', textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a7060', textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 

@@ -409,7 +409,7 @@ export default function WiredGame() {
           >
             [ ENTRAR ]
           </button>
-          <Link href="/" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
+          <Link className="tap-ext" href="/" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
             ← VOLVER
           </Link>
         </div>

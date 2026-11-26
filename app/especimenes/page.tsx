@@ -62,7 +62,7 @@ export default function EspecimenesPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '104px 32px 100px' }}>
-        <Link href="/fabrication" className="press" style={{
+        <Link href="/fabrication" className="press tap-ext" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>

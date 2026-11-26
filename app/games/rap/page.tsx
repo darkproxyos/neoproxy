@@ -44,7 +44,7 @@ export default function RapPage() {
         position: 'relative', zIndex: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column',
         maxWidth: 900, margin: '0 auto', padding: '40px 24px 32px',
       }}>
-        <Link href="/games" style={{
+        <Link className="tap-ext" href="/games" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${VIOLET}66`, textDecoration: 'none',
           display: 'inline-block', marginBottom: 24,
         }}>

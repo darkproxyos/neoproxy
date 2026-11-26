@@ -176,7 +176,7 @@ export default function FormacionPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" className="press" style={{
+        <Link href="/experimental" className="press tap-ext" style={{
           fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>

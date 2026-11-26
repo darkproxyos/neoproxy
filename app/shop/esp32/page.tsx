@@ -80,7 +80,7 @@ export default function Esp32TechPage() {
 
       <header className="relative z-10 p-8 border-b border-[#0f1f35]">
         <div className="max-w-4xl mx-auto">
-          <Link href="/shop" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block">
+          <Link href="/shop" className="press text-[11px] font-mono text-[#00d4ff] tracking-[0.2em] uppercase mb-4 block tap-ext">
             ← VOLVER A LA TIENDA
           </Link>
           <div className="flex items-start gap-6">

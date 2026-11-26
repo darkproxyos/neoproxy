@@ -44,7 +44,7 @@ export default function ProxygenesisGaleriaPage() {
           <Link href="/especimenes" className="press" style={{ color: '#4a6080', textDecoration: 'none', fontSize: 10, border: '1px solid #4a608044', padding: '2px 8px' }}>
             ESPECÍMENES CURADOS
           </Link>
-          <Link href="/lab/proxygenesis" className="press" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 10, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
+          <Link href="/lab/proxygenesis" className="press tap-ext" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 10, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
             ← VOLVER AL GENERADOR
           </Link>
         </div>

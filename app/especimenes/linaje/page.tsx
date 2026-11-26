@@ -165,7 +165,7 @@ export default function LinajePage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/especimenes/laboratorio" className="press" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
+        <Link href="/especimenes/laboratorio" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
           ← VOLVER AL LABORATORIO
         </Link>
         <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}99`, marginBottom: 14 }}>NPX-ESP-LINAJE // MEMORIA DE LO QUE EXISTIÓ</div>

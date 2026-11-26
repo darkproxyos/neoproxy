@@ -23,8 +23,9 @@ export default function FabricationGallery() {
   useEffect(() => {
     const loadData = async () => {
       try {
+        // el índice puede no estar publicado: entonces la galería queda vacía, sin error
         const res = await fetch('/curated_stl_index.json')
-        const data = await res.json()
+        const data = res.ok && (res.headers.get('content-type') || '').includes('json') ? await res.json() : []
         
         // Convert STL paths to GLB paths
         const glbData = data.map((item: any) => ({
@@ -85,6 +86,11 @@ export default function FabricationGallery() {
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', fontSize: '14px', letterSpacing: '4px' }}>
           INITIALIZING_DATABASE...
+        </div>
+      ) : filtered.length === 0 ? (
+        <div style={{ textAlign: 'center', marginTop: 100, fontSize: 13, lineHeight: 2, letterSpacing: 2, color: '#8fa8c4' }}>
+          GALERÍA EN PREPARACIÓN<br />
+          <span style={{ fontSize: 12, color: '#6f86a3' }}>Los trabajos impresos aparecerán aquí. Mientras tanto: <Link href="/artifacts" style={{ color: '#00d4ff' }}>artefactos</Link>.</span>
         </div>
       ) : (
         <div className="gallery-grid">

@@ -201,7 +201,7 @@ export default function Manifesto() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '104px 24px 0' }}>
-          <Link href="/" style={{
+          <Link className="tap-ext" href="/" style={{
             fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#3a4652', textDecoration: 'none',
           }}>
             ← VOLVER AL INICIO
