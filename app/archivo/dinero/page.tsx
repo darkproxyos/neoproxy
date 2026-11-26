@@ -59,7 +59,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -70,7 +70,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -112,13 +112,13 @@ export default function DineroPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-07 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -139,7 +139,7 @@ export default function DineroPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
               borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -152,7 +152,7 @@ export default function DineroPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -163,12 +163,12 @@ export default function DineroPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -181,14 +181,14 @@ export default function DineroPage() {
         <div id="sec-01" className={`din-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="QUÉ ES EL DINERO — HISTORIA REAL" sub="de trueque a dinero digital, con fechas verificables" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Antes de la moneda, el trueque directo tenía un problema concreto: la "doble coincidencia
               de deseos" (que vos tengas lo que yo quiero y yo tenga, justo, lo que vos querés). Las
               primeras monedas acuñadas con un valor garantizado aparecen en Lidia, actual Turquía, hacia
               el 600 a.C. — electro (aleación natural de oro y plata) con un sello oficial que certificaba
               peso y pureza, para no tener que pesar y evaluar cada transacción desde cero.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El patrón oro —cada moneda respaldada por una cantidad fija de oro físico— dominó buena
               parte de los siglos XIX y XX. El sistema de Bretton Woods (1944) ató el dólar al oro y el
               resto de las monedas al dólar; en 1971 Richard Nixon suspendió la convertibilidad del
@@ -204,7 +204,7 @@ export default function DineroPage() {
         <div id="sec-02" className={`din-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="LA CIENCIA ECONÓMICA — LO QUE TIENE ECUACIÓN" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Escasez</strong> y <strong style={{ color: '#fff' }}>costo
               de oportunidad</strong> son la base de toda la disciplina: los recursos son finitos, así que
               elegir una cosa siempre implica resignar la mejor alternativa que no elegiste — ese es el
@@ -212,7 +212,7 @@ export default function DineroPage() {
               demanda describe cómo el precio de equilibrio surge del cruce entre cuánto se ofrece y
               cuánto se quiere comprar a cada precio posible.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El <strong style={{ color: '#fff' }}>interés compuesto</strong> — ganar interés sobre el
               interés ya ganado, no solo sobre el capital original — es, matemáticamente,{' '}
               <Mono>VF = C(1 + i)ⁿ</Mono>. La frase que lo llama "la octava maravilla del mundo" se le
@@ -227,7 +227,7 @@ export default function DineroPage() {
         <div id="sec-03" className={`din-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="LA PSICOLOGÍA REAL DEL DINERO" sub="economía conductual con premio Nobel real detrás" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Daniel Kahneman y Amos Tversky formularon en 1979 la <strong style={{ color: '#fff' }}>teoría
               de las perspectivas</strong>: las personas no evalúan el dinero en términos absolutos sino
               como ganancias o pérdidas relativas a un punto de referencia, y la{' '}
@@ -236,7 +236,7 @@ export default function DineroPage() {
               Nobel de Economía en 2002 — siendo psicólogo, no economista, el primero en lograrlo por este
               trabajo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Richard Thaler formalizó la <strong style={{ color: '#fff' }}>contabilidad mental</strong>
               (mental accounting): tratamos mentalmente al dinero como si viniera en compartimentos
               separados según su origen o destino —el "dinero del aguinaldo" no se gasta igual que el
@@ -251,7 +251,7 @@ export default function DineroPage() {
         <div id="sec-04" className={`din-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="MENTALIDAD DE RICO Y POBRE" sub="Kiyosaki y Eker — desarrollo personal financiero, no economía académica" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Robert Kiyosaki publicó <em>Padre Rico, Padre Pobre</em> en 1997, contrastando los consejos
               de dos figuras paternas —una empleada y conservadora, otra empresaria— para argumentar que
               la diferencia entre riqueza y pobreza es, ante todo, una diferencia de educación financiera
@@ -261,7 +261,7 @@ export default function DineroPage() {
               últimas son las que de verdad generan libertad financiera, porque no dependen de cambiar
               tiempo propio por dinero.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               T. Harv Eker, en <em>Los secretos de la mente millonaria</em> (2005), propone un{' '}
               <strong style={{ color: '#fff' }}>"money blueprint"</strong>: un patrón inconsciente sobre
               el dinero, formado en la infancia por lo que viste y escuchaste en tu casa, que determina
@@ -284,7 +284,7 @@ export default function DineroPage() {
         <div id="sec-05" className={`din-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="NEUROVENTAS — KLARIĆ Y EL CEREBRO TRIUNO" sub="un modelo neurocientífico superado, todavía muy usado en marketing" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Jürgen Klarić, en <em>Véndele a la mente, no a la gente</em> (2014) y <em>Estamos
               ciegos</em> (2012), sostiene que la mayoría de las decisiones de compra son inconscientes y
               que venderle a la razón ("la mente") convence menos que venderle a los impulsos más
@@ -313,19 +313,19 @@ export default function DineroPage() {
         <div id="sec-06" className={`din-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="PROTOCOLOS REALES DE MANEJO DE DINERO" sub="reglas prácticas con respaldo en planificación financiera, no motivacionales" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Presupuesto 50/30/20</strong>: 50% del ingreso a
               necesidades fijas, 30% a deseos, 20% a ahorro o pago de deuda — una proporción de referencia
               popularizada por la senadora estadounidense Elizabeth Warren (entonces profesora de
               Harvard) en <em>All Your Worth</em> (2005), no una ley económica, pero una regla simple de
               punto de partida.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Fondo de emergencia</strong>: el estándar más citado en
               planificación financiera personal es cubrir entre 3 y 6 meses de gastos fijos en un
               instrumento líquido, antes de destinar dinero a objetivos de inversión de más largo plazo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Págate primero</strong> ("pay yourself first"): separar el
               ahorro apenas entra el ingreso, antes de pagar cualquier gasto, en vez de ahorrar "lo que
               sobra" al final del mes — invierte el orden habitual porque lo que sobra, en la práctica,
@@ -338,7 +338,7 @@ export default function DineroPage() {
         <div id="sec-07" className={`din-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="NEGOCIOS Y VENTAS — LO QUE SE CALCULA, NO SE INTUYE" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Margen vs. markup</strong>, la confusión más común de
               cualquier negocio chico: margen es la ganancia como porcentaje del <em>precio de
               venta</em> (<Mono>(precio − costo) / precio</Mono>); markup es la ganancia como porcentaje
@@ -347,13 +347,13 @@ export default function DineroPage() {
               la misma venta, y confundirlos hace que un negocio crea que gana más de lo que gana en
               realidad.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Punto de equilibrio</strong> (break-even): la cantidad de
               ventas a partir de la cual los ingresos cubren todos los costos fijos y variables — antes de
               ese punto, cada venta deja al negocio más cerca de no perder plata; después, cada venta es
               ganancia real.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               En negocios digitales/startups, dos métricas gobiernan casi toda decisión de inversión en
               ventas: <strong style={{ color: '#fff' }}>LTV</strong> (lifetime value, cuánto deja un
               cliente en total mientras sigue siendo cliente) y <strong style={{ color: '#fff' }}>CAC</strong>
@@ -368,7 +368,7 @@ export default function DineroPage() {
         <div id="sec-08" className={`din-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 40 }}>
           <SectionHeader roman="VIII" title="FRONTERAS ABIERTAS" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Este documento junta, a propósito, tres niveles de evidencia distintos bajo un mismo tema:
               economía conductual con Nobel y revisión por pares (Kahneman, Thaler), literatura de
               desarrollo personal financiero sin ese mismo estándar pero con influencia real y masiva
@@ -378,7 +378,7 @@ export default function DineroPage() {
               influyeron, en la práctica, en cómo millones de personas piensan su propio dinero, con
               independencia de cuánto respaldo científico tenga cada uno.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La pregunta que sigue abierta, la más vieja de la economía, es también la más nueva: qué es
               el valor y de dónde sale.{' '}
               <Link href="/knowledge?entry=zuboff" style={{ color: '#fff', textDecoration: 'underline' }}>
@@ -393,7 +393,7 @@ export default function DineroPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-07 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

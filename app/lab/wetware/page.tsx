@@ -233,10 +233,10 @@ export default function WetwareHologramPage() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px',
         background: 'rgba(5,10,20,0.85)', borderBottom: `1px solid ${CYAN}44`, backdropFilter: 'blur(5px)',
       }}>
-        <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: CYAN }}>
+        <span style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, color: CYAN }}>
           NEOPROXY // WETWARE — HOLOGRAMA
         </span>
-        <Link href="/archivo/wetware" className="press" style={{ color: CYAN, textDecoration: 'none', fontFamily: mono, fontSize: 9, border: `1px solid ${CYAN}66`, padding: '6px 10px', borderRadius: 4 }}>
+        <Link href="/archivo/wetware" className="press" style={{ color: CYAN, textDecoration: 'none', fontFamily: mono, fontSize: 10.5, border: `1px solid ${CYAN}66`, padding: '6px 10px', borderRadius: 4 }}>
           EXIT
         </Link>
       </div>
@@ -246,7 +246,7 @@ export default function WetwareHologramPage() {
       {!ready && (
         <div style={{
           position: 'absolute', inset: 0, zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: mono, fontSize: 11, color: CYAN, letterSpacing: 2,
+          fontFamily: mono, fontSize: 12, color: CYAN, letterSpacing: 2,
         }}>
           CARGANDO HOLOGRAMA...
         </div>
@@ -291,27 +291,27 @@ export default function WetwareHologramPage() {
                   transition: 'padding 0.15s ease, width 0.15s ease, opacity 0.15s ease',
                 }}
               >
-                <div style={{ fontSize: 9, letterSpacing: 2, color: sys.color, whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: 10.5, letterSpacing: 2, color: sys.color, whiteSpace: 'nowrap' }}>
                   {sys.roman} — {sys.title}
                 </div>
                 {!isSel && (
-                  <div style={{ fontSize: 8, letterSpacing: 1, color: '#8fb8d6', marginTop: 2, whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 10, letterSpacing: 1, color: '#8fb8d6', marginTop: 2, whiteSpace: 'nowrap' }}>
                     {sys.sub}
                   </div>
                 )}
                 {isSel && (
                   <>
-                    <div style={{ fontSize: 9, letterSpacing: 1, color: '#8fb8d6', marginTop: 2, marginBottom: 10 }}>
+                    <div style={{ fontSize: 10.5, letterSpacing: 1, color: '#8fb8d6', marginTop: 2, marginBottom: 10 }}>
                       {sys.sub}
                     </div>
                     {sys.facts.map((fact, i) => (
-                      <p key={i} style={{ fontSize: 10, lineHeight: 1.7, color: '#c8daf0', margin: 0, marginBottom: 8 }}>
+                      <p key={i} style={{ fontSize: 11, lineHeight: 1.7, color: '#c8daf0', margin: 0, marginBottom: 8 }}>
                         {fact}
                       </p>
                     ))}
                     <Link
                       href={`/archivo/wetware#${sys.sourceAnchor}`}
-                      style={{ fontSize: 9, letterSpacing: 1, color: sys.color, textDecoration: 'underline' }}
+                      style={{ fontSize: 10.5, letterSpacing: 1, color: sys.color, textDecoration: 'underline' }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       → VER SECCIÓN COMPLETA EN EL DOCUMENTO
@@ -325,7 +325,7 @@ export default function WetwareHologramPage() {
           {!active && (
             <div style={{
               position: 'fixed', bottom: 14, left: '50%', transform: 'translateX(-50%)', zIndex: 21,
-              fontFamily: mono, fontSize: 8, letterSpacing: 1.5, color: `${CYAN}66`, whiteSpace: 'nowrap',
+              fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: `${CYAN}66`, whiteSpace: 'nowrap',
             }}>
               ARRASTRAR: ORBITAR // SCROLL: ZOOM // TOCÁ UN NODO PARA ABRIR EL PANEL
             </div>

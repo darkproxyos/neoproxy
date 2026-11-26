@@ -94,14 +94,14 @@ export default function DrawCanvas() {
         display: 'flex', gap: 12, alignItems: 'center',
         background: '#020c18ee', border: '1px solid #00d4ff22',
         padding: '10px 20px', backdropFilter: 'blur(8px)',
-        fontFamily: 'Space Mono, monospace', fontSize: 10, letterSpacing: 3
+        fontFamily: 'Space Mono, monospace', fontSize: 11, letterSpacing: 3
       }}>
         {['brush', 'erase'].map(t => (
           <button key={t} onClick={() => setTool(t as any)} style={{
             background: tool === t ? '#00d4ff22' : 'none',
             border: `1px solid ${tool === t ? '#00d4ff' : '#00d4ff33'}`,
             color: '#00d4ff', padding: '4px 12px', cursor: 'pointer',
-            fontFamily: 'inherit', fontSize: 9, letterSpacing: 3
+            fontFamily: 'inherit', fontSize: 10.5, letterSpacing: 3
           }}>{t.toUpperCase()}</button>
         ))}
 
@@ -121,7 +121,7 @@ export default function DrawCanvas() {
           onChange={e => setSize(Number(e.target.value))}
           style={{ width: 80, accentColor: '#00d4ff' }} />
 
-        <div style={{ color: '#00d4ff44', fontSize: 9 }}>{size}px</div>
+        <div style={{ color: '#00d4ff44', fontSize: 10.5 }}>{size}px</div>
 
         <div style={{ width: 1, height: 20, background: '#00d4ff22' }} />
 
@@ -133,7 +133,7 @@ export default function DrawCanvas() {
         }} style={{
           background: 'none', border: '1px solid #ff444433',
           color: '#ff4444', padding: '4px 12px', cursor: 'pointer',
-          fontFamily: 'inherit', fontSize: 9, letterSpacing: 3
+          fontFamily: 'inherit', fontSize: 10.5, letterSpacing: 3
         }}>CLEAR</button>
 
         <button onClick={() => {
@@ -144,14 +144,14 @@ export default function DrawCanvas() {
         }} style={{
           background: 'none', border: '1px solid #00d4ff33',
           color: '#00d4ff', padding: '4px 12px', cursor: 'pointer',
-          fontFamily: 'inherit', fontSize: 9, letterSpacing: 3
+          fontFamily: 'inherit', fontSize: 10.5, letterSpacing: 3
         }}>SAVE</button>
       </div>
 
       <a className="tap-ext" href="/" style={{
         position: 'fixed', bottom: 20, left: 20,
         fontFamily: 'monospace', color: '#00d4ff22',
-        fontSize: 10, letterSpacing: 3, textDecoration: 'none'
+        fontSize: 11, letterSpacing: 3, textDecoration: 'none'
       }}>← EXIT</a>
     </div>
   )

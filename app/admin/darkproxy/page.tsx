@@ -73,7 +73,7 @@ export default function DarkProxyTerminal() {
     marginBottom: 8,
     padding: '10px 14px',
     fontFamily: mono,
-    fontSize: 11,
+    fontSize: 12,
     letterSpacing: 1.5,
     textTransform: 'uppercase',
     cursor: 'pointer',
@@ -91,7 +91,7 @@ export default function DarkProxyTerminal() {
         {bypassActive && (
           <div style={{
             border: `1px solid ${AMBER}66`, background: `${AMBER}14`, color: AMBER,
-            fontSize: 10, letterSpacing: 1, lineHeight: 1.8, padding: '12px 16px', marginBottom: 24,
+            fontSize: 11, letterSpacing: 1, lineHeight: 1.8, padding: '12px 16px', marginBottom: 24,
           }}>
             ⚠ ACCESO SIN SESIÓN ACTIVO — NEXT_PUBLIC_ADMIN_BYPASS_AUTH=true. Cualquiera con esta URL
             entra sin login, incluidas purgar entropía / inyectar corrupción. Borrar la variable en
@@ -103,7 +103,7 @@ export default function DarkProxyTerminal() {
           borderBottom: `1px solid ${CYAN}22`, paddingBottom: 24, marginBottom: 32, gap: 16, flexWrap: 'wrap',
         }}>
           <div>
-            <div style={{ fontSize: 9, letterSpacing: 6, color: `${CYAN}88`, marginBottom: 10 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${CYAN}88`, marginBottom: 10 }}>
               NPX-ROOT // EL INTÉRPRETE
             </div>
             <h1 style={{
@@ -112,17 +112,17 @@ export default function DarkProxyTerminal() {
             }}>
               DARKPROXY
             </h1>
-            <p style={{ fontSize: 10.5, color: '#7fa8b8', letterSpacing: 0.5, marginTop: 10, maxWidth: 480, lineHeight: 1.8 }}>
+            <p style={{ fontSize: 11.5, color: '#7fa8b8', letterSpacing: 0.5, marginTop: 10, maxWidth: 480, lineHeight: 1.8 }}>
               No es un personaje. Es el nombre que el sistema le puso a tu presencia — esto es lo que
               ves cuando entrás como root.
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 10, color: '#7fa8b8', marginBottom: 10 }}>
+            <div style={{ fontSize: 11, color: '#7fa8b8', marginBottom: 10 }}>
               {status} {loading && '// PROCESANDO...'}
             </div>
             <button onClick={() => signOut({ callbackUrl: '/login' })} style={{
-              fontFamily: mono, fontSize: 9.5, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
               background: 'transparent', border: `1px solid ${CYAN}44`, color: `${CYAN}aa`,
             }}>
               CERRAR SESIÓN
@@ -132,12 +132,12 @@ export default function DarkProxyTerminal() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           <div style={card}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// MÉTRICAS GLOBALES</h3>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// MÉTRICAS GLOBALES</h3>
             <div style={{ fontSize: 32, color: CYAN, marginBottom: 4 }}>
               {systemState ? `${systemState.entropyLevel?.toFixed(2) || 0}%` : '--'}
             </div>
-            <p style={{ fontSize: 10, color: '#7fa8b8', margin: '0 0 14px' }}>NIVEL DE ENTROPÍA</p>
-            <div style={{ borderTop: `1px solid ${CYAN}22`, paddingTop: 12, fontSize: 11, lineHeight: 2, color: '#a8c8d4' }}>
+            <p style={{ fontSize: 11, color: '#7fa8b8', margin: '0 0 14px' }}>NIVEL DE ENTROPÍA</p>
+            <div style={{ borderTop: `1px solid ${CYAN}22`, paddingTop: 12, fontSize: 12, lineHeight: 2, color: '#a8c8d4' }}>
               <p style={{ margin: 0 }}>COHERENCIA: {systemState?.totalCoherence || 0}</p>
               <p style={{ margin: 0 }}>CORRUPCIÓN: {systemState?.totalCorruption || 0}</p>
               <p style={{ margin: 0 }}>NODOS ABSORBIDOS: {systemState?.totalNodesAbsorbed || 0}</p>
@@ -145,18 +145,18 @@ export default function DarkProxyTerminal() {
           </div>
 
           <div style={card}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// OVERRIDE MANUAL</h3>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// OVERRIDE MANUAL</h3>
             <button onClick={handlePurge} style={button} disabled={loading}>Purgar entropía</button>
             <button onClick={handleInject} style={button} disabled={loading}>Inyectar corrupción (+10)</button>
           </div>
 
           <div style={card}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// USO REAL ACUMULADO</h3>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// USO REAL ACUMULADO</h3>
             {usageMetrics ? (
               <>
                 <div style={{ fontSize: 22, color: CYAN, marginBottom: 4 }}>{usageMetrics.totalEvents}</div>
-                <p style={{ fontSize: 10, color: '#7fa8b8', margin: '0 0 14px' }}>EVENTOS TOTALES EN MEMORY_EVENTS</p>
-                <div style={{ borderTop: `1px solid ${CYAN}22`, paddingTop: 12, fontSize: 10.5, lineHeight: 1.9, color: '#a8c8d4' }}>
+                <p style={{ fontSize: 11, color: '#7fa8b8', margin: '0 0 14px' }}>EVENTOS TOTALES EN MEMORY_EVENTS</p>
+                <div style={{ borderTop: `1px solid ${CYAN}22`, paddingTop: 12, fontSize: 11.5, lineHeight: 1.9, color: '#a8c8d4' }}>
                   {usageMetrics.byType.length === 0 ? (
                     <p style={{ margin: 0 }}>SIN EVENTOS TODAVÍA</p>
                   ) : (
@@ -165,18 +165,18 @@ export default function DarkProxyTerminal() {
                       .map((c: any) => <p key={c.eventType} style={{ margin: 0 }}>{c.eventType}: {c.count}</p>)
                   )}
                 </div>
-                <p style={{ fontSize: 10.5, color: '#a8c8d4', borderTop: `1px solid ${CYAN}22`, marginTop: 12, paddingTop: 12 }}>
+                <p style={{ fontSize: 11.5, color: '#a8c8d4', borderTop: `1px solid ${CYAN}22`, marginTop: 12, paddingTop: 12 }}>
                   ESPECÍMENES EN COLA DE FABRICACIÓN: {usageMetrics.fabricationSubmissions}
                 </p>
               </>
             ) : (
-              <p style={{ fontSize: 10.5, color: '#7fa8b8' }}>CARGANDO...</p>
+              <p style={{ fontSize: 11.5, color: '#7fa8b8' }}>CARGANDO...</p>
             )}
           </div>
 
           <div style={card}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// REGISTRO DE EVENTOS</h3>
-            <div style={{ height: 200, overflowY: 'auto', fontSize: 10.5, color: '#a8c8d4' }}>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// REGISTRO DE EVENTOS</h3>
+            <div style={{ height: 200, overflowY: 'auto', fontSize: 11.5, color: '#a8c8d4' }}>
               {entropyHistory.length === 0 ? (
                 <p>// SIN EVENTOS REGISTRADOS</p>
               ) : (

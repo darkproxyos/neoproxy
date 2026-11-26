@@ -65,10 +65,10 @@ export default function CardHighLow({
 
   return (
     <div style={{ border: `1px solid ${COLOR}33`, background: `${COLOR}08`, padding: '24px 20px' }}>
-      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: COLOR, marginBottom: 4 }}>
+      <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: COLOR, marginBottom: 4 }}>
         CARTA_ALTA
       </div>
-      <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 1, color: '#4a6080', marginBottom: 18 }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginBottom: 18 }}>
         RACHA: {streak}
       </div>
 
@@ -91,7 +91,7 @@ export default function CardHighLow({
             onClick={() => setBet(b)}
             disabled={revealing}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: revealing ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '8px 14px', cursor: revealing ? 'default' : 'pointer',
               background: bet === b ? `${COLOR}33` : 'transparent', color: bet === b ? COLOR : '#8fb8d6',
               border: `1px solid ${bet === b ? COLOR : COLOR + '33'}`,
             }}
@@ -106,7 +106,7 @@ export default function CardHighLow({
           onClick={() => guess('baja')}
           disabled={revealing || balance < bet || noLower}
           style={{
-            flex: 1, fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '14px',
+            flex: 1, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '14px',
             background: revealing || balance < bet || noLower ? 'transparent' : `${COLOR}1a`,
             color: revealing || balance < bet || noLower ? '#4a6080' : COLOR,
             border: `1px solid ${revealing || balance < bet || noLower ? '#4a6080' : COLOR}`,
@@ -119,7 +119,7 @@ export default function CardHighLow({
           onClick={() => guess('alta')}
           disabled={revealing || balance < bet || noHigher}
           style={{
-            flex: 1, fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '14px',
+            flex: 1, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '14px',
             background: revealing || balance < bet || noHigher ? 'transparent' : `${COLOR}1a`,
             color: revealing || balance < bet || noHigher ? '#4a6080' : COLOR,
             border: `1px solid ${revealing || balance < bet || noHigher ? '#4a6080' : COLOR}`,
@@ -131,14 +131,14 @@ export default function CardHighLow({
       </div>
 
       {balance < bet && (
-        <div style={{ marginTop: 10, textAlign: 'center', fontFamily: mono, fontSize: 9, color: '#4a6080' }}>
+        <div style={{ marginTop: 10, textAlign: 'center', fontFamily: mono, fontSize: 10.5, color: '#6f86a3' }}>
           SALDO INSUFICIENTE
         </div>
       )}
 
       {message && (
         <div style={{
-          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 10, letterSpacing: 1,
+          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 11, letterSpacing: 1,
           color: message.includes('FALLASTE') ? '#4a6080' : '#00ff9d',
         }}>
           {message}

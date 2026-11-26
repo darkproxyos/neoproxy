@@ -51,7 +51,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -62,7 +62,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -108,12 +108,12 @@ export default function LinuxPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-17 // REFERENCIA TÉCNICA
           </div>
           <h1 style={{
@@ -126,7 +126,7 @@ export default function LinuxPage() {
             EL KERNEL REAL — DE LA FILOSOFÍA UNIX A CONSTRUIR UN SISTEMA OPERATIVO PROPIO
           </div>
           <p style={{
-            fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+            fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
             borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
           }}>
             No es una introducción de curso online. Es la historia real (fechas, nombres, el mensaje
@@ -137,7 +137,7 @@ export default function LinuxPage() {
           </p>
 
           <div style={{
-            display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+            display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
             letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
             marginBottom: 32,
           }}>
@@ -147,10 +147,10 @@ export default function LinuxPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -163,7 +163,7 @@ export default function LinuxPage() {
         <div id="sec-01" className={`lnx-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="ANTES DE LINUX" sub="Multics, Unix y la filosofía que lo sostiene todo" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Antes de Unix hubo <strong style={{ color: '#fff' }}>Multics</strong> (1965, un proyecto
               conjunto de MIT, Bell Labs y General Electric): un sistema operativo ambicioso, pensado
               para que miles de usuarios compartieran una sola máquina con seguridad real por niveles —
@@ -175,7 +175,7 @@ export default function LinuxPage() {
               el nombre, un chiste de un colega (Brian Kernighan) sobre ser la versión "castrada" de
               Multics, quedó.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La decisión que de verdad cambió todo llegó en 1973: reescribir Unix en{' '}
               <strong style={{ color: '#fff' }}>C</strong>, un lenguaje que el propio Ritchie terminaba de
               diseñar. Antes de eso, un sistema operativo era, por necesidad, código de máquina específico
@@ -198,7 +198,7 @@ export default function LinuxPage() {
         <div id="sec-02" className={`lnx-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="GNU Y EL SOFTWARE LIBRE" sub="Stallman, la GPL, el copyleft como decisión técnica" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En 1983, <strong style={{ color: '#fff' }}>Richard Stallman</strong>, investigador del MIT,
               anunció en Usenet el proyecto <strong style={{ color: '#fff' }}>GNU</strong> (acrónimo
               recursivo: "GNU's Not Unix") — reescribir, desde cero, un sistema operativo completo
@@ -209,7 +209,7 @@ export default function LinuxPage() {
               <strong style={{ color: '#fff' }}>Free Software Foundation</strong> para sostener legalmente
               el proyecto.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La herramienta real de esa idea es la{' '}
               <strong style={{ color: '#fff' }}>GPL</strong> (GNU General Public License, primera versión
               1989): cualquiera puede usar, estudiar, modificar y redistribuir el código, con una
@@ -233,7 +233,7 @@ export default function LinuxPage() {
         <div id="sec-03" className={`lnx-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="1991" sub="el mensaje real de Torvalds y el debate con Tanenbaum" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El 25 de agosto de 1991, <strong style={{ color: '#fff' }}>Linus Torvalds</strong>, un
               estudiante de 21 años en la Universidad de Helsinki, posteó en el grupo de noticias{' '}
               <em>comp.os.minix</em> uno de los mensajes más citados de la historia de la computación:
@@ -244,7 +244,7 @@ export default function LinuxPage() {
               de sistemas operativos, no para usarse en serio — tenía una licencia que restringía
               modificarlo y redistribuirlo libremente.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               En 1992 se dio, en el mismo grupo de noticias, el debate real conocido como{' '}
               <strong style={{ color: '#fff' }}>"LINUX is obsolete"</strong>: Tanenbaum argumentó en
               público que el diseño monolítico de Linux era un paso atrás respecto del diseño de
@@ -269,7 +269,7 @@ export default function LinuxPage() {
         <div id="sec-04" className={`lnx-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="QUÉ HACE UN KERNEL, EN SERIO" sub="procesos, memoria, drivers, syscalls" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un procesador real no sabe nada de "programas" — ejecuta instrucciones, una tras otra, de
               donde le apunte el program counter. Un kernel es el software que convierte eso en la
               ilusión de que muchos programas corren "a la vez", cada uno con su propia memoria privada,
@@ -280,7 +280,7 @@ export default function LinuxPage() {
               todo lo demás en <strong style={{ color: '#fff' }}>ring 3</strong> (espacio de usuario,
               sandboxeado por el propio procesador, no por convención de software).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Un proceso en ring 3 no puede, por ejemplo, escribir un archivo directamente al disco — no
               tiene el privilegio. Lo que hace es una{' '}
               <strong style={{ color: '#fff' }}>syscall</strong> (llamada al sistema, ej. <code>write()</code>):
@@ -304,7 +304,7 @@ export default function LinuxPage() {
         <div id="sec-05" className={`lnx-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="EL SCHEDULER" sub="cómo decide la CPU quién corre" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una CPU de 8 núcleos puede correr, de verdad, 8 instrucciones simultáneas — un sistema con
               cientos de procesos activos logra la ilusión de "todos corriendo a la vez" turnándolos a
               una velocidad que el ojo humano no distingue (un{' '}
@@ -317,7 +317,7 @@ export default function LinuxPage() {
               con <code>nice</code>) — ningún proceso tiene un "turno" literal, el scheduler siempre le da
               la CPU al que más tiempo proporcional lleva esperando.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Desde 2023 (kernel 6.6), Linux ofrece además{' '}
               <strong style={{ color: '#fff' }}>EEVDF</strong> (Earliest Eligible Virtual Deadline First),
               que mejora específicamente la latencia para cargas interactivas (audio, juegos) sin romper
@@ -338,7 +338,7 @@ export default function LinuxPage() {
         <div id="sec-06" className={`lnx-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="MEMORIA VIRTUAL" sub="la mentira útil que cree cada proceso" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Cada proceso en un sistema Linux "cree" que tiene toda la memoria de la máquina para él
               solo, empezando siempre desde la misma dirección — eso es falso, y es falso a propósito.
               El kernel, con ayuda de hardware dedicado (la <strong style={{ color: '#fff' }}>MMU</strong>,
@@ -348,7 +348,7 @@ export default function LinuxPage() {
               proceso, así que dos procesos pueden usar la "misma" dirección virtual sin pisarse jamás en
               la memoria física real.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esa misma capa de indirección hace posible el{' '}
               <strong style={{ color: '#fff' }}>swap</strong>: cuando la RAM física se llena, el kernel
               puede mover páginas de memoria poco usadas al disco y reusar esa RAM para otra cosa,
@@ -372,7 +372,7 @@ export default function LinuxPage() {
         <div id="sec-07" className={`lnx-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="EL ÁRBOL DE ARRANQUE" sub="de la UEFI al primer prompt" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Antes de que exista cualquier "sistema operativo", el firmware de la placa (hoy casi
               siempre <strong style={{ color: '#fff' }}>UEFI</strong>, heredero del BIOS clásico) corre
               sus propias pruebas de hardware y busca, en un disco, un{' '}
@@ -380,7 +380,7 @@ export default function LinuxPage() {
               <strong style={{ color: '#fff' }}>GRUB2</strong>). El bootloader no es el sistema operativo:
               su único trabajo es cargar en RAM la imagen real del kernel y entregarle el control.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El kernel arranca con un problema real: todavía no sabe cómo leer el disco donde está el
               sistema de archivos raíz de verdad (el driver que necesita puede estar justo adentro de ese
               mismo disco). La solución es el{' '}
@@ -405,7 +405,7 @@ export default function LinuxPage() {
         <div id="sec-08" className={`lnx-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="TODO ES UN ARCHIVO" sub="/proc, /sys, y la filosofía que todavía sostiene todo" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La prueba más literal de que "todo es un archivo" sigue viva es{' '}
               <strong style={{ color: '#fff' }}>/proc</strong>: un sistema de archivos que no existe en
               ningún disco — lo genera el kernel en vivo. <code>/proc/1234/status</code> no es un archivo
@@ -414,7 +414,7 @@ export default function LinuxPage() {
               cotidianas como <code>ps</code> o <code>top</code> no usan ninguna API especial — leen{' '}
               <code>/proc</code> directo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>/sys</strong> (sysfs, formalizado en la serie 2.6 del
               kernel, 2003) hace lo mismo para el modelo de dispositivos: cada pieza de hardware que el
               kernel reconoce aparece como un directorio real, sus parámetros ajustables como archivos
@@ -438,7 +438,7 @@ export default function LinuxPage() {
         <div id="sec-09" className={`lnx-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="NAMESPACES Y CGROUPS" sub="las piezas reales detrás de los contenedores" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Docker (2013) no inventó ninguna tecnología de aislamiento nueva — empaquetó, con una
               interfaz mucho más simple, dos primitivas que ya existían en el kernel de Linux desde antes.{' '}
               <strong style={{ color: '#fff' }}>Namespaces</strong> (los primeros, en 2002; la familia
@@ -447,7 +447,7 @@ export default function LinuxPage() {
               sí mismo como PID 1); en su propio <em>network namespace</em>, tiene su propia interfaz de
               red, invisible para el resto de la máquina.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>cgroups</strong> (control groups, desarrollados en Google
               por Paul Menage y Rohit Seth, incorporados al kernel en 2007) resuelven el problema
               complementario: no qué un proceso <em>ve</em>, sino cuánto puede <em>usar</em> — límites
@@ -470,7 +470,7 @@ export default function LinuxPage() {
         <div id="sec-10" className={`lnx-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="X" title="MONOLÍTICO CON MÓDULOS" sub="por qué Linux ganó el debate en la práctica" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un <strong style={{ color: '#fff' }}>microkernel</strong> (el diseño de MINIX, y de sistemas
               reales como <strong style={{ color: '#fff' }}>QNX</strong> o el formalmente verificado{' '}
               <strong style={{ color: '#fff' }}>seL4</strong>, 2009) mantiene en ring 0 solo lo
@@ -482,7 +482,7 @@ export default function LinuxPage() {
               memoria, sistemas de archivos, la enorme mayoría de los drivers — adentro del mismo espacio
               de ring 0: un bug serio en un driver puede, en teoría, tumbar la máquina entera.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Tanenbaum tenía razón en ese argumento de aislamiento — y aun así, en la práctica, el diseño
               monolítico ganó durante treinta años, por una razón concreta: el paso de mensajes entre
               procesos separados (la base de todo microkernel) tiene un costo de rendimiento real en cada
@@ -506,7 +506,7 @@ export default function LinuxPage() {
         <div id="sec-11" className={`lnx-section ${visible['sec-11'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="XI" title="DISTRIBUCIONES" sub="qué es el kernel y qué es la distro" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               "Linux" a secas es solo el kernel — un archivo que sabe administrar CPU, memoria y
               dispositivos, y nada más: sin él no hay ni siquiera una terminal donde escribir un comando.
               Una <strong style={{ color: '#fff' }}>distribución</strong> es ese mismo kernel más
@@ -518,7 +518,7 @@ export default function LinuxPage() {
               Debian: rolling release (actualizaciones continuas, nunca una "versión" fija) y configurar
               casi todo a mano.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Gentoo</strong> (2002) lleva la personalización un paso
               más allá: no instala binarios precompilados, compila cada paquete en tu propia máquina a
               partir del código fuente, con "USE flags" que vos elegís para activar o desactivar
@@ -545,7 +545,7 @@ export default function LinuxPage() {
         <div id="sec-12" className={`lnx-section ${visible['sec-12'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="XII" title="CONSTRUIR EL TUYO" sub="de compilar tu kernel a un sistema operativo propio — y qué de NeoProxy ya se le parece" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Hay un camino real, con pasos concretos, de "usar Linux" a "tener tu propio sistema
               operativo" — ninguno exige escribir un kernel desde cero: <strong style={{ color: '#fff' }}>
               Linux From Scratch</strong> (LFS, Gerard Beekmans, desde 1999) es un libro-guía real que
@@ -562,7 +562,7 @@ export default function LinuxPage() {
               instalado, cargado con <code>insmod</code>) — un punto de entrada real y acotado, no una
               reescritura del sistema entero.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               NeoProxy ya se llama, en varias de sus propias páginas, "NeoProxy OS" — y la pregunta
               honesta es qué tan literal es eso hoy. Hay partes reales del paralelo:{' '}
               <code>Memory/hub.json</code> ya funciona como una tabla de procesos mínima — entradas por
@@ -573,7 +573,7 @@ export default function LinuxPage() {
               Metatron, descrito en el propio proyecto como "orquestador", es la pieza más parecida
               conceptualmente a PID 1: el único proceso con el rol explícito de supervisar al resto.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo que le falta de verdad para dejar de ser metáfora y ser un sistema operativo real son,
               con precisión, las mismas cuatro piezas de la sección IV: un scheduler real (algo que
               decida, en vivo, a qué agente le toca "correr" ahora, no un campo <code>idle</code> fijo en

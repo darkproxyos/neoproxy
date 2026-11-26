@@ -54,14 +54,14 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
           {title}
         </h2>
       </div>
-      {sub && <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
     </div>
   )
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12 }}>
+    <div style={{ fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12 }}>
       {children}
     </div>
   )
@@ -69,7 +69,7 @@ function Caption({ children }: { children: React.ReactNode }) {
 
 function Stat({ label, value, color = ACCENT }: { label: string; value: string; color?: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 9 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 10.5 }}>
       <span style={{ color: `${color}99`, letterSpacing: 1.5 }}>{label}</span>
       <span style={{ color: '#e8f2ff', letterSpacing: 0.3, textAlign: 'right' }}>{value}</span>
     </div>
@@ -77,7 +77,7 @@ function Stat({ label, value, color = ACCENT }: { label: string; value: string; 
 }
 
 function P({ children }: { children: React.ReactNode }) {
-  return <p style={{ fontSize: 11.5, lineHeight: 2, letterSpacing: 0.3, color: TEXT_DIM, marginTop: 0, marginBottom: 14 }}>{children}</p>
+  return <p style={{ fontSize: 12.5, lineHeight: 2, letterSpacing: 0.3, color: TEXT_DIM, marginTop: 0, marginBottom: 14 }}>{children}</p>
 }
 
 function Mono({ children }: { children: React.ReactNode }) {
@@ -160,9 +160,9 @@ function TimelineRow({ entry, isLast }: { entry: TimelineEntry; isLast: boolean 
       <div style={{ paddingBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, fontWeight: 700, color: ACCENT, letterSpacing: 1, textShadow: `0 0 10px ${ACCENT}55` }}>{entry.year}</span>
-          <span style={{ fontSize: 11, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
+          <span style={{ fontSize: 12, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
         </div>
-        <div style={{ fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
+        <div style={{ fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
       </div>
     </div>
   )
@@ -244,7 +244,7 @@ export default function CienciaCognitivaPage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* encabezado */}
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '104px 24px 0' }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-COG-00 // DOCUMENTO TÉCNICO ARCHIVADO
           </div>
           <h1 style={{ fontSize: 'clamp(28px, 6vw, 44px)', fontWeight: 700, letterSpacing: 8, color: ACCENT, textShadow: `0 0 40px ${ACCENT}55`, marginBottom: 14, lineHeight: 1.05 }}>
@@ -253,7 +253,7 @@ export default function CienciaCognitivaPage() {
           <div style={{ fontSize: 12, letterSpacing: 3, color: TEXT_DIM, marginBottom: 32 }}>
             CÓMO SE ESTUDIA UNA MENTE DESDE AFUERA Y DESDE ADENTRO
           </div>
-          <p style={{ fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 640, borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32 }}>
+          <p style={{ fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 640, borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32 }}>
             La mente no es un objeto que se pueda abrir como un reloj. La ciencia cognitiva nació de
             apostar que se la podía estudiar igual: como un sistema que procesa información, con
             partes que se pueden aislar, medir y poner a prueba — tomando prestado de la psicología, la
@@ -263,7 +263,7 @@ export default function CienciaCognitivaPage() {
           </p>
 
           {/* sello */}
-          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9, letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px', marginBottom: 32, maxWidth: 640 }}>
+          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5, letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px', marginBottom: 32, maxWidth: 640 }}>
             <span style={{ color: `${ACCENT}55` }}>CLASIFICACIÓN</span><span style={{ color: TEXT }}>INTERDISCIPLINARIA — SIN UN MÉTODO ÚNICO</span>
             <span style={{ color: `${ACCENT}55` }}>REVISIÓN</span><span style={{ color: TEXT }}>01 — 14 SECCIONES</span>
             <span style={{ color: `${ACCENT}55` }}>ALCANCE</span><span style={{ color: TEXT }}>REFERENCIA EDUCATIVA — EL PROBLEMA DIFÍCIL DE LA CONCIENCIA (SECCIÓN X) SIGUE ABIERTO, NO RESUELTO</span>
@@ -271,7 +271,7 @@ export default function CienciaCognitivaPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640, marginBottom: 90 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
               {[
                 ['I', 'sec-01', 'Introducción'],
@@ -289,7 +289,7 @@ export default function CienciaCognitivaPage() {
                 ['XIII', 'sec-13', 'Línea de tiempo'],
                 ['XIV', 'sec-14', 'Fronteras abiertas'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 26, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -447,7 +447,7 @@ export default function CienciaCognitivaPage() {
             {SYSTEMS.map(s => (
               <Panel key={s.title}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{s.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{s.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{s.detail}</div>
               </Panel>
             ))}
           </div>
@@ -522,8 +522,8 @@ export default function CienciaCognitivaPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {FOUR_E.map(e => (
               <Panel key={e.title}>
-                <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{e.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{e.detail}</div>
+                <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{e.title}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{e.detail}</div>
               </Panel>
             ))}
           </div>
@@ -563,7 +563,7 @@ export default function CienciaCognitivaPage() {
 
         {/* XIV. FRONTERAS ABIERTAS */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-14" last>
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}55`, marginBottom: 10 }}>
             TERRENO ABIERTO // SIN CONSENSO, A DIFERENCIA DE TODO LO ANTERIOR
           </div>
           <h2 style={{ fontSize: 19, letterSpacing: 4, color: ACCENT, textShadow: `0 0 22px ${ACCENT}44`, fontWeight: 700, margin: '0 0 18px' }}>
@@ -578,8 +578,8 @@ export default function CienciaCognitivaPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {FRONTIERS.map(f => (
               <Panel key={f.title}>
-                <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{f.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{f.detail}</div>
+                <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{f.title}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{f.detail}</div>
               </Panel>
             ))}
           </div>
@@ -587,7 +587,7 @@ export default function CienciaCognitivaPage() {
 
         {/* footer */}
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 24px 140px', textAlign: 'center' }}>
-          <div style={{ fontSize: 9, letterSpacing: 4, color: `${ACCENT}33` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 4, color: `${ACCENT}33` }}>
             NPX-COG-00 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

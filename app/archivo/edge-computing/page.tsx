@@ -37,14 +37,14 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
           {title}
         </h2>
       </div>
-      {sub && <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
     </div>
   )
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12 }}>
+    <div style={{ fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12 }}>
       {children}
     </div>
   )
@@ -84,12 +84,12 @@ export default function EdgeComputingPage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-18 // REFERENCIA TÉCNICA
           </div>
           <h1 style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700, letterSpacing: 6, color: ACCENT, textShadow: `0 0 40px ${ACCENT}55`, marginBottom: 14, lineHeight: 1.1 }}>
@@ -98,23 +98,23 @@ export default function EdgeComputingPage() {
           <div style={{ fontSize: 12, letterSpacing: 3, color: TEXT_DIM, marginBottom: 32 }}>
             PROCESAR DONDE PASAN LAS COSAS, NO DONDE ESTÁ EL DATACENTER
           </div>
-          <p style={{ fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660, borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32 }}>
+          <p style={{ fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660, borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32 }}>
             No es una moda de marketing de "la nube pero más cerca". Es una respuesta real a un límite
             físico real — y la pieza de hardware que mejor encaja con esa respuesta, FPGA, es
             exactamente la puerta de entrada al siguiente documento del Codex.
           </p>
 
-          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9, letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px', marginBottom: 32 }}>
+          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5, letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px', marginBottom: 32 }}>
             <span style={{ color: `${ACCENT}55` }}>CLASIFICACIÓN</span><span style={{ color: TEXT }}>ARQUITECTURA DE SISTEMAS DISTRIBUIDOS — DEL CDN AL SILICIO RECONFIGURABLE</span>
             <span style={{ color: `${ACCENT}55` }}>REVISIÓN</span><span style={{ color: TEXT }}>01 — X SECCIONES</span>
             <span style={{ color: `${ACCENT}55` }}>ALCANCE</span><span style={{ color: TEXT }}>LATENCIA → CLOUD/FOG/EDGE → 5G/MEC → EDGE AI → INDUSTRIAL → FPGA</span>
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -126,7 +126,7 @@ export default function EdgeComputingPage() {
         <div id="sec-01" className={`edg-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="QUÉ RESUELVE DE VERDAD" sub="el límite físico de la velocidad de la luz" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Mandar un dato a un datacenter y recibir la respuesta no es instantáneo por un límite que
               ninguna optimización de software puede saltar: la luz tarda, como mínimo,{' '}
               <strong style={{ color: '#fff' }}>~67 milisegundos</strong> en dar una vuelta ida y vuelta
@@ -136,7 +136,7 @@ export default function EdgeComputingPage() {
               quirúrgico, o una red eléctrica reaccionando a una falla, un salto de ida y vuelta a un
               datacenter lejano puede ser, literalmente, demasiado tarde.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Edge computing</strong> es la respuesta a ese límite
               físico, no a una preferencia de diseño: procesar el dato lo más cerca posible de donde se
               genera — en el propio dispositivo, en una antena cercana, en un servidor regional a pocos
@@ -154,7 +154,7 @@ export default function EdgeComputingPage() {
         <div id="sec-02" className={`edg-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="EL CONTINUO CLOUD-FOG-EDGE" sub="no es una dicotomía" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               "Edge vs. cloud" es una simplificación — en sistemas reales conviven varios niveles a la
               vez, cada uno resolviendo una parte distinta del problema:{' '}
               <strong style={{ color: '#fff' }}>cloud</strong> (datacenters centrales, cómputo masivo sin
@@ -164,7 +164,7 @@ export default function EdgeComputingPage() {
               <strong style={{ color: '#fff' }}>edge</strong> propiamente dicho (el propio dispositivo o
               su gateway inmediato, cero saltos de red externos).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La decisión de diseño real en cualquier sistema distribuido moderno no es "¿edge o cloud?"
               sino "¿qué procesamiento va en cada nivel?" — un auto autónomo real procesa localmente
               (edge) lo que decide en milisegundos (frenar), manda a un servidor regional (fog) lo que
@@ -183,7 +183,7 @@ export default function EdgeComputingPage() {
         <div id="sec-03" className={`edg-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="POR QUÉ AHORA" sub="IoT, sensores, y el volumen que no tiene sentido centralizar" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Edge computing como idea no es nueva — lo nuevo es la escala real del problema que la hizo
               indispensable: miles de millones de sensores IoT (cámaras, medidores inteligentes,
               wearables, sensores industriales) generando datos todo el tiempo, la mayoría de ellos sin
@@ -191,7 +191,7 @@ export default function EdgeComputingPage() {
               a un datacenter central, siempre, es un desperdicio real de ancho de banda y de energía —
               no solo de dinero.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La solución real que el edge habilita es filtrar en el origen: un sensor de vibración en
               una máquina industrial puede procesar localmente y mandar a la nube solo cuando detecta una
               anomalía real, no un stream constante de números normales. El volumen de datos "interesante"
@@ -210,7 +210,7 @@ export default function EdgeComputingPage() {
         <div id="sec-04" className={`edg-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="5G Y MEC" sub="el estándar real detrás de la promesa de latencia" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una de las promesas centrales de 5G es latencia de red de{' '}
               <strong style={{ color: '#fff' }}>~1 milisegundo</strong> (contra ~50ms típicos de 4G/LTE)
               — pero esa latencia tan baja en la red es inútil si el dato, igual, tiene que viajar cientos
@@ -220,7 +220,7 @@ export default function EdgeComputingPage() {
               2014): colocar capacidad de cómputo real dentro de la infraestructura de la propia red
               celular, en la torre o cerca de ella, no en un datacenter lejano.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Con MEC, una aplicación puede correr literalmente a metros de la antena a la que se conectó
               el teléfono — el "último salto" de radio sigue siendo rápido por diseño de 5G, y el
               procesamiento ya no agrega la distancia que lo volvía irrelevante. Es la pieza de
@@ -238,7 +238,7 @@ export default function EdgeComputingPage() {
         <div id="sec-05" className={`edg-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="EDGE AI" sub="inferencia en el dispositivo, no entrenamiento" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Entrenar una red neuronal grande (ver /archivo/redes-neuronales) sigue siendo trabajo de
               datacenter — necesita enormes cantidades de datos y de cómputo concentrado. Pero una vez
               entrenada, usar esa red para hacer una predicción puntual (<strong style={{ color: '#fff' }}>
@@ -249,7 +249,7 @@ export default function EdgeComputingPage() {
               dedicado, del tamaño de una moneda, pensado específicamente para correr modelos ya
               entrenados con bajísimo consumo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El ejemplo más exigente real es la conducción autónoma: el hardware de cómputo a bordo de
               un auto (como el FSD Computer de Tesla, con chips propios diseñados específicamente para
               ese fin) tiene que decidir en milisegundos, sin depender de que haya señal de red en ese
@@ -267,7 +267,7 @@ export default function EdgeComputingPage() {
         <div id="sec-06" className={`edg-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="EL CDN COMO EL EDGE COMPUTING ORIGINAL" sub="de cachear archivos a ejecutar código real" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Akamai</strong> (fundada en 1998, a partir de
               investigación del MIT) resolvió, mucho antes de que existiera la palabra "edge computing",
               exactamente el mismo problema de fondo: poner copias de un sitio web en servidores
@@ -276,7 +276,7 @@ export default function EdgeComputingPage() {
               forma masiva y exitosa de computación en el borde — aunque durante años solo sirviera
               archivos estáticos cacheados, no ejecutara lógica real.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo que cambió de verdad en los últimos años es que esos mismos puntos de presencia
               distribuidos empezaron a ejecutar <strong style={{ color: '#fff' }}>código real</strong>, no
               solo cachear archivos:{' '}
@@ -297,7 +297,7 @@ export default function EdgeComputingPage() {
         <div id="sec-07" className={`edg-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="EDGE INDUSTRIAL" sub="donde la nube no puede ser la respuesta" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En control industrial real, el problema no es solo latencia promedio baja — es{' '}
               <strong style={{ color: '#fff' }}>determinismo</strong>: una respuesta que siempre llega
               dentro de un plazo garantizado, no "casi siempre rápido". Un PLC (controlador lógico
@@ -306,7 +306,7 @@ export default function EdgeComputingPage() {
               Esa clase de sistemas corre, por diseño, completamente local — "edge" ahí no es una elección
               de arquitectura moderna, es la única opción que siempre existió.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo que sí cambió con el edge computing moderno es que esos sistemas, antes aislados por
               necesidad, hoy pueden combinar ese control local determinístico con analítica real conectada
               — un gateway industrial procesa el control crítico en tiempo real localmente, y en paralelo
@@ -324,7 +324,7 @@ export default function EdgeComputingPage() {
         <div id="sec-08" className={`edg-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="LO QUE EL EDGE NO RESUELVE SOLO" sub="el costo real de operar miles de nodos" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Mover cómputo al borde no elimina problemas de sistemas distribuidos — los multiplica por la
               cantidad de nodos reales. Actualizar software en un datacenter central es una operación;
               actualizar firmware de forma segura en diez mil dispositivos edge dispersos geográficamente,
@@ -332,7 +332,7 @@ export default function EdgeComputingPage() {
               — una actualización mal aplicada puede dejar un dispositivo inaccesible físicamente para
               siempre ("bricked"), sin forma remota de arreglarlo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La seguridad física es otro problema real que el cloud centralizado no tiene en la misma
               escala: un servidor de datacenter está detrás de controles de acceso físico serios; un
               dispositivo edge puede estar en una calle, un auto, o la casa de un usuario — accesible
@@ -350,7 +350,7 @@ export default function EdgeComputingPage() {
         <div id="sec-09" className={`edg-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="EDGE Y FPGA" sub="dónde se cruzan de verdad" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un chip edge real necesita tres cosas a la vez, casi siempre en tensión entre sí: bajo
               consumo de energía (muchos dispositivos edge corren a batería o con presupuesto térmico
               chico), latencia determinística (sección VII), y la capacidad de actualizarse cuando el
@@ -359,7 +359,7 @@ export default function EdgeComputingPage() {
               una sola tarea) es excelente en las dos primeras pero no se puede modificar después de
               fabricado — si el algoritmo cambia, hay que fabricar un chip nuevo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Una <strong style={{ color: '#fff' }}>FPGA</strong> (field-programmable gate array) es la
               respuesta real a esa tensión: silicio reconfigurable, cuya lógica interna se puede
               reprogramar por completo después de fabricado, pero que una vez configurado para una tarea
@@ -382,7 +382,7 @@ export default function EdgeComputingPage() {
         <div id="sec-10" className={`edg-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="X" title="LO QUE QUEDA POR EXPLORAR" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>WebAssembly como el runtime universal del edge</strong>{' '}
               es, hoy, un problema activamente en desarrollo, no cerrado: la promesa de ejecutar el mismo
               binario compilado, con seguridad real por sandboxing, en cualquier nodo edge sin importar
@@ -390,14 +390,14 @@ export default function EdgeComputingPage() {
               evolucionando para cubrir los casos reales que esto necesita (acceso a archivos, redes,
               GPU) de forma portable.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>IA generativa corriendo local</strong> (modelos de lenguaje
               chicos pero reales ejecutándose enteros en un teléfono o una FPGA de borde, sin ninguna
               llamada a un servidor) está recién empezando a ser viable en 2024-2025 — la pregunta real
               abierta es cuánta capacidad se puede comprimir en cuánto silicio antes de que deje de ser
               útil.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Y la pregunta de orquestación sigue sin respuesta definitiva: ¿quién decide, en vivo, qué
               parte de un cómputo corre en el dispositivo, cuál en el nodo fog más cercano, y cuál sube a
               la nube? Hoy esa decisión casi siempre se programa a mano, caso por caso — un sistema real

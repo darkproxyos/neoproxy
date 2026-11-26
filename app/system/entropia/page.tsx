@@ -42,7 +42,7 @@ export default async function EntropiaLogPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#8fb8d6', fontFamily: mono, position: 'relative' }}>
       <div className="crt-scanlines" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '64px 24px 80px' }}>
-        <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 4, marginBottom: 12 }}>
+        <div style={{ fontSize: 10.5, color: `${GREEN}66`, letterSpacing: 4, marginBottom: 12 }}>
           REGISTRO SIN CURAR — ENTROPY_ENTITY_SHIFT
         </div>
 
@@ -61,7 +61,7 @@ export default async function EntropiaLogPage() {
         )}
 
         {rows.length === 0 && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1 }}>
             SIN REGISTROS TODAVÍA.
           </div>
         )}
@@ -71,8 +71,8 @@ export default async function EntropiaLogPage() {
             const p = readPayload(r.payload)
             const deltaSign = typeof p.delta === 'number' && p.delta >= 0 ? '+' : ''
             return (
-              <div key={r.id} style={{ fontSize: 10, lineHeight: 1.9, borderLeft: `2px solid ${GREEN}33`, paddingLeft: 10 }}>
-                <span style={{ color: '#4a6080' }}>{new Date(r.timestamp).toISOString()}</span>
+              <div key={r.id} style={{ fontSize: 11, lineHeight: 1.9, borderLeft: `2px solid ${GREEN}33`, paddingLeft: 10 }}>
+                <span style={{ color: '#6f86a3' }}>{new Date(r.timestamp).toISOString()}</span>
                 {' — '}
                 <span style={{ color: GREEN }}>{deltaSign}{typeof p.delta === 'number' ? p.delta.toFixed(1) : '?'}</span>
                 {' → '}
@@ -81,7 +81,7 @@ export default async function EntropiaLogPage() {
                   <span style={{ color: '#ff6a6a' }}> // orden pagado: +{p.corruptionCost.toFixed(1)} corrupción</span>
                 )}
                 {p.candidates && p.candidates.length > 0 && (
-                  <span style={{ color: '#4a6080' }}>
+                  <span style={{ color: '#6f86a3' }}>
                     {' // sin colapsar: "'}{p.candidates.join('" / "')}{'"'}
                   </span>
                 )}

@@ -75,7 +75,7 @@ export default function HomeSenalPage() {
           }}
         >
           <div style={{
-            fontFamily: mono, fontSize: 11, letterSpacing: 5, color: `${CYAN}bb`,
+            fontFamily: mono, fontSize: 12, letterSpacing: 5, color: `${CYAN}bb`,
             textShadow: `0 0 20px ${CYAN}66`, animation: 'senal-pulse 2.4s ease-in-out infinite',
           }}>
             TOCÁ PARA SINTONIZAR

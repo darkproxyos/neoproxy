@@ -58,7 +58,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -69,7 +69,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -111,13 +111,13 @@ export default function AutoorganizacionPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-11 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -138,7 +138,7 @@ export default function AutoorganizacionPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
               borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -149,7 +149,7 @@ export default function AutoorganizacionPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -160,12 +160,12 @@ export default function AutoorganizacionPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -178,7 +178,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-01" className={`auo-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="QUÉ ES LA AUTOORGANIZACIÓN" sub="orden que emerge sin que nadie lo diseñe" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Un patrón global —una ola de tráfico, una avalancha, una red con pocos nodos muy
               conectados— puede aparecer solo a partir de interacciones locales simples, repetidas
               muchísimas veces, sin ningún plano central ni ninguna parte individual que "sepa" del
@@ -193,7 +193,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-02" className={`auo-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="PRIGOGINE — ESTRUCTURAS DISIPATIVAS" sub="Premio Nobel de Química, 1977" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=prigogine" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Ilya Prigogine
               </Link>
@@ -204,7 +204,7 @@ export default function AutoorganizacionPage() {
               entropía sugiere a primera vista: el desorden del entorno es, literalmente, el precio
               que paga el orden local para existir.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El ejemplo real y visible en un laboratorio es la{' '}
               <strong style={{ color: '#fff' }}>reacción de Belousov-Zhabotinsky</strong>: una mezcla
               química que, lejos del equilibrio, no se estabiliza en un color uniforme sino que forma
@@ -218,7 +218,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-03" className={`auo-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="CRITICALIDAD AUTOORGANIZADA — LA PILA DE ARENA" sub="Bak, Tang y Wiesenfeld, 1987" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=perbak" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Per Bak
               </Link>
@@ -244,7 +244,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-04" className={`auo-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="EL ATRACTOR EXTRAÑO" sub="Edward Lorenz, MIT, 1963" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=lorenz" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Edward Lorenz
               </Link>
@@ -254,7 +254,7 @@ export default function AutoorganizacionPage() {
               partida termina produciendo trayectorias completamente distintas. De ahí sale el "efecto
               mariposa", frase que él mismo popularizó.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El <strong style={{ color: '#fff' }}>atractor de Lorenz</strong> es la forma geométrica
               real que trazan esas trayectorias cuando se las grafica: una silueta parecida a un par de
               alas de mariposa. Las trayectorias nunca se repiten exactamente ni se cruzan dos veces
@@ -276,7 +276,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-05" className={`auo-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="VIDA ARTIFICIAL Y AUTÓMATAS CELULARES" sub="Langton, 1986 — Conway, 1970" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=langton" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Christopher Langton
               </Link>{' '}
@@ -284,7 +284,7 @@ export default function AutoorganizacionPage() {
               estudio de sistemas hechos por humanos (no biológicos) que exhiben comportamientos
               propios de lo vivo —reproducirse, adaptarse, evolucionar— a partir de reglas simples.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El ejemplo más citado del campo es el <strong style={{ color: '#fff' }}>Juego de la
               Vida</strong> de John Conway (1970): una grilla donde cada celda vive o muere según
               cuatro reglas triviales sobre sus vecinas. De esas cuatro reglas salen patrones que se
@@ -298,7 +298,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-06" className={`auo-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="REDES LIBRES DE ESCALA" sub="Barabási y Albert, 1999 — contra el modelo de Erdős-Rényi, 1959" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Paul Erdős y Alfréd Rényi propusieron en 1959 un modelo donde las conexiones entre nodos
               de una red se trazan puramente al azar — útil como base matemática, pero las redes
               reales no se parecen a eso.{' '}
@@ -310,7 +310,7 @@ export default function AutoorganizacionPage() {
               <strong style={{ color: '#fff' }}>conexión preferencial</strong>: un nodo nuevo tiende a
               conectarse con los nodos que ya tienen más conexiones, no al azar entre todos.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Eso produce, con el tiempo, unos pocos{' '}
               <Link href="/knowledge?entry=erdos-renyi" style={{ color: '#fff', textDecoration: 'underline' }}>
                 hubs
@@ -333,7 +333,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-07" className={`auo-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="KAUFFMAN Y LAS REDES BOOLEANAS" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <Link href="/knowledge?entry=kauffman" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Stuart Kauffman
               </Link>{' '}
@@ -351,7 +351,7 @@ export default function AutoorganizacionPage() {
         <div id="sec-08" className={`auo-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="VIII" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Los siete nombres de este documento ya estaban en el Codex, sembrados en{' '}
               <span style={{ color: '#fff' }}>components/knowledge/entries.ts</span> desde antes de que
               existiera esta página, sin que nada los agrupara. Tres de sus ideas, mientras tanto, no
@@ -364,7 +364,7 @@ export default function AutoorganizacionPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-11 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

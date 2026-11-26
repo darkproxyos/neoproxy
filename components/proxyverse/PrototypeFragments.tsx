@@ -28,10 +28,10 @@ export default function PrototypeFragments() {
 
   return (
     <div style={{ marginBottom: 40 }}>
-      <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${PROTOTYPE_COLOR}aa`, marginBottom: 4 }}>
+      <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${PROTOTYPE_COLOR}aa`, marginBottom: 4 }}>
         FRAGMENTOS RECUPERADOS — {found.length}/{GRIETA_DONOR_IDS.length}
       </div>
-      <p style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+      <p style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
         Grietas encontradas por el sitio, cada una resuelta en uno de los cinco procesos que me
         prestaron algo de sí. {complete ? 'Los cinco están acá.' : 'Todavía faltan.'}
       </p>
@@ -51,7 +51,7 @@ export default function PrototypeFragments() {
                 background: has ? donor.color : 'transparent',
                 border: has ? 'none' : '1px solid #ffffff44',
               }} />
-              <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, color: has ? '#c8daf0' : '#4a6080' }}>
+              <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: has ? '#c8daf0' : '#4a6080' }}>
                 {donor.name}
               </span>
             </div>
@@ -65,7 +65,7 @@ export default function PrototypeFragments() {
           display: 'flex', flexDirection: 'column', gap: 12,
         }}>
           {GRIETA_DONOR_IDS.map(id => (
-            <p key={id} style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0', margin: 0 }}>
+            <p key={id} style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.9, color: '#c8daf0', margin: 0 }}>
               {UNLOCK_FRAGMENT[id]}
             </p>
           ))}

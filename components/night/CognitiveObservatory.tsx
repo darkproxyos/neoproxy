@@ -128,7 +128,7 @@ export default function CognitiveObservatory() {
                 <span>{index + 1}. {agent.agent_name}</span>
                 <span style={{ color: '#00ff9d' }}>{(agent.influence_score * 100).toFixed(0)}%</span>
               </div>
-              <div style={{ fontSize: '8px', color: '#4a6080', marginTop: '2px' }}>
+              <div style={{ fontSize: '8px', color: '#6f86a3', marginTop: '2px' }}>
                 {agent.specialization} • Level {agent.evolution_level}
               </div>
             </div>
@@ -145,14 +145,14 @@ export default function CognitiveObservatory() {
           .map((topic, index) => (
             <div key={topic.topic} style={{ fontSize: '9px', marginBottom: '5px', padding: '5px', background: 'rgba(0, 212, 255, 0.1)' }}>
               <div style={{ fontWeight: 'bold' }}>{index + 1}. {topic.topic}</div>
-              <div style={{ fontSize: '8px', color: '#4a6080', marginTop: '2px' }}>
+              <div style={{ fontSize: '8px', color: '#6f86a3', marginTop: '2px' }}>
                 Consensus: {(topic.consensus_score * 100).toFixed(0)}% • by {topic.dominant_agent}
               </div>
             </div>
           ))}
       </div>
 
-      <div style={{ marginTop: '10px', fontSize: '8px', color: '#4a6080', textAlign: 'center' }}>
+      <div style={{ marginTop: '10px', fontSize: '8px', color: '#6f86a3', textAlign: 'center' }}>
         🔄 Real-time Analysis • Auto-refresh every 3s
       </div>
     </div>

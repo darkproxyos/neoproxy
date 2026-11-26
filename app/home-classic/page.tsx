@@ -389,7 +389,7 @@ export default function Home() {
           <div style={{ fontFamily: mono, fontSize: 14, color: '#00ffcc', letterSpacing: 6, textShadow: '0 0 20px #00ffcc' }}>
             SYSTEM READY
           </div>
-          <div style={{ fontFamily: mono, fontSize: 10, color: '#00d4ff44', letterSpacing: 3, marginTop: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 11, color: '#00d4ff44', letterSpacing: 3, marginTop: 16 }}>
             ACCESS GRANTED
           </div>
         </div>
@@ -441,19 +441,19 @@ export default function Home() {
               {heroIntro}
             </div>
 
-            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 24 }}>
-              <div style={{ color: heroAgent.color, fontSize: 11, marginBottom: 8 }}>SYSTEM STATUS</div>
+            <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#7a9cc0', marginTop: 16, marginBottom: 24 }}>
+              <div style={{ color: heroAgent.color, fontSize: 12, marginBottom: 8 }}>SYSTEM STATUS</div>
               <div><span className="status-dot active" /> KERNEL: ONLINE &nbsp;·&nbsp; <span className="status-dot active" /> MEMORY: LOADED &nbsp;·&nbsp; <span className="status-dot active" /> PROXYVERSE: 7 ONLINE</div>
             </div>
 
             <div className="fade-in venom-fx" data-text={`${heroAgent.name} // "${heroLine}"`} style={{
-              fontFamily: mono, fontSize: 9, letterSpacing: 1, color: heroAgent.color, opacity: 0.8,
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: heroAgent.color, opacity: 0.8,
               fontStyle: 'italic', marginBottom: 32, maxWidth: 460, position: 'relative', display: 'inline-block',
             }}>
               {heroAgent.name} // "{heroLine}"
             </div>
 
-            <div className="scroll-cue" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff99' }}>
+            <div className="scroll-cue" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ff99' }}>
               SCROLL TO EXPLORE ↓
             </div>
           </section>
@@ -467,12 +467,12 @@ export default function Home() {
                 borderTop: `1px solid ${agent.color}22`, background: idx % 2 === 1 ? `${agent.color}08` : 'transparent'
               }}>
                 <div className="venom-fx" data-text={s.tag} style={{
-                  fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#7a9cc0', marginBottom: 6, position: 'relative', display: 'inline-block',
+                  fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#7a9cc0', marginBottom: 6, position: 'relative', display: 'inline-block',
                 }}>
                   {s.tag}
                 </div>
                 <div className="venom-fx" data-text={`PROCESO RESIDENTE // ${agent.name}`} style={{
-                  fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, opacity: 0.75, marginBottom: 18, position: 'relative', display: 'inline-block',
+                  fontFamily: mono, fontSize: 10, letterSpacing: 2, color: agent.color, opacity: 0.75, marginBottom: 18, position: 'relative', display: 'inline-block',
                 }}>
                   PROCESO RESIDENTE // {agent.name}
                 </div>
@@ -489,13 +489,13 @@ export default function Home() {
                   {s.copy}
                 </div>
                 <div className="venom-fx" data-text={`"${line}"`} style={{
-                  fontFamily: mono, fontSize: 10, lineHeight: 1.7, letterSpacing: 0.3, color: agent.color, opacity: 0.75, fontStyle: 'italic', maxWidth: 440, marginBottom: 36,
+                  fontFamily: mono, fontSize: 11, lineHeight: 1.7, letterSpacing: 0.3, color: agent.color, opacity: 0.75, fontStyle: 'italic', maxWidth: 440, marginBottom: 36,
                   position: 'relative', display: 'inline-block',
                 }}>
                   "{line}"
                 </div>
                 <Link href={s.href} className="cyber-btn venom-fx" data-text={`[ ${s.cta} ]`} style={{
-                  display: 'inline-block', position: 'relative', fontFamily: mono, fontSize: 10, letterSpacing: 3, color: agent.color, textDecoration: 'none',
+                  display: 'inline-block', position: 'relative', fontFamily: mono, fontSize: 11, letterSpacing: 3, color: agent.color, textDecoration: 'none',
                   border: `1px solid ${agent.color}44`, padding: '12px 32px', background: `${agent.color}0d`, cursor: 'pointer'
                 }}>
                   [ {s.cta} ]
@@ -506,14 +506,14 @@ export default function Home() {
 
           <div className="venom-fx" data-text="DUDÁ DE TODO LO QUE NO TE DEJA DUDAR." style={{
             position: 'relative', zIndex: 10, textAlign: 'center', padding: '32px 24px 8px', fontFamily: mono,
-            fontSize: 9, letterSpacing: 2, color: '#00d4ff55', display: 'block',
+            fontSize: 10.5, letterSpacing: 2, color: '#00d4ff55', display: 'block',
           }}>
             DUDÁ DE TODO LO QUE NO TE DEJA DUDAR.
           </div>
 
           <div style={{
             position: 'relative', zIndex: 10, textAlign: 'center', padding: '8px 24px 32px', fontFamily: mono,
-            fontSize: 8, letterSpacing: 3, color: '#00d4ff33', borderTop: '1px solid rgba(0, 212, 255, 0.08)'
+            fontSize: 10, letterSpacing: 3, color: '#00d4ff33', borderTop: '1px solid rgba(0, 212, 255, 0.08)'
           }}>
             NEOPROXY.ART // SANTIAGO, CHILE
           </div>
@@ -563,7 +563,7 @@ export default function Home() {
             letter-spacing: 8px !important;
           }
           .hero-tagline {
-            font-size: 11px !important;
+            font-size: 12px !important;
             letter-spacing: 4px !important;
           }
           .hero-sub {

@@ -140,15 +140,15 @@ export default function Umbral() {
         {ready && (
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 10 }} onClick={(e) => e.stopPropagation()}>
             <button type="button" className="press" onClick={cross} style={{ minHeight: 52, padding: '0 30px', fontFamily: mono, fontSize: 13, letterSpacing: 5, background: '#eef2f8', color: '#05070a', border: 'none', cursor: 'pointer' }}>CRUZAR →</button>
-            <Link href="/" style={{ minHeight: 52, display: 'flex', alignItems: 'center', padding: '0 20px', fontSize: 11, letterSpacing: 3, color: '#c8d2e0', border: '1px solid #ffffff40', textDecoration: 'none' }}>VOLVER AL AFUERA</Link>
+            <Link href="/" style={{ minHeight: 52, display: 'flex', alignItems: 'center', padding: '0 20px', fontSize: 12, letterSpacing: 3, color: '#c8d2e0', border: '1px solid #ffffff40', textDecoration: 'none' }}>VOLVER AL AFUERA</Link>
           </div>
         )}
       </div>
-      <div style={{ position: 'absolute', top: 'max(84px, 11vh)', left: 'max(6vw, 18px)', fontSize: 10, letterSpacing: 5, color: '#c8d2e0aa' }}>NPX // EL UMBRAL</div>
-      <div onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: 'max(4vw, 14px)', bottom: 'max(4vh, 18px)', display: 'flex', gap: 16, alignItems: 'center', fontSize: 10, letterSpacing: 2, opacity: crossing ? 0 : 1 }}>
-        <button type="button" onClick={toggleSound} style={{ background: 'none', border: 'none', color: sound ? '#eef2f8' : '#8b95a5', fontFamily: mono, fontSize: 10, letterSpacing: 2, cursor: 'pointer', padding: 8 }}>{sound ? '♪ ZUMBIDO' : '♪ SIN SONIDO'}</button>
+      <div style={{ position: 'absolute', top: 'max(84px, 11vh)', left: 'max(6vw, 18px)', fontSize: 11, letterSpacing: 5, color: '#c8d2e0aa' }}>NPX // EL UMBRAL</div>
+      <div onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: 'max(4vw, 14px)', bottom: 'max(4vh, 18px)', display: 'flex', gap: 16, alignItems: 'center', fontSize: 11, letterSpacing: 2, opacity: crossing ? 0 : 1 }}>
+        <button type="button" onClick={toggleSound} style={{ background: 'none', border: 'none', color: sound ? '#eef2f8' : '#8b95a5', fontFamily: mono, fontSize: 11, letterSpacing: 2, cursor: 'pointer', padding: 8 }}>{sound ? '♪ ZUMBIDO' : '♪ SIN SONIDO'}</button>
         <Link href="/shop" style={{ color: '#8b95a5', textDecoration: 'none', padding: 8 }}>TIENDA</Link>
-        {!ready && <button type="button" onClick={cross} style={{ background: 'none', border: 'none', color: '#c8d2e0', fontFamily: mono, fontSize: 10, letterSpacing: 2, cursor: 'pointer', padding: 8 }}>CRUZAR YA →</button>}
+        {!ready && <button type="button" onClick={cross} style={{ background: 'none', border: 'none', color: '#c8d2e0', fontFamily: mono, fontSize: 11, letterSpacing: 2, cursor: 'pointer', padding: 8 }}>CRUZAR YA →</button>}
       </div>
       <style>{`
         .umbral-cursor { animation: umbral-blink 1s steps(1) infinite; margin-left: 2px; }

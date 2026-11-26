@@ -34,7 +34,7 @@ export default function RevealPanel({ reveal }: { reveal: ArtifactReveal }) {
       </div>
       {reveal.agentId && (
         <Link href={`/proxyverse/${reveal.agentId}`} style={{
-          display: 'inline-block', marginTop: 16, fontFamily: mono, fontSize: 9, letterSpacing: 2,
+          display: 'inline-block', marginTop: 16, fontFamily: mono, fontSize: 10.5, letterSpacing: 2,
           color: reveal.color, border: `1px solid ${reveal.color}66`, padding: '8px 16px', textDecoration: 'none',
         }}>
           VER PERFIL →

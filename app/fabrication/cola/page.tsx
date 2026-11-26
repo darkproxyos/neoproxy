@@ -90,18 +90,18 @@ export default function FabricationQueuePage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
           <Link href="/fabrication" className="press tap-ext" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           }}>
             ← VOLVER A FABRICACIÓN
           </Link>
           <Link href="/fabrication/archivo" className="press" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: CYAN, textDecoration: 'none',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: CYAN, textDecoration: 'none',
           }}>
             ARCHIVO →
           </Link>
         </div>
 
-        <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-FAB-COLA // {weekOf || '...'}
         </div>
         <h1 style={{
@@ -110,12 +110,12 @@ export default function FabricationQueuePage() {
         }}>
           COLA DE FABRICACIÓN
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 8 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 8 }}>
           Especímenes reales generados en <Link href="/lab/proxygenesis" style={{ color: GREEN }}>Proxygenesis</Link>, enviados
           por quien los generó. Votá el que te gustaría ver fabricado de verdad en resina — el voto
           es insumo, no una promesa automática: DarkProxy decide a mano cuál se imprime.
         </p>
-        <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8, maxWidth: 600, marginBottom: 48 }}>
+        <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, lineHeight: 1.8, maxWidth: 600, marginBottom: 48 }}>
           Un voto por visitante por semana ISO. La cola se vacía cada semana — lo que no se vota no se pierde,
           solo deja de competir.
         </p>
@@ -125,14 +125,14 @@ export default function FabricationQueuePage() {
             border: `1px solid ${winner.corrupted ? '#ff2d55' : GREEN}66`,
             background: winner.corrupted ? '#ff2d550d' : `${GREEN}0d`, padding: 20, marginBottom: 32,
           }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: winner.corrupted ? '#ff2d55' : GREEN, marginBottom: 6 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: winner.corrupted ? '#ff2d55' : GREEN, marginBottom: 6 }}>
               ◉ GANADOR DECLARADO ESTA SEMANA{winner.corrupted ? ' — FORJADO BAJO CORRUPCIÓN' : ''}
             </div>
-            <div style={{ fontSize: 11, color: '#c8daf0' }}>
+            <div style={{ fontSize: 12, color: '#c8daf0' }}>
               {winner.label || `${winner.mode.toUpperCase()} sin nombre`} — pasa a fabricación real.
             </div>
             {winner.corrupted && (
-              <div style={{ fontSize: 9, color: '#ff2d5599', letterSpacing: 0.5, marginTop: 6 }}>
+              <div style={{ fontSize: 10.5, color: '#ff2d5599', letterSpacing: 0.5, marginTop: 6 }}>
                 La entropía del sistema estaba en {winner.entropyAtDeclare?.toFixed(1)}% cuando se declaró.
               </div>
             )}
@@ -140,15 +140,15 @@ export default function FabricationQueuePage() {
         )}
 
         {status === 'loading' && (
-          <div style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1 }}>CARGANDO COLA...</div>
+          <div style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 1 }}>CARGANDO COLA...</div>
         )}
         {status === 'error' && (
-          <div style={{ fontSize: 10, color: '#ff2d55', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#ff2d55', letterSpacing: 1 }}>
             No se pudo cargar la cola. Probá de nuevo más tarde.
           </div>
         )}
         {status === 'ready' && submissions.length === 0 && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1 }}>
             SIN ENVÍOS ESTA SEMANA TODAVÍA — generá algo en Proxygenesis y envialo.
           </div>
         )}
@@ -166,10 +166,10 @@ export default function FabricationQueuePage() {
                     ? `contrast(${1 + entropy / 150}) saturate(${1 + entropy / 60}) hue-rotate(${entropy * 1.3}deg)`
                     : undefined,
                 }} />
-              <div style={{ fontSize: 10, color: '#c8daf0', marginBottom: 4 }}>
+              <div style={{ fontSize: 11, color: '#c8daf0', marginBottom: 4 }}>
                 {s.label || `${s.mode.toUpperCase()} sin nombre`}
               </div>
-              <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 10 }}>
+              <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 10 }}>
                 {s.mode.toUpperCase()} {s.id === leader?.id && s.votes > 0 && <span style={{ color: GREEN }}>· LÍDER</span>}
               </div>
               <button
@@ -177,7 +177,7 @@ export default function FabricationQueuePage() {
                 disabled={s.votedByMe || votingId === s.id}
                 className="press"
                 style={{
-                  width: '100%', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 0',
+                  width: '100%', fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 0',
                   cursor: s.votedByMe ? 'default' : 'pointer',
                   background: s.votedByMe ? `${GREEN}18` : 'transparent',
                   border: `1px solid ${s.votedByMe ? GREEN : CYAN}66`,

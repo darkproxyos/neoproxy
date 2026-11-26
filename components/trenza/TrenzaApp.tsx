@@ -18,18 +18,18 @@ const fmt = (n: number, d = 1) => n.toFixed(d).replace('.', ',')
 const ACCENT = '#ffc75a'
 
 function Chip({ on, onClick, children, title, color = '#9fe8ff', disabled }: { on: boolean; onClick: () => void; children: React.ReactNode; title?: string; color?: string; disabled?: boolean }) {
-  return <button type="button" className="press" title={title} disabled={disabled} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.6, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1, background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
+  return <button type="button" className="press" title={title} disabled={disabled} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.6, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1, background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
 }
 function Slider({ label, value, onChange, readout, min = 0, max = 1, step = 0.01 }: { label: string; value: number; onChange: (v: number) => void; readout: string; min?: number; max?: number; step?: number }) {
   return (
     <label style={{ display: 'block' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}><span>{label}</span><span style={{ color: '#fff' }}>{readout}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}><span>{label}</span><span style={{ color: '#fff' }}>{readout}</span></div>
       <input type="range" className="tr-range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ width: '100%' }} />
     </label>
   )
 }
 function Stat({ k, v, warn, title }: { k: string; v: string; warn?: boolean; title?: string }) {
-  return <div title={title} style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 9.5, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
+  return <div title={title} style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 11, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
 }
 function Glyph({ pts, on }: { pts?: number[][]; on: boolean }) {
   if (!pts) return <svg width={46} height={30} />
@@ -241,7 +241,7 @@ export default function TrenzaApp() {
           <TrenzaViewer onReady={onViewer} onTick={(t, span) => setHead({ t, span })} />
           {!reel && (
             <>
-              <div style={{ position: 'absolute', left: 14, top: 12, fontSize: 10, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
+              <div style={{ position: 'absolute', left: 14, top: 12, fontSize: 11, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
                 <div style={{ color: ACCENT }}>{o.name}</div>
                 <div>{mode === 'danza' ? 'DANZA · vista desde arriba' : mode === 'trenza' ? 'TRENZA · el tiempo sube' : mode === 'pieza' ? 'PIEZA' : 'CAOS · dos universos'}</div>
                 <div style={{ color: '#7f96b2' }}>t = {fmt(mode === 'danza' ? head.t % o.T : head.t, 2)} · período {fmt(o.T, 3)}</div>
@@ -251,7 +251,7 @@ export default function TrenzaApp() {
                 <Chip on={palette === 'resina'} onClick={() => setPalette((x) => (x === 'resina' ? 'trenza' : 'resina'))} title="La pieza de un solo color, como saldría impresa">RESINA</Chip>
               </div>
               {mode === 'caos' && chaos && (
-                <div style={{ position: 'absolute', left: 14, bottom: 14, right: 70, fontSize: 10.5, lineHeight: 1.7, color: '#fff', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
+                <div style={{ position: 'absolute', left: 14, bottom: 14, right: 70, fontSize: 11.5, lineHeight: 1.7, color: '#fff', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
                   <span style={{ color: '#ff5a48' }}>■</span> la misma órbita con p₁ corrido en {chaos.eps.toExponential(0)} · {chaosText}
                 </div>
               )}
@@ -280,7 +280,7 @@ export default function TrenzaApp() {
                   <div style={{ fontSize: 'clamp(12px, 2.2vh, 22px)', color: '#ffd98f', letterSpacing: 2 }}>neoproxy.art/trenza</div>
                 </div>
               </div>
-              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
+              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
             </div>
           )}
         </div>
@@ -290,7 +290,7 @@ export default function TrenzaApp() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '12px 0' }}>
         {(['danza', 'trenza', 'pieza', 'caos'] as TrenzaMode[]).map((x) => (
           <button key={x} type="button" className="press" onClick={() => goMode(x)}
-            style={{ minHeight: 46, padding: '0 20px', fontFamily: mono, fontWeight: 700, fontSize: 11.5, letterSpacing: 2.5, cursor: 'pointer', border: 'none', background: mode === x ? (x === 'caos' ? 'linear-gradient(90deg,#ff5a48,#ff4fa3)' : 'linear-gradient(90deg,#5fe3ff,#ffc75a)') : '#0b111a', color: mode === x ? '#04060a' : '#9fb4cc' }}>
+            style={{ minHeight: 46, padding: '0 20px', fontFamily: mono, fontWeight: 700, fontSize: 12.5, letterSpacing: 2.5, cursor: 'pointer', border: 'none', background: mode === x ? (x === 'caos' ? 'linear-gradient(90deg,#ff5a48,#ff4fa3)' : 'linear-gradient(90deg,#5fe3ff,#ffc75a)') : '#0b111a', color: mode === x ? '#04060a' : '#9fb4cc' }}>
             {x === 'danza' ? '◎ DANZA' : x === 'trenza' ? '⟰ TRENZA' : x === 'pieza' ? '◆ PIEZA' : '✶ CAOS'}
           </button>
         ))}
@@ -299,7 +299,7 @@ export default function TrenzaApp() {
         <span style={{ flex: 1 }} />
         <Chip on={!!reel} onClick={enterReel} disabled={!ready} color="#ffd27c" title="Pantalla vertical que corre sola: para grabarla con el teléfono">▣ MODO REEL</Chip>
       </div>
-      {err && <p style={{ color: '#ffb86b', fontSize: 11 }}>{err}</p>}
+      {err && <p style={{ color: '#ffb86b', fontSize: 12 }}>{err}</p>}
 
       {/* catálogo */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 6, marginBottom: 18 }}>
@@ -308,8 +308,8 @@ export default function TrenzaApp() {
             style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 10px', fontFamily: mono, textAlign: 'left', cursor: 'pointer', background: x.id === p.id ? '#ffc75a18' : '#070b11', border: `1px solid ${x.id === p.id ? ACCENT : '#ffffff14'}` }}>
             <Glyph pts={glyphs[x.id]} on={x.id === p.id} />
             <span>
-              <span style={{ display: 'block', fontSize: 10.5, letterSpacing: 1.4, color: x.id === p.id ? ACCENT : '#cfe0f2' }}>{x.name}</span>
-              <span style={{ display: 'block', fontSize: 9, color: '#6f86a3', marginTop: 2 }}>{x.word.length} cruces · T {fmt(x.T, 1)}</span>
+              <span style={{ display: 'block', fontSize: 11.5, letterSpacing: 1.4, color: x.id === p.id ? ACCENT : '#cfe0f2' }}>{x.name}</span>
+              <span style={{ display: 'block', fontSize: 10.5, color: '#6f86a3', marginTop: 2 }}>{x.word.length} cruces · T {fmt(x.T, 1)}</span>
             </span>
           </button>
         ))}
@@ -317,10 +317,10 @@ export default function TrenzaApp() {
 
       <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.15fr) minmax(0,1fr)', gap: 22 }}>
         <section style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '1px 1px 1px 3px', borderColor: `${ACCENT}2a ${ACCENT}2a ${ACCENT}2a ${ACCENT}`, padding: '18px 20px' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: ACCENT, marginBottom: 10 }}>LA PALABRA DE LA TRENZA · {o.name}</div>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: ACCENT, marginBottom: 10 }}>LA PALABRA DE LA TRENZA · {o.name}</div>
           <BraidDiagram word={o.word} start={START} colors={COLORS} progress={mode === 'danza' ? 0 : mode === 'trenza' ? progress : 1} />
           <div style={{ fontSize: 14, color: '#fff', margin: '12px 0 8px', wordBreak: 'break-word', lineHeight: 1.6 }}>{wordText(o.word)}</div>
-          <p style={{ fontSize: 10.5, lineHeight: 1.85, color: '#8fa8c4', margin: 0 }}>
+          <p style={{ fontSize: 11.5, lineHeight: 1.85, color: '#8fa8c4', margin: 0 }}>
             Cada letra es un cruce: dos soles vecinos cambian de lugar de izquierda a derecha, y el signo dice cuál pasa por delante. Esta palabra es la huella topológica de la órbita: {o.word.length} cruces en un período de {fmt(o.T, 3)}.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8, marginTop: 14 }}>
@@ -332,9 +332,9 @@ export default function TrenzaApp() {
           </div>
         </section>
         <section style={{ background: '#080c12', border: '1px solid #ffffff12', padding: '18px 20px', display: 'grid', gap: 15, alignContent: 'start' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff' }}>LA PIEZA</div>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff' }}>LA PIEZA</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: 10, letterSpacing: 1.5, color: '#8fa8c4', marginRight: 4 }}>VUELTAS</span>
+            <span style={{ fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginRight: 4 }}>VUELTAS</span>
             {[1, 2, 3].map((n) => <Chip key={n} on={p.periods === n} onClick={() => changePiece({ periods: n })}>{n}</Chip>)}
             <span style={{ width: 10 }} />
             <Chip on={p.plates === 'ambas'} onClick={() => changePiece({ plates: p.plates === 'ambas' ? 'base' : 'ambas' })} title="Una segunda barra arriba: el diagrama clásico de una trenza entre dos barras (necesita soportes)">TAPA</Chip>
@@ -342,20 +342,20 @@ export default function TrenzaApp() {
           <Slider label="ALTO DEL TIEMPO" value={p.aspect} min={1} max={3} step={0.05} readout={`${fmt(p.aspect, 2)} × el ancho`} onChange={(v) => changePiece({ aspect: v })} />
           <Slider label="GROSOR DE LAS HEBRAS" value={p.radius} min={0.03} max={0.07} step={0.001} readout={fmt(p.radius * 100, 1) + ' %'} onChange={(v) => changePiece({ radius: v })} />
           <Slider label="GROSOR SEGÚN LA VELOCIDAD" value={p.speedW} readout={p.speedW < 0.05 ? 'parejo' : fmt(p.speedW, 2)} onChange={(v) => changePiece({ speedW: v })} />
-          <div style={{ fontSize: 10, color: '#6f86a3', lineHeight: 1.7 }}>Donde un sol va lento la hebra engorda: pasa más tiempo ahí. Más alto, menos voladizos.</div>
+          <div style={{ fontSize: 11, color: '#6f86a3', lineHeight: 1.7 }}>Donde un sol va lento la hebra engorda: pasa más tiempo ahí. Más alto, menos voladizos.</div>
           <div style={{ borderTop: '1px solid #ffffff12', paddingTop: 14 }}>
-            <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#ff8a7a', marginBottom: 10 }}>CAOS</div>
+            <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#ff8a7a', marginBottom: 10 }}>CAOS</div>
             <Slider label="DIFERENCIA EN LA VELOCIDAD INICIAL" value={epsK} min={3} max={12} step={1} readout={`10⁻${String(epsK).split('').map((ch) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+ch]).join('')}`} onChange={(v) => setEpsK(v)} />
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10, flexWrap: 'wrap' }}>
               <Chip on={mode === 'caos'} color="#ff8a7a" onClick={() => runChaos()}>✶ DOS UNIVERSOS</Chip>
-              <span style={{ fontSize: 10.5, color: '#cfe0f2' }}>{mode === 'caos' ? chaosText : ''}</span>
+              <span style={{ fontSize: 11.5, color: '#cfe0f2' }}>{mode === 'caos' ? chaosText : ''}</span>
             </div>
           </div>
         </section>
       </div>
 
       <section style={{ marginTop: 22 }}>
-        <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>MEDIDAS{solid ? '' : busy ? ' · ' + busy : ' · ABRE ◆ PIEZA PARA MEDIRLA'}</div>
+        <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>MEDIDAS{solid ? '' : busy ? ' · ' + busy : ' · ABRE ◆ PIEZA PARA MEDIRLA'}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))', gap: 8 }}>
           <Stat k="MEDIDAS" v={solid ? `${fmt(solid.widthMm, 0)} × ${fmt(solid.heightMm, 0)} mm` : '…'} />
           <Stat k="TRIÁNGULOS" v={m ? m.tris.toLocaleString('es-CL') : '…'} />
@@ -366,10 +366,10 @@ export default function TrenzaApp() {
           <Stat k="PUNTAJE DE IMPRESIÓN" v={m ? fmt(m.printScore, 2) : '…'} warn={!!m && m.printScore < 0.5} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8, marginTop: 14 }}>
-          <button className="press" onClick={exportStl} disabled={!solid || exporting} style={{ minHeight: 46, background: ACCENT, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>{exporting ? 'CALCULANDO STL…' : `DESCARGAR STL (${SIZE_MM} MM)`}</button>
-          <button className="press" onClick={exportJson} disabled={!solid} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
-          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTA PIEZA'}</button>
-          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
+          <button className="press" onClick={exportStl} disabled={!solid || exporting} style={{ minHeight: 46, background: ACCENT, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>{exporting ? 'CALCULANDO STL…' : `DESCARGAR STL (${SIZE_MM} MM)`}</button>
+          <button className="press" onClick={exportJson} disabled={!solid} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
+          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTA PIEZA'}</button>
+          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
         </div>
       </section>
       <style>{`

@@ -76,13 +76,13 @@ export default function MarcadorPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/realidad-aumentada" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A REALIDAD AUMENTADA
         </Link>
 
-        <div style={{ fontSize: 9, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-AR-MARCADOR // TRACKING DE IMAGEN, NO QR
         </div>
         <h1 style={{
@@ -91,7 +91,7 @@ export default function MarcadorPage() {
         }}>
           MARCADOR
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 28 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 28 }}>
           Enfocá un marcador entrenado con la cámara y mantenelo en cuadro — nada de apretar un
           botón para "sacar foto": el reconocimiento es continuo, en vivo, mientras la imagen
           esté enfocada. Tracking de imagen real (MindAR), no un lector de QR.
@@ -103,8 +103,8 @@ export default function MarcadorPage() {
         }}>
           <Image src={artifact.preview} alt={artifact.reveal.label} width={56} height={56} style={{ width: 56, height: 56, objectFit: 'cover', border: `1px solid ${CYAN}44` }} />
           <div>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: `${CYAN}aa`, marginBottom: 4 }}>MARCADOR ACTIVO</div>
-            <div style={{ fontSize: 11, color: '#c8daf0' }}>{artifact.reveal.label}</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${CYAN}aa`, marginBottom: 4 }}>MARCADOR ACTIVO</div>
+            <div style={{ fontSize: 12, color: '#c8daf0' }}>{artifact.reveal.label}</div>
           </div>
         </div>
 
@@ -120,7 +120,7 @@ export default function MarcadorPage() {
               position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexDirection: 'column', gap: 16,
             }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textAlign: 'center', maxWidth: 260 }}>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', textAlign: 'center', maxWidth: 260 }}>
                 REQUIERE CÁMARA — el marcador necesita el sticker físico real, no sirve apuntar a esta misma pantalla
               </div>
             </div>
@@ -128,7 +128,7 @@ export default function MarcadorPage() {
 
           {status === 'scanning' && (
             <div style={{
-              position: 'absolute', top: 14, left: 14, fontSize: 9, letterSpacing: 2, color: `${CYAN}cc`,
+              position: 'absolute', top: 14, left: 14, fontSize: 10.5, letterSpacing: 2, color: `${CYAN}cc`,
               background: 'rgba(0,4,10,0.6)', padding: '6px 10px', pointerEvents: 'none',
             }}>
               ESCANEANDO... ENFOCÁ EL MARCADOR
@@ -143,11 +143,11 @@ export default function MarcadorPage() {
         </div>
 
         {errorMsg && (
-          <div style={{ fontSize: 10, color: '#ff2d55', marginBottom: 20 }}>{errorMsg}</div>
+          <div style={{ fontSize: 11, color: '#ff2d55', marginBottom: 20 }}>{errorMsg}</div>
         )}
 
         <button onClick={activar} disabled={busy} className="press" style={{
-          fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
+          fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${CYAN}18`, border: `1px solid ${CYAN}66`, color: CYAN, opacity: busy ? 0.5 : 1,
         }}>
           {status === 'starting' ? 'INICIANDO CÁMARA...'

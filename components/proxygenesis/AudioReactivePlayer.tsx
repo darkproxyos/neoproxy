@@ -144,7 +144,7 @@ export default function AudioReactivePlayer({
       border: `1px solid ${color}44`, background: `${color}0a`, padding: '12px 14px', marginBottom: 20,
     }}>
       <audio ref={audioRef} src={audioPath} preload="metadata" />
-      <div style={{ fontSize: 9, letterSpacing: 2, color: `${color}cc`, marginBottom: 8 }}>
+      <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${color}cc`, marginBottom: 8 }}>
         🔊 ESCUCHAR — EL ESPÉCIMEN REACCIONA EN VIVO AL AUDIO REAL
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -152,7 +152,7 @@ export default function AudioReactivePlayer({
           onClick={togglePlay}
           disabled={!ready}
           style={{
-            fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '7px 12px', cursor: ready ? 'pointer' : 'default',
+            fontFamily: mono, fontSize: 12, letterSpacing: 1, padding: '7px 12px', cursor: ready ? 'pointer' : 'default',
             background: playing ? `${color}33` : 'rgba(0,4,10,0.7)', border: `1px solid ${color}`, color,
             flexShrink: 0, opacity: ready ? 1 : 0.5,
           }}
@@ -168,11 +168,11 @@ export default function AudioReactivePlayer({
           onChange={seek}
           style={{ flex: 1, accentColor: color }}
         />
-        <span style={{ fontSize: 9, color: '#8fb8d6', flexShrink: 0, minWidth: 72, textAlign: 'right' }}>
+        <span style={{ fontSize: 10.5, color: '#8fb8d6', flexShrink: 0, minWidth: 72, textAlign: 'right' }}>
           {fmtTime(progress)} / {fmtTime(duration)}
         </span>
       </div>
-      <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 8 }}>
+      <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 8 }}>
         La geometría ya terminó de crecer — es fija. Lo que sigue al audio en vivo, frame a frame, es el
         color (banda de frecuencia dominante) y un pulso de escala (energía/graves). No es una animación
         precalculada: es el análisis real del tema mientras suena.

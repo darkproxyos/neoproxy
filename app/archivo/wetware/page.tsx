@@ -59,7 +59,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -70,7 +70,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -118,13 +118,13 @@ export default function WetwarePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-16 // REFERENCIA TÉCNICA
           </div>
           <h1 style={{
@@ -137,7 +137,7 @@ export default function WetwarePage() {
             EL CUERPO HUMANO, REESCRITO COMO ARQUITECTURA DE SISTEMA — ANATOMÍA REAL, NO DECORACIÓN
           </div>
           <p style={{
-            fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+            fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
             borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
           }}>
             "Wetware" es un término real del vocabulario cyberpunk (Rudy Rucker, 1988): el cerebro y el
@@ -148,7 +148,7 @@ export default function WetwarePage() {
           </p>
 
           <div style={{
-            display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+            display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
             letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
             marginBottom: 32,
           }}>
@@ -162,17 +162,17 @@ export default function WetwarePage() {
             border: `1px solid ${ACCENT}55`, padding: '12px 18px', marginBottom: 28, maxWidth: 680,
             background: `${ACCENT}0d`,
           }}>
-            <span style={{ fontSize: 9, letterSpacing: 2, color: ACCENT }}>→ PROBAR LA VERSIÓN 3D</span>
-            <span style={{ fontSize: 9, letterSpacing: 1, color: TEXT_DIM }}>
+            <span style={{ fontSize: 10.5, letterSpacing: 2, color: ACCENT }}>→ PROBAR LA VERSIÓN 3D</span>
+            <span style={{ fontSize: 10.5, letterSpacing: 1, color: TEXT_DIM }}>
               holograma interactivo — 4 de estos 14 sistemas marcados sobre una figura orbitable
             </span>
           </Link>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -185,7 +185,7 @@ export default function WetwarePage() {
         <div id="sec-01" className={`wtw-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="ARQUITECTURA GENERAL — EL MAPA DE CAPAS" sub="antes del detalle, cómo se organiza todo lo que sigue" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un sistema de cómputo real se piensa en capas: hardware (los componentes físicos),
               firmware (instrucciones grabadas en el hardware mismo), sistema operativo (gestiona
               recursos y procesos), red (comunica componentes entre sí), seguridad (filtra lo que
@@ -199,7 +199,7 @@ export default function WetwarePage() {
               <strong style={{ color: '#fff' }}>mantenimiento</strong> es el sueño y la reparación celular
               continua.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Ninguna de estas capas corre sola. El resto de este documento baja cada una al sistema
               real que le corresponde — con la anatomía primero, la analogía después, nunca al revés.
             </p>
@@ -210,7 +210,7 @@ export default function WetwarePage() {
         <div id="sec-02" className={`wtw-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="EL PROCESADOR CENTRAL — EL CEREBRO" sub="~86 mil millones de núcleos, cada uno lentísimo, todos en paralelo" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El cerebro humano tiene, según el recuento moderno (Suzana Herculano-Houzel, 2009, que
               reemplazó el "100 mil millones" popular de décadas de citas sin verificar), aproximadamente{' '}
               <strong style={{ color: '#fff' }}>86 mil millones de neuronas</strong>, cada una conectada a
@@ -220,7 +220,7 @@ export default function WetwarePage() {
               <strong style={{ color: '#fff' }}>clúster de núcleos especializados</strong> que se reparten
               tareas distintas y se comunican constantemente entre sí.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El hipocampo funciona como memoria de trabajo activa que consolida información hacia
               almacenamiento distribuido en la corteza durante el sueño (ver sección XIII) — un proceso
               real parecido a mover datos de una caché rápida y volátil a almacenamiento permanente, no
@@ -243,12 +243,12 @@ export default function WetwarePage() {
         <div id="sec-03" className={`wtw-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="LA RED DE BAJA LATENCIA" sub="sistema nervioso periférico y reflejos" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Los nervios periféricos son el cableado físico que conecta el procesador central con el
               resto del chasis — la médula espinal funciona como el <strong style={{ color: '#fff' }}>bus
               troncal</strong> por el que pasa casi todo ese tráfico antes de ramificarse.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Un reflejo (como retirar la mano de algo caliente, o el reflejo rotuliano que prueba
               cualquier control médico) no pasa por el cerebro antes de actuar: la señal entra, hace un
               salto corto en la médula espinal, y sale de vuelta como orden motora — el equivalente real
@@ -263,14 +263,14 @@ export default function WetwarePage() {
         <div id="sec-04" className={`wtw-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="MENSAJERÍA ASÍNCRONA — SISTEMA ENDOCRINO" sub="broadcast de alto alcance, no mensajes punto a punto" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Si el sistema nervioso es mensajería directa y rápida (un pulso eléctrico, un destinatario
               puntual), el sistema endocrino es el opuesto exacto: glándulas que liberan hormonas{' '}
               <strong style={{ color: '#fff' }}>directamente al torrente sanguíneo</strong>, sin un
               destinatario fijo — cualquier célula con el receptor correcto la recibe, en segundos o
               minutos, no milisegundos.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La adrenalina liberada por las glándulas suprarrenales es el ejemplo más claro: una sola
               señal de "modo de emergencia" que sube el ritmo cardíaco, redirige sangre a los músculos y
               dilata las pupilas, todo en simultáneo, sin que el cerebro tenga que avisarle a cada órgano
@@ -285,14 +285,14 @@ export default function WetwarePage() {
         <div id="sec-05" className={`wtw-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="LA FUENTE DE ALIMENTACIÓN — SISTEMA CIRCULATORIO" sub="~5 litros por minuto, en reposo" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El corazón bombea en reposo alrededor de <strong style={{ color: '#fff' }}>5 litros de
               sangre por minuto</strong> (el "gasto cardíaco" estándar en un adulto sano) — una fuente de
               poder con cuatro cámaras, cierta redundancia parcial de circuito, y un ritmo que se ajusta
               solo según la demanda real medida (frecuencia cardíaca sube con el ejercicio, no por
               decisión consciente).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La sangre es el bus de transporte real: oxígeno y glucosa como combustible y datos,
               glóbulos blancos patrullando como unidades de seguridad activas (ver sección VIII),
               hormonas viajando como los mensajes de broadcast de la sección anterior. La presión
@@ -307,12 +307,12 @@ export default function WetwarePage() {
         <div id="sec-06" className={`wtw-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="EL PUERTO DE E/S DE GASES" sub="sistema respiratorio" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Los alvéolos pulmonares son, con bastante literalidad, un puerto de entrada/salida:
               entra oxígeno del aire hacia la sangre, sale dióxido de carbono de la sangre hacia el
               aire, por simple diferencia de concentración a través de una membrana finísima.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo que de verdad regula cuánto respirás no es el nivel de oxígeno (como mucha gente
               asume) sino sensores que miden <strong style={{ color: '#fff' }}>CO₂ disuelto en sangre</strong>,
               en el tronco encefálico — un <strong style={{ color: '#fff' }}>bucle de retroalimentación</strong> real:
@@ -327,7 +327,7 @@ export default function WetwarePage() {
         <div id="sec-07" className={`wtw-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="EL PIPELINE ETL — SISTEMA DIGESTIVO" sub="extract, transform, load — literal" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un pipeline ETL real toma datos crudos de afuera (extract), los convierte a un formato
               utilizable (transform), y los deposita donde el sistema los puede usar (load). El sistema
               digestivo hace exactamente eso con la comida: la boca y el estómago{' '}
@@ -337,7 +337,7 @@ export default function WetwarePage() {
               simples) y <strong style={{ color: '#fff' }}>carga</strong> directamente al torrente
               sanguíneo a través de la pared intestinal.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El hígado funciona como una etapa de post-procesamiento que casi todo ese flujo atraviesa
               antes de distribuirse al resto del sistema: filtra toxinas, regula la cantidad de glucosa
               liberada según la demanda real, y almacena excedentes — el mismo rol que cumpliría un
@@ -351,7 +351,7 @@ export default function WetwarePage() {
         <div id="sec-08" className={`wtw-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="EL FIREWALL — SISTEMA INMUNE" sub="detección por firma, base de datos de amenazas, y el falso positivo que peor sale" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Los anticuerpos reconocen patógenos por su forma específica (el antígeno) — exactamente el
               mismo principio que un antivirus detectando malware por{' '}
               <strong style={{ color: '#fff' }}>firma conocida</strong>. Las células de memoria
@@ -360,7 +360,7 @@ export default function WetwarePage() {
               conocidas</strong> real. Una vacuna funciona entrenando esa base de datos con una versión
               inactiva o fragmentada del patógeno, sin correr el riesgo real de la infección completa.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La inflamación es una respuesta de contención real (más flujo sanguíneo, más células de
               defensa concentradas en la zona) — el equivalente a poner en cuarentena un segmento de red
               mientras se investiga. Y la autoinmunidad es, en estos términos, el desastre más temido de
@@ -375,13 +375,13 @@ export default function WetwarePage() {
         <div id="sec-09" className={`wtw-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="EL FIRMWARE — ADN Y EPIGENÉTICA" sub="la anatomía completa de esto ya tiene su propio documento" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La estructura química del ADN, el código genético, la replicación y CRISPR ya tienen su
               documento propio y profundo en este Codex:{' '}
               <Link href="/archivo/adn" style={{ color: '#fff', textDecoration: 'underline' }}>ADN</Link>.
               Acá va solo la pieza que falta ahí: la analogía de sistema específica.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El ADN es <strong style={{ color: '#fff' }}>firmware</strong>: instrucciones grabadas en
               cada célula desde antes de que el sistema arranque, que no cambian con el uso normal. La{' '}
               <strong style={{ color: '#fff' }}>epigenética</strong> — qué genes se expresan y cuáles
@@ -397,7 +397,7 @@ export default function WetwarePage() {
         <div id="sec-10" className={`wtw-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="X" title="EL RECOLECTOR DE BASURA" sub="sistema linfático, renal y hepático" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Los riñones filtran alrededor de <strong style={{ color: '#fff' }}>180 litros de plasma
               sanguíneo por día</strong> — un proceso continuo de limpieza con un throughput medible de
               verdad, reabsorbiendo casi todo el agua y los solutos útiles y excretando apenas 1 a 2
@@ -405,7 +405,7 @@ export default function WetwarePage() {
               <strong style={{ color: '#fff' }}>recolector de basura (garbage collector)</strong> que
               corre en segundo plano, sin pausar nada más, todo el tiempo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El sistema linfático es un segundo proceso de recolección, más lento y menos centralizado
               — drena líquido sobrante de los tejidos y filtra patógenos a través de los ganglios
               linfáticos antes de devolver ese líquido a la circulación. Dos recolectores de basura
@@ -418,13 +418,13 @@ export default function WetwarePage() {
         <div id="sec-11" className={`wtw-section ${visible['sec-11'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="XI" title="CHASIS Y ACTUADORES" sub="sistema musculoesquelético" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Los huesos son el <strong style={{ color: '#fff' }}>chasis estructural</strong> — rígido
               donde hace falta soporte, articulado donde hace falta movimiento, con las articulaciones
               funcionando como juntas mecánicas reales con grados de libertad definidos (una bisagra en
               el codo, una rótula de movimiento amplio en el hombro).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Los músculos son <strong style={{ color: '#fff' }}>actuadores</strong> reales: el sarcómero
               (la unidad contráctil mínima, filamentos de actina y miosina deslizándose uno sobre otro)
               es, literalmente, un motor lineal microscópico que convierte energía química (ATP) en
@@ -438,14 +438,14 @@ export default function WetwarePage() {
         <div id="sec-12" className={`wtw-section ${visible['sec-12'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="XII" title="PERIFÉRICOS DE ENTRADA — LOS SENTIDOS" sub="cada uno con su propio protocolo de conversión analógico-digital" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Cada sentido es un sensor especializado que convierte un tipo de energía física distinta en
               el mismo formato final: potenciales de acción, el único "idioma" que el sistema nervioso
               entiende. La retina convierte fotones en señal eléctrica (fototransducción); la cóclea
               convierte vibración mecánica del aire en señal eléctrica según la frecuencia; los
               receptores de la piel convierten presión, temperatura y daño tisular en señal eléctrica.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Es, con precisión real, un{' '}
               <strong style={{ color: '#fff' }}>conversor analógico-digital</strong> por cada tipo de
               estímulo — la señal de entrada es continua (luz, sonido, presión), pero lo que viaja por el
@@ -459,7 +459,7 @@ export default function WetwarePage() {
         <div id="sec-13" className={`wtw-section ${visible['sec-13'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="XIII" title="EL CICLO DE MANTENIMIENTO — EL SUEÑO" sub="no es apagado, es mantenimiento activo" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La analogía más común y más floja es "dormir es apagar el sistema". La real es otra:
               dormir es un <strong style={{ color: '#fff' }}>ciclo de mantenimiento programado</strong> con
               el sistema todavía corriendo, no un apagado. Durante el sueño el cerebro consolida memoria
@@ -482,7 +482,7 @@ export default function WetwarePage() {
         <div id="sec-14" className={`wtw-section ${visible['sec-14'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="XIV" title="FIN DE CICLO — ENVEJECIMIENTO Y APOPTOSIS" sub="shutdown controlado, no crash — y los límites reales de esta traducción entera" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Cada vez que una célula se divide, los telómeros (los extremos protectores de los
               cromosomas) se acortan un poco. Leonard Hayflick demostró en 1961 que las células humanas
               normales tienen un número finito de divisiones posibles antes de dejar de dividirse — el{' '}
@@ -490,7 +490,7 @@ export default function WetwarePage() {
               (cuyo rol real le valió el Nobel de Fisiología o Medicina 2009 a Blackburn, Greider y
               Szostak) como la pieza que puede retrasarlo en ciertas células.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La <strong style={{ color: '#fff' }}>apoptosis</strong> (muerte celular programada) es un
               proceso ordenado y activo que la propia célula ejecuta sobre sí misma cuando corresponde —
               el equivalente real a un{' '}
@@ -515,7 +515,7 @@ export default function WetwarePage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-16 // REFERENCIA TÉCNICA DEL CODEX — FASE 1/3 (TEXTO). ILUSTRADO/ANIMADO: PENDIENTE.
           </div>
         </div>

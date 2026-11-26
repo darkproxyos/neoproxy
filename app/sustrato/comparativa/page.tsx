@@ -45,10 +45,10 @@ function CompareTable() {
   ]
   return (
     <div style={{ overflowX: 'auto', marginBottom: 10 }}>
-      <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 780, fontSize: 10 }}>
+      <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 780, fontSize: 11 }}>
         <thead>
           <tr>
-            <th style={{ textAlign: 'left', padding: '8px 10px', color: '#5a7290', borderBottom: `1px solid ${ACCENT}33`, whiteSpace: 'nowrap' }}>CRITERIO</th>
+            <th style={{ textAlign: 'left', padding: '8px 10px', color: '#6f86a3', borderBottom: `1px solid ${ACCENT}33`, whiteSpace: 'nowrap' }}>CRITERIO</th>
             {cols.map((c) => (
               <th key={c.key} style={{ textAlign: 'left', padding: '8px 10px', color: c.color, borderBottom: `1px solid ${ACCENT}33`, whiteSpace: 'nowrap' }}>
                 {c.title}

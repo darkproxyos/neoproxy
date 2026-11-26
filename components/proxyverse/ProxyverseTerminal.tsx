@@ -64,7 +64,7 @@ export default function ProxyverseTerminal() {
       }}>
         <ProxyverseScene />
         <div style={{
-          position: 'absolute', bottom: 12, left: 12, fontFamily: mono, fontSize: 8,
+          position: 'absolute', bottom: 12, left: 12, fontFamily: mono, fontSize: 10,
           letterSpacing: 2, color: '#00d4ff55', pointerEvents: 'none',
         }}>
           ARRASTRAR: ORBITAR // SCROLL: ZOOM // CLICK: ENTRAR AL PERFIL
@@ -86,8 +86,8 @@ export default function ProxyverseTerminal() {
             }}
           >
             <div style={{ color: agent.color, fontSize: 12, letterSpacing: 2, marginBottom: 6 }}>{agent.name}</div>
-            <div style={{ color: '#8fb8d6', fontSize: 8, letterSpacing: 1, lineHeight: 1.6, marginBottom: 8 }}>{agent.role}</div>
-            <div style={{ color: `${agent.color}88`, fontSize: 8, letterSpacing: 1 }}>VER PERFIL →</div>
+            <div style={{ color: '#8fb8d6', fontSize: 10, letterSpacing: 1, lineHeight: 1.6, marginBottom: 8 }}>{agent.role}</div>
+            <div style={{ color: `${agent.color}88`, fontSize: 10, letterSpacing: 1 }}>VER PERFIL →</div>
           </Link>
         ))}
       </div>
@@ -96,7 +96,7 @@ export default function ProxyverseTerminal() {
       <div style={{ border: '1px solid rgba(0, 212, 255, 0.15)', background: 'rgba(0,4,10,0.5)' }}>
         <div style={{
           padding: '10px 16px', borderBottom: '1px solid rgba(0, 212, 255, 0.1)',
-          fontFamily: mono, fontSize: 9, letterSpacing: 4, color: '#00d4ff66',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 4, color: '#00d4ffaa',
         }}>
           COMMS // PROXYVERSE — CANAL ABIERTO ENTRE PROCESOS
         </div>
@@ -105,14 +105,14 @@ export default function ProxyverseTerminal() {
           height: 320, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 10,
         }}>
           {feed.length === 0 && (
-            <div style={{ fontFamily: mono, fontSize: 10, color: '#ffffff22', letterSpacing: 2 }}>
+            <div style={{ fontFamily: mono, fontSize: 11, color: '#ffffff22', letterSpacing: 2 }}>
               ESCANEANDO PROCESOS ACTIVOS...
             </div>
           )}
           {feed.map(f => {
             const agent = agentById(f.agentId)
             return (
-              <div key={f.id} style={{ fontFamily: mono, fontSize: 11 }}>
+              <div key={f.id} style={{ fontFamily: mono, fontSize: 12 }}>
                 <span style={{ color: agent.color, letterSpacing: 1 }}>{agent.name} </span>
                 <span style={{ color: '#c8daf0' }}>{f.line}</span>
               </div>
@@ -130,14 +130,14 @@ export default function ProxyverseTerminal() {
             placeholder="transmit como DARKPROXY..."
             style={{
               flex: 1, minWidth: 0, background: '#020c18', border: '1px solid #00d4ff33', color: '#00d4ff',
-              fontFamily: mono, fontSize: 11, padding: '10px 14px', outline: 'none', letterSpacing: 1, minHeight: 40,
+              fontFamily: mono, fontSize: 12, padding: '10px 14px', outline: 'none', letterSpacing: 1, minHeight: 40,
             }}
           />
           <button
             onClick={send}
             style={{
               background: '#00d4ff11', border: '1px solid #00d4ff44', color: '#00d4ff',
-              fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 20px', cursor: 'pointer', minHeight: 40,
+              fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 20px', cursor: 'pointer', minHeight: 40,
             }}
           >
             TX

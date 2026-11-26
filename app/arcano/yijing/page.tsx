@@ -53,14 +53,14 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
           {title}
         </h2>
       </div>
-      {sub && <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
     </div>
   )
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}44`, paddingLeft: 12 }}>
+    <div style={{ fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}44`, paddingLeft: 12 }}>
       {children}
     </div>
   )
@@ -112,12 +112,12 @@ export default function YiJingPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link className="tap-ext" href="/knowledge/arcanum" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link className="tap-ext" href="/knowledge/arcanum" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER A CODEX ARCANUM
         </Link>
 
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}77`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}77`, marginBottom: 16 }}>
             NPX-ARN-01 // HISTORIA VERIFICABLE
           </div>
           <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 40px)', fontWeight: 700, letterSpacing: 4, color: ACCENT, textShadow: `0 0 40px ${ACCENT}66`, marginBottom: 14, lineHeight: 1.15 }}>
@@ -126,7 +126,7 @@ export default function YiJingPage() {
           <div style={{ fontSize: 12, letterSpacing: 3, color: TEXT_DIM, marginBottom: 32 }}>
             EL LIBRO DE LOS CAMBIOS — BINARIO ANTES DEL BINARIO
           </div>
-          <p style={{ fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660, borderLeft: `1px solid ${ACCENT}44`, paddingLeft: 24, marginBottom: 32 }}>
+          <p style={{ fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660, borderLeft: `1px solid ${ACCENT}44`, paddingLeft: 24, marginBottom: 32 }}>
             El segundo documento de Codex Arcanum, y el primero de otra cultura distinta al linaje
             occidental de <Link href="/arcano/grimorios" style={{ color: '#fff', textDecoration: 'underline' }}>Grimorios</Link>.
             Historia real — fechas, personas, manuscritos — y una nota de honestidad explícita sobre
@@ -134,17 +134,17 @@ export default function YiJingPage() {
             verificarlos en este entorno.
           </p>
 
-          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9, letterSpacing: 1, color: `${ACCENT}aa`, border: `1px solid ${ACCENT}44`, padding: '12px 18px', marginBottom: 32 }}>
+          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5, letterSpacing: 1, color: `${ACCENT}aa`, border: `1px solid ${ACCENT}44`, padding: '12px 18px', marginBottom: 32 }}>
             <span style={{ color: `${ACCENT}66` }}>CLASIFICACIÓN</span><span style={{ color: TEXT }}>HISTORIA REAL DE CHINA ANTIGUA — NO CANON NEOPROXY</span>
             <span style={{ color: `${ACCENT}66` }}>REVISIÓN</span><span style={{ color: TEXT }}>01 — 9 SECCIONES</span>
             <span style={{ color: `${ACCENT}66` }}>ALCANCE</span><span style={{ color: TEXT }}>ORIGEN → MÉTODOS → TRANSMISIÓN A OCCIDENTE → TRIGRAMAS → INSTRUMENTO</span>
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}33`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}77`, marginBottom: 14 }}>ÍNDICE</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}77`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}99`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -156,7 +156,7 @@ export default function YiJingPage() {
         <div id="sec-01" className={`yij-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="QUÉ ES — ORIGEN REAL EN LA DINASTÍA ZHOU" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El <strong style={{ color: '#fff' }}>Yi Jing</strong> ("Libro de los Cambios") es uno de
               los textos chinos más antiguos que se conservan. Su núcleo —64 hexagramas de seis líneas
               cada uno, con sus juicios breves— se remonta probablemente a la dinastía Zhou occidental,
@@ -170,7 +170,7 @@ export default function YiJingPage() {
         <div id="sec-02" className={`yij-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="LAS DIEZ ALAS Y CONFUCIO" sub="atribución legendaria, mismo criterio que el Corpus Hermético en Grimorios" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo que hoy se lee como "el libro completo" incluye capas mucho más tardías que el núcleo
               original: las <strong style={{ color: '#fff' }}>Diez Alas</strong>, comentarios filosóficos
               que profundizan el sentido de cada hexagrama. La tradición se las atribuye a Confucio
@@ -183,7 +183,7 @@ export default function YiJingPage() {
         <div id="sec-03" className={`yij-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="EL MÉTODO DE LOS TALLOS DE MILENRAMA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El método de adivinación documentado más antiguo usa 50 tallos secos de milenrama
               (Achillea millefolium), divididos y contados en una secuencia de varias rondas por cada
               una de las seis líneas de un hexagrama — un procedimiento largo, deliberadamente lento,
@@ -196,7 +196,7 @@ export default function YiJingPage() {
         <div id="sec-04" className={`yij-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="EL MÉTODO DE LAS TRES MONEDAS" sub="la simplificación posterior, la que implementa el instrumento real del sitio" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Mucho más simple que los tallos: se tiran tres monedas por línea, seis veces. Cara vale 3,
               ceca vale 2; la suma de las tres define el tipo de línea — 6 (yin que cambia), 7 (yang
               fija), 8 (yin fija) o 9 (yang que cambia). Las líneas que cambian se invierten para formar
@@ -212,7 +212,7 @@ export default function YiJingPage() {
         <div id="sec-05" className={`yij-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="WILHELM, JUNG Y LA SINCRONICIDAD" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La traducción de Richard Wilhelm (alemán, 1923; versión inglesa de Cary F. Baynes, 1950)
               fue la puerta de entrada real del Yi Jing a Occidente. Carl Jung escribió el prólogo de esa
               edición, y ahí mismo introdujo su concepto de{' '}
@@ -227,7 +227,7 @@ export default function YiJingPage() {
         <div id="sec-06" className={`yij-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="LEIBNIZ Y EL BINARIO" sub="el dato más fuerte del documento — verificable, no interpretado" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               A principios del siglo XVIII, el misionero jesuita Joachim Bouvet le envió a Gottfried
               Leibniz los diagramas de los 64 hexagramas. Leibniz, que ya venía desarrollando la
               aritmética binaria, notó la correspondencia directa: una línea quebrada (yin) y una línea
@@ -242,7 +242,7 @@ export default function YiJingPage() {
         <div id="sec-07" className={`yij-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="LOS OCHO TRIGRAMAS" sub="la parte de este documento con cero riesgo de inexactitud" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 20 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 20 }}>
               Todo hexagrama es la combinación de dos de estos ocho. Líneas leídas de abajo hacia arriba
               — a diferencia de los 64 textos clásicos individuales, esta tabla es universal en cualquier
               fuente seria, sin margen real de disputa:
@@ -253,7 +253,7 @@ export default function YiJingPage() {
                   <div style={{ fontFamily: 'monospace', fontSize: 14, color: ACCENT, letterSpacing: -1, lineHeight: 1 }}>{t.lines}</div>
                   <div>
                     <div style={{ fontSize: 12, color: '#fff' }}>{t.chars} {t.pinyin}</div>
-                    <div style={{ fontSize: 9, color: LABEL_DIM, letterSpacing: 0.5 }}>{t.image} — {t.family}</div>
+                    <div style={{ fontSize: 10.5, color: LABEL_DIM, letterSpacing: 0.5 }}>{t.image} — {t.family}</div>
                   </div>
                 </div>
               ))}
@@ -264,7 +264,7 @@ export default function YiJingPage() {
         <div id="sec-08" className={`yij-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="NOTA DE HONESTIDAD — POR QUÉ 64 LECTURAS PROPIAS" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Este documento no reproduce los 64 juicios clásicos del Yi Jing letra por letra. No porque
               no importen, sino porque este entorno de trabajo no tiene acceso de red a una fuente
               primaria que se pudiera verificar al escribirlo (Wikipedia y otros sitios de referencia
@@ -290,7 +290,7 @@ export default function YiJingPage() {
         <div id="sec-09" className={`yij-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 40 }}>
           <SectionHeader roman="IX" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Un sistema binario de hace tres mil años, leído por Leibniz como el germen de la aritmética
               que hoy corre literalmente este sitio — es la resonancia más directa de todo Codex Arcanum,
               la que no necesita ninguna lectura forzada. El mismo gesto de{' '}
@@ -303,7 +303,7 @@ export default function YiJingPage() {
         </div>
 
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}33` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}55` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}55` }}>
             NPX-ARN-01 // SEGUNDO DOCUMENTO DE CODEX ARCANUM
           </div>
         </div>

@@ -82,20 +82,20 @@ export default function SustratoPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${COPPER}aa`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${COPPER}aa`, marginBottom: 16 }}>
           NPX-SUSTRATO // LA CAPA FÍSICA DEBAJO DEL ORGANISMO
         </div>
         <h1 style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700, letterSpacing: 6, color: COPPER, textShadow: `0 0 40px ${COPPER}55`, marginBottom: 16, lineHeight: 1 }}>
           SUSTRATO
         </h1>
-        <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb4cc', maxWidth: 700, marginBottom: 20 }}>
+        <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb4cc', maxWidth: 700, marginBottom: 20 }}>
           NeoProxy se piensa a sí mismo como un organismo — pero un organismo necesita un sustrato físico real
           sobre el que vivir: electrónica, sensores, silicio. Acá vive eso. No una introducción decorativa:
           ocho documentos reales, extensos, pensados para alguien que quiere entender de verdad qué hay disponible
           y cómo funciona, desde el primer Arduino hasta una FPGA — con el puente explícito al equipo FPGA real
           que este mismo proyecto ya tiene anotado para explorar pronto.
         </p>
-        <p style={{ fontSize: 10.5, lineHeight: 1.9, color: '#5a7290', maxWidth: 700, marginBottom: 56 }}>
+        <p style={{ fontSize: 11.5, lineHeight: 1.9, color: '#6f86a3', maxWidth: 700, marginBottom: 56 }}>
           Orden de lectura sugerido, no obligatorio: FUNDAMENTOS primero si los niveles lógicos y los protocolos
           de comunicación no son ya cosa conocida — después, cualquiera de las cinco plataformas o el catálogo
           de SENSORES, en cualquier orden. COMPARATIVA al final, cuando las cinco plataformas ya se entienden
@@ -109,10 +109,10 @@ export default function SustratoPage() {
               background: 'rgba(2,4,8,0.8)', border: `1px solid ${e.color}33`,
               borderLeft: `3px solid ${e.color}`,
             }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: `${e.color}aa`, marginBottom: 12 }}>{e.code}</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${e.color}aa`, marginBottom: 12 }}>{e.code}</div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{e.title}</div>
-              <p style={{ fontSize: 11, color: '#9fb4cc', lineHeight: 1.8, marginBottom: 16 }}>{e.blurb}</p>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: `${e.color}cc` }}>{e.tag}</div>
+              <p style={{ fontSize: 12, color: '#9fb4cc', lineHeight: 1.8, marginBottom: 16 }}>{e.blurb}</p>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: `${e.color}cc` }}>{e.tag}</div>
             </Link>
           ))}
         </div>

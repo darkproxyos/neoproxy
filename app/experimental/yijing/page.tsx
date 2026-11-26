@@ -40,7 +40,7 @@ function HexagramLines({ lines, cast, size = 220 }: { lines: boolean[]; cast?: C
               </>
             )}
           </div>
-          <div style={{ width: 14, fontSize: 11, color: GOLD, textAlign: 'center' }}>
+          <div style={{ width: 14, fontSize: 12, color: GOLD, textAlign: 'center' }}>
             {row.changing ? (row.yang ? '○' : '✕') : ''}
           </div>
         </div>
@@ -54,15 +54,15 @@ function HexagramCard({ hex, label, color }: { hex: Hexagram; label: string; col
   const lower = TRIGRAMS[hex.lower]
   return (
     <div style={{ border: `1px solid ${color}44`, background: `${color}0a`, padding: '20px 22px' }}>
-      <div style={{ fontSize: 9, letterSpacing: 2, color: `${color}cc`, marginBottom: 10 }}>{label}</div>
+      <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${color}cc`, marginBottom: 10 }}>{label}</div>
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
         <HexagramLines lines={hex.lines} size={100} />
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ fontSize: 16, color: '#fff', letterSpacing: 0.5, marginBottom: 6 }}>{hex.title}</div>
-          <div style={{ fontSize: 9, color: '#8fb8a8', letterSpacing: 1, marginBottom: 12 }}>
+          <div style={{ fontSize: 10.5, color: '#8fb8a8', letterSpacing: 1, marginBottom: 12 }}>
             {upper.chars} {upper.pinyin} ({upper.image}) sobre {lower.chars} {lower.pinyin} ({lower.image})
           </div>
-          <p style={{ fontSize: 11, lineHeight: 1.8, color: '#c8e8da', margin: 0 }}>{hex.reading}</p>
+          <p style={{ fontSize: 12, lineHeight: 1.8, color: '#c8e8da', margin: 0 }}>{hex.reading}</p>
         </div>
       </div>
     </div>
@@ -109,17 +109,17 @@ export default function YiJingOraclePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a7060', textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#4a7060', textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${JADE_BRIGHT}99`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${JADE_BRIGHT}99`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-XP-YIJING // MÉTODO REAL DE LAS TRES MONEDAS
         </div>
         <h1 style={{ fontSize: 34, fontWeight: 700, letterSpacing: 4, color: JADE_BRIGHT, textShadow: `0 0 30px ${JADE_BRIGHT}44`, marginBottom: 16, lineHeight: 1 }}>
           易經 YI JING
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8a8', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 12 }}>
+        <p style={{ fontSize: 12, color: '#8fb8a8', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 12 }}>
           Seis líneas, tres monedas cada una, de abajo hacia arriba — el mismo método que popularizó la
           práctica en Occidente. A diferencia del{' '}
           <Link href="/experimental/sigilo" style={{ color: GOLD, textDecoration: 'none' }}>sigilo</Link>,
@@ -144,7 +144,7 @@ export default function YiJingOraclePage() {
         />
 
         <button onClick={lanzar} disabled={casting} className="press" style={{
-          fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: casting ? 'default' : 'pointer',
+          fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '12px 28px', cursor: casting ? 'default' : 'pointer',
           background: `${JADE}22`, border: `1px solid ${JADE_BRIGHT}88`, color: JADE_BRIGHT,
           opacity: casting ? 0.6 : 1, marginBottom: 40,
         }}>
@@ -171,7 +171,7 @@ export default function YiJingOraclePage() {
 
         {primary && (
           <div className="fade-in" style={{
-            fontSize: 9.5, lineHeight: 1.8, color: '#6a9a86', letterSpacing: 0.3,
+            fontSize: 11, lineHeight: 1.8, color: '#6a9a86', letterSpacing: 0.3,
             border: `1px solid ${JADE}33`, background: `${JADE}08`, padding: '16px 18px', marginBottom: 20,
           }}>
             Esto no predice nada — es azar real (tres monedas, sin semilla) leído a través de una
@@ -181,7 +181,7 @@ export default function YiJingOraclePage() {
         )}
 
         {!casting && (
-          <div style={{ fontSize: 8, letterSpacing: 0.5, color: `${JADE}77` }}>
+          <div style={{ fontSize: 10, letterSpacing: 0.5, color: `${JADE}77` }}>
             NPX-XP-YIJING // v1 — oráculo de monedas, lecturas propias sobre trigramas reales.
           </div>
         )}

@@ -5,11 +5,11 @@ import { resonances, HZ_PER_LAMBDA } from '@/lib/resonancia/plate'
 
 const mono = "'Space Mono', monospace"
 const MINT = '#7cf0d0', CYAN = '#9fe8ff'
-const H = ({ children, c = CYAN }: { children: React.ReactNode; c?: string }) => <div style={{ fontSize: 10.5, letterSpacing: 4, color: c, margin: '0 0 16px' }}>{children}</div>
-const P = ({ children }: { children: React.ReactNode }) => <p style={{ fontSize: 11.5, lineHeight: 2, color: '#a9bdd4', margin: '0 0 12px' }}>{children}</p>
+const H = ({ children, c = CYAN }: { children: React.ReactNode; c?: string }) => <div style={{ fontSize: 11.5, letterSpacing: 4, color: c, margin: '0 0 16px' }}>{children}</div>
+const P = ({ children }: { children: React.ReactNode }) => <p style={{ fontSize: 12.5, lineHeight: 2, color: '#a9bdd4', margin: '0 0 12px' }}>{children}</p>
 const Card = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
   <div style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '2px 1px 1px 1px', borderColor: `${MINT} #ffffff12 #ffffff12 #ffffff12`, padding: '16px 18px 8px' }}>
-    <div style={{ fontSize: 9.5, letterSpacing: 3, color: `${MINT}aa`, marginBottom: 6 }}>{n}</div>
+    <div style={{ fontSize: 11, letterSpacing: 3, color: `${MINT}aa`, marginBottom: 6 }}>{n}</div>
     <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: '#fff', marginBottom: 10 }}>{title}</div>
     {children}
   </div>
@@ -24,12 +24,12 @@ export default function ResonanciaPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div className="rs-layer" style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontSize: 9.5, letterSpacing: 6, color: `${MINT}aa`, marginBottom: 14 }}>NPX-RESONANCIA // SONIDO · <Link href="/fenomenos" style={{ color: `${MINT}aa` }}>SERIE FENÓMENOS</Link></div>
+        <div style={{ fontSize: 11, letterSpacing: 6, color: `${MINT}aa`, marginBottom: 14 }}>NPX-RESONANCIA // SONIDO · <Link href="/fenomenos" style={{ color: `${MINT}aa` }}>SERIE FENÓMENOS</Link></div>
         <h1 style={{ fontSize: 'clamp(30px, 7vw, 58px)', letterSpacing: 9, margin: '0 0 18px', lineHeight: 1.05, background: 'linear-gradient(90deg,#7cf0d0,#9fb8ff)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>RESONANCIA</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 880, margin: '0 0 10px' }}>
           Una placa de acero, arena encima y un parlante que la empuja. A casi cualquier nota la arena tiembla sin orden; en las <b style={{ color: '#fff' }}>resonancias</b> la placa se parte en zonas que se mueven en sentidos opuestos, separadas por líneas que no se mueven nunca, y la arena corre a juntarse ahí. Cada nota dibuja su figura.
         </p>
-        <p style={{ fontSize: 10.5, lineHeight: 1.95, color: '#7f96b2', maxWidth: 880, margin: '0 0 26px' }}>
+        <p style={{ fontSize: 11.5, lineHeight: 1.95, color: '#7f96b2', maxWidth: 880, margin: '0 0 26px' }}>
           Activa ♪ para oírla: suena la frecuencia que tendría una placa de acero de 24 cm y 1 mm. Las figuras se llaman de Chladni, por Ernst Chladni, que las mostró en 1787 frotando placas con un arco de violín.
         </p>
 
@@ -57,7 +57,7 @@ export default function ResonanciaPage() {
           <div>
             <H c="#7cf0b0">LO QUE ESTÁ MEDIDO</H>
             <P>Lo comprueba <code style={{ color: '#fff' }}>scripts/resonancia/check.ts</code> en el repositorio.</P>
-            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11, lineHeight: 2, color: '#a9bdd4' }}>
+            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 12, lineHeight: 2, color: '#a9bdd4' }}>
               <li><b style={{ color: '#fff' }}>Las frecuencias coinciden con las tablas.</b> Las nueve primeras frecuencias de la placa libre (λ = {L.map((x) => fmt(x.leissa, 3)).join(' · ')}, Leissa 1969, ν = 0,3) salen con un error máximo de {fmt(100 * worst, 3)} %.</li>
               <li><b style={{ color: '#fff' }}>Convergencia.</b> Se guardan {nModes} modos: los que cambian menos de 0,1 % al pasar de 196 a 256 funciones de base.</li>
               <li><b style={{ color: '#fff' }}>La arena encuentra las líneas.</b> Partiendo de arena pareja, en una resonancia la fracción de granos sobre las líneas quietas sube de cerca de 30 % (lo que ocupan) a más de 60 % en 1200 saltos, unos 3 segundos en pantalla.</li>
@@ -68,7 +68,7 @@ export default function ResonanciaPage() {
           </div>
           <div>
             <H c="#ffb86b">LO QUE NO</H>
-            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11, lineHeight: 2, color: '#a9bdd4' }}>
+            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 12, lineHeight: 2, color: '#a9bdd4' }}>
               <li><b style={{ color: '#fff' }}>La arena es un modelo, no granos de verdad.</b> El salto proporcional a la vibración reproduce dónde se junta la arena, no cómo rebota cada grano. El polvo muy fino hace lo contrario y se junta en las zonas que más vibran, por corrientes de aire (Faraday, 1831); eso no está.</li>
               <li><b style={{ color: '#fff' }}>Una placa ideal.</b> Delgada (Kirchhoff), libre en los cuatro bordes y empujada en un punto sin peso. En los kits reales la placa va atornillada al parlante, y el tornillo cambia un poco las frecuencias.</li>
               <li><b style={{ color: '#fff' }}>El amortiguamiento es elegido.</b> El ancho de cada resonancia (factor de pérdida 0,012) no se midió en ninguna placa.</li>
@@ -79,14 +79,14 @@ export default function ResonanciaPage() {
 
         <section style={{ marginTop: 56 }}>
           <H>FUENTES</H>
-          <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 10.5, lineHeight: 2, color: '#8fa8c4' }}>
+          <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11.5, lineHeight: 2, color: '#8fa8c4' }}>
             <li>Chladni, E. F. F. (1787). <i>Entdeckungen über die Theorie des Klanges</i>. Leipzig.</li>
             <li>Faraday, M. (1831). On a peculiar class of acoustical figures. <i>Philosophical Transactions of the Royal Society</i> 121.</li>
             <li>Ritz, W. (1909). Theorie der Transversalschwingungen einer quadratischen Platte mit freien Rändern. <i>Annalen der Physik</i> 333.</li>
             <li>Leissa, A. W. (1969). <i>Vibration of Plates</i> (NASA SP-160). Washington: NASA.</li>
             <li>Gander, M. J. y Wanner, G. (2012). From Euler, Ritz, and Galerkin to modern computing. <i>SIAM Review</i> 54.</li>
           </ul>
-          <p style={{ fontSize: 10, lineHeight: 1.9, color: '#5d7490', margin: '18px 0 0' }}>
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#6f86a3', margin: '18px 0 0' }}>
             Parte de la serie <Link href="/fenomenos" style={{ color: CYAN }}>FENÓMENOS</Link>, junto a <Link href="/capas" style={{ color: CYAN }}>CAPAS</Link>, <Link href="/humo" style={{ color: CYAN }}>HUMO SÓLIDO</Link> y <Link href="/trenza" style={{ color: CYAN }}>TRENZA</Link>.
           </p>
         </section>

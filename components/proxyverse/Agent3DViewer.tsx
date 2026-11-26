@@ -202,7 +202,7 @@ export default function Agent3DViewer({ config, color }: { config: Agent3DConfig
     }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
       <div style={{
-        position: 'absolute', top: 10, left: 12, fontFamily: mono, fontSize: 8,
+        position: 'absolute', top: 10, left: 12, fontFamily: mono, fontSize: 10,
         letterSpacing: 2, color: `${color}99`, pointerEvents: 'none',
       }}>
         VISOR 3D // EN VIVO
@@ -210,7 +210,7 @@ export default function Agent3DViewer({ config, color }: { config: Agent3DConfig
       {loading && !loadError && (
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: mono, fontSize: 10, letterSpacing: 2, color: `${color}aa`, background: '#000205cc',
+          fontFamily: mono, fontSize: 11, letterSpacing: 2, color: `${color}aa`, background: '#000205cc',
         }}>
           CARGANDO MODELO...
         </div>
@@ -218,7 +218,7 @@ export default function Agent3DViewer({ config, color }: { config: Agent3DConfig
       {loadError && (
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#8fb8d6', background: '#000205',
+          fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#8fb8d6', background: '#000205',
         }}>
           NO SE PUDO CARGAR EL MODELO
         </div>

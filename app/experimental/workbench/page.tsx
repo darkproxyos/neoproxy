@@ -35,7 +35,7 @@ function Slider({ label, value, min, max, step, onChange, accent }: {
 }) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4, letterSpacing: 0.5 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4, letterSpacing: 0.5 }}>
         <span>{label}</span>
         <span style={{ color: accent }}>{value.toFixed(step < 0.01 ? 3 : step < 1 ? 2 : 0)}</span>
       </div>
@@ -56,11 +56,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -294,22 +294,22 @@ export default function WorkbenchPage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
-        <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-WORKBENCH</div>
-        <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>mezclá teorías sobre un mismo objeto</div>
+        <div style={{ fontSize: 12, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-WORKBENCH</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 1, color: '#6f86a3' }}>mezclá teorías sobre un mismo objeto</div>
       </div>
 
       <div style={{
         position: 'absolute', top: 44, left: 0, bottom: 0, width: 300, overflowY: 'auto',
         background: 'rgba(5,10,20,0.92)', borderRight: `1px solid ${RED}22`, padding: 16, zIndex: 90,
       }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: RED, marginBottom: 10 }}>BASE // ESQUELETO</div>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: RED, marginBottom: 10 }}>BASE // ESQUELETO</div>
         <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
           {(['colonization', 'shell'] as BaseType[]).map((bt) => (
             <button key={bt} onClick={() => setBaseType(bt)} className="press" style={{
-              flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
+              flex: 1, fontFamily: mono, fontSize: 10.5, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
               background: baseType === bt ? `${accent}22` : 'transparent',
               border: `1px solid ${baseType === bt ? accent : '#2a3a50'}`,
               color: baseType === bt ? accent : '#4a6080',
@@ -336,11 +336,11 @@ export default function WorkbenchPage() {
           </>
         )}
 
-        <div style={{ fontSize: 10, letterSpacing: 3, color: RED, margin: '22px 0 10px', borderTop: `1px solid ${RED}22`, paddingTop: 18 }}>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: RED, margin: '22px 0 10px', borderTop: `1px solid ${RED}22`, paddingTop: 18 }}>
           MODIFICADORES
         </div>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, color: '#c8daf0', marginBottom: 10, cursor: 'pointer' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#c8daf0', marginBottom: 10, cursor: 'pointer' }}>
           <input type="checkbox" checked={patternEnabled} onChange={(e) => setPatternEnabled(e.target.checked)} />
           PATRÓN — reacción-difusión (Turing)
         </label>
@@ -349,7 +349,7 @@ export default function WorkbenchPage() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>
               {Object.entries(RD_PRESETS).map(([key, p]) => (
                 <button key={key} onClick={() => setPatternPreset(key as keyof typeof RD_PRESETS)} className="press" style={{
-                  fontFamily: mono, fontSize: 8, padding: '5px 8px', cursor: 'pointer', letterSpacing: 0.5,
+                  fontFamily: mono, fontSize: 10, padding: '5px 8px', cursor: 'pointer', letterSpacing: 0.5,
                   background: patternPreset === key ? `${CYAN}22` : 'transparent',
                   border: `1px solid ${patternPreset === key ? CYAN : '#2a3a50'}`,
                   color: patternPreset === key ? CYAN : '#4a6080',
@@ -363,14 +363,14 @@ export default function WorkbenchPage() {
           </div>
         )}
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, color: '#c8daf0', marginBottom: 10, cursor: 'pointer' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#c8daf0', marginBottom: 10, cursor: 'pointer' }}>
           <input type="checkbox" checked={chaosEnabled} onChange={(e) => setChaosEnabled(e.target.checked)} />
           CAOS — sistema dinámico real
         </label>
         {chaosEnabled && (
           <div style={{ marginBottom: 16, paddingLeft: 4 }}>
             <select value={chaosSystem} onChange={(e) => setChaosSystem(e.target.value)} style={{
-              width: '100%', fontFamily: mono, fontSize: 9, padding: 6, marginBottom: 10,
+              width: '100%', fontFamily: mono, fontSize: 10.5, padding: 6, marginBottom: 10,
               background: '#020c18', border: '1px solid #2a3a50', color: '#c8daf0',
             }}>
               {Object.entries(attractors).map(([key, a]) => (
@@ -382,22 +382,22 @@ export default function WorkbenchPage() {
               <AuthorCard entryId="lorenz" accent="#ff2d55" />
             ) : (
               <div style={{ marginTop: 10, padding: '10px 12px', border: '1px solid #ff2d5533', background: '#ff2d550a' }}>
-                <div style={{ fontSize: 9, color: '#ff2d55', letterSpacing: 1, marginBottom: 6 }}>{chaosInfo.name.toUpperCase()}</div>
-                <div style={{ fontSize: 8, color: '#4a6080', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{chaosInfo.equations}</div>
+                <div style={{ fontSize: 10.5, color: '#ff2d55', letterSpacing: 1, marginBottom: 6 }}>{chaosInfo.name.toUpperCase()}</div>
+                <div style={{ fontSize: 10, color: '#6f86a3', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{chaosInfo.equations}</div>
               </div>
             )}
           </div>
         )}
 
         <button onClick={regenerate} disabled={generating} className="press" style={{
-          width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginTop: 8,
+          width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 11, marginTop: 8,
           cursor: generating ? 'default' : 'pointer', background: accent, color: '#020408', border: 'none',
           opacity: generating ? 0.5 : 1, letterSpacing: 1,
         }}>
           {generating ? `COMPONIENDO... ${Math.round(progress * 100)}%` : '▲ GENERAR'}
         </button>
         <button onClick={handleExportSTL} disabled={!ready || generating} className="press" style={{
-          width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginTop: 8,
+          width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 10, marginTop: 8,
           cursor: (!ready || generating) ? 'default' : 'pointer', background: 'transparent',
           border: `1px solid ${accent}`, color: accent, opacity: (!ready || generating) ? 0.4 : 1, letterSpacing: 1,
         }}>
@@ -412,8 +412,8 @@ export default function WorkbenchPage() {
           position: 'absolute', bottom: 16, right: 16, textAlign: 'right', pointerEvents: 'none',
           background: 'rgba(5,10,20,0.85)', padding: '8px 12px', border: `1px solid ${accent}44`, backdropFilter: 'blur(10px)',
         }}>
-          <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 4 }}>ESPÉCIMEN</div>
-          <div style={{ fontSize: 10, color: accent, letterSpacing: 1 }}>
+          <div style={{ fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>ESPÉCIMEN</div>
+          <div style={{ fontSize: 11, color: accent, letterSpacing: 1 }}>
             {segmentCount} SEGMENTOS
             {patternEnabled ? ' · PATRÓN' : ''}
             {chaosEnabled ? ' · CAOS' : ''}

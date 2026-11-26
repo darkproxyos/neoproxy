@@ -47,13 +47,13 @@ export default function RealidadAumentadaHubPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER AL INICIO
         </Link>
 
-        <div style={{ fontSize: 9, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
           // REALIDAD AUMENTADA — TRACKING FACIAL Y DE CUERPO EN EL NAVEGADOR
         </div>
         <h1 style={{
@@ -62,20 +62,20 @@ export default function RealidadAumentadaHubPage() {
         }}>
           REALIDAD AUMENTADA
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 56 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 56 }}>
           Cámara web real, procesada en vivo con MediaPipe (cara, segmentación de persona, manos) y canvas —
           todo corre en tu navegador, nada se sube a un servidor. Tres herramientas, de la más completa a la más simple.
         </p>
 
-        <div style={{ fontSize: 10, color: CYAN, letterSpacing: 4, marginBottom: 22 }}>CATÁLOGO</div>
+        <div style={{ fontSize: 11, color: CYAN, letterSpacing: 4, marginBottom: 22 }}>CATÁLOGO</div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
           {CATALOG.map(entry => (
             <Link key={entry.id} href={entry.href} className="artifact-card" style={{ display: 'block', padding: 24, textDecoration: 'none', color: 'inherit' }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 12 }}>{entry.code}</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', marginBottom: 12 }}>{entry.code}</div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{entry.title}</div>
-              <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16 }}>{entry.blurb}</p>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>{entry.controls}</div>
+              <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16 }}>{entry.blurb}</p>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>{entry.controls}</div>
             </Link>
           ))}
         </div>

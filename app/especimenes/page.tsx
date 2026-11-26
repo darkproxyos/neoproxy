@@ -63,13 +63,13 @@ export default function EspecimenesPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '104px 32px 100px' }}>
         <Link href="/fabrication" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A FABRICACIÓN
         </Link>
 
-        <div style={{ fontSize: 9, color: `${AUTOORG}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${AUTOORG}66`, letterSpacing: 6, marginBottom: 16 }}>
           // PROXYGENESIS — ORGANISMOS GENERADOS
         </div>
         <h1 style={{
@@ -78,19 +78,19 @@ export default function EspecimenesPage() {
         }}>
           ESPECÍMENES
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 680, marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 680, marginBottom: 20 }}>
           Formas crecidas, no modeladas — árboles, corales y conchas generados con un algoritmo real de
           colonización espacial, cada uno corrido horas en una máquina dedicada hasta que terminó de
           crecer solo. Cada pieza acá es un STL real y persistido, con los datos exactos de su propia
           corrida: semilla, nodos, velocidad, parámetros.
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-          <Link href="/lab/proxygenesis" className="press" style={{ fontSize: 10, color: AUTOORG, letterSpacing: 1 }}>
+          <Link href="/lab/proxygenesis" className="press" style={{ fontSize: 11, color: AUTOORG, letterSpacing: 1 }}>
             → Generar los tuyos en el laboratorio
           </Link>
         </div>
 
-        <p style={{ fontSize: 10, color: `${AUTOORG}99`, letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 680, marginTop: 20, fontStyle: 'italic' }}>
+        <p style={{ fontSize: 11, color: `${AUTOORG}99`, letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 680, marginTop: 20, fontStyle: 'italic' }}>
           Cada espécimen trae su propia lectura — qué pensador real conecta con el algoritmo y los
           parámetros de ESA corrida en particular, no un texto genérico pegado a todos. Abrí uno para verla.
         </p>
@@ -103,7 +103,7 @@ export default function EspecimenesPage() {
           justifyContent: 'space-between', borderTop: `1px solid ${AUTOORG}22`, borderBottom: `1px solid ${AUTOORG}22`,
           padding: '14px 0',
         }}>
-          <div style={{ display: 'flex', gap: 24, fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>
+          <div style={{ display: 'flex', gap: 24, fontSize: 10.5, letterSpacing: 1, color: '#6f86a3' }}>
             <span><span style={{ color: AUTOORG }}>{counts.all}</span> ESPECÍMENES</span>
             <span><span style={{ color: AUTOORG }}>{totalNodes.toLocaleString()}</span> NODOS TOTALES</span>
           </div>
@@ -114,7 +114,7 @@ export default function EspecimenesPage() {
               const label = m === 'all' ? 'TODOS' : MODE_LABEL[m]
               return (
                 <button key={m} onClick={() => setFilter(m)} className="press" style={{
-                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 12px', cursor: 'pointer',
+                  fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '6px 12px', cursor: 'pointer',
                   background: active ? `${c}22` : 'transparent', border: `1px solid ${active ? c : '#4a6080'}`,
                   color: active ? c : '#8fa8c4',
                 }}>
@@ -131,7 +131,7 @@ export default function EspecimenesPage() {
           ))}
 
           {specimens !== null && filtered.length === 0 && (
-            <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1, lineHeight: 2, gridColumn: '1 / -1' }}>
+            <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1, lineHeight: 2, gridColumn: '1 / -1' }}>
               {specimens.length === 0
                 ? 'TODAVÍA SIN ESPECÍMENES. Esta colección se llena a mano, con corridas locales reales revisadas antes de subirlas.'
                 : 'SIN ESPECÍMENES EN ESTE MODO TODAVÍA.'}
@@ -151,7 +151,7 @@ export default function EspecimenesPage() {
                     <img src={s.thumbnail} alt={s.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   ) : (
                     <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontSize: 9, color: `${color}aa`, letterSpacing: 2 }}>[+] VER EN 3D</span>
+                      <span style={{ fontSize: 10.5, color: `${color}aa`, letterSpacing: 2 }}>[+] VER EN 3D</span>
                     </div>
                   )}
                   <div className="specimen-scanlines" style={{
@@ -159,7 +159,7 @@ export default function EspecimenesPage() {
                     background: `repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, ${color}22 2px, transparent 3px)`,
                   }} />
                   <span className="specimen-tag" style={{
-                    position: 'absolute', bottom: 8, right: 10, fontSize: 8, letterSpacing: 1, color,
+                    position: 'absolute', bottom: 8, right: 10, fontSize: 10, letterSpacing: 1, color,
                     background: 'rgba(0,4,10,0.75)', padding: '3px 7px', border: `1px solid ${color}44`,
                   }}>
                     VER EN 3D →
@@ -167,15 +167,15 @@ export default function EspecimenesPage() {
                 </div>
                 <div style={{ padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                    <span style={{ fontSize: 11, letterSpacing: 2, color }}>{MODE_LABEL[s.mode]}</span>
-                    <span style={{ fontSize: 8, color: '#4a6080' }}>{new Date(s.createdAt).toLocaleDateString('es-AR')}</span>
+                    <span style={{ fontSize: 12, letterSpacing: 2, color }}>{MODE_LABEL[s.mode]}</span>
+                    <span style={{ fontSize: 10, color: '#6f86a3' }}>{new Date(s.createdAt).toLocaleDateString('es-AR')}</span>
                   </div>
                   <div style={{ fontSize: 12, color: '#fff', marginBottom: 10 }}>{s.title}</div>
-                  <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 10 }}>
+                  <div style={{ fontSize: 10.5, color: '#6f86a3', marginBottom: 10 }}>
                     NODOS: {s.stats.nodeCount.toLocaleString()} // {s.stats.iterationsPerSecond} iter/s // {s.stats.elapsedSeconds}s
                   </div>
                   {s.reading.thinkerIds.length > 0 && (
-                    <div style={{ fontSize: 8, letterSpacing: 0.5, color: `${color}99`, fontStyle: 'italic' }}>
+                    <div style={{ fontSize: 10, letterSpacing: 0.5, color: `${color}99`, fontStyle: 'italic' }}>
                       // lee: {s.reading.thinkerIds.map(id => THINKERS[id]?.name).filter(Boolean).join(' · ')}
                     </div>
                   )}
@@ -207,12 +207,12 @@ export default function EspecimenesPage() {
               <Corner pos="tr" color={MODE_COLOR[open.mode]} />
               <Corner pos="br" color={MODE_COLOR[open.mode]} />
               <button onClick={() => setOpen(null)} className="press" style={{
-                fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#8fa8c4', background: 'transparent',
+                fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: '#8fa8c4', background: 'transparent',
                 border: '1px solid #4a6080', padding: '4px 10px', cursor: 'pointer', marginBottom: 20,
               }}>
                 ✕ CERRAR
               </button>
-              <div style={{ fontSize: 11, letterSpacing: 2, color: MODE_COLOR[open.mode], marginBottom: 6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 2, color: MODE_COLOR[open.mode], marginBottom: 6 }}>
                 {MODE_LABEL[open.mode]}
               </div>
               <div style={{ fontSize: 18, color: '#fff', marginBottom: 20 }}>{open.title}</div>
@@ -225,7 +225,7 @@ export default function EspecimenesPage() {
                 />
               )}
 
-              <div style={{ fontSize: 9, letterSpacing: 3, color: `${MODE_COLOR[open.mode]}aa`, marginBottom: 12 }}>
+              <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${MODE_COLOR[open.mode]}aa`, marginBottom: 12 }}>
                 // LECTURA
               </div>
               {open.reading.prose.map((p, i) => (
@@ -237,17 +237,17 @@ export default function EspecimenesPage() {
                   if (!t) return null
                   return (
                     <Link key={id} href={`/knowledge?entry=${id}`} className="press" style={{
-                      display: 'block', fontSize: 8, letterSpacing: 0.5, color: `${MODE_COLOR[open.mode]}dd`, textDecoration: 'none',
+                      display: 'block', fontSize: 10, letterSpacing: 0.5, color: `${MODE_COLOR[open.mode]}dd`, textDecoration: 'none',
                       border: `1px solid ${MODE_COLOR[open.mode]}33`, padding: '6px 10px', lineHeight: 1.5,
                     }}>
                       <span style={{ color: MODE_COLOR[open.mode], letterSpacing: 1 }}>{t.name}</span>
-                      <span style={{ color: '#4a6080' }}> · {t.years}</span>
+                      <span style={{ color: '#6f86a3' }}> · {t.years}</span>
                     </Link>
                   )
                 })}
               </div>
 
-              <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', marginBottom: 8, borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
+              <div style={{ fontSize: 11, letterSpacing: 2, color: '#6f86a3', marginBottom: 8, borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
                 DATOS DE LA CORRIDA
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px 16px', marginBottom: 8 }}>
@@ -258,25 +258,25 @@ export default function EspecimenesPage() {
                   ['Tiempo', `${open.stats.elapsedSeconds}s`],
                   ['Velocidad', `${open.stats.iterationsPerSecond} iter/s`],
                 ].map(([label, value]) => (
-                  <div key={label as string} style={{ fontSize: 10, padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div style={{ color: '#4a6080', fontSize: 8, letterSpacing: 1 }}>{label.toString().toUpperCase()}</div>
+                  <div key={label as string} style={{ fontSize: 11, padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ color: '#6f86a3', fontSize: 10, letterSpacing: 1 }}>{label.toString().toUpperCase()}</div>
                     <div style={{ color: '#c8daf0' }}>{value}</div>
                   </div>
                 ))}
               </div>
 
-              <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', margin: '20px 0 8px', borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
+              <div style={{ fontSize: 11, letterSpacing: 2, color: '#6f86a3', margin: '20px 0 8px', borderBottom: '1px solid #4a608033', paddingBottom: 4 }}>
                 PARÁMETROS
               </div>
               {Object.entries(open.stats.params).map(([label, value]) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ color: '#4a6080' }}>{label}</span>
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ color: '#6f86a3' }}>{label}</span>
                   <span style={{ color: '#c8daf0' }}>{String(value)}</span>
                 </div>
               ))}
 
               <a href={open.stlPath} download style={{
-                display: 'block', textAlign: 'center', marginTop: 20, fontSize: 10, letterSpacing: 1, padding: '10px 0',
+                display: 'block', textAlign: 'center', marginTop: 20, fontSize: 11, letterSpacing: 1, padding: '10px 0',
                 background: `${MODE_COLOR[open.mode]}15`, border: `1px solid ${MODE_COLOR[open.mode]}66`, color: MODE_COLOR[open.mode],
                 textDecoration: 'none',
               }}>
@@ -312,7 +312,7 @@ export default function EspecimenesPage() {
         }
         .specimen-modal-viewer { height: 72vh; }
         .specimen-modal-text { height: 72vh; }
-        .reading-prose { font-size: 10px; line-height: 1.9; }
+        .reading-prose { font-size: 11px; line-height: 1.9; }
 
         @media (max-width: 760px) {
           .specimen-modal-overlay { padding: 10px; align-items: flex-start !important; }

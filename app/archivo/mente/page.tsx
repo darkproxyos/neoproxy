@@ -51,7 +51,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -63,7 +63,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -427,9 +427,9 @@ function TimelineRow({ entry, isLast }: { entry: TimelineEntry; isLast: boolean 
       <div style={{ paddingBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, fontWeight: 700, color: ACCENT, letterSpacing: 1, textShadow: `0 0 10px ${ACCENT}55` }}>{entry.year}</span>
-          <span style={{ fontSize: 11, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
+          <span style={{ fontSize: 12, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
         </div>
-        <div style={{ fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
+        <div style={{ fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
       </div>
     </div>
   )
@@ -532,7 +532,7 @@ function NeurotransmitterTable() {
                 key={i}
                 style={{
                   textAlign: 'left',
-                  fontSize: 9.5,
+                  fontSize: 11,
                   letterSpacing: 1.5,
                   color: ACCENT,
                   borderBottom: `1px solid ${ACCENT}55`,
@@ -548,16 +548,16 @@ function NeurotransmitterTable() {
         <tbody>
           {NEUROTRANSMITTERS.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,79,163,0.03)' : 'transparent' }}>
-              <td style={{ padding: '12px 14px', fontSize: 11, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 12, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.nombre}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.tipo}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10.5, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11.5, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>
                 {row.funcion}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10, lineHeight: 1.6, color: TEXT_DIM, verticalAlign: 'top' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.6, color: TEXT_DIM, verticalAlign: 'top' }}>
                 {row.origen}
               </td>
             </tr>
@@ -575,7 +575,7 @@ function ImagingTable() {
         <thead>
           <tr>
             {['TÉCNICA', 'RES. ESPACIAL', 'RES. TEMPORAL', 'QUÉ MIDE', 'INVASIVIDAD'].map((h, i) => (
-              <th key={i} style={{ textAlign: 'left', fontSize: 9.5, letterSpacing: 1.5, color: ACCENT, borderBottom: `1px solid ${ACCENT}55`, padding: '10px 14px', whiteSpace: 'nowrap' }}>
+              <th key={i} style={{ textAlign: 'left', fontSize: 11, letterSpacing: 1.5, color: ACCENT, borderBottom: `1px solid ${ACCENT}55`, padding: '10px 14px', whiteSpace: 'nowrap' }}>
                 {h}
               </th>
             ))}
@@ -584,11 +584,11 @@ function ImagingTable() {
         <tbody>
           {IMAGING_TECHNIQUES.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,79,163,0.03)' : 'transparent' }}>
-              <td style={{ padding: '12px 14px', fontSize: 10.5, color: '#fff', letterSpacing: 0.3, verticalAlign: 'top' }}>{row.tecnica}</td>
-              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{row.espacial}</td>
-              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{row.temporal}</td>
-              <td style={{ padding: '12px 14px', fontSize: 10, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>{row.mide}</td>
-              <td style={{ padding: '12px 14px', fontSize: 9.5, color: TEXT_DIM, verticalAlign: 'top' }}>{row.invasividad}</td>
+              <td style={{ padding: '12px 14px', fontSize: 11.5, color: '#fff', letterSpacing: 0.3, verticalAlign: 'top' }}>{row.tecnica}</td>
+              <td style={{ padding: '12px 14px', fontSize: 11, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{row.espacial}</td>
+              <td style={{ padding: '12px 14px', fontSize: 11, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{row.temporal}</td>
+              <td style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>{row.mide}</td>
+              <td style={{ padding: '12px 14px', fontSize: 11, color: TEXT_DIM, verticalAlign: 'top' }}>{row.invasividad}</td>
             </tr>
           ))}
         </tbody>
@@ -605,8 +605,8 @@ function WaveBandsChart() {
         const widthPct = Math.min(100, (parseFloat(band.rango.split('–')[1] || band.rango) / maxFreq) * 100 + 14)
         return (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{ width: 64, fontSize: 11, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{band.nombre}</div>
-            <div style={{ width: 80, fontSize: 9.5, color: ACCENT, flexShrink: 0 }}>{band.rango}</div>
+            <div style={{ width: 64, fontSize: 12, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{band.nombre}</div>
+            <div style={{ width: 80, fontSize: 11, color: ACCENT, flexShrink: 0 }}>{band.rango}</div>
             <div style={{ flexGrow: 1, height: 14, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
               <div style={{ width: `${widthPct}%`, height: '100%', background: `linear-gradient(90deg, ${ACCENT}33, ${ACCENT})`, boxShadow: `0 0 8px ${ACCENT}66` }} />
             </div>
@@ -615,7 +615,7 @@ function WaveBandsChart() {
       })}
       <div style={{ marginTop: 6 }}>
         {WAVE_BANDS.map((band, i) => (
-          <div key={i} style={{ fontSize: 9.5, lineHeight: 1.7, color: TEXT_DIM, marginBottom: 4 }}>
+          <div key={i} style={{ fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, marginBottom: 4 }}>
             <span style={{ color: ACCENT }}>{band.nombre}</span> — {band.estado}
           </div>
         ))}
@@ -745,7 +745,7 @@ function CardBlock({ title, children }: { title: string; children: React.ReactNo
       >
         {title}
       </h3>
-      <div style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, letterSpacing: 0.3 }}>{children}</div>
+      <div style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, letterSpacing: 0.3 }}>{children}</div>
     </div>
   )
 }
@@ -759,7 +759,7 @@ export default function MentePage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-NSC-00 // DOCUMENTO TÉCNICO ARCHIVADO
           </div>
           <h1
@@ -780,7 +780,7 @@ export default function MentePage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -802,7 +802,7 @@ export default function MentePage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -817,7 +817,7 @@ export default function MentePage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -836,7 +836,7 @@ export default function MentePage() {
                 ['XII', 'sec-12', 'La consciencia — el problema difícil'],
                 ['XIII', 'sec-13', 'Notas adicionales'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -860,7 +860,7 @@ export default function MentePage() {
           </Panel>
 
           <div style={{ marginTop: 24 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
+            <div style={{ fontSize: 12, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
               DETALLE — LA SINAPSIS
             </div>
             <Panel>
@@ -928,7 +928,7 @@ export default function MentePage() {
           </Panel>
 
           <div style={{ marginTop: 24 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
+            <div style={{ fontSize: 12, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
               DETALLE — SISTEMA LÍMBICO (corte medial, estructuras internas)
             </div>
             <Panel>
@@ -937,8 +937,8 @@ export default function MentePage() {
                 <div>
                   {LIMBIC_STRUCTURES.map((s, i) => (
                     <div key={i} style={{ marginBottom: 14 }}>
-                      <div style={{ fontSize: 11, letterSpacing: 1.5, color: ACCENT }}>{s.nombre.toUpperCase()}</div>
-                      <div style={{ fontSize: 10.5, lineHeight: 1.7, color: TEXT_DIM }}>{s.fn}</div>
+                      <div style={{ fontSize: 12, letterSpacing: 1.5, color: ACCENT }}>{s.nombre.toUpperCase()}</div>
+                      <div style={{ fontSize: 11.5, lineHeight: 1.7, color: TEXT_DIM }}>{s.fn}</div>
                     </div>
                   ))}
                 </div>
@@ -973,22 +973,22 @@ export default function MentePage() {
         <div id="sec-07" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="ONDAS CEREBRALES Y ARQUITECTURA DEL SUEÑO" />
           <Panel>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 16 }}>
+            <div style={{ fontSize: 12, letterSpacing: 2, color: TEXT_DIM, marginBottom: 16 }}>
               BANDAS DE FRECUENCIA (EEG)
             </div>
             <WaveBandsChart />
           </Panel>
 
           <div style={{ marginTop: 24 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
+            <div style={{ fontSize: 12, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
               DETALLE — ETAPAS DEL SUEÑO
             </div>
             <Panel>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {SLEEP_STAGES.map((s, i) => (
                   <div key={i}>
-                    <div style={{ fontSize: 11, letterSpacing: 1.5, color: ACCENT }}>{s.nombre.toUpperCase()}</div>
-                    <div style={{ fontSize: 10.5, lineHeight: 1.7, color: TEXT_DIM, marginTop: 4 }}>{s.detail}</div>
+                    <div style={{ fontSize: 12, letterSpacing: 1.5, color: ACCENT }}>{s.nombre.toUpperCase()}</div>
+                    <div style={{ fontSize: 11.5, lineHeight: 1.7, color: TEXT_DIM, marginTop: 4 }}>{s.detail}</div>
                   </div>
                 ))}
               </div>
@@ -1009,9 +1009,9 @@ export default function MentePage() {
               <Panel key={i}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 10, flexWrap: 'wrap' }}>
                   <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, textShadow: `0 0 10px ${ACCENT}44` }}>{c.title}</div>
-                  <div style={{ fontSize: 9.5, color: LABEL_DIM }}>{c.year}</div>
+                  <div style={{ fontSize: 11, color: LABEL_DIM }}>{c.year}</div>
                 </div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{c.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{c.detail}</div>
               </Panel>
             ))}
           </div>
@@ -1110,7 +1110,7 @@ export default function MentePage() {
             {PHARM_TOPICS.map((t, i) => (
               <Panel key={i}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{t.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{t.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{t.detail}</div>
               </Panel>
             ))}
           </div>
@@ -1119,7 +1119,7 @@ export default function MentePage() {
         {/* XII. LA CONSCIENCIA — EL PROBLEMA DIFÍCIL */}
         <div id="sec-12" style={{ marginBottom: 90 }}>
           <SectionHeader roman="XII" title="LA CONSCIENCIA — EL PROBLEMA DIFÍCIL" sub="terreno abierto, sin consenso — a diferencia de todo lo anterior en este documento" />
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: TEXT_DIM, maxWidth: 680, marginBottom: 28 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: TEXT_DIM, maxWidth: 680, marginBottom: 28 }}>
             Todo lo descripto hasta acá es ciencia con consenso razonable: anatomía verificable,
             mecanismos moleculares replicados, casos clínicos documentados. Esta sección es distinta —
             ninguna de estas teorías está confirmada ni es mayoritariamente aceptada; se las incluye
@@ -1129,7 +1129,7 @@ export default function MentePage() {
             {CONSCIOUSNESS_TOPICS.map((t, i) => (
               <Panel key={i}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{t.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{t.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{t.detail}</div>
               </Panel>
             ))}
           </div>
@@ -1139,14 +1139,14 @@ export default function MentePage() {
         <div id="sec-13" style={{ marginBottom: 40 }}>
           <SectionHeader roman="XIII" title="NOTAS ADICIONALES" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Variabilidad individual.</strong> Casi todos los valores
               y ubicaciones de este documento (localización exacta de un área funcional, duración de un
               ciclo de sueño, umbral de una memoria de trabajo) son promedios poblacionales con
               variación real entre individuos — la neuroanatomía funcional no es tan fija ni tan
               uniforme como un mapa de carreteras.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Lo que este documento no resuelve.</strong> Por diseño:
               el origen de la experiencia subjetiva (Sección XII), el rol exacto del sueño REM en la
               cognición, la magnitud real de la neurogénesis adulta, y por qué algunos tratamientos
@@ -1158,7 +1158,7 @@ export default function MentePage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-NSC-00 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

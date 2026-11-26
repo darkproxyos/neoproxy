@@ -65,11 +65,11 @@ export default function AtlasPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER AL CODEX
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-KNW-ATLAS // EL CODEX ENTERO, EN UNA SOLA VISTA
         </div>
         <h1 style={{
@@ -78,7 +78,7 @@ export default function AtlasPage() {
         }}>
           ATLAS
         </h1>
-        <p style={{ fontSize: 11.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 40 }}>
+        <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 40 }}>
           Mismos datos reales que ya viven en <Link href="/knowledge" style={{ color: '#fff', textDecoration: 'underline' }}>/knowledge</Link> — nada
           inventado para esta vista, solo reorganizado en el tiempo. El cluster GEOMETRÍA queda afuera:
           sus entradas son categorías dimensionales sin año real, no personas ni hechos fechables.
@@ -94,13 +94,13 @@ export default function AtlasPage() {
           ].map(stat => (
             <div key={stat.label} style={{ border: `1px solid ${CYAN}33`, background: `${CYAN}08`, padding: '14px 18px', minWidth: 150 }}>
               <div style={{ fontSize: 20, color: CYAN }}>{stat.value}</div>
-              <div style={{ fontSize: 8.5, letterSpacing: 1.5, color: '#5a7290', marginTop: 4 }}>{stat.label}</div>
+              <div style={{ fontSize: 10, letterSpacing: 1.5, color: '#6f86a3', marginTop: 4 }}>{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* LINEA DE TIEMPO */}
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
           LÍNEA DE TIEMPO — TOCÁ UN PUNTO
         </div>
         <div style={{ overflowX: 'auto', marginBottom: 64, border: `1px solid ${CYAN}22`, padding: '16px 8px' }}>
@@ -148,7 +148,7 @@ export default function AtlasPage() {
         </div>
 
         {/* NOMBRES POR CLUSTER */}
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
           NOMBRES POR CLUSTER
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 64 }}>
@@ -158,24 +158,24 @@ export default function AtlasPage() {
               background: `${clusters[c.cluster].color}0a`, padding: '8px 14px',
             }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: clusters[c.cluster].color, display: 'inline-block' }} />
-              <span style={{ fontSize: 10, color: '#c8daf0' }}>{clusters[c.cluster].label}</span>
-              <span style={{ fontSize: 10, color: clusters[c.cluster].color }}>{c.count}</span>
+              <span style={{ fontSize: 11, color: '#c8daf0' }}>{clusters[c.cluster].label}</span>
+              <span style={{ fontSize: 11, color: clusters[c.cluster].color }}>{c.count}</span>
             </div>
           ))}
         </div>
 
         {/* DOCUMENTOS POR FORMATO */}
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
           DOCUMENTOS DEL CODEX POR FORMATO
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 480 }}>
           {formatCounts.map(f => (
             <div key={f.format} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 150, fontSize: 9.5, color: '#8fb8d6', textAlign: 'right' }}>{f.format}</div>
+              <div style={{ width: 150, fontSize: 11, color: '#8fb8d6', textAlign: 'right' }}>{f.format}</div>
               <svg width={260} height={16}>
                 <rect x={0} y={2} width={Math.max(barX(f.count), 2)} height={12} fill={FORMAT_COLOR[f.format]} />
               </svg>
-              <div style={{ fontSize: 11, color: FORMAT_COLOR[f.format] }}>{f.count}</div>
+              <div style={{ fontSize: 12, color: FORMAT_COLOR[f.format] }}>{f.count}</div>
             </div>
           ))}
         </div>

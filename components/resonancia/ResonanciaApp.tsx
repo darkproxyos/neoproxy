@@ -18,10 +18,10 @@ export const noteName = (f: number) => { const m = Math.round(12 * Math.log2(f /
 const GRAINS = typeof navigator !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent) ? 22000 : 34000
 
 function Chip({ on, onClick, children, title, color = '#9fe8ff', disabled }: { on: boolean; onClick: () => void; children: React.ReactNode; title?: string; color?: string; disabled?: boolean }) {
-  return <button type="button" className="press" title={title} disabled={disabled} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.6, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1, background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
+  return <button type="button" className="press" title={title} disabled={disabled} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.6, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1, background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
 }
 function Stat({ k, v, warn, title }: { k: string; v: string; warn?: boolean; title?: string }) {
-  return <div title={title} style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 9.5, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
+  return <div title={title} style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 11, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
 }
 
 type Piece = { kind: 'placa' | 'columna'; info: Record<string, unknown>; ms: number; hash: string }
@@ -224,9 +224,9 @@ export default function ResonanciaApp() {
             <>
               <div style={{ position: 'absolute', left: 14, top: 12, pointerEvents: 'none', textShadow: '0 1px 4px #000' }}>
                 <div style={{ fontSize: 30, color: '#fff', letterSpacing: 2, lineHeight: 1 }}>{fmt(f, f < 100 ? 1 : 0)} <span style={{ fontSize: 13, color: ACCENT }}>Hz</span></div>
-                <div style={{ fontSize: 10, letterSpacing: 1.8, color: '#cfe0f2', marginTop: 6 }}>{noteName(f)} · {onRes ? `RESONANCIA · MODO ${onRes.k + 1}` : `cerca del modo ${near.k + 1}`}</div>
-                <div style={{ fontSize: 10, letterSpacing: 1.5, color: '#7f96b2', marginTop: 3 }}>arena en las líneas quietas: {Math.round(100 * nodes)} %</div>
-                {busy && <div style={{ fontSize: 10, color: '#ffd27c', marginTop: 3 }}>{busy}</div>}
+                <div style={{ fontSize: 11, letterSpacing: 1.8, color: '#cfe0f2', marginTop: 6 }}>{noteName(f)} · {onRes ? `RESONANCIA · MODO ${onRes.k + 1}` : `cerca del modo ${near.k + 1}`}</div>
+                <div style={{ fontSize: 11, letterSpacing: 1.5, color: '#7f96b2', marginTop: 3 }}>arena en las líneas quietas: {Math.round(100 * nodes)} %</div>
+                {busy && <div style={{ fontSize: 11, color: '#ffd27c', marginTop: 3 }}>{busy}</div>}
               </div>
               <div style={{ position: 'absolute', right: 10, top: 10, display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '60%' }}>
                 <Chip on={sound} onClick={toggleSound} color={ACCENT} title="Escucha la frecuencia (la de una placa de acero de 24 cm y 1 mm)">{sound ? '♪ SONIDO' : '♪ SIN SONIDO'}</Chip>
@@ -260,8 +260,8 @@ export default function ResonanciaApp() {
                   <div style={{ fontSize: 'clamp(12px, 2.2vh, 22px)', color: ACCENT, letterSpacing: 2 }}>neoproxy.art/resonancia</div>
                 </div>
               </div>
-              {!sound && reel.phase === 'titulo' && <div style={{ position: 'absolute', top: '30%', left: 0, right: 0, textAlign: 'center', fontSize: 11, color: '#ffd27c', letterSpacing: 1.5 }}>sin sonido: actívalo antes de grabar (♪)</div>}
-              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
+              {!sound && reel.phase === 'titulo' && <div style={{ position: 'absolute', top: '30%', left: 0, right: 0, textAlign: 'center', fontSize: 12, color: '#ffd27c', letterSpacing: 1.5 }}>sin sonido: actívalo antes de grabar (♪)</div>}
+              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
             </div>
           )}
         </div>
@@ -272,15 +272,15 @@ export default function ResonanciaApp() {
         <input type="range" className="rs-range" aria-label="Frecuencia" min={0} max={1} step={0.0005} value={sl} onChange={(e) => { clearTimers(); setTour(false); tune(F_MIN * Math.pow(F_MAX / F_MIN, Number(e.target.value))) }} style={{ width: '100%' }} />
         <div style={{ position: 'relative', height: 30, marginTop: 4 }}>
           {res.map((r) => { const u = Math.log(r.hz / F_MIN) / Math.log(F_MAX / F_MIN); if (u < 0 || u > 1) return null; const on = Math.abs(r.hz - f) / f < 0.01
-            return <button key={r.k} type="button" onClick={() => { clearTimers(); setTour(false); setMode('arena'); glide(r.hz * 1.0005) }} title={`Modo ${r.k + 1}: ${fmt(r.hz, 1)} Hz (${noteName(r.hz)})`} style={{ position: 'absolute', left: `calc(${(u * 100).toFixed(2)}% - 13px)`, top: 0, width: 26, height: 26, padding: 0, fontFamily: mono, fontSize: 8.5, cursor: 'pointer', background: on ? ACCENT : '#0b1118', color: on ? '#02060a' : '#9fb4cc', border: `1px solid ${on ? ACCENT : '#ffffff30'}`, borderRadius: '50%' }}>{r.k + 1}</button> })}
+            return <button key={r.k} type="button" onClick={() => { clearTimers(); setTour(false); setMode('arena'); glide(r.hz * 1.0005) }} title={`Modo ${r.k + 1}: ${fmt(r.hz, 1)} Hz (${noteName(r.hz)})`} style={{ position: 'absolute', left: `calc(${(u * 100).toFixed(2)}% - 13px)`, top: 0, width: 26, height: 26, padding: 0, fontFamily: mono, fontSize: 10, cursor: 'pointer', background: on ? ACCENT : '#0b1118', color: on ? '#02060a' : '#9fb4cc', border: `1px solid ${on ? ACCENT : '#ffffff30'}`, borderRadius: '50%' }}>{r.k + 1}</button> })}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9.5, color: '#5d7490', letterSpacing: 1 }}><span>{F_MIN} Hz</span><span>los círculos son las resonancias que se oyen desde este punto de empuje</span><span>{F_MAX} Hz</span></div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#6f86a3', letterSpacing: 1 }}><span>{F_MIN} Hz</span><span>los círculos son las resonancias que se oyen desde este punto de empuje</span><span>{F_MAX} Hz</span></div>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '6px 0 16px' }}>
         {(['arena', 'placa', 'columna'] as ResMode[]).map((x) => (
           <button key={x} type="button" className="press" onClick={() => { clearTimers(); setTour(false); goMode(x) }}
-            style={{ minHeight: 46, padding: '0 20px', fontFamily: mono, fontWeight: 700, fontSize: 11.5, letterSpacing: 2.5, cursor: 'pointer', border: 'none', background: mode === x ? 'linear-gradient(90deg,#7cf0d0,#9fb8ff)' : '#0b111a', color: mode === x ? '#04060a' : '#9fb4cc' }}>
+            style={{ minHeight: 46, padding: '0 20px', fontFamily: mono, fontWeight: 700, fontSize: 12.5, letterSpacing: 2.5, cursor: 'pointer', border: 'none', background: mode === x ? 'linear-gradient(90deg,#7cf0d0,#9fb8ff)' : '#0b111a', color: mode === x ? '#04060a' : '#9fb4cc' }}>
             {x === 'arena' ? '◌ ARENA' : x === 'placa' ? '◆ PLACA' : '▥ COLUMNA'}
           </button>
         ))}
@@ -289,15 +289,15 @@ export default function ResonanciaApp() {
         <span style={{ flex: 1 }} />
         <Chip on={!!reel} onClick={enterReel} color="#ffd27c" title="Pantalla vertical que corre sola: para grabarla con el teléfono (activa el sonido antes)">▣ MODO REEL</Chip>
       </div>
-      {err && <p style={{ color: '#ffb86b', fontSize: 11 }}>{err}</p>}
+      {err && <p style={{ color: '#ffb86b', fontSize: 12 }}>{err}</p>}
 
       <div className="rs-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 22 }}>
         <section style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '1px 1px 1px 3px', borderColor: `${ACCENT}2a ${ACCENT}2a ${ACCENT}2a ${ACCENT}`, padding: '18px 20px' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: ACCENT, marginBottom: 10 }}>DÓNDE EMPUJA EL PARLANTE</div>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: ACCENT, marginBottom: 10 }}>DÓNDE EMPUJA EL PARLANTE</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
             {(Object.keys(DRIVES) as Drive[]).map((d) => <Chip key={d} on={drive === d} color={ACCENT} onClick={() => pickDrive(d)}>{DRIVES[d].label}</Chip>)}
           </div>
-          <p style={{ fontSize: 10.5, lineHeight: 1.9, color: '#8fa8c4', margin: '0 0 12px' }}>
+          <p style={{ fontSize: 11.5, lineHeight: 1.9, color: '#8fa8c4', margin: '0 0 12px' }}>
             Empujada en el centro, la placa solo puede sonar con los modos que mueven el centro: {resonances('centro').length} resonancias bajo {F_MAX} Hz. Desde el borde o en diagonal despiertan otras ({resonances('borde').length} y {resonances('esquina').length}). Un modo con una línea quieta justo en el punto de empuje no se oye: el parlante empuja donde la placa no quiere moverse.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 8 }}>
@@ -308,26 +308,26 @@ export default function ResonanciaApp() {
           </div>
         </section>
         <section style={{ background: '#080c12', border: '1px solid #ffffff12', padding: '18px 20px', display: 'grid', gap: 14, alignContent: 'start' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff' }}>LAS PIEZAS</div>
-          <div style={{ fontSize: 10.5, lineHeight: 1.85, color: '#8fa8c4' }}>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff' }}>LAS PIEZAS</div>
+          <div style={{ fontSize: 11.5, lineHeight: 1.85, color: '#8fa8c4' }}>
             <b style={{ color: '#fff' }}>◆ PLACA</b> — baldosa de 100 mm con la arena en relieve. Se calcula con arena nueva asentada 1500 saltos en la nota actual, así el enlace la reproduce.
           </div>
           <Chip on={rim} onClick={() => { cfg.current = { ...cfg.current, rim: !rim }; setRim(!rim); st.current.pieceKey = ''; if (modeRef.current === 'placa') requestPiece('placa') }}>MARCO</Chip>
-          <div style={{ fontSize: 10.5, lineHeight: 1.85, color: '#8fa8c4', borderTop: '1px solid #ffffff12', paddingTop: 12 }}>
+          <div style={{ fontSize: 11.5, lineHeight: 1.85, color: '#8fa8c4', borderTop: '1px solid #ffffff12', paddingTop: 12 }}>
             <b style={{ color: '#fff' }}>▥ COLUMNA</b> — un barrido de frecuencia apilado en altura: cada capa es la línea quieta a esa frecuencia. Elige el tramo:
           </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', fontSize: 10, color: '#8fa8c4' }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', fontSize: 11, color: '#8fa8c4' }}>
             DESDE
-            <select value={colA} onChange={(e) => { setColA(+e.target.value); cfg.current = { ...cfg.current, colA: +e.target.value }; st.current.pieceKey = '' }} style={{ background: '#05080d', color: '#fff', border: '1px solid #ffffff30', fontFamily: mono, fontSize: 11, padding: '6px' }}>{res.map((r, i) => <option key={r.k} value={i}>{Math.round(r.hz)} Hz</option>)}</select>
+            <select value={colA} onChange={(e) => { setColA(+e.target.value); cfg.current = { ...cfg.current, colA: +e.target.value }; st.current.pieceKey = '' }} style={{ background: '#05080d', color: '#fff', border: '1px solid #ffffff30', fontFamily: mono, fontSize: 12, padding: '6px' }}>{res.map((r, i) => <option key={r.k} value={i}>{Math.round(r.hz)} Hz</option>)}</select>
             HASTA
-            <select value={colB} onChange={(e) => { setColB(+e.target.value); cfg.current = { ...cfg.current, colB: +e.target.value }; st.current.pieceKey = '' }} style={{ background: '#05080d', color: '#fff', border: '1px solid #ffffff30', fontFamily: mono, fontSize: 11, padding: '6px' }}>{res.map((r, i) => <option key={r.k} value={i}>{Math.round(r.hz)} Hz</option>)}</select>
+            <select value={colB} onChange={(e) => { setColB(+e.target.value); cfg.current = { ...cfg.current, colB: +e.target.value }; st.current.pieceKey = '' }} style={{ background: '#05080d', color: '#fff', border: '1px solid #ffffff30', fontFamily: mono, fontSize: 12, padding: '6px' }}>{res.map((r, i) => <option key={r.k} value={i}>{Math.round(r.hz)} Hz</option>)}</select>
             <Chip on={false} onClick={() => goMode('columna')}>APILAR</Chip>
           </div>
         </section>
       </div>
 
       <section style={{ marginTop: 22 }}>
-        <div data-piece-hash={piece?.hash} style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>MEDIDAS{piece ? ` · ${piece.kind.toUpperCase()} · huella ${piece.hash}` : ' · ABRE ◆ PLACA O ▥ COLUMNA'}</div>
+        <div data-piece-hash={piece?.hash} style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>MEDIDAS{piece ? ` · ${piece.kind.toUpperCase()} · huella ${piece.hash}` : ' · ABRE ◆ PLACA O ▥ COLUMNA'}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))', gap: 8 }}>
           {piece?.kind === 'placa' && <>
             <Stat k="MEDIDAS" v={`${piece.info.sizeMm} × ${piece.info.sizeMm} × ${fmt(piece.info.heightMm as number, 1)} mm`} />
@@ -347,12 +347,12 @@ export default function ResonanciaApp() {
           </>}
           {!piece && <Stat k="—" v="…" />}
         </div>
-        {m && m.components > 1 && <p style={{ fontSize: 10.5, color: '#ffb86b', margin: '10px 0 0' }}>El STL omite {m.components - 1} partes sueltas ({fmt(100 * m.droppedVolumeFrac, 1)} % del volumen).</p>}
+        {m && m.components > 1 && <p style={{ fontSize: 11.5, color: '#ffb86b', margin: '10px 0 0' }}>El STL omite {m.components - 1} partes sueltas ({fmt(100 * m.droppedVolumeFrac, 1)} % del volumen).</p>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8, marginTop: 14 }}>
-          <button className="press" onClick={() => piece && requestPiece(piece.kind, true)} disabled={!piece || !!busy} style={{ minHeight: 46, background: ACCENT, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer', opacity: piece ? 1 : 0.45 }}>{busy.startsWith('CALCULANDO') ? busy : 'DESCARGAR STL'}</button>
-          <button className="press" onClick={exportJson} disabled={!piece} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer', opacity: piece ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
-          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTA NOTA'}</button>
-          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
+          <button className="press" onClick={() => piece && requestPiece(piece.kind, true)} disabled={!piece || !!busy} style={{ minHeight: 46, background: ACCENT, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 1.5, cursor: 'pointer', opacity: piece ? 1 : 0.45 }}>{busy.startsWith('CALCULANDO') ? busy : 'DESCARGAR STL'}</button>
+          <button className="press" onClick={exportJson} disabled={!piece} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer', opacity: piece ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
+          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTA NOTA'}</button>
+          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
         </div>
       </section>
       <style>{`

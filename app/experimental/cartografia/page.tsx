@@ -63,24 +63,24 @@ export default function CartografiaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-XP-CARTOGRAFÍA // TODO EL DATO, DE UNA SOLA VEZ
         </div>
         <h1 style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700, letterSpacing: 6, color: CYAN, textShadow: `0 0 40px ${CYAN}44`, marginBottom: 16, lineHeight: 1 }}>
           CARTOGRAFÍA
         </h1>
-        <p style={{ fontSize: 11.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
+        <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
           La continuación de <Link href="/experimental/graficos" style={{ color: '#fff', textDecoration: 'underline' }}>/experimental/graficos</Link>, a otra escala:
           acá no hay muestra ni recorte — es el sitio entero y el Codex entero, cada rama real, sin resumir. Tres formas
           de layout (árbol radial, círculos anidados, mosaico) sobre los mismos dos árboles, con zoom y arrastre reales.
         </p>
 
         <div style={{ marginBottom: 16 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${CYAN}66` }}>TODAS LAS RUTAS REALES DEL SITIO</div>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: `${CYAN}66` }}>TODAS LAS RUTAS REALES DEL SITIO</div>
           <div style={{ fontFamily: mono, fontSize: 15, letterSpacing: 2, color: '#fff' }}>
             <span style={{ color: CYAN }}>I.</span> EL SITIO ENTERO — {countNodes(SITE_TREE)} NODOS
           </div>
@@ -90,7 +90,7 @@ export default function CartografiaPage() {
         </div>
 
         <div style={{ marginBottom: 16 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#6644aa99' }}>LOS 88 NOMBRES REALES DE /knowledge, POR CLUSTER</div>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#6644aa99' }}>LOS 88 NOMBRES REALES DE /knowledge, POR CLUSTER</div>
           <div style={{ fontFamily: mono, fontSize: 15, letterSpacing: 2, color: '#fff' }}>
             <span style={{ color: '#6644aa' }}>II.</span> EL CODEX ENTERO — {countLeaves(codexTree)} CONCEPTOS
           </div>

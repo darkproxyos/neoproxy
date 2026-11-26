@@ -120,7 +120,7 @@ export default function ImprimirPage() {
         .imp-hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .imp-hero-shade { position: absolute; inset: 0; background: linear-gradient(to top, #05080c 4%, rgba(5,8,12,0.55) 45%, rgba(5,8,12,0.25) 100%); }
         .imp-hero-copy { position: relative; z-index: 1; width: 100%; max-width: 980px; margin: 0 auto; padding: 120px 24px 56px; }
-        .imp-eyebrow { font-size: 10px; letter-spacing: 5px; color: #7fd8ff; margin-bottom: 16px; }
+        .imp-eyebrow { font-size: 11px; letter-spacing: 5px; color: #7fd8ff; margin-bottom: 16px; }
         .imp-hero h1 { font-size: clamp(30px, 6vw, 54px); line-height: 1.12; letter-spacing: 1px; color: #fff; margin: 0 0 16px; max-width: 14em; }
         .imp-hero p { font-size: 14px; line-height: 1.8; color: #d6e4f2; max-width: 34em; margin: 0 0 28px; }
         .imp-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 28px; background: #25d366; color: #04210f; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-decoration: none; border-radius: 6px; }
@@ -136,7 +136,7 @@ export default function ImprimirPage() {
         .imp-materials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
         .imp-materials article { padding: 22px; border: 1px solid rgba(127,216,255,0.18); border-radius: 8px; background: rgba(255,255,255,0.02); }
         .imp-materials h3 { margin: 0 0 10px; font-size: 18px; color: #fff; }
-        .imp-materials h3 span { font-size: 10px; letter-spacing: 2px; color: #7fd8ff; margin-left: 8px; }
+        .imp-materials h3 span { font-size: 11px; letter-spacing: 2px; color: #7fd8ff; margin-left: 8px; }
         .imp-materials p { font-size: 12.5px; line-height: 1.75; color: #b8cadc; margin: 0 0 12px; }
         .imp-materials ul { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.9; color: #9fb4cc; }
         .imp-note { font-size: 12px; color: #9fb4cc; margin: 18px 0 0; }
@@ -148,7 +148,7 @@ export default function ImprimirPage() {
         .imp-play-badge { position: absolute; right: 10px; bottom: 10px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: rgba(0,0,0,0.65); color: #fff; font-size: 12px; }
         .imp-tile figcaption { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 12px; }
         .imp-tile-title { font-size: 12px; color: #fff; }
-        .imp-tile-material { font-size: 10px; color: #8fa8c4; letter-spacing: 0.5px; }
+        .imp-tile-material { font-size: 11px; color: #8fa8c4; letter-spacing: 0.5px; }
         .imp-final { text-align: center; padding: 48px 0 0; }
         @media (prefers-reduced-motion: reduce) { .imp-hero-media { animation: none; } }
       `}</style>

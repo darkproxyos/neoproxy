@@ -163,7 +163,7 @@ export default function SpecimenModal({ specimen: initialSpecimen, onClose, onUp
         {/* Header */}
         <div className="modal-header">
           <div>
-            <div style={{ fontSize: '10px', color: '#4a6080', letterSpacing: '2px' }}>// SPECIMEN_DETAIL_VIEW</div>
+            <div style={{ fontSize: '10px', color: '#6f86a3', letterSpacing: '2px' }}>// SPECIMEN_DETAIL_VIEW</div>
             <h2 className="specimen-title">{specimen.name}</h2>
           </div>
           <button 
@@ -214,7 +214,7 @@ export default function SpecimenModal({ specimen: initialSpecimen, onClose, onUp
             bottom: '25px',
             right: '25px',
             fontSize: '9px',
-            color: '#00d4ff88',
+            color: '#00d4ffaa',
             pointerEvents: 'none',
             fontFamily: 'Space Mono, monospace'
           }}>
@@ -259,7 +259,7 @@ export default function SpecimenModal({ specimen: initialSpecimen, onClose, onUp
           .close-btn {
             background: transparent;
             border: 1px solid rgba(0, 212, 255, 0.3);
-            color: #4a6080;
+            color: #6f86a3;
             padding: 5px 15px;
             cursor: pointer;
             font-family: 'Space Mono', monospace;
@@ -293,7 +293,7 @@ export default function SpecimenModal({ specimen: initialSpecimen, onClose, onUp
             font-size: 0.65rem;
             margin-bottom: 4px;
           }
-          .label { color: #4a6080; }
+          .label { color: #6f86a3; }
           .value { color: #00d4ff; font-family: 'Space Mono', monospace; }
           
           .action-panel {

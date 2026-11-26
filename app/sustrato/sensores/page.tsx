@@ -164,10 +164,10 @@ function SensorCard({ s }: { s: SensorEntry }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, marginBottom: 6, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 12.5, color: '#fff', letterSpacing: 0.5 }}>{s.name}</span>
-        <span style={{ fontSize: 8, color: ACCENT, border: `1px solid ${ACCENT}55`, padding: '2px 6px', whiteSpace: 'nowrap' }}>{s.iface}</span>
+        <span style={{ fontSize: 10, color: ACCENT, border: `1px solid ${ACCENT}55`, padding: '2px 6px', whiteSpace: 'nowrap' }}>{s.iface}</span>
       </div>
-      <p style={{ fontSize: 10.5, lineHeight: 1.75, color: '#9fb4cc', margin: 0, marginBottom: 6 }}>{s.desc}</p>
-      <div style={{ fontSize: 9, color: `${ACCENT}bb`, letterSpacing: 0.3 }}>USO TÍPICO — {s.use}</div>
+      <p style={{ fontSize: 11.5, lineHeight: 1.75, color: '#9fb4cc', margin: 0, marginBottom: 6 }}>{s.desc}</p>
+      <div style={{ fontSize: 10.5, color: `${ACCENT}bb`, letterSpacing: 0.3 }}>USO TÍPICO — {s.use}</div>
     </div>
   )
 }

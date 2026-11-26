@@ -31,7 +31,7 @@ export default function ResearchPage() {
           letter-spacing: 2px;
         }
         .page-subtitle {
-          color: #4a6080;
+          color: #6f86a3;
           font-size: 0.8rem;
           margin-top: 0.5rem;
           font-family: 'Space Mono', monospace;

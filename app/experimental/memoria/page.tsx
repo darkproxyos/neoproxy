@@ -32,11 +32,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -165,13 +165,13 @@ export default function MemoriaPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${RED}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${RED}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-XP-MEMORIA // CADA RECUERDO ES UN POZO DE ENERGÍA
         </div>
         <h1 style={{
@@ -180,7 +180,7 @@ export default function MemoriaPage() {
         }}>
           MEMORIA
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 36 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 36 }}>
           Una red de Hopfield no busca el recuerdo en una tabla — lo reconstruye rodando cuesta
           abajo en su propia energía. Elegí un patrón, rompélo (con ruido o a mano, pixel por
           pixel), y dejá correr la red: si no la sobrecargaste de más, va a caer exactamente en
@@ -189,11 +189,11 @@ export default function MemoriaPage() {
 
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
           <div>
-            <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 10 }}>PATRÓN</div>
+            <div style={{ fontSize: 10.5, color: RED, letterSpacing: 2, marginBottom: 10 }}>PATRÓN</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 18 }}>
               {PATTERN_DEFS.map((d) => (
                 <button key={d.id} onClick={() => loadPattern(d.id)} disabled={running} className="press" style={{
-                  fontFamily: mono, fontSize: 9, padding: '7px 10px', cursor: running ? 'default' : 'pointer', letterSpacing: 0.5,
+                  fontFamily: mono, fontSize: 10.5, padding: '7px 10px', cursor: running ? 'default' : 'pointer', letterSpacing: 0.5,
                   background: patternId === d.id ? `${accent}22` : 'transparent',
                   border: `1px solid ${patternId === d.id ? accent : '#2a3a50'}`,
                   color: patternId === d.id ? accent : '#4a6080', opacity: running ? 0.6 : 1,
@@ -216,19 +216,19 @@ export default function MemoriaPage() {
                 }} />
               ))}
             </div>
-            <div style={{ fontSize: 8, color: '#3a4a60', letterSpacing: 0.5, marginBottom: 16 }}>
+            <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 0.5, marginBottom: 16 }}>
               clic en un pixel = corromper a mano · {corrupted ? 'patrón corrompido' : 'patrón original, sin tocar'}
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
               <button onClick={handleCorrupt} disabled={running} className="press" style={{
-                flex: 1, fontFamily: mono, fontSize: 9, padding: 10, cursor: running ? 'default' : 'pointer', letterSpacing: 1,
+                flex: 1, fontFamily: mono, fontSize: 10.5, padding: 10, cursor: running ? 'default' : 'pointer', letterSpacing: 1,
                 background: 'transparent', border: `1px solid ${accent}`, color: accent, opacity: running ? 0.5 : 1,
               }}>
                 ⚡ CORROMPER ({Math.round(noiseLevel * 100)}%)
               </button>
               <button onClick={converge} disabled={running} className="press" style={{
-                flex: 1, fontFamily: mono, fontSize: 9, fontWeight: 700, padding: 10, cursor: running ? 'default' : 'pointer', letterSpacing: 1,
+                flex: 1, fontFamily: mono, fontSize: 10.5, fontWeight: 700, padding: 10, cursor: running ? 'default' : 'pointer', letterSpacing: 1,
                 background: accent, color: '#020408', border: 'none', opacity: running ? 0.6 : 1,
               }}>
                 {running ? `CONVERGIENDO... (${steps})` : '▶ CONVERGER'}
@@ -243,9 +243,9 @@ export default function MemoriaPage() {
           </div>
 
           <div style={{ width: 280 }}>
-            <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 10 }}>ESTADO DE LA RED</div>
+            <div style={{ fontSize: 10.5, color: RED, letterSpacing: 2, marginBottom: 10 }}>ESTADO DE LA RED</div>
 
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
               ENERGÍA: <span style={{ color: accent }}>{energy.toFixed(1)}</span> · PASOS: <span style={{ color: accent }}>{steps}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 36, marginBottom: 18, border: `1px solid ${accent}22`, padding: '3px 3px 0' }}>
@@ -255,7 +255,7 @@ export default function MemoriaPage() {
               })}
             </div>
 
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>
               SOLAPAMIENTO CON CADA PATRÓN GUARDADO
             </div>
             {PATTERN_DEFS.map((d) => {
@@ -263,7 +263,7 @@ export default function MemoriaPage() {
               const isBest = bestMatch && bestMatch[0] === d.id
               return (
                 <div key={d.id} style={{ marginBottom: 8 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: isBest ? accent : '#8fb8d6', marginBottom: 3 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: isBest ? accent : '#8fb8d6', marginBottom: 3 }}>
                     <span>{d.label}{isBest ? ' ←' : ''}</span>
                     <span>{Math.round(v * 100)}%</span>
                   </div>
@@ -274,14 +274,14 @@ export default function MemoriaPage() {
               )
             })}
 
-            <div style={{ fontSize: 9, color: RED, letterSpacing: 2, margin: '22px 0 10px', borderTop: `1px solid ${RED}22`, paddingTop: 18 }}>
+            <div style={{ fontSize: 10.5, color: RED, letterSpacing: 2, margin: '22px 0 10px', borderTop: `1px solid ${RED}22`, paddingTop: 18 }}>
               SOBRECARGAR LA MEMORIA
             </div>
-            <div style={{ fontSize: 9, color: '#4a6080', lineHeight: 1.8, marginBottom: 10 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', lineHeight: 1.8, marginBottom: 10 }}>
               Capacidad teórica de esta red: ≈{CAPACITY} patrones (N={N} neuronas). Agregá ruido
               guardado de más y mirá cómo el recuerdo empieza a fallar de verdad.
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>PATRONES DE RUIDO EXTRA</span>
               <span style={{ color: extraPatterns > CAPACITY - 4 ? '#ff2d55' : accent }}>{extraPatterns}</span>
             </div>

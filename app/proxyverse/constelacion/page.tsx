@@ -86,13 +86,13 @@ export default function ConstelacionPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ffaa', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PROXYVERSE
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-PXV-CONSTELACION // LO QUE YA ENCONTRASTE
         </div>
         <h1 style={{
@@ -101,19 +101,19 @@ export default function ConstelacionPage() {
         }}>
           CONSTELACIÓN
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 12 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 12 }}>
           El sistema esconde cosas a propósito — nadie te las explica, ni esta página. Solo junta,
           en un lugar, cuánto de lo escondido ya cruzaste sin que te lo señalaran.
         </p>
 
         {secrets !== null && (
-          <div style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1, marginBottom: 36 }}>
+          <div style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 1, marginBottom: 36 }}>
             {foundCount} / {total} encontrados
           </div>
         )}
 
         {secrets === null && (
-          <div style={{ fontSize: 10, color: '#3a4a60' }}>LEYENDO...</div>
+          <div style={{ fontSize: 11, color: '#3a4a60' }}>LEYENDO...</div>
         )}
 
         {secrets !== null && (
@@ -132,10 +132,10 @@ export default function ConstelacionPage() {
                     boxShadow: s.found ? `0 0 10px ${s.color}` : 'none',
                   }} />
                   <div>
-                    <div style={{ fontSize: 11, letterSpacing: 1, color: s.found ? s.color : '#4a6080', marginBottom: 4 }}>
+                    <div style={{ fontSize: 12, letterSpacing: 1, color: s.found ? s.color : '#4a6080', marginBottom: 4 }}>
                       {s.found ? s.label : '??? sin resolver'}
                     </div>
-                    <div style={{ fontSize: 9, color: '#8fb8d6', lineHeight: 1.7 }}>
+                    <div style={{ fontSize: 10.5, color: '#8fb8d6', lineHeight: 1.7 }}>
                       {s.detail}
                     </div>
                   </div>

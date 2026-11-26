@@ -219,13 +219,13 @@ export default function ExperimentalHubPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER AL INICIO
         </Link>
 
-        <div style={{ fontSize: 9, color: `${RED}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${RED}66`, letterSpacing: 6, marginBottom: 16 }}>
           // EXPERIMENTAL — ZONA SIN GARANTÍA
         </div>
         <h1 style={{
@@ -234,19 +234,19 @@ export default function ExperimentalHubPage() {
         }}>
           EXPERIMENTAL
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 12 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 12 }}>
           Todo lo que no encaja todavía en una categoría fija: motores generativos, datos científicos
           reales, sintetizadores, face tracking. Nada acá tiene la promesa de estabilidad de PROXYGAMES —
           algunas piezas son herramientas terminadas, otras son apenas la intención de lo que van a ser.
         </p>
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1, lineHeight: 1.9, maxWidth: 620, marginBottom: 56 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 1, lineHeight: 1.9, maxWidth: 620, marginBottom: 56 }}>
           Cada tarjeta dice, sin maquillaje, qué tan hecha está cada cosa.
         </p>
 
-        <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: RED, letterSpacing: 4, marginBottom: 10 }}>
           EL LABORATORIO
         </div>
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 28 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 28 }}>
           No son 6 experimentos sueltos — son 6 respuestas a la misma pregunta, "¿qué clase de objeto
           estudiás?": una forma, un comportamiento en el tiempo, un argumento, una relación, una
           memoria, una población. SÍNTESIS (adentro de EVOLUCIÓN) cruza dos de estos seis entre sí.
@@ -263,26 +263,26 @@ export default function ExperimentalHubPage() {
               transition: 'all 0.25s ease',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-                <span style={{ fontSize: 9, letterSpacing: 2, color: `${mode.color}aa` }}>{mode.code}</span>
+                <span style={{ fontSize: 10.5, letterSpacing: 2, color: `${mode.color}aa` }}>{mode.code}</span>
                 <span style={{
-                  fontSize: 9, letterSpacing: 1, color: mode.color, border: `1px solid ${mode.color}55`,
+                  fontSize: 10.5, letterSpacing: 1, color: mode.color, border: `1px solid ${mode.color}55`,
                   padding: '2px 7px',
                 }}>
                   {mode.step} / 6 — {mode.object}
                 </span>
               </div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{mode.title}</div>
-              <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>{mode.blurb}</p>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: `${mode.color}cc`, marginBottom: 8 }}>{mode.authors}</div>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>{mode.controls}</div>
+              <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>{mode.blurb}</p>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: `${mode.color}cc`, marginBottom: 8 }}>{mode.authors}</div>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>{mode.controls}</div>
             </Link>
           ))}
         </div>
 
-        <div style={{ fontSize: 10, color: '#b06bff', letterSpacing: 4, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: '#b06bff', letterSpacing: 4, marginBottom: 10 }}>
           EL ORÁCULO
         </div>
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
           No es un séptimo modo del laboratorio — no estudia un objeto nuevo, lee a través de los seis.
           Te tocan al azar tres posiciones documentadas de /knowledge, sin relación previa entre ellas,
           y el sistema busca una conexión real con tu pregunta en vez de generar una forma o correr una simulación.
@@ -292,29 +292,29 @@ export default function ExperimentalHubPage() {
           background: 'rgba(2,4,8,0.8)', border: '1px solid #b06bff33', borderLeft: '3px solid #b06bff',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-            <span style={{ fontSize: 9, letterSpacing: 2, color: '#b06bffaa' }}>NPX-XP-ORÁCULO</span>
+            <span style={{ fontSize: 10.5, letterSpacing: 2, color: '#b06bffaa' }}>NPX-XP-ORÁCULO</span>
             <span style={{
-              fontSize: 9, letterSpacing: 1, color: '#b06bff', border: '1px solid #b06bff55', padding: '2px 7px',
+              fontSize: 10.5, letterSpacing: 1, color: '#b06bff', border: '1px solid #b06bff55', padding: '2px 7px',
             }}>
               CRUZA LOS 6
             </span>
           </div>
           <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>ORÁCULO</div>
-          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+          <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
             Tres cartas al azar de /knowledge — autores y algoritmos reales, sin relación documentada entre
             sí — y una lectura en vivo que busca una conexión honesta con tu pregunta, citando solo lo que
             esos tres de verdad sostuvieron.
           </p>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#b06bffcc', marginBottom: 8 }}>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#b06bffcc', marginBottom: 8 }}>
             78 ENTRADAS POSIBLES · 3 AL AZAR POR TIRADA
           </div>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>LECTURA EN VIVO — NUNCA LA MISMA COMBINACIÓN</div>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>LECTURA EN VIVO — NUNCA LA MISMA COMBINACIÓN</div>
         </Link>
 
-        <div style={{ fontSize: 10, color: '#00ff9d', letterSpacing: 4, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: '#00ff9d', letterSpacing: 4, marginBottom: 10 }}>
           EL SIGILO
         </div>
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
           Tampoco es un séptimo modo — no genera una forma nueva ni simula nada, reduce. Un procedimiento
           real de reducción de texto a símbolo: se le sacan las letras repetidas a tu intención y lo que
           sobrevive se funde en un trazo sobre una rueda fija de 26 posiciones. Determinístico — mismo
@@ -325,28 +325,28 @@ export default function ExperimentalHubPage() {
           background: 'rgba(2,4,8,0.8)', border: '1px solid #00ff9d33', borderLeft: '3px solid #00ff9d',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-            <span style={{ fontSize: 9, letterSpacing: 2, color: '#00ff9daa' }}>NPX-XP-SIGILO</span>
+            <span style={{ fontSize: 10.5, letterSpacing: 2, color: '#00ff9daa' }}>NPX-XP-SIGILO</span>
             <span style={{
-              fontSize: 9, letterSpacing: 1, color: '#00ff9d', border: '1px solid #00ff9d55', padding: '2px 7px',
+              fontSize: 10.5, letterSpacing: 1, color: '#00ff9d', border: '1px solid #00ff9d55', padding: '2px 7px',
             }}>
               REDUCE, NO GENERA
             </span>
           </div>
           <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>SIGILO</div>
-          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+          <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
             Escribís una intención, se eliminan las letras repetidas, y el set resultante se dibuja como
             un único trazo — procedimiento determinístico real, no una animación al azar.
           </p>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#00ff9dcc', marginBottom: 8 }}>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#00ff9dcc', marginBottom: 8 }}>
             GALERÍA LOCAL — CADA SIGILO QUEDA GUARDADO
           </div>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>MISMO TEXTO, MISMO SIGILO — SIEMPRE</div>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>MISMO TEXTO, MISMO SIGILO — SIEMPRE</div>
         </Link>
 
-        <div style={{ fontSize: 10, color: '#3fcf9e', letterSpacing: 4, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: '#3fcf9e', letterSpacing: 4, marginBottom: 10 }}>
           YI JING
         </div>
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
           Lo opuesto al sigilo: acá nada es determinístico a propósito. El método real de las tres
           monedas — seis líneas, azar genuino sin semilla, tal como siempre fue — arma uno de 64
           hexagramas reales (dos trigramas apilados) con una lectura propia de NeoProxy sobre esa
@@ -357,29 +357,29 @@ export default function ExperimentalHubPage() {
           background: 'rgba(2,4,8,0.8)', border: '1px solid #3fcf9e33', borderLeft: '3px solid #3fcf9e',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-            <span style={{ fontSize: 9, letterSpacing: 2, color: '#3fcf9eaa' }}>NPX-XP-YIJING</span>
+            <span style={{ fontSize: 10.5, letterSpacing: 2, color: '#3fcf9eaa' }}>NPX-XP-YIJING</span>
             <span style={{
-              fontSize: 9, letterSpacing: 1, color: '#3fcf9e', border: '1px solid #3fcf9e55', padding: '2px 7px',
+              fontSize: 10.5, letterSpacing: 1, color: '#3fcf9e', border: '1px solid #3fcf9e55', padding: '2px 7px',
             }}>
               AZAR REAL, SIN SEMILLA
             </span>
           </div>
           <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>易經 YI JING</div>
-          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+          <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
             Tres monedas, seis líneas, de abajo hacia arriba — el hexagrama primario y, si hay líneas
             cambiantes, hacia dónde se mueve. Las 8 líneas de cada trigrama son reales; la lectura de
             cada combinación es síntesis propia, dicha así.
           </p>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3fcf9ecc', marginBottom: 8 }}>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#3fcf9ecc', marginBottom: 8 }}>
             64 HEXAGRAMAS REALES · LECTURA PROPIA DE NEOPROXY
           </div>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>CADA TIRADA ES DISTINTA — A PROPÓSITO</div>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>CADA TIRADA ES DISTINTA — A PROPÓSITO</div>
         </Link>
 
-        <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: RED, letterSpacing: 4, marginBottom: 10 }}>
           ACECHO
         </div>
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
           Tampoco es un séptimo modo — es la segunda criatura, cada una en su propio espacio con sus
           propias reglas (el enjambre de Trickster fue la primera). Ahí era forrajeo activo; acá, D
           se queda quieto y ataca una sola vez cuando algo entra en rango, con una predicción de
@@ -390,26 +390,26 @@ export default function ExperimentalHubPage() {
           background: 'rgba(2,4,8,0.8)', border: `1px solid ${RED}33`, borderLeft: `3px solid ${RED}`,
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-            <span style={{ fontSize: 9, letterSpacing: 2, color: `${RED}aa` }}>NPX-XP-ACECHO</span>
+            <span style={{ fontSize: 10.5, letterSpacing: 2, color: `${RED}aa` }}>NPX-XP-ACECHO</span>
             <span style={{
-              fontSize: 9, letterSpacing: 1, color: RED, border: `1px solid ${RED}55`, padding: '2px 7px',
+              fontSize: 10.5, letterSpacing: 1, color: RED, border: `1px solid ${RED}55`, padding: '2px 7px',
             }}>
               SEGUNDA CRIATURA
             </span>
           </div>
           <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>ACECHO</div>
-          <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+          <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
             D acecha a procesos que vagan solos por su propio espacio — casi invisible, casi inmóvil,
             hasta que uno entra en rango. Pursuit (Reynolds, 1999): predice dónde va a estar el objetivo,
             no dónde está, y ataca una sola vez sin corregir el tiro.
           </p>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: `${RED}cc`, marginBottom: 8 }}>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: `${RED}cc`, marginBottom: 8 }}>
             Craig Reynolds (Pursuit, 1999) · Huey & Pianka (Sit-and-wait predation, 1981)
           </div>
-          <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>SIMULACIÓN EN VIVO — ESTADO DORMIDO/EMBESTIDA</div>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>SIMULACIÓN EN VIVO — ESTADO DORMIDO/EMBESTIDA</div>
         </Link>
 
-        <p style={{ fontSize: 10, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
+        <p style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, maxWidth: 640, marginBottom: 20 }}>
           Tres criaturas más — mismo criterio, cada una con un paradigma de movimiento o crecimiento
           real y verificable, nada reciclado de las anteriores.
         </p>
@@ -420,18 +420,18 @@ export default function ExperimentalHubPage() {
             background: 'rgba(2,4,8,0.8)', border: '1px solid #00ff9d33', borderLeft: '3px solid #00ff9d',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <span style={{ fontSize: 9, letterSpacing: 2, color: '#00ff9daa' }}>NPX-XP-MUDA</span>
-              <span style={{ fontSize: 9, letterSpacing: 1, color: '#00ff9d', border: '1px solid #00ff9d55', padding: '2px 7px' }}>
+              <span style={{ fontSize: 10.5, letterSpacing: 2, color: '#00ff9daa' }}>NPX-XP-MUDA</span>
+              <span style={{ fontSize: 10.5, letterSpacing: 1, color: '#00ff9d', border: '1px solid #00ff9d55', padding: '2px 7px' }}>
                 CADENA ARTICULADA
               </span>
             </div>
             <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>MUDA</div>
-            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Snake: una cola de 16 segmentos a distancia fija (FABRIK sin base, Aristidou &amp;
               Lasenby 2011) persiguiendo a la cabeza. Cambia de piel cuando el entorno la obliga de
               verdad — no con un timer.
             </p>
-            <div style={{ fontSize: 8, letterSpacing: 1, color: '#00ff9dcc' }}>Aristidou &amp; Lasenby (FABRIK, 2011)</div>
+            <div style={{ fontSize: 10, letterSpacing: 1, color: '#00ff9dcc' }}>Aristidou &amp; Lasenby (FABRIK, 2011)</div>
           </Link>
 
           <Link href="/experimental/retazos" className="fade-in artifact-card" style={{
@@ -439,18 +439,18 @@ export default function ExperimentalHubPage() {
             background: 'rgba(2,4,8,0.8)', border: '1px solid #6644aa33', borderLeft: '3px solid #6644aa',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <span style={{ fontSize: 9, letterSpacing: 2, color: '#b49adcaa' }}>NPX-XP-RETAZOS</span>
-              <span style={{ fontSize: 9, letterSpacing: 1, color: '#b49adc', border: '1px solid #6644aa55', padding: '2px 7px' }}>
+              <span style={{ fontSize: 10.5, letterSpacing: 2, color: '#b49adcaa' }}>NPX-XP-RETAZOS</span>
+              <span style={{ fontSize: 10.5, letterSpacing: 1, color: '#b49adc', border: '1px solid #6644aa55', padding: '2px 7px' }}>
                 CRECE, NO SE MUEVE
               </span>
             </div>
             <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>RETAZOS</div>
-            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Prototype: agregación limitada por difusión (Witten &amp; Sander, 1981) — partículas al
               azar se pegan donde chocan. Cada fragmento nuevo toma prestado el color real de uno de
               los otros cinco agentes.
             </p>
-            <div style={{ fontSize: 8, letterSpacing: 1, color: '#b49adccc' }}>Witten &amp; Sander (DLA, 1981)</div>
+            <div style={{ fontSize: 10, letterSpacing: 1, color: '#b49adccc' }}>Witten &amp; Sander (DLA, 1981)</div>
           </Link>
 
           <Link href="/experimental/formacion" className="fade-in artifact-card" style={{
@@ -458,22 +458,22 @@ export default function ExperimentalHubPage() {
             background: 'rgba(2,4,8,0.8)', border: '1px solid #ffb80033', borderLeft: '3px solid #ffb800',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <span style={{ fontSize: 9, letterSpacing: 2, color: '#ffb800aa' }}>NPX-XP-FORMACIÓN</span>
-              <span style={{ fontSize: 9, letterSpacing: 1, color: '#ffb800', border: '1px solid #ffb80055', padding: '2px 7px' }}>
+              <span style={{ fontSize: 10.5, letterSpacing: 2, color: '#ffb800aa' }}>NPX-XP-FORMACIÓN</span>
+              <span style={{ fontSize: 10.5, letterSpacing: 1, color: '#ffb800', border: '1px solid #ffb80055', padding: '2px 7px' }}>
                 COORDINACIÓN CENTRAL
               </span>
             </div>
             <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>FORMACIÓN</div>
-            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Metatron: líder virtual + potenciales artificiales (Leonard &amp; Fiorelli, 2001) — los
               otros cinco agentes lo siguen sin reglas de vecindario. Cuando calla, cada uno sigue
               solo: no hay caos, hay silencio.
             </p>
-            <div style={{ fontSize: 8, letterSpacing: 1, color: '#ffb800cc' }}>Leonard &amp; Fiorelli (2001)</div>
+            <div style={{ fontSize: 10, letterSpacing: 1, color: '#ffb800cc' }}>Leonard &amp; Fiorelli (2001)</div>
           </Link>
         </div>
 
-        <div style={{ fontSize: 10, color: RED, letterSpacing: 4, marginBottom: 22 }}>
+        <div style={{ fontSize: 11, color: RED, letterSpacing: 4, marginBottom: 22 }}>
           OTROS EXPERIMENTOS
         </div>
 
@@ -481,15 +481,15 @@ export default function ExperimentalHubPage() {
           {CATALOG.map(exp => (
             <div key={exp.id} className="artifact-card" style={{ padding: 24 }}>
               <Link href={exp.href} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-                <div style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 12 }}>{exp.code}</div>
+                <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', marginBottom: 12 }}>{exp.code}</div>
                 <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{exp.title}</div>
-                <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16 }}>{exp.blurb}</p>
-                <div style={{ fontSize: 8, letterSpacing: 1, color: '#3a4a60' }}>{exp.controls}</div>
+                <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16 }}>{exp.blurb}</p>
+                <div style={{ fontSize: 10, letterSpacing: 1, color: '#3a4a60' }}>{exp.controls}</div>
               </Link>
               {exp.secondary && (
                 <Link href={exp.secondary.href} style={{
                   display: 'block', marginTop: 14, paddingTop: 14, borderTop: `1px solid ${RED}22`,
-                  fontSize: 9, letterSpacing: 1, color: `${RED}bb`, textDecoration: 'none',
+                  fontSize: 10.5, letterSpacing: 1, color: `${RED}bb`, textDecoration: 'none',
                 }}>
                   {exp.secondary.label}
                 </Link>

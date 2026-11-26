@@ -357,9 +357,9 @@ function TimelineRow({ entry, isLast }: { entry: TimelineEntry; isLast: boolean 
       <div style={{ paddingBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, fontWeight: 700, color: TEAL, letterSpacing: 1, textShadow: `0 0 10px ${TEAL}55` }}>{entry.year}</span>
-          <span style={{ fontSize: 11, letterSpacing: 1, color: '#eafff6' }}>{entry.title}</span>
+          <span style={{ fontSize: 12, letterSpacing: 1, color: '#eafff6' }}>{entry.title}</span>
         </div>
-        <div style={{ fontSize: 10, lineHeight: 1.7, color: '#9fb8d6', marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
+        <div style={{ fontSize: 11, lineHeight: 1.7, color: '#9fb8d6', marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
       </div>
     </div>
   )
@@ -409,7 +409,7 @@ export default function LenguajePage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* Encabezado */}
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '104px 24px 0' }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${TEAL}44`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${TEAL}44`, marginBottom: 16 }}>
             NPX-LNG-00 // DOCUMENTO DE ARCHIVO — ACCESO DIRECTO
           </div>
           <h1
@@ -422,7 +422,7 @@ export default function LenguajePage() {
           </h1>
           <p
             style={{
-              fontFamily: mono, fontSize: 11, lineHeight: 2.1, letterSpacing: 0.4, color: '#8fb8d6',
+              fontFamily: mono, fontSize: 12, lineHeight: 2.1, letterSpacing: 0.4, color: '#8fb8d6',
               maxWidth: 640, marginBottom: 32, borderLeft: `1px solid ${TEAL}33`, paddingLeft: 24,
             }}
           >
@@ -440,7 +440,7 @@ export default function LenguajePage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${TEAL}99`,
               border: `1px solid ${TEAL}33`,
@@ -455,7 +455,7 @@ export default function LenguajePage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${TEAL}22`, padding: '20px 24px', maxWidth: 680, marginBottom: 90 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${TEAL}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${TEAL}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -476,7 +476,7 @@ export default function LenguajePage() {
                 ['XIV', 'sec-14', 'Fronteras abiertas'],
                 ['XV', 'sec-15', 'Notas adicionales'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: '#9fb8d6', textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: '#9fb8d6', textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${TEAL}88`, width: 26, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -504,7 +504,7 @@ export default function LenguajePage() {
             (AFI / IPA)</Mono>, un símbolo por sonido, válido para cualquier lengua del mundo.
           </P>
           <Panel style={{ marginTop: 20, padding: '20px 20px 26px' }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 14 }}>
               INVENTARIO CONSONÁNTICO DEL ESPAÑOL GENERAL
             </div>
             <div style={{ overflowX: 'auto' }}>
@@ -512,7 +512,7 @@ export default function LenguajePage() {
                 <thead>
                   <tr>
                     {['FONEMA', 'MODO', 'PUNTO', 'SONORIDAD', 'EJEMPLO'].map(h => (
-                      <th key={h} style={{ textAlign: 'left', fontSize: 9, letterSpacing: 1.5, color: TEAL, borderBottom: `1px solid ${TEAL}55`, padding: '8px 12px', whiteSpace: 'nowrap' }}>
+                      <th key={h} style={{ textAlign: 'left', fontSize: 10.5, letterSpacing: 1.5, color: TEAL, borderBottom: `1px solid ${TEAL}55`, padding: '8px 12px', whiteSpace: 'nowrap' }}>
                         {h}
                       </th>
                     ))}
@@ -522,10 +522,10 @@ export default function LenguajePage() {
                   {SPANISH_CONSONANTS.map((row, i) => (
                     <tr key={row.symbol} style={{ background: i % 2 === 0 ? 'rgba(46,230,184,0.03)' : 'transparent' }}>
                       <td style={{ padding: '8px 12px', fontSize: 13, color: '#eafff6', whiteSpace: 'nowrap' }}>{row.symbol}</td>
-                      <td style={{ padding: '8px 12px', fontSize: 9.5, color: '#9fb8d6', whiteSpace: 'nowrap' }}>{row.manner}</td>
-                      <td style={{ padding: '8px 12px', fontSize: 9.5, color: '#9fb8d6', whiteSpace: 'nowrap' }}>{row.place}</td>
-                      <td style={{ padding: '8px 12px', fontSize: 9.5, color: '#9fb8d6', whiteSpace: 'nowrap' }}>{row.voicing}</td>
-                      <td style={{ padding: '8px 12px', fontSize: 9.5, color: `${TEAL}cc` }}>
+                      <td style={{ padding: '8px 12px', fontSize: 11, color: '#9fb8d6', whiteSpace: 'nowrap' }}>{row.manner}</td>
+                      <td style={{ padding: '8px 12px', fontSize: 11, color: '#9fb8d6', whiteSpace: 'nowrap' }}>{row.place}</td>
+                      <td style={{ padding: '8px 12px', fontSize: 11, color: '#9fb8d6', whiteSpace: 'nowrap' }}>{row.voicing}</td>
+                      <td style={{ padding: '8px 12px', fontSize: 11, color: `${TEAL}cc` }}>
                         {row.example}
                         {row.note && <span style={{ color: '#7a94ac', marginLeft: 8 }}>— {row.note}</span>}
                       </td>
@@ -603,7 +603,7 @@ export default function LenguajePage() {
             "duerme"); dentro del SN, un determinante (Det: "el") y un nombre (N: "gato").
           </P>
           <Panel style={{ marginTop: 18, marginBottom: 18 }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 10, textAlign: 'center' }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 10, textAlign: 'center' }}>
               ÁRBOL SINTÁCTICO — "EL GATO DUERME"
             </div>
             <SyntaxTree />
@@ -661,7 +661,7 @@ export default function LenguajePage() {
 
         {/* ===================== TIPOLOGÍA LINGÜÍSTICA ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-08">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             CLASIFICACIÓN // CÓMO VARÍAN LAS LENGUAS ENTRE SÍ
           </div>
           <h2
@@ -677,15 +677,15 @@ export default function LenguajePage() {
             relativamente chico de patrones recurrentes. Dos ejes clásicos de clasificación:
           </P>
           <Panel style={{ marginTop: 16, marginBottom: 18, padding: '20px 20px 26px' }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 14 }}>
               {WORD_ORDER_TYPOLOGY.label.toUpperCase()}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
               {WORD_ORDER_TYPOLOGY.rows.map(row => (
                 <div key={row.order} style={{ borderLeft: `2px solid ${TEAL}55`, paddingLeft: 12 }}>
                   <div style={{ fontSize: 14, color: '#eafff6', marginBottom: 4, letterSpacing: 1 }}>{row.order}</div>
-                  <div style={{ fontSize: 9, color: `${TEAL}99`, marginBottom: 4 }}>{row.pct}</div>
-                  <div style={{ fontSize: 9.5, color: '#9fb8d6', lineHeight: 1.6 }}>{row.examples}</div>
+                  <div style={{ fontSize: 10.5, color: `${TEAL}99`, marginBottom: 4 }}>{row.pct}</div>
+                  <div style={{ fontSize: 11, color: '#9fb8d6', lineHeight: 1.6 }}>{row.examples}</div>
                 </div>
               ))}
             </div>
@@ -695,15 +695,15 @@ export default function LenguajePage() {
             individuales:
           </P>
           <Panel style={{ marginBottom: 18, padding: '20px 20px 26px' }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${TEAL}99`, marginBottom: 14 }}>
               TIPOLOGÍA MORFOLÓGICA
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {MORPHOLOGICAL_TYPOLOGY.map(row => (
                 <div key={row.label}>
-                  <div style={{ fontSize: 11.5, letterSpacing: 1, color: TEAL, marginBottom: 4 }}>{row.label.toUpperCase()}</div>
-                  <div style={{ fontSize: 10, lineHeight: 1.7, color: '#9fb8d6' }}>{row.detail}</div>
-                  <div style={{ fontSize: 9, color: `${TEAL}99`, marginTop: 4 }}>{row.examples}</div>
+                  <div style={{ fontSize: 12.5, letterSpacing: 1, color: TEAL, marginBottom: 4 }}>{row.label.toUpperCase()}</div>
+                  <div style={{ fontSize: 11, lineHeight: 1.7, color: '#9fb8d6' }}>{row.detail}</div>
+                  <div style={{ fontSize: 10.5, color: `${TEAL}99`, marginTop: 4 }}>{row.examples}</div>
                 </div>
               ))}
             </div>
@@ -717,7 +717,7 @@ export default function LenguajePage() {
 
         {/* ===================== JERARQUÍA DE CHOMSKY ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-09">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             PUENTE // LINGÜÍSTICA FORMAL Y TEORÍA DE LA COMPUTACIÓN
           </div>
           <h2
@@ -752,7 +752,7 @@ export default function LenguajePage() {
 
         {/* ===================== FAMILIAS LINGÜÍSTICAS ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-10">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             CLASIFICACIÓN // PARENTESCO HISTÓRICO ENTRE LENGUAS
           </div>
           <h2
@@ -783,7 +783,7 @@ export default function LenguajePage() {
 
         {/* ===================== ADQUISICIÓN DEL LENGUAJE ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-11">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             DESARROLLO // CÓMO SE ADQUIERE UNA LENGUA MATERNA
           </div>
           <h2
@@ -802,10 +802,10 @@ export default function LenguajePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {ACQUISITION_STAGES.map(s => (
                 <div key={s.stage} style={{ display: 'flex', gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
-                  <div style={{ fontSize: 10, color: `${TEAL}99`, width: 90, flexShrink: 0 }}>{s.age}</div>
+                  <div style={{ fontSize: 11, color: `${TEAL}99`, width: 90, flexShrink: 0 }}>{s.age}</div>
                   <div style={{ flex: 1, minWidth: 200 }}>
-                    <div style={{ fontSize: 11.5, color: '#eafff6', letterSpacing: 0.5, marginBottom: 4 }}>{s.stage}</div>
-                    <div style={{ fontSize: 10, lineHeight: 1.7, color: '#9fb8d6' }}>{s.detail}</div>
+                    <div style={{ fontSize: 12.5, color: '#eafff6', letterSpacing: 0.5, marginBottom: 4 }}>{s.stage}</div>
+                    <div style={{ fontSize: 11, lineHeight: 1.7, color: '#9fb8d6' }}>{s.detail}</div>
                   </div>
                 </div>
               ))}
@@ -823,7 +823,7 @@ export default function LenguajePage() {
 
         {/* ===================== LINGÜÍSTICA COMPUTACIONAL Y PLN ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-12">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             PUENTE // DE LA GRAMÁTICA FORMAL AL MODELO ESTADÍSTICO
           </div>
           <h2
@@ -842,8 +842,8 @@ export default function LenguajePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {NLP_TOPICS.map(t => (
               <Panel key={t.title}>
-                <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: TEAL, marginBottom: 10, textShadow: `0 0 10px ${TEAL}44` }}>{t.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb8d6' }}>{t.detail}</div>
+                <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: TEAL, marginBottom: 10, textShadow: `0 0 10px ${TEAL}44` }}>{t.title}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: '#9fb8d6' }}>{t.detail}</div>
               </Panel>
             ))}
           </div>
@@ -851,7 +851,7 @@ export default function LenguajePage() {
 
         {/* ===================== SOCIOLINGÜÍSTICA ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-13">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             NOTA // VARIACIÓN
           </div>
           <h2
@@ -881,7 +881,7 @@ export default function LenguajePage() {
 
         {/* ===================== FRONTERAS ABIERTAS ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-14">
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             TERRENO ABIERTO // SIN CONSENSO, A DIFERENCIA DE TODO LO ANTERIOR
           </div>
           <h2
@@ -900,8 +900,8 @@ export default function LenguajePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {OPEN_DEBATES.map(d => (
               <Panel key={d.title}>
-                <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: TEAL, marginBottom: 10, textShadow: `0 0 10px ${TEAL}44` }}>{d.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb8d6' }}>{d.detail}</div>
+                <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: TEAL, marginBottom: 10, textShadow: `0 0 10px ${TEAL}44` }}>{d.title}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: '#9fb8d6' }}>{d.detail}</div>
               </Panel>
             ))}
           </div>
@@ -909,7 +909,7 @@ export default function LenguajePage() {
 
         {/* ===================== NOTAS ADICIONALES ===================== */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-15" last>
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${TEAL}55`, marginBottom: 10 }}>
             NOTA // ALCANCE DEL DOCUMENTO
           </div>
           <h2
@@ -937,7 +937,7 @@ export default function LenguajePage() {
 
         {/* Footer */}
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 24px 140px', textAlign: 'center' }}>
-          <div style={{ fontSize: 9, letterSpacing: 4, color: `${TEAL}33` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 4, color: `${TEAL}33` }}>
             NPX-LNG-00 // FIN DEL DOCUMENTO — ARCHIVO SIN ENLACE, SOLO ACCESIBLE POR RUTA DIRECTA
           </div>
         </div>

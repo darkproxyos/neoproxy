@@ -163,13 +163,13 @@ export default function SigiloPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-XP-SIGILO // REDUCCIÓN DETERMINÍSTICA DE INTENCIÓN
         </div>
         <h1 style={{
@@ -178,7 +178,7 @@ export default function SigiloPage() {
         }}>
           SIGILO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 12 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 12 }}>
           Un procedimiento real y documentado, no una animación decorativa: tu intención se normaliza,
           se le quitan las letras repetidas quedándote con la primera aparición de cada una, y ese set
           se funde en un único trazo sobre una rueda fija de 26 posiciones (A–Z). Mismo texto, siempre
@@ -206,7 +206,7 @@ export default function SigiloPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
           {SUGGESTED.map(q => (
             <button key={q} onClick={() => setIntention(q)} disabled={busy} className="press" style={{
-              fontFamily: mono, fontSize: 8, letterSpacing: 0.5, padding: '6px 10px', cursor: busy ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 10, letterSpacing: 0.5, padding: '6px 10px', cursor: busy ? 'default' : 'pointer',
               background: 'rgba(255,255,255,0.04)', border: `1px solid ${GREEN}33`, color: '#8fb8d6',
               opacity: busy ? 0.5 : 1,
             }}>
@@ -216,7 +216,7 @@ export default function SigiloPage() {
         </div>
 
         <button onClick={forjar} disabled={busy} className="press" style={{
-          fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
+          fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${GREEN}18`, border: `1px solid ${GREEN}66`, color: GREEN,
           opacity: busy ? 0.5 : 1, marginBottom: 40,
         }}>
@@ -225,7 +225,7 @@ export default function SigiloPage() {
 
         {reduced && (
           <div className="fade-in" style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 10 }}>
               PASO 1 — INTENCIÓN NORMALIZADA
             </div>
             <div style={{ fontSize: 16, letterSpacing: 2, lineHeight: 2, marginBottom: 20, wordBreak: 'break-all' }}>
@@ -239,7 +239,7 @@ export default function SigiloPage() {
                 </span>
               ))}
             </div>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 10 }}>
               PASO 2 — SET RESULTANTE ({reduced.keptLetters.length} LETRAS)
             </div>
             <div style={{ fontSize: 16, letterSpacing: 3, color: GREEN, marginBottom: 20 }}>
@@ -250,7 +250,7 @@ export default function SigiloPage() {
 
         {glyph && (
           <div className="fade-in" style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 14 }}>
               PASO 3 — GLIFO
             </div>
             <div
@@ -267,14 +267,14 @@ export default function SigiloPage() {
             {status === 'done' && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 <button onClick={guardar} disabled={saved} className="press" style={{
-                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px',
+                  fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 16px',
                   cursor: saved ? 'default' : 'pointer', background: saved ? `${GREEN}18` : 'transparent',
                   border: `1px solid ${GREEN}66`, color: GREEN, opacity: saved ? 0.7 : 1,
                 }}>
                   {saved ? '◉ GUARDADO' : '✦ GUARDAR EN GALERÍA'}
                 </button>
                 <button onClick={cargar} className="press" style={{
-                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+                  fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
                   background: 'transparent', border: `1px solid ${GOLD}66`, color: GOLD,
                 }}>
                   ◈ CARGAR (RITUAL, ~45S)
@@ -284,7 +284,7 @@ export default function SigiloPage() {
 
             {status === 'charging' && breathPhase && (
               <div className="fade-in" style={{ textAlign: 'center', padding: '28px 0' }}>
-                <div style={{ fontSize: 9, color: `${GOLD}99`, letterSpacing: 3, marginBottom: 10 }}>
+                <div style={{ fontSize: 10.5, color: `${GOLD}99`, letterSpacing: 3, marginBottom: 10 }}>
                   CICLO {breathPhase.cycle} / {BREATH_REPEATS}
                 </div>
                 <div style={{
@@ -298,7 +298,7 @@ export default function SigiloPage() {
             {status === 'charged' && (
               <div className="fade-in" style={{ marginTop: 20 }}>
                 <div style={{
-                  fontSize: 10, lineHeight: 1.9, color: `${GOLD}cc`, letterSpacing: 0.3,
+                  fontSize: 11, lineHeight: 1.9, color: `${GOLD}cc`, letterSpacing: 0.3,
                   border: `1px solid ${GOLD}33`, background: `${GOLD}0a`, padding: '16px 18px', marginBottom: 14, maxWidth: 560,
                 }}>
                   <strong style={{ color: GOLD }}>Lo que acaba de pasar, en términos reales:</strong> ningún
@@ -312,14 +312,14 @@ export default function SigiloPage() {
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                   <button onClick={guardar} disabled={saved} className="press" style={{
-                    fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px',
+                    fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 16px',
                     cursor: saved ? 'default' : 'pointer', background: saved ? `${GREEN}18` : 'transparent',
                     border: `1px solid ${GREEN}66`, color: GREEN, opacity: saved ? 0.7 : 1,
                   }}>
                     {saved ? '◉ GUARDADO' : '✦ GUARDAR EN GALERÍA'}
                   </button>
                   <button onClick={() => { setStatus('idle'); setGlyph(null); setReduced(null); setInstruction(null); setIntention('') }} className="press" style={{
-                    fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+                    fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
                     background: 'transparent', border: `1px solid ${GOLD}66`, color: GOLD,
                   }}>
                     ✧ OLVIDAR Y EMPEZAR OTRO
@@ -332,10 +332,10 @@ export default function SigiloPage() {
 
         {instruction && (status === 'done' || status === 'charging' || status === 'charged') && (
           <div className="fade-in" style={{ marginBottom: 40 }}>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 10 }}>
               PASO 4 — INSTRUCCIÓN CONCEPTUAL
             </div>
-            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
               Las mismas {reduced?.keptLetters.length ?? 0} letras del set, leídas distinto: no un glifo,
               una receta de texto (al estilo Sol LeWitt) — lo que sigue se dibuja exactamente como dice,
               nada librado al criterio de quien lo ejecuta.
@@ -370,7 +370,7 @@ export default function SigiloPage() {
 
         {gallery.length > 0 && (
           <div style={{ marginTop: 56 }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
               GALERÍA LOCAL ({gallery.length})
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 14 }}>
@@ -381,11 +381,11 @@ export default function SigiloPage() {
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
                       <SigilSVG glyph={g} size={100} />
                     </div>
-                    <div style={{ fontSize: 8, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6, wordBreak: 'break-word' }}>
+                    <div style={{ fontSize: 10, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6, wordBreak: 'break-word' }}>
                       {s.intention}
                     </div>
                     <button onClick={() => borrar(s.id)} className="press" style={{
-                      fontFamily: mono, fontSize: 7, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
+                      fontFamily: mono, fontSize: 9.5, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
                       background: 'transparent', border: '1px solid rgba(255,45,85,0.4)', color: '#ff2d55',
                     }}>
                       BORRAR

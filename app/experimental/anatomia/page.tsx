@@ -51,11 +51,11 @@ function BarRow({ label, count, color, max }: { label: string; count: number; co
   const w = scaleLinear().domain([0, max]).range([0, 280])
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-      <div style={{ width: 160, fontFamily: mono, fontSize: 9, color: '#8fb8d6', textAlign: 'right' }}>{label}</div>
+      <div style={{ width: 160, fontFamily: mono, fontSize: 10.5, color: '#8fb8d6', textAlign: 'right' }}>{label}</div>
       <svg width={300} height={16}>
         <rect x={0} y={2} width={Math.max(w(count), 2)} height={12} fill={color} fillOpacity={0.85} />
       </svg>
-      <div style={{ fontFamily: mono, fontSize: 11, color }}>{count}</div>
+      <div style={{ fontFamily: mono, fontSize: 12, color }}>{count}</div>
     </div>
   )
 }
@@ -72,17 +72,17 @@ export default function AnatomiaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-XP-ANATOMIA // LA ARQUITECTURA REAL, NO EL CONTENIDO
         </div>
         <h1 style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700, letterSpacing: 6, color: CYAN, textShadow: `0 0 40px ${CYAN}44`, marginBottom: 16, lineHeight: 1 }}>
           ANATOMÍA
         </h1>
-        <p style={{ fontSize: 11.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 20 }}>
+        <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 20 }}>
           No es el mapa del sitio (eso es <Link href="/experimental/cartografia" style={{ color: '#fff', textDecoration: 'underline' }}>/experimental/cartografia</Link>) —
           es la arquitectura técnica real debajo: frontend, backend, base de datos, servicios externos, y el kernel narrativo.
           Cada caja es verificable contra el código — tocala para ver el detalle real.
@@ -123,28 +123,28 @@ export default function AnatomiaPage() {
 
           {selectedBox ? (
             <div style={{ marginTop: 16, padding: '16px 18px', border: `1px solid ${selectedBox.color}66`, background: `${selectedBox.color}0d` }}>
-              <div style={{ fontSize: 11, letterSpacing: 2, color: selectedBox.color === '#ffffff' ? '#fff' : selectedBox.color, marginBottom: 10 }}>
+              <div style={{ fontSize: 12, letterSpacing: 2, color: selectedBox.color === '#ffffff' ? '#fff' : selectedBox.color, marginBottom: 10 }}>
                 {selectedBox.label}
               </div>
               {selectedBox.detail.map((line, i) => (
-                <p key={i} style={{ fontSize: 10, lineHeight: 1.8, color: '#c8daf0', margin: 0, marginBottom: 8 }}>
+                <p key={i} style={{ fontSize: 11, lineHeight: 1.8, color: '#c8daf0', margin: 0, marginBottom: 8 }}>
                   — {line}
                 </p>
               ))}
               {selectedBox.href && (
-                <Link href={selectedBox.href} className="press" style={{ fontSize: 9, letterSpacing: 1, color: selectedBox.color, textDecoration: 'underline' }}>
+                <Link href={selectedBox.href} className="press" style={{ fontSize: 10.5, letterSpacing: 1, color: selectedBox.color, textDecoration: 'underline' }}>
                   → VER /archivo/linux (LA COMPARACIÓN HONESTA CON UN KERNEL REAL)
                 </Link>
               )}
             </div>
           ) : (
-            <div style={{ marginTop: 16, fontSize: 9, letterSpacing: 1, color: '#4a6080', textAlign: 'center' }}>
+            <div style={{ marginTop: 16, fontSize: 10.5, letterSpacing: 1, color: '#6f86a3', textAlign: 'center' }}>
               TOCÁ CUALQUIER CAJA PARA VER EL DETALLE REAL VERIFICADO CONTRA EL CÓDIGO
             </div>
           )}
         </div>
 
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16, marginTop: 56 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 16, marginTop: 56 }}>
           LOS 35 API ROUTES REALES, POR CATEGORÍA
         </div>
         <div style={{ marginBottom: 56 }}>
@@ -153,14 +153,14 @@ export default function AnatomiaPage() {
           ))}
         </div>
 
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
           LAS 13 TABLAS REALES DE TURSO, POR ÁREA
         </div>
         <div>
           {DB_TABLES_BY_AREA.map((d) => (
             <div key={d.label} style={{ marginBottom: 10 }}>
               <BarRow label={d.label} count={d.count} color={d.color} max={maxDb} />
-              <div style={{ fontSize: 8, color: '#4a6080', paddingLeft: 172, marginTop: -4 }}>
+              <div style={{ fontSize: 10, color: '#6f86a3', paddingLeft: 172, marginTop: -4 }}>
                 {d.tables.join(', ')}
               </div>
             </div>

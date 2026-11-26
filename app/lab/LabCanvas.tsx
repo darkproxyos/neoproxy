@@ -140,7 +140,7 @@ export default function LabCanvas() {
             background: tool === t ? '#ff8c1a22' : 'none',
             border: `1px solid ${tool === t ? '#ff8c1a' : '#ff8c1a33'}`,
             color: '#ff8c1a', padding: '5px 12px', cursor: 'pointer',
-            fontFamily: 'inherit', fontSize: 9, letterSpacing: 3,
+            fontFamily: 'inherit', fontSize: 10.5, letterSpacing: 3,
           }}>
             {t === 'brush' ? 'PINCEL' : 'BORRAR'}
           </button>
@@ -167,19 +167,19 @@ export default function LabCanvas() {
           onChange={e => setSize(Number(e.target.value))}
           style={{ width: 80, accentColor: '#ff8c1a' }}
         />
-        <div style={{ color: '#ff8c1a88', fontSize: 9, width: 28 }}>{size}px</div>
+        <div style={{ color: '#ff8c1a88', fontSize: 10.5, width: 28 }}>{size}px</div>
 
         <div style={{ width: 1, height: 20, background: '#ff8c1a22' }} />
 
         <button onClick={clear} style={{
           background: 'none', border: '1px solid #ff444433', color: '#ff4444',
-          padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 9, letterSpacing: 3,
+          padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 10.5, letterSpacing: 3,
         }}>
           LIMPIAR
         </button>
         <button onClick={save} style={{
           background: 'none', border: '1px solid #ff8c1a33', color: '#ff8c1a',
-          padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 9, letterSpacing: 3,
+          padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 10.5, letterSpacing: 3,
         }}>
           GUARDAR
         </button>

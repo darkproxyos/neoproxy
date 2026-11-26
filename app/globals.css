@@ -607,7 +607,7 @@ html.tramo-boot .neo-organism-filter { transition: none; }
   z-index: 999;
   pointer-events: none;
   font-family: 'Space Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1px;
   color: #6a7a8a;
   text-shadow: 0 0 6px #000a;
@@ -692,7 +692,7 @@ html.tramo-boot .neo-organism-filter { transition: none; }
   z-index: 999;
   pointer-events: none;
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: #8fb8d6;
   text-shadow: 0 0 10px #000c;

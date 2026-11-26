@@ -85,7 +85,7 @@ export default function ResearchCenter() {
         .layer-btn {
           background: rgba(26, 44, 66, 0.3);
           border: 1px solid #1a2c42;
-          color: #4a6080;
+          color: #6f86a3;
           padding: 1rem;
           display: flex;
           align-items: center;

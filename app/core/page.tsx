@@ -7,22 +7,22 @@ export default function Core() {
         <div style={{ marginTop: '4rem', display: 'grid', gap: '3rem' }}>
           <section>
             <h2 style={{ fontSize: '14px', color: '#00ff9d', letterSpacing: '4px' }}>[01] THE_NEURAL_BACKBONE</h2>
-            <p style={{ color: '#4a6080', marginTop: '1rem', lineHeight: '1.8' }}>
+            <p style={{ color: '#6f86a3', marginTop: '1rem', lineHeight: '1.8' }}>
               The Core is not a server; it is a consensus. Every transaction, every generative seed, and every artifact extraction is validated by the distributed kernel. It ensures that no geometry is duplicated and every digital soul remains unique within the network.
             </p>
           </section>
 
           <section>
             <h2 style={{ fontSize: '14px', color: '#b400ff', letterSpacing: '4px' }}>[02] PROTOCOL_OVERRIDE</h2>
-            <p style={{ color: '#4a6080', marginTop: '1rem', lineHeight: '1.8' }}>
+            <p style={{ color: '#6f86a3', marginTop: '1rem', lineHeight: '1.8' }}>
               Intention is converted into executable geometry through the Stardust Engine. The Core manages the entropy levels of the system, ensuring that the balance between chaotic generation and structural integrity is maintained for physical fabrication.
             </p>
           </section>
 
           <div style={{ marginTop: '2rem', padding: '2rem', border: '1px solid #0f1f35', display: 'block', textAlign: 'center' }}>
             <p style={{ color: '#00ff9d', fontSize: '12px' }}>STATUS: STABLE_SYNC</p>
-            <p style={{ color: '#4a6080', fontSize: '12px' }}>UPTIME: 99.9982%</p>
-            <p style={{ color: '#4a6080', fontSize: '10px', marginTop: '10px' }}>IDENT_HASH: 0x884291X_CORE_PRIME</p>
+            <p style={{ color: '#6f86a3', fontSize: '12px' }}>UPTIME: 99.9982%</p>
+            <p style={{ color: '#6f86a3', fontSize: '10px', marginTop: '10px' }}>IDENT_HASH: 0x884291X_CORE_PRIME</p>
           </div>
         </div>
       </div>

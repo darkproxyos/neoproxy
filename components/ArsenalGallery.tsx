@@ -291,13 +291,13 @@ export default function ArsenalGallery() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link className="tap-ext" href="/fabrication" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A FABRICACIÓN
         </Link>
 
-        <div style={{ fontSize: 9, color: `${CYAN}44`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${CYAN}44`, letterSpacing: 6, marginBottom: 16 }}>
           // ARSENAL MODULE
         </div>
         <h1 style={{
@@ -306,7 +306,7 @@ export default function ArsenalGallery() {
         }}>
           ARSENAL
         </h1>
-        <p style={{ fontSize: 11, color: '#4a6080', letterSpacing: 1, lineHeight: 2, maxWidth: 620, marginBottom: 44 }}>
+        <p style={{ fontSize: 12, color: '#6f86a3', letterSpacing: 1, lineHeight: 2, maxWidth: 620, marginBottom: 44 }}>
           Artefactos de combate y utilidad fabricados en resina y PLA. Cada pieza real tiene,
           además, un portador dentro del Proxyverse — el agente cuya lógica la diseñó o la empuña.
         </p>
@@ -335,7 +335,7 @@ export default function ArsenalGallery() {
                   key={p}
                   onClick={() => setPreset(p)}
                   style={{
-                    fontFamily: mono, fontSize: 9, letterSpacing: 2, padding: '6px 12px',
+                    fontFamily: mono, fontSize: 10.5, letterSpacing: 2, padding: '6px 12px',
                     background: view === p ? `${accent}26` : 'transparent',
                     border: `1px solid ${view === p ? accent : '#1a2b3f'}`,
                     color: view === p ? accent : '#4a6080', cursor: 'pointer', textTransform: 'uppercase',
@@ -346,16 +346,16 @@ export default function ArsenalGallery() {
               ))}
             </div>
 
-            <div style={{ position: 'absolute', bottom: 20, left: 20, fontSize: 10, letterSpacing: 1, color: `${accent}aa` }}>
+            <div style={{ position: 'absolute', bottom: 20, left: 20, fontSize: 11, letterSpacing: 1, color: `${accent}aa` }}>
               {current.code} :: RENDER_ACTIVE
             </div>
           </div>
 
           {/* Info panel */}
           <div style={{ padding: '28px', border: `1px solid ${accent}33`, background: `${accent}05` }}>
-            <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080' }}>{current.code}</div>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: '#6f86a3' }}>{current.code}</div>
             <div style={{ fontSize: 26, letterSpacing: 3, color: '#fff', margin: '4px 0 2px' }}>{current.name}</div>
-            <div style={{ fontSize: 11, letterSpacing: 1, color: accent, marginBottom: 20 }}>{current.category}</div>
+            <div style={{ fontSize: 12, letterSpacing: 1, color: accent, marginBottom: 20 }}>{current.category}</div>
 
             {/* Portador — el agente del Proxyverse asociado a esta pieza */}
             <Link href={`/proxyverse/${operator.id}`} style={{
@@ -372,10 +372,10 @@ export default function ArsenalGallery() {
                 />
               )}
               <div>
-                <div style={{ fontSize: 9, letterSpacing: 2, color: accent, marginBottom: 4 }}>
+                <div style={{ fontSize: 10.5, letterSpacing: 2, color: accent, marginBottom: 4 }}>
                   PORTADOR // {operator.name}
                 </div>
-                <div style={{ fontSize: 10, color: '#8fb8d6', fontStyle: 'italic', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 11, color: '#8fb8d6', fontStyle: 'italic', lineHeight: 1.6 }}>
                   "{operator.quote}"
                 </div>
               </div>
@@ -383,9 +383,9 @@ export default function ArsenalGallery() {
 
             {/* Materials */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', marginBottom: 8, borderBottom: `1px solid ${accent}33`, paddingBottom: 4 }}>MATERIALS</div>
+              <div style={{ fontSize: 11, letterSpacing: 2, color: '#6f86a3', marginBottom: 8, borderBottom: `1px solid ${accent}33`, paddingBottom: 4 }}>MATERIALS</div>
               {current.materials.map((m) => (
-                <div key={m.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
+                <div key={m.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, marginBottom: 6 }}>
                   <span style={{ width: 12, height: 12, background: m.hex, display: 'inline-block', border: '1px solid #333', flexShrink: 0 }} />
                   {m.label}
                 </div>
@@ -394,9 +394,9 @@ export default function ArsenalGallery() {
 
             {/* Features */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', marginBottom: 8, borderBottom: `1px solid ${accent}33`, paddingBottom: 4 }}>FEATURES</div>
+              <div style={{ fontSize: 11, letterSpacing: 2, color: '#6f86a3', marginBottom: 8, borderBottom: `1px solid ${accent}33`, paddingBottom: 4 }}>FEATURES</div>
               {current.features.map((f) => (
-                <div key={f} style={{ fontSize: 11, color: '#c8daf0', marginBottom: 5 }}>
+                <div key={f} style={{ fontSize: 12, color: '#c8daf0', marginBottom: 5 }}>
                   <span style={{ color: accent, marginRight: 6 }}>✓</span>{f}
                 </div>
               ))}
@@ -404,10 +404,10 @@ export default function ArsenalGallery() {
 
             {/* Specs */}
             <div>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: '#4a6080', marginBottom: 8, borderBottom: `1px solid ${accent}33`, paddingBottom: 4 }}>SPECIFICATIONS</div>
+              <div style={{ fontSize: 11, letterSpacing: 2, color: '#6f86a3', marginBottom: 8, borderBottom: `1px solid ${accent}33`, paddingBottom: 4 }}>SPECIFICATIONS</div>
               {current.specs.map((s) => (
-                <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ color: '#4a6080' }}>{s.label}</span>
+                <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ color: '#6f86a3' }}>{s.label}</span>
                   <span style={{ color: s.value === 'TBD' ? '#3a4a60' : '#c8daf0' }}>{s.value}</span>
                 </div>
               ))}
@@ -436,14 +436,14 @@ export default function ArsenalGallery() {
                     width: 6, height: 6, borderRadius: '50%', background: itemAgent.color,
                     boxShadow: isActive ? `0 0 8px ${itemAgent.color}` : 'none',
                   }} />
-                  <span style={{ fontSize: 8, letterSpacing: 1, color: isActive ? itemAgent.color : '#4a6080' }}>
+                  <span style={{ fontSize: 10, letterSpacing: 1, color: isActive ? itemAgent.color : '#4a6080' }}>
                     {item.code}
                   </span>
                 </div>
-                <div style={{ fontSize: 11, letterSpacing: 1, color: isActive ? '#fff' : '#8fb8d6' }}>
+                <div style={{ fontSize: 12, letterSpacing: 1, color: isActive ? '#fff' : '#8fb8d6' }}>
                   {item.name}
                 </div>
-                <div style={{ fontSize: 8, letterSpacing: 1, color: isActive ? `${itemAgent.color}cc` : '#4a6080', marginTop: 2 }}>
+                <div style={{ fontSize: 10, letterSpacing: 1, color: isActive ? `${itemAgent.color}cc` : '#4a6080', marginTop: 2 }}>
                   {itemAgent.name}
                 </div>
               </button>

@@ -190,7 +190,7 @@ export default function SpecimenCard({ specimen, onView }: { specimen: Specimen,
           <div style={{ fontSize: '12px', color: '#00d4ff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={specimen.name}>
             {specimen.name}
           </div>
-          <div style={{ fontSize: '9px', color: '#4a6080', marginTop: '4px' }}>
+          <div style={{ fontSize: '9px', color: '#6f86a3', marginTop: '4px' }}>
             SIZE: {specimen.size}
           </div>
         </div>

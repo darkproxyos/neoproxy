@@ -45,11 +45,11 @@ export default function CodexArcanumPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 120px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${GOLD}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${GOLD}66`, marginBottom: 16 }}>
           NPX-KNW-ARN // LA MISMA PREGUNTA, LA VERSIÓN MÁS ANTIGUA
         </div>
         <h1 style={{
@@ -58,7 +58,7 @@ export default function CodexArcanumPage() {
         }}>
           CODEX ARCANUM
         </h1>
-        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: `${GOLD}aa`, marginBottom: 36 }}>
+        <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, color: `${GOLD}aa`, marginBottom: 36 }}>
           MAGIA, LEÍDA COMO PROTOCOLO, NO COMO DECORACIÓN
         </div>
 
@@ -87,7 +87,7 @@ export default function CodexArcanumPage() {
           de verdad se puede medir.
         </p>
 
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#80705a', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#80705a', marginBottom: 16 }}>
           DOCUMENTOS
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14, marginBottom: 56 }}>
@@ -96,20 +96,20 @@ export default function CodexArcanumPage() {
               display: 'block', padding: '20px 20px 22px', textDecoration: 'none',
               border: `1px solid ${doc.color}44`, background: `${doc.color}0f`,
             }}>
-              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${doc.color}cc`, marginBottom: 12 }}>
+              <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: `${doc.color}cc`, marginBottom: 12 }}>
                 {doc.code}
               </div>
               <div style={{ fontFamily: mono, fontSize: 15, letterSpacing: 1, color: '#fff', marginBottom: 10 }}>
                 {doc.title}
               </div>
-              <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
+              <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
                 {doc.blurb}
               </p>
             </Link>
           ))}
         </div>
 
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#80705a', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#80705a', marginBottom: 16 }}>
           INSTRUMENTOS
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginBottom: 56 }}>
@@ -117,13 +117,13 @@ export default function CodexArcanumPage() {
             display: 'block', textDecoration: 'none', padding: '20px 24px',
             border: `1px solid ${GOLD}44`, background: `linear-gradient(135deg, ${GOLD}0f, transparent)`,
           }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${GOLD}88`, marginBottom: 8 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${GOLD}88`, marginBottom: 8 }}>
               NPX-XP-SIGILO // DETERMINÍSTICO A PROPÓSITO
             </div>
             <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: GOLD, marginBottom: 8, textShadow: `0 0 16px ${GOLD}55` }}>
               FORJAR Y CARGAR UN SIGILO →
             </div>
-            <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
+            <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
               El método de Austin Osman Spare (cap. VIII de Grimorios): reducción de letras, glifo sobre
               una rueda fija, y un ritual de carga cronometrado con respiración guiada.
             </p>
@@ -132,13 +132,13 @@ export default function CodexArcanumPage() {
             display: 'block', textDecoration: 'none', padding: '20px 24px',
             border: `1px solid ${JADE}44`, background: `linear-gradient(135deg, ${JADE}0f, transparent)`,
           }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${JADE}aa`, marginBottom: 8 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${JADE}aa`, marginBottom: 8 }}>
               NPX-XP-YIJING // AZAR REAL, SIN SEMILLA
             </div>
             <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: JADE, marginBottom: 8, textShadow: `0 0 16px ${JADE}55` }}>
               LANZAR LAS TRES MONEDAS →
             </div>
-            <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
+            <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.8, color: '#c9b8a8', margin: 0 }}>
               El método real del Yi Jing (ver cap. IV): seis líneas de monedas reales, el hexagrama
               primario y, si cambia, hacia dónde se mueve.
             </p>
@@ -146,10 +146,10 @@ export default function CodexArcanumPage() {
         </div>
 
         <div style={{ borderTop: `1px solid ${GOLD}22`, paddingTop: 28 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#80705a', marginBottom: 10 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#80705a', marginBottom: 10 }}>
             LO QUE TODAVÍA NO ESTÁ
           </div>
-          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.9, color: '#8a7868', maxWidth: 620, margin: 0 }}>
+          <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.9, color: '#8a7868', maxWidth: 620, margin: 0 }}>
             Dos linajes ya cubiertos, el occidental (Egipto, hermetismo, grimorios, Renacimiento, revival
             del siglo XIX, magia del caos) y el chino (Yi Jing) — los dos con un instrumento real
             corriendo detrás. Otros sistemas — vudú, chamanismo amazónico y siberiano, curanderismo

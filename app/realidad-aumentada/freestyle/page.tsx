@@ -217,18 +217,18 @@ export default function FreestyleVoicePage() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px',
         background: 'rgba(5,10,20,0.85)', borderBottom: `1px solid ${VIOLET}44`, backdropFilter: 'blur(5px)',
       }}>
-        <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: VIOLET }}>
+        <span style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, color: VIOLET }}>
           NEOPROXY // FREESTYLE — VOZ
         </span>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {isActive && (
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center', fontFamily: mono, fontSize: 9, color: '#8fb8d6', letterSpacing: 1 }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', fontFamily: mono, fontSize: 10.5, color: '#8fb8d6', letterSpacing: 1 }}>
               <span style={{ color: '#ff3b3b', animation: 'freestyleVozPulse 1.4s ease-in-out infinite' }}>● REC</span>
               <span style={{ color: CYAN }}>NOMBRADAS {popped}</span>
-              <span style={{ color: '#4a6080' }}>PASADAS {missed}</span>
+              <span style={{ color: '#6f86a3' }}>PASADAS {missed}</span>
             </div>
           )}
-          <Link href="/games" style={{ color: VIOLET, textDecoration: 'none', fontFamily: mono, fontSize: 9, border: `1px solid ${VIOLET}66`, padding: '6px 10px', borderRadius: 4 }}>
+          <Link href="/games" style={{ color: VIOLET, textDecoration: 'none', fontFamily: mono, fontSize: 10.5, border: `1px solid ${VIOLET}66`, padding: '6px 10px', borderRadius: 4 }}>
             EXIT
           </Link>
         </div>
@@ -245,11 +245,11 @@ export default function FreestyleVoicePage() {
             display: 'flex', alignItems: 'center', gap: 14, padding: '7px 16px', borderRadius: 8,
             background: 'rgba(10,14,24,0.78)', border: `1px solid ${CYAN}44`, whiteSpace: 'nowrap',
           }}>
-            <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: CYAN, textShadow: `0 0 10px ${CYAN}88` }}>
+            <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: CYAN, textShadow: `0 0 10px ${CYAN}88` }}>
               RIMA: {groupEnding}
             </span>
             <span style={{ width: 1, height: 14, background: '#2a3a50' }} />
-            <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#00ffcc' }}>
+            <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: 1.5, color: '#00ffcc' }}>
               PALABRAS: {popped}
             </span>
           </div>
@@ -260,7 +260,7 @@ export default function FreestyleVoicePage() {
           }}>
             {namedWords.map((n) => (
               <span key={`${n.text}-${n.t}`} style={{
-                fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '4px 9px', borderRadius: 5,
+                fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '4px 9px', borderRadius: 5,
                 background: '#00ffcc1a', border: '1px solid #00ffcc66', color: '#00ffcc',
                 animation: 'freestyleVozFadeIn 0.25s ease-out',
               }}>
@@ -275,12 +275,12 @@ export default function FreestyleVoicePage() {
             display: 'flex', flexDirection: 'column', gap: 4,
           }}>
             {barsLog.slice(-3).map((b, i) => (
-              <div key={i} style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6cc', lineHeight: 1.5 }}>
+              <div key={i} style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6cc', lineHeight: 1.5 }}>
                 {b}
               </div>
             ))}
             {interimText && (
-              <div style={{ fontFamily: mono, fontSize: 10, color: `${VIOLET}aa`, fontStyle: 'italic', lineHeight: 1.5 }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: `${VIOLET}aa`, fontStyle: 'italic', lineHeight: 1.5 }}>
                 {interimText}…
               </div>
             )}
@@ -293,7 +293,7 @@ export default function FreestyleVoicePage() {
           }}>
             {rhymeStreak >= 2 && (
               <div style={{
-                fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: '#00ffcc', padding: '6px 10px',
+                fontFamily: mono, fontSize: 11, letterSpacing: 1.5, color: '#00ffcc', padding: '6px 10px',
                 border: '1px solid #00ffcc66', borderRadius: 6, background: '#00ffcc14', textAlign: 'center',
               }}>
                 RACHA DE RIMA × {rhymeStreak}
@@ -301,7 +301,7 @@ export default function FreestyleVoicePage() {
             )}
             {resources.slice(0, 10).map((r) => (
               <div key={r.id} style={{
-                fontFamily: mono, fontSize: 9, letterSpacing: 0.5, padding: '6px 10px', borderRadius: 4,
+                fontFamily: mono, fontSize: 10.5, letterSpacing: 0.5, padding: '6px 10px', borderRadius: 4,
                 borderLeft: `3px solid ${RESOURCE_COLOR[r.type]}`, background: 'rgba(10,14,24,0.7)',
                 animation: 'freestyleVozFadeIn 0.3s ease-out',
               }}>
@@ -320,20 +320,20 @@ export default function FreestyleVoicePage() {
         }}>
           {status === 'idle' && (
             <>
-              <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, maxWidth: 360, textAlign: 'center', lineHeight: 1.8 }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', letterSpacing: 1, maxWidth: 360, textAlign: 'center', lineHeight: 1.8 }}>
                 PALABRAS DE LOS TEMAS DE NEOPROXY SE ACERCAN, TODAS CON LA MISMA TERMINACIÓN — NOMBRALAS RIMANDO EN VOZ ALTA
                 ANTES DE QUE PASEN DE LARGO. CADA FRASE QUE DECÍS TAMBIÉN SE ANALIZA BUSCANDO RIMAS Y OTROS RECURSOS.
                 REQUIERE MICRÓFONO, NO CÁMARA.
               </div>
               {!supported && (
-                <div style={{ fontFamily: mono, fontSize: 10, color: '#ff6666', letterSpacing: 1, maxWidth: 320, textAlign: 'center' }}>
+                <div style={{ fontFamily: mono, fontSize: 11, color: '#ff6666', letterSpacing: 1, maxWidth: 320, textAlign: 'center' }}>
                   Este navegador no soporta reconocimiento de voz. Probá en Chrome o Edge (desktop o Android).
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8 }}>
                 {DIFFICULTIES.map((d) => (
                   <button key={d.id} onClick={() => applyDifficulty(d.id)} style={{
-                    fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '8px 14px', borderRadius: 6, cursor: 'pointer',
+                    fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, padding: '8px 14px', borderRadius: 6, cursor: 'pointer',
                     background: difficulty === d.id ? `${VIOLET}33` : 'transparent',
                     border: `1px solid ${difficulty === d.id ? VIOLET : '#2a3a50'}`,
                     color: difficulty === d.id ? VIOLET : '#4a6080',
@@ -349,23 +349,23 @@ export default function FreestyleVoicePage() {
               }}>
                 ACTIVAR MICRÓFONO
               </button>
-              <Link className="tap-ext" href="/games/rap" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, color: `${CYAN}88`, textDecoration: 'none' }}>
+              <Link className="tap-ext" href="/games/rap" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: `${CYAN}88`, textDecoration: 'none' }}>
                 ← modo sin voz, solo texto (/games/rap)
               </Link>
             </>
           )}
           {status === 'requesting-mic' && (
-            <div style={{ fontFamily: mono, fontSize: 11, color: VIOLET, letterSpacing: 2 }}>
+            <div style={{ fontFamily: mono, fontSize: 12, color: VIOLET, letterSpacing: 2 }}>
               SOLICITANDO ACCESO AL MICRÓFONO...
             </div>
           )}
           {status === 'error' && (
             <>
-              <div style={{ fontFamily: mono, fontSize: 11, color: '#ff4444', letterSpacing: 1, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>
+              <div style={{ fontFamily: mono, fontSize: 12, color: '#ff4444', letterSpacing: 1, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>
                 {errorMsg}
               </div>
               {supported && (
-                <button onClick={start} style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: VIOLET, background: 'none', border: `1px solid ${VIOLET}66`, padding: '10px 24px', cursor: 'pointer', minHeight: 44 }}>
+                <button onClick={start} style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: VIOLET, background: 'none', border: `1px solid ${VIOLET}66`, padding: '10px 24px', cursor: 'pointer', minHeight: 44 }}>
                   REINTENTAR
                 </button>
               )}

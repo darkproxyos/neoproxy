@@ -60,7 +60,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -72,7 +72,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -114,7 +114,7 @@ export default function GrinbergAnalysisPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-REF-03 // REFERENCIA CIENTÍFICA DISPUTADA
           </div>
           <h1
@@ -135,7 +135,7 @@ export default function GrinbergAnalysisPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -159,7 +159,7 @@ export default function GrinbergAnalysisPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -174,7 +174,7 @@ export default function GrinbergAnalysisPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -188,7 +188,7 @@ export default function GrinbergAnalysisPage() {
                 ['VII', 'sec-07', 'Qué es verificable y qué no'],
                 ['VIII', 'sec-08', 'Resonancia con NeoProxy'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -201,7 +201,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-01" style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="PREMISA — QUIÉN FUE" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Grinberg trabajó en neurofisiología, percepción extrasensorial y chamanismo. En 1987
               fundó el <strong style={{ color: '#fff' }}>Instituto Nacional para el Estudio de la
               Conciencia</strong>, con apoyo de la UNAM y el Conacyt — es decir, operó dentro de
@@ -216,7 +216,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-02" style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="LA TEORÍA SINTÉRGICA" sub="el nombre: neologismo de 'síntesis' + 'energía'" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La propuesta central: la realidad que percibimos no es un conjunto de objetos
               independientes, sino el resultado de la interacción entre un{' '}
               <strong style={{ color: '#fff' }}>campo neuronal</strong> (generado por la actividad
@@ -234,7 +234,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-03" style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="LOS POTENCIALES TRANSFERIDOS" sub="el experimento más citado de su obra" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Según la Psi Encyclopedia de la Society for Psychical Research, Grinberg probó siete
               pares de participantes: a uno se lo estimulaba con destellos de luz dentro de una jaula
               de Faraday, mientras el otro permanecía aislado en una jaula separada. Reportó que, en
@@ -252,7 +252,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-04" style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="RECEPCIÓN CIENTÍFICA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
               La misma Psi Encyclopedia señala que las ideas de Grinberg nunca recibieron demasiada
               atención académica, ni en México ni afuera. Espejos de Wikipedia lo describen
               directamente como pseudocientífico — se marca aquí como una etiqueta de fuente
@@ -277,7 +277,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-05" style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="EL GIRO CHAMÁNICO — PACHITA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Pachita fue una curandera mexicana que Grinberg estudió de cerca, documentando y
               analizando su método de curación. Es el punto donde su trabajo se aleja más del
               laboratorio: pasó de medir EEG en condiciones controladas a documentar prácticas de
@@ -292,7 +292,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-06" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="LA DESAPARICIÓN" sub="8 de diciembre de 1994 — caso sin resolver" />
           <Panel style={{ marginBottom: 16 }}>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Desapareció mientras realizaba pruebas relacionadas con su teoría. Según un relato de
               su familia, la noche del 5 de diciembre asistió a una obra de teatro y mencionó que
               esperaba una invitación para viajar a India e Israel; la alarma se encendió cuando una
@@ -304,8 +304,8 @@ export default function GrinbergAnalysisPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {DISAPPEARANCE_THEORIES.map((t, i) => (
               <div key={i} style={{ borderLeft: `2px solid ${ACCENT}55`, paddingLeft: 14 }}>
-                <div style={{ fontSize: 11, color: '#fff', letterSpacing: 1, marginBottom: 4 }}>{t.nombre}</div>
-                <div style={{ fontSize: 10, lineHeight: 1.7, color: TEXT_DIM }}>{t.detalle}</div>
+                <div style={{ fontSize: 12, color: '#fff', letterSpacing: 1, marginBottom: 4 }}>{t.nombre}</div>
+                <div style={{ fontSize: 11, lineHeight: 1.7, color: TEXT_DIM }}>{t.detalle}</div>
               </div>
             ))}
           </div>
@@ -319,7 +319,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-07" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="QUÉ ES VERIFICABLE Y QUÉ NO" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Verificable:</strong> que Grinberg existió, trabajó en
               instituciones académicas reales, publicó el experimento de potenciales transferidos en
               una revista revisada por pares, y desapareció sin explicación en 1994.{' '}
@@ -337,7 +337,7 @@ export default function GrinbergAnalysisPage() {
         <div id="sec-08" style={{ marginBottom: 40 }}>
           <SectionHeader roman="VIII" title="RESONANCIA CON NEOPROXY" sub="lectura propia de este documento, no un aval de la teoría — marcada como tal" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La idea de un campo compartido que emerge de la actividad de varias conciencias
               individuales — más que de cualquiera de ellas por separado — es, estructuralmente, la
               misma apuesta detrás de los efectos colectivos ya shipeados en este sitio: el{' '}
@@ -354,7 +354,7 @@ export default function GrinbergAnalysisPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-REF-03 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

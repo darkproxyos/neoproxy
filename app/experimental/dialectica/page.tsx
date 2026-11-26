@@ -112,13 +112,13 @@ export default function DialecticaPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${RED}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${RED}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-XP-DIALÉCTICA // TENSIONES REALES, NO INVENTADAS
         </div>
         <h1 style={{
@@ -127,14 +127,14 @@ export default function DialecticaPage() {
         }}>
           DIALÉCTICA
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 36 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 36 }}>
           No cualquier par de pensadores charlando — una oposición filosófica real y documentada,
           cada uno argumentando solo desde su posición registrada en{' '}
           <Link href="/knowledge" style={{ color: RED }}>/knowledge</Link>. Tesis, antítesis, réplica —
           y un cierre honesto sobre si hay síntesis o la tensión queda abierta.
         </p>
 
-        <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 10 }}>
+        <div style={{ fontSize: 10.5, color: RED, letterSpacing: 2, marginBottom: 10 }}>
           ELEGÍ UNA TENSIÓN
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8, marginBottom: 28 }}>
@@ -149,10 +149,10 @@ export default function DialecticaPage() {
                 border: `1px solid ${active ? RED : 'rgba(255,255,255,0.15)'}`,
                 opacity: busy ? 0.6 : 1,
               }}>
-                <div style={{ fontSize: 9, letterSpacing: 2, color: active ? RED : '#8fb8d6', marginBottom: 6 }}>{t.label}</div>
-                <div style={{ fontSize: 10, color: COLOR_A }}>{a.name}</div>
-                <div style={{ fontSize: 8, color: '#4a6080', margin: '2px 0' }}>vs</div>
-                <div style={{ fontSize: 10, color: COLOR_B }}>{b.name}</div>
+                <div style={{ fontSize: 10.5, letterSpacing: 2, color: active ? RED : '#8fb8d6', marginBottom: 6 }}>{t.label}</div>
+                <div style={{ fontSize: 11, color: COLOR_A }}>{a.name}</div>
+                <div style={{ fontSize: 10, color: '#6f86a3', margin: '2px 0' }}>vs</div>
+                <div style={{ fontSize: 11, color: COLOR_B }}>{b.name}</div>
               </button>
             )
           })}
@@ -170,12 +170,12 @@ export default function DialecticaPage() {
             resize: 'vertical', marginBottom: 14, opacity: busy ? 0.6 : 1,
           }}
         />
-        <div style={{ fontSize: 8, color: '#3a4a60', letterSpacing: 0.5, marginBottom: 18 }}>
+        <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 0.5, marginBottom: 18 }}>
           vacío = usa la pregunta sugerida de arriba
         </div>
 
         <button onClick={abrir} disabled={busy} className="press" style={{
-          fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
+          fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${RED}18`, border: `1px solid ${RED}66`, color: RED,
           opacity: busy ? 0.5 : 1, marginBottom: 40,
         }}>
@@ -183,16 +183,16 @@ export default function DialecticaPage() {
         </button>
 
         {errorMsg && (
-          <div style={{ fontSize: 10, color: '#ff2d55', marginBottom: 24 }}>{errorMsg}</div>
+          <div style={{ fontSize: 11, color: '#ff2d55', marginBottom: 24 }}>{errorMsg}</div>
         )}
 
         {(visible.length > 0 || status === 'loading') && (
           <div style={{ border: `1px solid ${RED}33`, background: 'rgba(0,4,10,0.5)', padding: 20, minHeight: 100 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${RED}aa`, marginBottom: 16 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${RED}aa`, marginBottom: 16 }}>
               INTERCAMBIO EN VIVO
             </div>
             {status === 'loading' && (
-              <div style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1 }}>abriendo canal...</div>
+              <div style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 1 }}>abriendo canal...</div>
             )}
             {visible.map(v => (
               <div key={v.id} style={{
@@ -201,7 +201,7 @@ export default function DialecticaPage() {
                 borderLeft: v.speaker !== 'sistema' ? `2px solid ${speakerColor(v.speaker)}44` : 'none',
                 paddingLeft: v.speaker !== 'sistema' ? 12 : 0,
               }}>
-                <div style={{ fontSize: 8, letterSpacing: 2, color: speakerColor(v.speaker), marginBottom: 4 }}>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: speakerColor(v.speaker), marginBottom: 4 }}>
                   {v.role} — {speakerName(v.speaker)}
                 </div>
                 <span style={{ color: v.speaker === 'sistema' ? SISTEMA : '#c8daf0' }}>{v.line}</span>
@@ -214,7 +214,7 @@ export default function DialecticaPage() {
                 borderLeft: typingLine.speaker !== 'sistema' ? `2px solid ${speakerColor(typingLine.speaker)}44` : 'none',
                 paddingLeft: typingLine.speaker !== 'sistema' ? 12 : 0,
               }}>
-                <div style={{ fontSize: 8, letterSpacing: 2, color: speakerColor(typingLine.speaker), marginBottom: 4 }}>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: speakerColor(typingLine.speaker), marginBottom: 4 }}>
                   {typingLine.role} — {speakerName(typingLine.speaker)}
                 </div>
                 <span style={{ color: typingLine.speaker === 'sistema' ? SISTEMA : '#c8daf0' }}>

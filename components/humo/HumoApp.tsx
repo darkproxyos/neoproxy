@@ -23,18 +23,18 @@ export const EXP_TEXT: Record<ExperimentId, { concept: string; credit: string; p
 }
 
 function Chip({ on, onClick, children, title, color = '#9fe8ff' }: { on: boolean; onClick: () => void; children: React.ReactNode; title?: string; color?: string }) {
-  return <button type="button" className="press" title={title} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.6, cursor: 'pointer', background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
+  return <button type="button" className="press" title={title} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.6, cursor: 'pointer', background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
 }
 function Slider({ label, value, onChange, readout }: { label: string; value: number; onChange: (v: number) => void; readout: string }) {
   return (
     <label style={{ display: 'block' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}><span>{label}</span><span style={{ color: '#fff' }}>{readout}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}><span>{label}</span><span style={{ color: '#fff' }}>{readout}</span></div>
       <input type="range" className="humo-range" min={0} max={1} step={0.01} value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ width: '100%' }} />
     </label>
   )
 }
 function Stat({ k, v, warn }: { k: string; v: string; warn?: boolean }) {
-  return <div style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 9.5, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
+  return <div style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 11, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
 }
 
 type Solid = { metrics: Metrics; heightMm: number; widthMm: number; ms: number; step: number }
@@ -167,7 +167,7 @@ export default function HumoApp() {
           <HumoViewer onReady={(api) => { viewerRef.current = api; if (api) api.setShowCores(cores) }} />
           {!reel && (
             <>
-              <div style={{ position: 'absolute', left: 14, top: 12, fontSize: 10, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
+              <div style={{ position: 'absolute', left: 14, top: 12, fontSize: 11, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
                 <div style={{ color: '#ff8fc4' }}>{E.label}</div>
                 <div>t = {fmt(prog.t, 1)} · {status === 'congelado' ? 'CONGELADO' : status === 'congelando' ? 'CONGELANDO…' : status === 'final' ? 'FIN DEL TRAMO' : `${pct} %`}</div>
                 <div style={{ color: '#7f96b2' }}>impulso conservado ± {fmt(100 * prog.drift, 1)} %</div>
@@ -200,7 +200,7 @@ export default function HumoApp() {
                 <div style={{ fontSize: 'clamp(12px, min(2.4vh, 4.6vw), 22px)', letterSpacing: 4, color: '#fff', fontWeight: 700, opacity: reel.phase === 'solido' ? 1 : 0, transition: 'opacity .8s', marginBottom: 6 }}>❄ CONGELADO · LISTO PARA IMPRIMIR</div>
                 <div style={{ fontSize: 'clamp(10px, 1.6vh, 14px)', color: '#9fb4cc', letterSpacing: 2 }}>t = {fmt(prog.t, 1)}</div>
               </div>
-              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
+              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
             </div>
           )}
         </div>
@@ -223,19 +223,19 @@ export default function HumoApp() {
         <span style={{ flex: 1 }} />
         <Chip on={!!reel} onClick={enterReel} color="#ffd27c" title="Pantalla vertical que corre sola: para grabarla con el teléfono">▣ MODO REEL</Chip>
       </div>
-      {err && <p style={{ color: '#ffb86b', fontSize: 11 }}>{err}</p>}
+      {err && <p style={{ color: '#ffb86b', fontSize: 12 }}>{err}</p>}
 
       <div className="humo-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 22 }}>
         <section style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '1px 1px 1px 3px', borderColor: '#ff8fc42a #ff8fc42a #ff8fc42a #ff8fc4', padding: '18px 20px' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#ff8fc4', marginBottom: 8 }}>{E.label} — {E.tagline.toUpperCase()}</div>
-          <p style={{ fontSize: 11.5, lineHeight: 1.95, color: '#a9bdd4', margin: '0 0 10px' }}>{T.concept}</p>
-          <p style={{ fontSize: 10, lineHeight: 1.8, color: '#6f86a3', margin: 0 }}>{T.credit}</p>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#ff8fc4', marginBottom: 8 }}>{E.label} — {E.tagline.toUpperCase()}</div>
+          <p style={{ fontSize: 12.5, lineHeight: 1.95, color: '#a9bdd4', margin: '0 0 10px' }}>{T.concept}</p>
+          <p style={{ fontSize: 11, lineHeight: 1.8, color: '#6f86a3', margin: 0 }}>{T.credit}</p>
         </section>
         <section style={{ background: '#080c12', border: '1px solid #ffffff12', padding: '18px 20px', display: 'grid', gap: 16 }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff' }}>PERILLAS</div>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff' }}>PERILLAS</div>
           <Slider label={E.knobA.toUpperCase()} value={a} readout={fmt(a, 2)} onChange={(v) => { setA(v); latest.current = { ...latest.current, a: v } }} />
           <Slider label={E.knobB.toUpperCase()} value={b} readout={fmt(b, 2)} onChange={(v) => { setB(v); latest.current = { ...latest.current, b: v } }} />
-          <div style={{ fontSize: 10, color: '#6f86a3', marginTop: -6 }}>Las perillas cambian las condiciones iniciales: se aplican al pulsar REPETIR.</div>
+          <div style={{ fontSize: 11, color: '#6f86a3', marginTop: -6 }}>Las perillas cambian las condiciones iniciales: se aplican al pulsar REPETIR.</div>
           <Slider label="DENSIDAD DEL HUMO SÓLIDO" value={density} readout={fmt(density, 2)} onChange={setDensity} />
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <Chip on={pedestal} onClick={() => setPedestal((v) => !v)} title="Varilla y disco: la pieza queda de pie como una escultura">PEANA</Chip>
@@ -244,7 +244,7 @@ export default function HumoApp() {
       </div>
 
       <section style={{ marginTop: 22 }}>
-        <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>LA PIEZA{solid ? '' : ' · CONGELA UN INSTANTE PARA MEDIRLA'}</div>
+        <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>LA PIEZA{solid ? '' : ' · CONGELA UN INSTANTE PARA MEDIRLA'}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))', gap: 8 }}>
           <Stat k="INSTANTE" v={solid ? `t = ${fmt(solid.step * 0.06, 1)}` : '…'} />
           <Stat k="MEDIDAS" v={solid ? `${fmt(solid.widthMm, 0)} × ${fmt(solid.heightMm, 0)} mm` : '…'} />
@@ -256,12 +256,12 @@ export default function HumoApp() {
           <Stat k="PUNTAJE DE IMPRESIÓN" v={m ? fmt(m.printScore, 2) : '…'} warn={!!m && m.printScore < 0.5} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8, marginTop: 14 }}>
-          <button className="press" onClick={exportStl} disabled={!solid || exporting} style={{ minHeight: 46, background: '#ff8fc4', color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>{exporting ? 'CALCULANDO STL…' : `DESCARGAR STL (${SIZE_MM} MM)`}</button>
-          <button className="press" onClick={exportJson} disabled={!solid} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
-          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE INSTANTE'}</button>
-          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
+          <button className="press" onClick={exportStl} disabled={!solid || exporting} style={{ minHeight: 46, background: '#ff8fc4', color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>{exporting ? 'CALCULANDO STL…' : `DESCARGAR STL (${SIZE_MM} MM)`}</button>
+          <button className="press" onClick={exportJson} disabled={!solid} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
+          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE INSTANTE'}</button>
+          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
         </div>
-        {m && m.components > 1 && <p style={{ fontSize: 10.5, color: '#ffb86b', margin: '10px 0 0' }}>El STL omite {m.components - 1} partes sueltas ({fmt(100 * m.droppedVolumeFrac, 1)} % del volumen): humo que se separó de la pieza principal{pedestal ? '; los trozos grandes quedan unidos a la peana con su propia varilla' : ''}.</p>}
+        {m && m.components > 1 && <p style={{ fontSize: 11.5, color: '#ffb86b', margin: '10px 0 0' }}>El STL omite {m.components - 1} partes sueltas ({fmt(100 * m.droppedVolumeFrac, 1)} % del volumen): humo que se separó de la pieza principal{pedestal ? '; los trozos grandes quedan unidos a la peana con su propia varilla' : ''}.</p>}
       </section>
       <style>{`
         .humo-range { -webkit-appearance: none; appearance: none; height: 3px; background: #ffffff2a; outline: none; border-radius: 2px; }

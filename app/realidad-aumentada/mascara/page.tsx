@@ -246,7 +246,7 @@ export default function RealidadAumentadaPage() {
         <span style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#00d4ff' }}>
           NEOPROXY // REALIDAD_AUMENTADA
         </span>
-        <Link href="/" style={{ color: '#00d4ff', textDecoration: 'none', fontFamily: mono, fontSize: 10, border: '1px solid rgba(0,212,255,0.4)', padding: '2px 8px' }}>
+        <Link href="/" style={{ color: '#00d4ff', textDecoration: 'none', fontFamily: mono, fontSize: 11, border: '1px solid rgba(0,212,255,0.4)', padding: '2px 8px' }}>
           EXIT_PROTOCOL
         </Link>
       </div>
@@ -266,7 +266,7 @@ export default function RealidadAumentadaPage() {
         }}>
           {status === 'idle' && (
             <>
-              <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, maxWidth: 280, textAlign: 'center', lineHeight: 1.8 }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', letterSpacing: 1, maxWidth: 280, textAlign: 'center', lineHeight: 1.8 }}>
                 MÁSCARA KITSUNE // TRACKING FACIAL EN VIVO. REQUIERE CÁMARA FRONTAL.
               </div>
               <button
@@ -282,24 +282,24 @@ export default function RealidadAumentadaPage() {
             </>
           )}
           {status === 'loading-model' && (
-            <div style={{ fontFamily: mono, fontSize: 11, color: '#00d4ff', letterSpacing: 2 }}>
+            <div style={{ fontFamily: mono, fontSize: 12, color: '#00d4ff', letterSpacing: 2 }}>
               CARGANDO MODELO DE TRACKING FACIAL...
             </div>
           )}
           {status === 'requesting-camera' && (
-            <div style={{ fontFamily: mono, fontSize: 11, color: '#00d4ff', letterSpacing: 2 }}>
+            <div style={{ fontFamily: mono, fontSize: 12, color: '#00d4ff', letterSpacing: 2 }}>
               SOLICITANDO ACCESO A LA CÁMARA...
             </div>
           )}
           {status === 'error' && (
             <>
-              <div style={{ fontFamily: mono, fontSize: 11, color: '#ff4444', letterSpacing: 1, maxWidth: 280, textAlign: 'center' }}>
+              <div style={{ fontFamily: mono, fontSize: 12, color: '#ff4444', letterSpacing: 1, maxWidth: 280, textAlign: 'center' }}>
                 {errorMessage}
               </div>
               <button
                 onClick={start}
                 style={{
-                  fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#00d4ff', background: 'none',
+                  fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#00d4ff', background: 'none',
                   border: '1px solid #00d4ff66', padding: '10px 24px', cursor: 'pointer', minHeight: 44,
                 }}
               >
@@ -313,7 +313,7 @@ export default function RealidadAumentadaPage() {
       {isActive && maskStatus === 'loading' && (
         <div style={{
           position: 'absolute', top: 56, left: '50%', transform: 'translateX(-50%)', zIndex: 15,
-          fontFamily: mono, fontSize: 9, color: '#00d4ff', letterSpacing: 2, background: 'rgba(0,4,10,0.7)',
+          fontFamily: mono, fontSize: 10.5, color: '#00d4ff', letterSpacing: 2, background: 'rgba(0,4,10,0.7)',
           padding: '6px 14px', border: '1px solid rgba(0,212,255,0.3)',
         }}>
           CARGANDO MÁSCARA...
@@ -323,7 +323,7 @@ export default function RealidadAumentadaPage() {
       {isActive && maskStatus === 'error' && (
         <div style={{
           position: 'absolute', top: 56, left: '50%', transform: 'translateX(-50%)', zIndex: 15, maxWidth: 320,
-          fontFamily: mono, fontSize: 9, color: '#ff4444', letterSpacing: 1, background: 'rgba(20,0,0,0.85)',
+          fontFamily: mono, fontSize: 10.5, color: '#ff4444', letterSpacing: 1, background: 'rgba(20,0,0,0.85)',
           padding: '10px 16px', border: '1px solid rgba(255,68,68,0.4)', textAlign: 'center',
         }}>
           MÁSCARA NO CARGÓ: {maskError}
@@ -333,7 +333,7 @@ export default function RealidadAumentadaPage() {
       {status === 'no-face' && maskStatus === 'loaded' && (
         <div style={{
           position: 'absolute', bottom: 90, left: '50%', transform: 'translateX(-50%)', zIndex: 15,
-          fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 2, background: 'rgba(0,4,10,0.7)',
+          fontFamily: mono, fontSize: 11, color: '#00d4ff', letterSpacing: 2, background: 'rgba(0,4,10,0.7)',
           padding: '8px 16px', border: '1px solid rgba(0,212,255,0.3)',
         }}>
           BUSCANDO ROSTRO...
@@ -346,7 +346,7 @@ export default function RealidadAumentadaPage() {
           style={{
             position: 'absolute', bottom: 56, left: 20, zIndex: 20,
             background: 'rgba(0,4,10,0.7)', border: '1px solid #00d4ff44', color: '#00d4ff',
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 12px', cursor: 'pointer', minHeight: 40,
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 12px', cursor: 'pointer', minHeight: 40,
           }}
         >
           DEBUG
@@ -355,7 +355,7 @@ export default function RealidadAumentadaPage() {
       {showDebug && (
         <div style={{
           position: 'absolute', bottom: 104, left: 20, zIndex: 20, maxWidth: 260,
-          fontFamily: mono, fontSize: 9, color: '#00ffcc', letterSpacing: 0.5, background: 'rgba(0,4,10,0.85)',
+          fontFamily: mono, fontSize: 10.5, color: '#00ffcc', letterSpacing: 0.5, background: 'rgba(0,4,10,0.85)',
           padding: '10px 14px', border: '1px solid rgba(0,255,204,0.3)',
         }}>
           {debugInfo || 'sin datos aun'}
@@ -364,7 +364,7 @@ export default function RealidadAumentadaPage() {
 
       <div style={{
         position: 'absolute', bottom: 20, left: 20, zIndex: 15,
-        fontFamily: mono, fontSize: 8, letterSpacing: 1, color: '#00d4ff55',
+        fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#00d4ff55',
       }}>
         <a href="/realidad-aumentada/index.html" style={{ color: 'inherit', textDecoration: 'none' }}>
           MODO CLÁSICO (FILTROS DE CÁMARA) →

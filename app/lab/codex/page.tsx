@@ -66,30 +66,30 @@ function DetailPanel({ entry, onClose }: { entry: KnowledgeEntry; onClose: () =>
       <button
         onClick={onClose}
         aria-label="cerrar"
-        style={{ position: 'absolute', top: 12, right: 16, background: 'none', border: 'none', color: '#4a6080', fontSize: 22, cursor: 'pointer', lineHeight: 1 }}
+        style={{ position: 'absolute', top: 12, right: 16, background: 'none', border: 'none', color: '#6f86a3', fontSize: 22, cursor: 'pointer', lineHeight: 1 }}
       >
         ×
       </button>
       <div style={{ maxWidth: 640 }}>
         <div style={{ fontSize: 16, color, letterSpacing: 0.5, marginBottom: 4 }}>{entry.name}</div>
-        <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>{entry.years} — {entry.role}</div>
+        <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 14 }}>{entry.years} — {entry.role}</div>
         <span style={{
-          fontSize: 8, letterSpacing: 2, color: FORMULA_DIM[entry.formulaKind],
+          fontSize: 10, letterSpacing: 2, color: FORMULA_DIM[entry.formulaKind],
           border: `1px solid ${FORMULA_DIM[entry.formulaKind]}55`, padding: '2px 6px',
         }}>
           {FORMULA_LABELS[entry.formulaKind]}
         </span>
         <div style={{ fontSize: 13, color: '#00ffcc', margin: '10px 0 4px', lineHeight: 1.6, wordBreak: 'break-word' }}>{entry.formula}</div>
-        <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>{entry.formulaLabel}</div>
-        <p style={{ fontSize: 11, lineHeight: 1.9, color: '#c8daf0', marginBottom: 16 }}>{entry.summary}</p>
+        <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 14 }}>{entry.formulaLabel}</div>
+        <p style={{ fontSize: 12, lineHeight: 1.9, color: '#c8daf0', marginBottom: 16 }}>{entry.summary}</p>
         <div style={{ borderLeft: `2px solid ${color}33`, paddingLeft: 14 }}>
-          <div style={{ fontSize: 8, letterSpacing: 2, color, marginBottom: 8 }}>EJEMPLO</div>
-          <p style={{ fontSize: 11, lineHeight: 1.8, color: '#9fc4e0' }}>{entry.example}</p>
+          <div style={{ fontSize: 10, letterSpacing: 2, color, marginBottom: 8 }}>EJEMPLO</div>
+          <p style={{ fontSize: 12, lineHeight: 1.8, color: '#9fc4e0' }}>{entry.example}</p>
         </div>
         {agent && (
           <Link href={`/proxyverse/${agent.id}`} className="press" style={{ display: 'block', marginTop: 18, paddingTop: 14, borderTop: `1px solid ${agent.color}33`, textDecoration: 'none' }}>
-            <div style={{ fontSize: 8, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>ESTO YA VIVE EN PROXYVERSE</div>
-            <div style={{ fontSize: 11, color: '#c8daf0' }}>{agent.name} — {agent.role} →</div>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>ESTO YA VIVE EN PROXYVERSE</div>
+            <div style={{ fontSize: 12, color: '#c8daf0' }}>{agent.name} — {agent.role} →</div>
           </Link>
         )}
       </div>
@@ -284,7 +284,7 @@ export default function CodexSpacePage() {
             onClick={() => setSelectedId(entry.id)}
             style={{
               position: 'absolute', left: 0, top: 0, opacity: 0,
-              fontFamily: mono, fontSize: 11, letterSpacing: 0.5, whiteSpace: 'nowrap',
+              fontFamily: mono, fontSize: 12, letterSpacing: 0.5, whiteSpace: 'nowrap',
               color: clusters[entry.cluster].color, textShadow: `0 0 8px ${clusters[entry.cluster].color}aa`,
               cursor: 'pointer', padding: '4px 8px', userSelect: 'none',
             }}
@@ -296,7 +296,7 @@ export default function CodexSpacePage() {
 
       <Link href="/knowledge" className="press tap-ext" style={{
         position: 'fixed', top: 16, left: 16, zIndex: 25,
-        fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none',
+        fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none',
         border: '1px solid #00d4ff44', padding: '6px 12px', background: '#00050aaa',
       }}>
         ← CODEX COGITO
@@ -304,7 +304,7 @@ export default function CodexSpacePage() {
 
       <div style={{
         position: 'fixed', top: 16, right: 16, zIndex: 25, textAlign: 'right',
-        fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', lineHeight: 1.8,
+        fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', lineHeight: 1.8,
       }}>
         ARRASTRÁ PARA MIRAR · PELLIZCÁ/SCROLL PARA ACERCAR<br />TOCÁ UN NOMBRE PARA ABRIRLO
       </div>

@@ -155,12 +155,12 @@ export default function ConsoleOverlay() {
         }}
         onClick={e => e.stopPropagation()}
       >
-        <div style={{ padding: '8px 14px', borderBottom: '1px solid #39ff1422', fontSize: 9, letterSpacing: 3, color: '#39ff14aa' }}>
+        <div style={{ padding: '8px 14px', borderBottom: '1px solid #39ff1422', fontSize: 10.5, letterSpacing: 3, color: '#39ff14aa' }}>
           NPX-NAVI // ` PARA CERRAR
         </div>
         <div style={{ maxHeight: 220, overflowY: 'auto', padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
           {log.length === 0 && (
-            <div style={{ fontSize: 10, color: '#39ff1444', letterSpacing: 1 }}>
+            <div style={{ fontSize: 11, color: '#39ff1444', letterSpacing: 1 }}>
               escribí "ayuda" para ver las rutas disponibles.
             </div>
           )}
@@ -168,7 +168,7 @@ export default function ConsoleOverlay() {
             <div
               key={l.id}
               style={{
-                fontSize: 10, letterSpacing: 0.5, lineHeight: 1.6, wordBreak: 'break-word',
+                fontSize: 11, letterSpacing: 0.5, lineHeight: 1.6, wordBreak: 'break-word',
                 color: l.kind === 'echo' ? '#c8daf0' : l.kind === 'error' ? '#ff5577' : l.kind === 'ok' ? '#39ff14' : '#6a7a8a',
               }}
             >

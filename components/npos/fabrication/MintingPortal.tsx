@@ -141,7 +141,7 @@ export default function MintingPortal({ specimen, onSuccess }: MintingPortalProp
         }
         .meta-trace {
           font-size: 0.5rem;
-          color: #4a6080;
+          color: #6f86a3;
           font-family: 'Space Mono', monospace;
         }
         .portal-success {
