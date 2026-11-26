@@ -6,7 +6,7 @@ export type Tramo = 'afuera' | 'umbral' | 'zona'
 
 export const AFUERA = ['/', '/home-3d', '/home-grafico', '/home-senal', '/home-galeria', '/home-classic', '/manifesto', '/fabrication', '/artifacts']
 export const UMBRAL = ['/umbral']
-export const ZONA = ['/fenomenos', '/capas', '/humo', '/trenza', '/resonancia', '/rayo', '/especimenes', '/geometrias', '/lab/primercuerpo']
+export const ZONA = ['/fenomenos', '/capas', '/humo', '/trenza', '/resonancia', '/rayo', '/especimenes', '/geometrias', '/antesis', '/lab/primercuerpo']
 
 // las rutas de la serie FENÓMENOS (la entrada del menú, que pasa por el Umbral, se enciende en todas)
 export const SERIE = ['/umbral', '/fenomenos', '/capas', '/humo', '/trenza', '/resonancia', '/rayo']
