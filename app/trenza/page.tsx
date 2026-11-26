@@ -24,7 +24,7 @@ export default function TrenzaPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div className="tr-layer" style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontSize: 9.5, letterSpacing: 6, color: `${GOLD}aa`, marginBottom: 14 }}>NPX-TRENZA // GRAVEDAD</div>
+        <div style={{ fontSize: 9.5, letterSpacing: 6, color: `${GOLD}aa`, marginBottom: 14 }}>NPX-TRENZA // GRAVEDAD · <Link href="/fenomenos" style={{ color: `${GOLD}aa` }}>SERIE FENÓMENOS</Link></div>
         <h1 style={{ fontSize: 'clamp(34px, 8vw, 64px)', letterSpacing: 12, margin: '0 0 18px', lineHeight: 1.05, background: 'linear-gradient(90deg,#5fe3ff,#ff4fa3 55%,#ffc75a)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>TRENZA</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 880, margin: '0 0 10px' }}>
           Tres soles que se atraen por gravedad casi siempre terminan en caos. Pero hay órbitas excepcionales donde bailan para siempre sin chocar.
@@ -91,7 +91,7 @@ export default function TrenzaPage() {
             <li>Dormand, J. R. y Prince, P. J. (1980). A family of embedded Runge–Kutta formulae. <i>Journal of Computational and Applied Mathematics</i> 6.</li>
           </ul>
           <p style={{ fontSize: 10, lineHeight: 1.9, color: '#5d7490', margin: '18px 0 0' }}>
-            Tercera de una línea: en <Link href="/capas" style={{ color: CYAN }}>CAPAS</Link> el tiempo de un mundo plano se apila en altura; en <Link href="/humo" style={{ color: CYAN }}>HUMO SÓLIDO</Link> un instante de un fluido se congela; aquí el tiempo entero de una órbita se vuelve una trenza.
+            Tercera de una línea: en <Link href="/capas" style={{ color: CYAN }}>CAPAS</Link> el tiempo de un mundo plano se apila en altura; en <Link href="/humo" style={{ color: CYAN }}>HUMO SÓLIDO</Link> un instante de un fluido se congela; aquí el tiempo entero de una órbita se vuelve una trenza. Toda la serie, en <Link href="/fenomenos" style={{ color: CYAN }}>FENÓMENOS</Link>.
           </p>
         </section>
       </div>

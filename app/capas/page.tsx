@@ -24,7 +24,7 @@ export default function CapasPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}aa`, marginBottom: 14 }}>NPX-CAP // ESCULTURA DEL TIEMPO</div>
+        <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}aa`, marginBottom: 14 }}>NPX-CAP // ESCULTURA DEL TIEMPO · <Link href="/fenomenos" style={{ color: `${ACCENT}aa` }}>SERIE FENÓMENOS</Link></div>
         <h1 style={{ fontSize: 'clamp(30px, 7vw, 56px)', letterSpacing: 8, color: ACCENT, textShadow: `0 0 44px ${ACCENT}44`, margin: '0 0 18px', lineHeight: 1.05 }}>CAPAS</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 860, margin: '0 0 10px' }}>
           Un mundo plano gobernado por una ecuación real. Lo pintas, y su historia entera —cada instante apilado hacia arriba— se vuelve un sólido que se puede
@@ -99,7 +99,7 @@ export default function CapasPage() {
             <li>Hägerstrand, T. (1970). What about people in regional science? <i>Papers of the Regional Science Association</i> 24, 7–21.</li>
           </ul>
           <p style={{ fontSize: 10, lineHeight: 1.9, color: '#5d7490', margin: '18px 0 0' }}>
-            Hermana de <Link href="/especimenes" style={{ color: CYAN }}>ESPECÍMENES</Link> (formas que nacen, mutan y mueren) y de <Link href="/geometrias" style={{ color: CYAN }}>GEOMETRÍAS</Link> (objetos exactos con nombre y teorema). Aquí la forma no se evoluciona ni se calcula de una fórmula: se deja vivir un mundo y se guarda su historia.
+            Hermana de <Link href="/especimenes" style={{ color: CYAN }}>ESPECÍMENES</Link> (formas que nacen, mutan y mueren) y de <Link href="/geometrias" style={{ color: CYAN }}>GEOMETRÍAS</Link> (objetos exactos con nombre y teorema). Aquí la forma no se evoluciona ni se calcula de una fórmula: se deja vivir un mundo y se guarda su historia. Primera de la serie <Link href="/fenomenos" style={{ color: CYAN }}>FENÓMENOS</Link>, con <Link href="/humo" style={{ color: CYAN }}>HUMO SÓLIDO</Link>, <Link href="/trenza" style={{ color: CYAN }}>TRENZA</Link> y <Link href="/resonancia" style={{ color: CYAN }}>RESONANCIA</Link>.
           </p>
         </section>
       </div>
