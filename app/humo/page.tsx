@@ -18,7 +18,7 @@ export default function HumoPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div className="humo-layer" style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontSize: 9.5, letterSpacing: 6, color: `${PINK}aa`, marginBottom: 14 }}>NPX-HUMO // FÍSICA DE FLUIDOS</div>
+        <div style={{ fontSize: 9.5, letterSpacing: 6, color: `${PINK}aa`, marginBottom: 14 }}>NPX-HUMO // FÍSICA DE FLUIDOS · <Link href="/fenomenos" style={{ color: `${PINK}aa` }}>SERIE FENÓMENOS</Link></div>
         <h1 style={{ fontSize: 'clamp(30px, 7vw, 56px)', letterSpacing: 8, margin: '0 0 18px', lineHeight: 1.05, background: 'linear-gradient(90deg,#5fe3ff,#ff4fa3)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>HUMO SÓLIDO</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 860, margin: '0 0 10px' }}>
           Anillos de humo calculados con la física real de los vórtices: se adelantan uno a otro, chocan, se abren en coronas, se anudan.
@@ -82,7 +82,7 @@ export default function HumoPage() {
             <li>Weißmann, S. y Pinkall, U. (2010). Filament-based smoke with vortex shedding and variational reconnection. <i>ACM Transactions on Graphics</i> 29.</li>
           </ul>
           <p style={{ fontSize: 10, lineHeight: 1.9, color: '#5d7490', margin: '18px 0 0' }}>
-            Hermana de <Link href="/capas" style={{ color: CYAN }}>CAPAS</Link>: allí el tiempo de un mundo plano se apila en altura; aquí un instante de un fluido en tres dimensiones se congela.
+            Hermana de <Link href="/capas" style={{ color: CYAN }}>CAPAS</Link>: allí el tiempo de un mundo plano se apila en altura; aquí un instante de un fluido en tres dimensiones se congela. Parte de la serie <Link href="/fenomenos" style={{ color: CYAN }}>FENÓMENOS</Link>.
           </p>
         </section>
       </div>

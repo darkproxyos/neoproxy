@@ -54,9 +54,11 @@ export const navConfig: NavEntry[] = [
   { label: 'PRIMER CUERPO', href: '/lab/primercuerpo', live: true },
   { label: 'ESPECÍMENES', href: '/especimenes', live: true },
   { label: 'GEOMETRÍAS', href: '/geometrias', live: true },
-  { label: 'CAPAS', href: '/capas', live: true },
-  { label: 'HUMO SÓLIDO', href: '/humo', live: true },
-  { label: 'TRENZA', href: '/trenza', live: true },
+  // FENÓMENOS: hub de la serie de piezas nacidas de una ley de la naturaleza
+  // (CAPAS, HUMO SÓLIDO, TRENZA, RESONANCIA…), agrupada a pedido explícito.
+  // Mismo patrón que SUSTRATO: leaf a una página catálogo, no un dropdown; las
+  // rutas de cada fenómeno siguen iguales (/capas, /humo, /trenza, /resonancia).
+  { label: 'FENÓMENOS', href: '/fenomenos', live: true },
   { label: 'PROXYGAMES', href: '/games', live: true },
   // AUDIO: oculto del menú a pedido explícito — la página sigue viva en
   // /audio, se vuelve a agregar acá cuando esté lista para mostrarse.
