@@ -98,12 +98,12 @@ export default function VoluntadPage() {
         <div className="tech-grid" />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '104px 24px 80px' }}>
           <Link href="/proxyverse" className="press tap-ext" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
             display: 'inline-block', marginBottom: 32,
           }}>
             ← VOLVER A PROXYVERSE
           </Link>
-          <div style={{ fontSize: 9, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
+          <div style={{ fontSize: 10.5, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
             NPX-PXV-VOLUNTAD // SIN SEÑAL TODAVÍA
           </div>
           <h1 style={{
@@ -117,7 +117,7 @@ export default function VoluntadPage() {
             escribir ni fecha que tipear: se arma sola, de lo que ya hiciste en el sitio.
             Sin eso, no hay carta vacía que mostrar — solo seis ejes en cero, que es mentira.
           </p>
-          <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 14 }}>
+          <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 14 }}>
             SEÑALES QUE TODAVÍA FALTAN
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -128,7 +128,7 @@ export default function VoluntadPage() {
               { href: '/experimental/scan', label: 'Escanear un tag NFC' },
             ].map(l => (
               <Link key={l.href} href={l.href} className="press" style={{
-                fontFamily: mono, fontSize: 11, color: CYAN, textDecoration: 'none',
+                fontFamily: mono, fontSize: 12, color: CYAN, textDecoration: 'none',
                 border: `1px solid ${CYAN}33`, padding: '12px 16px', background: `${CYAN}0a`,
               }}>
                 {l.label} →
@@ -239,13 +239,13 @@ export default function VoluntadPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PROXYVERSE
         </Link>
 
-        <div style={{ fontSize: 9, color: `${agent.color}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${agent.color}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-PXV-VOLUNTAD // ARMADA DESDE USO REAL, NO DECLARADA
         </div>
         <h1 style={{
@@ -254,7 +254,7 @@ export default function VoluntadPage() {
         }}>
           VOLUNTAD VERDADERA
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 40, maxWidth: 560 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 40, maxWidth: 560 }}>
           No es un horóscopo — no hay dato inventado acá. Cada eje de abajo es una cuenta real
           de localStorage de este navegador: lo que de verdad hiciste en el sitio, nada más.
         </p>
@@ -307,7 +307,7 @@ export default function VoluntadPage() {
 
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <button onClick={downloadCard} disabled={exporting} className="press" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 2, padding: '8px 18px', cursor: exporting ? 'default' : 'pointer',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 2, padding: '8px 18px', cursor: exporting ? 'default' : 'pointer',
             background: `${agent.color}11`, border: `1px solid ${agent.color}44`, color: agent.color,
             opacity: exporting ? 0.5 : 1,
           }}>
@@ -316,14 +316,14 @@ export default function VoluntadPage() {
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 6 }}>ANCLA</div>
+          <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 6 }}>ANCLA</div>
           <div style={{
             fontFamily: mono, fontSize: 20, letterSpacing: 4, color: agent.color,
             textShadow: `0 0 20px ${agent.color}44`,
           }}>
             {agent.name}
           </div>
-          <div style={{ fontSize: 10, color: '#8fb8d6', letterSpacing: 1, marginTop: 4 }}>
+          <div style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 1, marginTop: 4 }}>
             {agent.role}
           </div>
         </div>
@@ -331,7 +331,7 @@ export default function VoluntadPage() {
         <div style={{
           borderLeft: `2px solid ${agent.color}44`, paddingLeft: 16, marginBottom: 32,
         }}>
-          <div style={{ fontSize: 9, color: `${agent.color}aa`, letterSpacing: 2, marginBottom: 6 }}>
+          <div style={{ fontSize: 10.5, color: `${agent.color}aa`, letterSpacing: 2, marginBottom: 6 }}>
             EJE DOMINANTE — {strongest.label}
           </div>
           <p style={{ fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.8 }}>
@@ -341,7 +341,7 @@ export default function VoluntadPage() {
 
         {otherAgents.length > 0 && (
           <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 12 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 12 }}>
               OTROS ECOS
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -350,7 +350,7 @@ export default function VoluntadPage() {
                 const pct = Math.round((score / maxScore) * 100)
                 return (
                   <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 90, fontSize: 9, color: '#8fb8d6', letterSpacing: 1 }}>
+                    <div style={{ width: 90, fontSize: 10.5, color: '#8fb8d6', letterSpacing: 1 }}>
                       {id.toUpperCase()}
                     </div>
                     <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.06)' }}>
@@ -363,7 +363,7 @@ export default function VoluntadPage() {
           </div>
         )}
 
-        <Link href="/proxyverse/id" className="press" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>
+        <Link href="/proxyverse/id" className="press" style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1 }}>
           ver los números crudos detrás de esta carta →
         </Link>
       </div>

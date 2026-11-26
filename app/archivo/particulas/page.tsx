@@ -264,7 +264,7 @@ const INTERACTIONS: Interaction[] = [
 
 function SectionTag({ children }: { children: string }) {
   return (
-    <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 5, color: `${ACCENT}66`, marginBottom: 14 }}>
+    <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 5, color: `${ACCENT}66`, marginBottom: 14 }}>
       {children}
     </div>
   )
@@ -338,14 +338,14 @@ function ParticleCard({ p, color }: { p: Particle; color: string }) {
       >
         {p.symbol}
       </div>
-      <div style={{ fontSize: 9.5, letterSpacing: 1.2, color: '#c8daf0', lineHeight: 1.4 }}>{p.name}</div>
+      <div style={{ fontSize: 11, letterSpacing: 1.2, color: '#c8daf0', lineHeight: 1.4 }}>{p.name}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4 }}>
         <Stat label="CARGA" value={p.charge} color={color} />
         <Stat label="SPIN" value={p.spin} color={color} />
         <Stat label="MASA" value={p.mass} color={color} />
       </div>
       {p.note && (
-        <div style={{ fontSize: 8.5, lineHeight: 1.5, color: '#7a94ac', marginTop: 4, letterSpacing: 0.2 }}>
+        <div style={{ fontSize: 10, lineHeight: 1.5, color: '#7a94ac', marginTop: 4, letterSpacing: 0.2 }}>
           {p.note}
         </div>
       )}
@@ -372,16 +372,16 @@ function HadronCard({ h, color }: { h: Hadron; color: string }) {
         <div style={{ fontSize: 22, fontWeight: 700, color, textShadow: `0 0 14px ${color}66`, lineHeight: 1 }}>
           {h.symbol}
         </div>
-        <div style={{ fontSize: 9.5, letterSpacing: 1.2, color: '#c8daf0' }}>{h.name}</div>
+        <div style={{ fontSize: 11, letterSpacing: 1.2, color: '#c8daf0' }}>{h.name}</div>
       </div>
-      <div style={{ fontSize: 9, color: `${color}99`, letterSpacing: 0.5 }}>contenido: {h.content}</div>
+      <div style={{ fontSize: 10.5, color: `${color}99`, letterSpacing: 0.5 }}>contenido: {h.content}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4 }}>
         <Stat label="CARGA" value={h.charge} color={color} />
         <Stat label="SPIN" value={h.spin} color={color} />
         <Stat label="MASA" value={h.mass} color={color} />
       </div>
       {h.note && (
-        <div style={{ fontSize: 8.5, lineHeight: 1.5, color: '#7a94ac', marginTop: 4, letterSpacing: 0.2 }}>
+        <div style={{ fontSize: 10, lineHeight: 1.5, color: '#7a94ac', marginTop: 4, letterSpacing: 0.2 }}>
           {h.note}
         </div>
       )}
@@ -391,7 +391,7 @@ function HadronCard({ h, color }: { h: Hadron; color: string }) {
 
 function Stat({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 9 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 10.5 }}>
       <span style={{ color: `${color}99`, letterSpacing: 1.5 }}>{label}</span>
       <span style={{ color: '#e8f2ff', letterSpacing: 0.3, textAlign: 'right' }}>{value}</span>
     </div>
@@ -409,7 +409,7 @@ function GenerationRow({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {generations.map(gen => (
         <div key={gen.label}>
-          <div style={{ fontSize: 8.5, letterSpacing: 2, color: `${color}77`, marginBottom: 8 }}>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: `${color}77`, marginBottom: 8 }}>
             {gen.label.toUpperCase()}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
@@ -445,9 +445,9 @@ function TimelineRow({ entry, color, isLast }: { entry: TimelineEntry; color: st
           <span style={{ fontSize: 13, fontWeight: 700, color, letterSpacing: 1, textShadow: `0 0 10px ${color}55` }}>
             {entry.year}
           </span>
-          <span style={{ fontSize: 11, letterSpacing: 1, color: '#e8f2ff' }}>{entry.title}</span>
+          <span style={{ fontSize: 12, letterSpacing: 1, color: '#e8f2ff' }}>{entry.title}</span>
         </div>
-        <div style={{ fontSize: 10, lineHeight: 1.7, color: '#8fa8bc', marginTop: 6, maxWidth: 580 }}>
+        <div style={{ fontSize: 11, lineHeight: 1.7, color: '#8fa8bc', marginTop: 6, maxWidth: 580 }}>
           {entry.detail}
         </div>
       </div>
@@ -460,7 +460,7 @@ function HiggsBranchingChart({ color }: { color: string }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       {HIGGS_BRANCHING.map(row => (
         <div key={row.channel} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 92, fontSize: 10, color: '#c8daf0', flexShrink: 0, textAlign: 'right' }}>
+          <div style={{ width: 92, fontSize: 11, color: '#c8daf0', flexShrink: 0, textAlign: 'right' }}>
             {row.channel}
           </div>
           <div style={{ flexGrow: 1, height: 14, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
@@ -473,7 +473,7 @@ function HiggsBranchingChart({ color }: { color: string }) {
               }}
             />
           </div>
-          <div style={{ width: 50, fontSize: 10, color: `${color}cc`, flexShrink: 0 }}>{row.pct}%</div>
+          <div style={{ width: 50, fontSize: 11, color: `${color}cc`, flexShrink: 0 }}>{row.pct}%</div>
         </div>
       ))}
     </div>
@@ -607,11 +607,11 @@ function FeynmanFrame({
 }) {
   return (
     <GlassPanel style={{ padding: 16 }}>
-      <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>{title}</div>
+      <div style={{ fontSize: 11, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>{title}</div>
       <svg viewBox="0 0 400 250" style={{ width: '100%', height: 'auto', display: 'block' }}>
         {children}
       </svg>
-      <div style={{ fontSize: 10, lineHeight: 1.7, color: '#9fb8d6', marginTop: 10 }}>{caption}</div>
+      <div style={{ fontSize: 11, lineHeight: 1.7, color: '#9fb8d6', marginTop: 10 }}>{caption}</div>
     </GlassPanel>
   )
 }
@@ -797,7 +797,7 @@ export default function ArchivoParticulasPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto', padding: '96px 24px 140px' }}>
         {/* 1. Encabezado */}
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}55`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}55`, marginBottom: 16 }}>
           NPX-QFT-00 // DOCUMENTO TÉCNICO ARCHIVADO
         </div>
         <h1
@@ -822,7 +822,7 @@ export default function ArchivoParticulasPage() {
             display: 'inline-grid',
             gridTemplateColumns: 'auto auto',
             gap: '4px 24px',
-            fontSize: 9,
+            fontSize: 10.5,
             letterSpacing: 1,
             color: `${ACCENT}99`,
             border: `1px solid ${ACCENT}33`,
@@ -837,7 +837,7 @@ export default function ArchivoParticulasPage() {
 
         <p
           style={{
-            fontSize: 11,
+            fontSize: 12,
             lineHeight: 2.1,
             letterSpacing: 0.4,
             color: '#8fb8d6',
@@ -868,7 +868,7 @@ export default function ArchivoParticulasPage() {
             maxWidth: 640,
           }}
         >
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
             ÍNDICE
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '6px 20px' }}>
@@ -892,7 +892,7 @@ export default function ArchivoParticulasPage() {
                 key={id}
                 href={`#${id}`}
                 style={{
-                  fontSize: 10.5,
+                  fontSize: 11.5,
                   color: '#9fb8d6',
                   textDecoration: 'none',
                   display: 'flex',
@@ -911,7 +911,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 01</SectionTag>
           <SectionTitle roman="I">MODELO ESTÁNDAR — PARTÍCULAS ELEMENTALES</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             Doce fermiones de materia (seis quarks, seis leptones, agrupados en tres generaciones
             cada familia) más los bosones que median las interacciones entre ellos, y el bosón de
             Higgs. Cada fermión listado tiene además su antipartícula correspondiente, con la misma
@@ -920,8 +920,8 @@ export default function ArchivoParticulasPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 28, marginBottom: 32 }}>
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>QUARKS</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>QUARKS</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 Spin 1/2 · carga de color (rojo/verde/azul) · confinados dentro de hadrones, nunca
                 libres · cada uno tiene antiquark de carga opuesta
               </div>
@@ -929,8 +929,8 @@ export default function ArchivoParticulasPage() {
             </GlassPanel>
 
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>LEPTONES</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>LEPTONES</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 Spin 1/2 · sin carga de color · los neutrinos apenas interactúan con la materia
                 ordinaria
               </div>
@@ -940,8 +940,8 @@ export default function ArchivoParticulasPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 28 }}>
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BOSONES DE GAUGE</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BOSONES DE GAUGE</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 Spin 1 · mediadores de fuerza — cada interacción fundamental (salvo gravedad) tiene
                 su propio bosón portador
               </div>
@@ -953,8 +953,8 @@ export default function ArchivoParticulasPage() {
             </GlassPanel>
 
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BOSÓN DE HIGGS</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BOSÓN DE HIGGS</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 Spin 0 — el único escalar fundamental conocido
               </div>
               <ParticleCard p={HIGGS} color={ACCENT} />
@@ -967,7 +967,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 02</SectionTag>
           <SectionTitle roman="II">LÍNEA DE TIEMPO DE DESCUBRIMIENTOS</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 40 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 40 }}>
             Ninguna de las partículas de este archivo se dedujo de un escritorio y punto — cada una
             tiene una fecha, un experimento y nombres propios detrás. Más de un siglo de física
             experimental, desde el primer electrón hasta el Higgs.
@@ -987,7 +987,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 03</SectionTag>
           <SectionTitle roman="III">ANTIPARTÍCULAS</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             Cada fermión del listado anterior tiene una antipartícula: misma masa y espín, carga
             eléctrica (y todo otro número cuántico aditivo) exactamente invertida. Los bosones de
             gauge neutros (fotón, Z⁰, Higgs) son su propia antipartícula; W⁺ y W⁻ son antipartículas
@@ -997,8 +997,8 @@ export default function ArchivoParticulasPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 28 }}>
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>ANTIQUARKS</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>ANTIQUARKS</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 Misma masa que su quark correspondiente, carga de color invertida (anticolor)
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
@@ -1009,8 +1009,8 @@ export default function ArchivoParticulasPage() {
             </GlassPanel>
 
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>ANTILEPTONES</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>ANTILEPTONES</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 El positrón fue la primera antipartícula observada (Anderson, 1932) — confirmó la
                 predicción de Dirac de 1928
               </div>
@@ -1028,7 +1028,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 04</SectionTag>
           <SectionTitle roman="IV">PARTÍCULAS COMPUESTAS — HADRONES</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             Los quarks nunca aparecen libres — el confinamiento de color los obliga a agruparse en
             hadrones. Dos familias: bariones (tres quarks, número bariónico ±1 — protón y neutrón
             son los más livianos) y mesones (un quark y un antiquark, número bariónico 0). Son estas
@@ -1038,8 +1038,8 @@ export default function ArchivoParticulasPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 28 }}>
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BARIONES</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>BARIONES</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 qqq · spin 1/2 o 3/2 · el protón y el neutrón (nucleones) son la materia de todo
                 núcleo atómico
               </div>
@@ -1051,8 +1051,8 @@ export default function ArchivoParticulasPage() {
             </GlassPanel>
 
             <GlassPanel>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>MESONES</div>
-              <div style={{ fontSize: 9, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 12, letterSpacing: 3, color: ACCENT, marginBottom: 6 }}>MESONES</div>
+              <div style={{ fontSize: 10.5, color: '#7a94ac', marginBottom: 16, lineHeight: 1.6 }}>
                 qq̄ · spin 0 o 1 · inestables, decaen rápido — nunca forman materia ordinaria estable
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -1069,7 +1069,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 05</SectionTag>
           <SectionTitle roman="V">NÚMEROS CUÁNTICOS Y LEYES DE CONSERVACIÓN</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 36 }}>
             No todo lo que se conserva, se conserva siempre de la misma manera: algunos números
             cuánticos son leyes exactas, otros solo se respetan en ciertas interacciones y se violan
             en otras — y esa diferencia es, en sí misma, una pista sobre la estructura del Modelo
@@ -1078,7 +1078,7 @@ export default function ArchivoParticulasPage() {
 
           <GlassPanel style={{ padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10.5, minWidth: 640 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5, minWidth: 640 }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${ACCENT}33` }}>
                     {['NÚMERO CUÁNTICO', 'SÍMBOLO', '¿SE CONSERVA?', 'NOTA'].map(h => (
@@ -1089,7 +1089,7 @@ export default function ArchivoParticulasPage() {
                           padding: '14px 16px',
                           color: ACCENT,
                           letterSpacing: 1.5,
-                          fontSize: 9,
+                          fontSize: 10.5,
                           whiteSpace: 'nowrap',
                         }}
                       >
@@ -1120,7 +1120,7 @@ export default function ArchivoParticulasPage() {
 
           <GlassPanel style={{ padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10.5, minWidth: 640 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5, minWidth: 640 }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${ACCENT}33` }}>
                     {['INTERACCIÓN', 'MEDIADOR', 'INTENSIDAD RELATIVA', 'ALCANCE', 'AFECTA A'].map(h => (
@@ -1131,7 +1131,7 @@ export default function ArchivoParticulasPage() {
                           padding: '14px 16px',
                           color: ACCENT,
                           letterSpacing: 1.5,
-                          fontSize: 9,
+                          fontSize: 10.5,
                           whiteSpace: 'nowrap',
                         }}
                       >
@@ -1150,7 +1150,7 @@ export default function ArchivoParticulasPage() {
                       <td style={{ padding: '14px 16px', color: '#9fb8d6' }}>
                         {row.affects}
                         {row.note && (
-                          <div style={{ fontSize: 9, color: `${ACCENT}99`, marginTop: 4 }}>{row.note}</div>
+                          <div style={{ fontSize: 10.5, color: `${ACCENT}99`, marginTop: 4 }}>{row.note}</div>
                         )}
                       </td>
                     </tr>
@@ -1160,7 +1160,7 @@ export default function ArchivoParticulasPage() {
             </div>
           </GlassPanel>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginTop: 24 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginTop: 24 }}>
             La gravedad todavía no está unificada con las otras tres interacciones en una teoría
             cuántica funcional. El Modelo Estándar describe con enorme precisión lo fuerte, lo
             electromagnético y lo débil, pero no incluye la gravedad — encontrar una teoría
@@ -1175,7 +1175,7 @@ export default function ArchivoParticulasPage() {
           <SectionTitle roman="VII">SIMETRÍA DE GAUGE Y EL MECANISMO DE HIGGS</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680, marginBottom: 40 }}>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               El Modelo Estándar completo es una teoría de gauge con grupo de simetría{' '}
               <strong style={{ color: ACCENT }}>SU(3)_C × SU(2)_L × U(1)_Y</strong>. Cada factor
               produce sus propios bosones mediadores: SU(3)_C (cromodinámica cuántica, QCD) tiene 8
@@ -1183,7 +1183,7 @@ export default function ArchivoParticulasPage() {
               quiralidad izquierda — la interacción débil viola paridad, algo confirmado
               experimentalmente por Chien-Shiung Wu en 1956; U(1)_Y es la hipercarga débil.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               Antes de la ruptura de simetría, SU(2)_L × U(1)_Y predice cuatro bosones de gauge sin
               masa (W¹, W², W³, B). El campo de Higgs adquiere un valor de expectación de vacío
               distinto de cero (<strong style={{ color: ACCENT }}>v ≈ 246 GeV</strong>), y esa
@@ -1191,7 +1191,7 @@ export default function ArchivoParticulasPage() {
               bosón Z⁰ (que adquiere masa) — el ángulo de mezcla se llama ángulo de Weinberg (θW, con
               sin²θW ≈ 0.231). W¹ y W² se combinan en W⁺ y W⁻, ambos masivos.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               Los fermiones no reciben su masa del mismo mecanismo geométrico — la adquieren por
               acoplamiento de Yukawa al campo de Higgs, con una intensidad de acoplamiento
               proporcional a la masa de cada fermión. El quark top, con un acoplamiento de Yukawa
@@ -1200,7 +1200,7 @@ export default function ArchivoParticulasPage() {
             </p>
           </div>
 
-          <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+          <div style={{ fontSize: 11, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
             ESTRUCTURA DEL LAGRANGIANO (esquemática)
           </div>
           <GlassPanel style={{ marginBottom: 40 }}>
@@ -1215,19 +1215,19 @@ export default function ArchivoParticulasPage() {
                 { term: 'ℒ_Yukawa = −y_f Ψ̄_L Φ Ψ_R + h.c.', note: 'da masa a los fermiones por acoplamiento al Higgs — y_f distinta para cada uno, de ahí la jerarquía de masas' },
               ].map(row => (
                 <div key={row.term}>
-                  <div style={{ fontFamily: mono, fontSize: 11, color: ACCENT, letterSpacing: 0.5 }}>{row.term}</div>
-                  <div style={{ fontSize: 9.5, color: '#7a94ac', marginTop: 4, lineHeight: 1.6 }}>{row.note}</div>
+                  <div style={{ fontFamily: mono, fontSize: 12, color: ACCENT, letterSpacing: 0.5 }}>{row.term}</div>
+                  <div style={{ fontSize: 11, color: '#7a94ac', marginTop: 4, lineHeight: 1.6 }}>{row.note}</div>
                 </div>
               ))}
             </div>
           </GlassPanel>
 
-          <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+          <div style={{ fontSize: 11, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
             CANALES DE DECAIMIENTO DEL HIGGS (branching ratios, m_H ≈ 125 GeV)
           </div>
           <GlassPanel>
             <HiggsBranchingChart color={ACCENT} />
-            <div style={{ fontSize: 9.5, lineHeight: 1.7, color: '#7a94ac', marginTop: 18 }}>
+            <div style={{ fontSize: 11, lineHeight: 1.7, color: '#7a94ac', marginTop: 18 }}>
               El canal más frecuente (H⁰ → bb̄) no es el más usado para descubrirlo — el ruido de
               fondo de la fuerte lo hace casi invisible en el LHC. Los canales que realmente
               permitieron el anuncio de 2012 fueron los más raros pero más limpios: H⁰ → γγ y
@@ -1241,7 +1241,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 08</SectionTag>
           <SectionTitle roman="VIII">MEZCLA DE QUARKS — MATRIZ CKM Y VIOLACIÓN CP</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Los autoestados de masa de los quarks (u, c, t / d, s, b) no coinciden exactamente con
             los autoestados que participan en la interacción débil — están mezclados por la matriz
             de Cabibbo-Kobayashi-Maskawa (CKM), una matriz unitaria 3×3 compleja. Esa mezcla es lo
@@ -1252,11 +1252,11 @@ export default function ArchivoParticulasPage() {
           </p>
 
           <GlassPanel>
-            <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
               |V_CKM| — MAGNITUDES APROXIMADAS (parametrización de Wolfenstein)
             </div>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ borderCollapse: 'collapse', fontSize: 11, minWidth: 320, margin: '0 auto' }}>
+              <table style={{ borderCollapse: 'collapse', fontSize: 12, minWidth: 320, margin: '0 auto' }}>
                 <thead>
                   <tr>
                     <th />
@@ -1283,7 +1283,7 @@ export default function ArchivoParticulasPage() {
                 </tbody>
               </table>
             </div>
-            <div style={{ fontSize: 9.5, lineHeight: 1.7, color: '#7a94ac', marginTop: 14 }}>
+            <div style={{ fontSize: 11, lineHeight: 1.7, color: '#7a94ac', marginTop: 14 }}>
               Los elementos cercanos a la diagonal (Vud, Vcs, Vtb) están cerca de 1 — un quark
               "prefiere" decaer dentro de su propia generación. Los elementos lejos de la diagonal
               son progresivamente más chicos — cambiar dos generaciones a la vez (ej. t↔d) es mucho
@@ -1298,13 +1298,13 @@ export default function ArchivoParticulasPage() {
           <SectionTitle roman="IX">OSCILACIÓN DE NEUTRINOS</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               Super-Kamiokande (neutrinos atmosféricos, Japón, 1998) y el Observatorio de Neutrinos
               de Sudbury (neutrinos solares, Canadá, 2001) mostraron que un neutrino cambia de sabor
               —electrónico, muónico, tauónico— a medida que se propaga por el espacio. Ese
               descubrimiento les valió el Nobel de Física 2015 a Takaaki Kajita y Arthur McDonald.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               La oscilación solo es posible si los neutrinos tienen masa — por minúscula que sea —
               contradiciendo la versión original del Modelo Estándar, que los postulaba exactamente
               sin masa. La probabilidad de oscilación depende de las <em>diferencias</em> entre los
@@ -1312,7 +1312,7 @@ export default function ArchivoParticulasPage() {
               absolutas — por eso se conocen esas diferencias con precisión, pero no la escala
               absoluta de masa de ningún neutrino individual.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               Sigue abierta una pregunta central: ¿son los neutrinos partículas de Dirac (como el
               resto de los fermiones, con antipartícula distinta) o de Majorana (su propia
               antipartícula)? Los experimentos de doble decaimiento beta sin neutrinos buscan
@@ -1327,12 +1327,12 @@ export default function ArchivoParticulasPage() {
           <SectionTitle roman="X">CONSTANTES DE ACOPLAMIENTO Y LIBERTAD ASINTÓTICA</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680, marginBottom: 32 }}>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               Las "constantes" de acoplamiento de cada interacción no son constantes — dependen de
               la escala de energía a la que se miden, un efecto de renormalización en teoría
               cuántica de campos: las constantes "corren" con la energía.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               La constante de estructura fina (α, que fija la intensidad electromagnética) vale
               ≈ 1/137 a baja energía, pero crece — aunque muy poco — a energías más altas. La
               constante de acoplamiento fuerte (αs) hace exactamente lo contrario: es grande a baja
@@ -1340,7 +1340,7 @@ export default function ArchivoParticulasPage() {
               vuelve pequeña a muy alta energía o muy corta distancia, un fenómeno llamado{' '}
               <strong style={{ color: ACCENT }}>libertad asintótica</strong>.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               La libertad asintótica fue descubierta teóricamente por David Gross, David Politzer y
               Frank Wilczek (Nobel de Física 2004) y es lo que permite tratar a los quarks dentro del
               protón como casi libres en colisiones de muy alta energía — exactamente lo que se
@@ -1351,11 +1351,11 @@ export default function ArchivoParticulasPage() {
           </div>
 
           <GlassPanel>
-            <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>
               CORRIDA DE LAS CONSTANTES DE ACOPLAMIENTO (esquemático)
             </div>
             <UnificationPlot color={ACCENT} />
-            <div style={{ fontSize: 9.5, lineHeight: 1.7, color: '#7a94ac', marginTop: 14 }}>
+            <div style={{ fontSize: 11, lineHeight: 1.7, color: '#7a94ac', marginTop: 14 }}>
               Gráfico ilustrativo, no a escala real: muestra la forma cualitativa de cómo 1/α
               (inverso de cada constante de acoplamiento) crece con la energía. En extensiones
               supersimétricas del Modelo Estándar, las tres curvas convergen de forma mucho más
@@ -1369,7 +1369,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 11</SectionTag>
           <SectionTitle roman="XI">DIAGRAMAS DE FEYNMAN</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Convención usada en todos los diagramas de esta sección: el tiempo avanza de izquierda a
             derecha. Línea recta con flecha = fermión (flecha hacia adelante = partícula, hacia
             atrás = antipartícula). Línea ondulada = fotón. Línea rizada = gluón. Línea discontinua =
@@ -1392,7 +1392,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 12</SectionTag>
           <SectionTitle roman="XII">CERN Y LOS GRANDES EXPERIMENTOS</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Casi todos los valores de este documento fueron medidos, confirmados o descubiertos en
             un puñado de laboratorios de altas energías. El más grande en operación es el Gran
             Colisionador de Hadrones (LHC) del CERN, en la frontera franco-suiza cerca de Ginebra: un
@@ -1411,15 +1411,15 @@ export default function ArchivoParticulasPage() {
                 <div style={{ fontSize: 16, fontWeight: 700, color: ACCENT, letterSpacing: 2, textShadow: `0 0 12px ${ACCENT}55` }}>
                   {exp.name}
                 </div>
-                <div style={{ fontSize: 9, color: `${ACCENT}99`, marginTop: 4, marginBottom: 10, letterSpacing: 0.5 }}>
+                <div style={{ fontSize: 10.5, color: `${ACCENT}99`, marginTop: 4, marginBottom: 10, letterSpacing: 0.5 }}>
                   {exp.detail}
                 </div>
-                <div style={{ fontSize: 9.5, lineHeight: 1.6, color: '#9fb8d6' }}>{exp.note}</div>
+                <div style={{ fontSize: 11, lineHeight: 1.6, color: '#9fb8d6' }}>{exp.note}</div>
               </GlassPanel>
             ))}
           </div>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginTop: 28 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginTop: 28 }}>
             El 4 de julio de 2012, ATLAS y CMS anunciaron conjuntamente la observación de una nueva
             partícula compatible con el bosón de Higgs — la última pieza que faltaba para confirmar
             el Modelo Estándar completo, 48 años después de que Peter Higgs y otros propusieran el
@@ -1432,7 +1432,7 @@ export default function ArchivoParticulasPage() {
           <SectionTag>SECCIÓN 13</SectionTag>
           <SectionTitle roman="XIII">MÁS ALLÁ DEL MODELO ESTÁNDAR</SectionTitle>
 
-          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
+          <p style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb8d6', maxWidth: 680, marginBottom: 32 }}>
             Todo lo anterior es, a la vez, un éxito enorme y una lista de lo que todavía falta. El
             Modelo Estándar describe con precisión extraordinaria todo lo que mide un acelerador de
             partículas — y al mismo tiempo no explica la mayor parte del contenido del universo. Esta
@@ -1446,7 +1446,7 @@ export default function ArchivoParticulasPage() {
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>
                   {topic.title}
                 </div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb8d6' }}>{topic.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: '#9fb8d6' }}>{topic.detail}</div>
               </GlassPanel>
             ))}
           </div>
@@ -1458,7 +1458,7 @@ export default function ArchivoParticulasPage() {
           <SectionTitle roman="XIV">NOTAS ADICIONALES</SectionTitle>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 680 }}>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               <strong style={{ color: '#c8daf0' }}>Espín y estadística.</strong> Toda partícula
               elemental es o un fermión (spin semientero — 1/2 para quarks y leptones) o un bosón
               (spin entero — 0 para Higgs, 1 para los bosones de gauge). Los fermiones obedecen el
@@ -1467,7 +1467,7 @@ export default function ArchivoParticulasPage() {
               acumularse en un mismo estado, lo que permite fenómenos como el láser o la
               superconductividad.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               <strong style={{ color: '#c8daf0' }}>Materia y antimateria.</strong> Cada fermión
               tiene una antipartícula correspondiente: misma masa, mismo espín, carga eléctrica (y
               otros números cuánticos) exactamente opuestos. El positrón (e⁺) es la antipartícula
@@ -1475,14 +1475,14 @@ export default function ArchivoParticulasPage() {
               se encuentran pueden aniquilarse, convirtiendo su masa en energía — ver el diagrama 02
               arriba.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               <strong style={{ color: '#c8daf0' }}>Unidades naturales.</strong> Todas las masas de
               este documento se dan en eV/c² (y sus múltiplos keV, MeV, GeV) en vez de kilogramos —
               la convención estándar en física de partículas. En el sistema de unidades naturales
               (ħ = c = 1) masa, energía y momento comparten unidad; un protón "pesa" ≈ 938 MeV
               porque esa es, literalmente, su energía en reposo (E = mc², con c = 1).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb8d6', margin: 0 }}>
               <strong style={{ color: '#c8daf0' }}>Lo que el Modelo Estándar no explica.</strong>{' '}
               Pese a décadas de confirmación experimental precisa, el Modelo Estándar no da cuenta
               de la materia oscura, no explica la energía oscura, y no incluye una descripción
@@ -1497,7 +1497,7 @@ export default function ArchivoParticulasPage() {
           style={{
             borderTop: `1px solid ${ACCENT}22`,
             paddingTop: 28,
-            fontSize: 9,
+            fontSize: 10.5,
             letterSpacing: 3,
             color: `${ACCENT}44`,
           }}

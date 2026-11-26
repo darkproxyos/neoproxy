@@ -48,11 +48,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -202,13 +202,13 @@ export default function MudaPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${SNAKE_GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${SNAKE_GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
           // NPX-XP-MUDA — TERCERA CRIATURA, CADENA ARTICULADA
         </div>
         <h1 style={{
@@ -217,7 +217,7 @@ export default function MudaPage() {
         }}>
           MUDA
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
           Ni partículas con reglas de vecindario (Enjambre) ni un cuerpo rígido lanzándose una vez
           (Acecho) — una cadena de {SEGMENT_COUNT} segmentos a distancia fija, cada uno persiguiendo en
           línea recta al anterior (FABRIK sin base fija, ver tarjeta abajo). "No tiene una forma fija
@@ -232,37 +232,37 @@ export default function MudaPage() {
 
           <div>
             <div style={{ border: `1px solid ${SNAKE_GREEN}33`, background: `${SNAKE_GREEN}08`, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: `${SNAKE_GREEN}cc`, marginBottom: 10 }}>// ESTADO</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${SNAKE_GREEN}cc`, marginBottom: 10 }}>// ESTADO</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <span style={{ width: 16, height: 16, borderRadius: '50%', background: hueHex, boxShadow: `0 0 10px ${hueHex}` }} />
-                <span style={{ fontSize: 10, color: '#c8daf0' }}>PIEL ACTUAL</span>
+                <span style={{ fontSize: 11, color: '#c8daf0' }}>PIEL ACTUAL</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 10 }}>
-                <div style={{ color: '#4a6080' }}>MUDAS</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 11 }}>
+                <div style={{ color: '#6f86a3' }}>MUDAS</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{moltCount}</div>
-                <div style={{ color: '#4a6080' }}>MATIZ (HUE)</div>
+                <div style={{ color: '#6f86a3' }}>MATIZ (HUE)</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{hue}°</div>
-                <div style={{ color: '#4a6080' }}>VELOCIDAD</div>
+                <div style={{ color: '#6f86a3' }}>VELOCIDAD</div>
                 <div style={{ color: SNAKE_GREEN, textAlign: 'right' }}>{speed.toFixed(2)}</div>
-                <div style={{ color: '#4a6080' }}>SEGMENTOS</div>
+                <div style={{ color: '#6f86a3' }}>SEGMENTOS</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{SEGMENT_COUNT}</div>
               </div>
             </div>
 
-            <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
+            <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
               Cada segmento se mueve en línea recta hacia el anterior y se frena a distancia fija —
               sin ángulos, sin trigonometría.
             </p>
             <AuthorCard entryId="aristidou-fabrik" accent={SNAKE_GREEN} />
 
             <button onClick={exportSTL} className="press" style={{
-              display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 10,
+              display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 11,
               letterSpacing: 1, padding: '10px 0', background: `${SNAKE_GREEN}15`,
               border: `1px solid ${SNAKE_GREEN}66`, color: SNAKE_GREEN, cursor: 'pointer', fontFamily: mono,
             }}>
               ▽ DESCARGAR POSE ACTUAL (.STL)
             </button>
-            <p style={{ fontSize: 8, color: '#3a4a60', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 6 }}>
+            <p style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 6 }}>
               Congela la pose exacta de este instante — no hay una "corrida terminada": la cadena
               nunca deja de moverse.
             </p>

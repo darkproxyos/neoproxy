@@ -1678,7 +1678,7 @@ export default function Home() {
       {currentScreen === 'init' && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 99, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', background: '#000205' }}>
           <div style={{ fontFamily: mono, fontSize: 14, color: '#00ffcc', letterSpacing: 6, textShadow: '0 0 20px #00ffcc' }}>SIGNAL ACQUIRED</div>
-          <div style={{ fontFamily: mono, fontSize: 10, color: '#00d4ff44', letterSpacing: 3, marginTop: 16 }}>NODOS Y UNIONES DETECTADAS EN EL RUIDO</div>
+          <div style={{ fontFamily: mono, fontSize: 11, color: '#00d4ff44', letterSpacing: 3, marginTop: 16 }}>NODOS Y UNIONES DETECTADAS EN EL RUIDO</div>
         </div>
       )}
 
@@ -1703,7 +1703,7 @@ export default function Home() {
             ))}
 
             {hovered && ALL_NODE_META[hovered] && (
-              <div style={{ position: 'absolute', top: 168, left: 30, fontFamily: mono, fontSize: 10, color: '#00ffccdd', letterSpacing: 2, textShadow: '0 0 10px #00ffcc55' }}>
+              <div style={{ position: 'absolute', top: 168, left: 30, fontFamily: mono, fontSize: 11, color: '#00ffccdd', letterSpacing: 2, textShadow: '0 0 10px #00ffcc55' }}>
                 FOCUS // {ALL_NODE_META[hovered].tag}
               </div>
             )}
@@ -1736,7 +1736,7 @@ export default function Home() {
               transform: `translateX(-50%) translateY(${panelVisible ? '0' : '-10px'}) scale(${panelVisible ? 1 : 0.97})`,
               transition: 'opacity 220ms var(--ease-out), transform 220ms var(--ease-out)',
             }}>
-              <div style={{ fontFamily: mono, fontSize: 11, color: renderedZone.color, letterSpacing: 3 }}>
+              <div style={{ fontFamily: mono, fontSize: 12, color: renderedZone.color, letterSpacing: 3 }}>
                 {renderedZone.tag}
               </div>
               <div style={{ fontFamily: mono, fontSize: 21, fontWeight: 700, color: '#f2f8fc', letterSpacing: 2.5, marginTop: 7, marginBottom: 13, textShadow: `0 0 14px ${renderedZone.color}66` }}>

@@ -519,7 +519,7 @@ export default function ProxygenesisPage() {
     label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void; suffix?: string
   }) => (
     <div style={{ marginBottom: 14 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
         <span>{label}</span>
         <span style={{ color: accent }}>{value.toFixed(step < 0.1 ? 2 : step < 1 ? 1 : 0)}{suffix}</span>
       </div>
@@ -539,12 +539,12 @@ export default function ProxygenesisPage() {
         borderBottom: `1px solid ${accent}44`, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 20px', zIndex: 100, backdropFilter: 'blur(5px)',
       }}>
-        <span style={{ fontSize: 11, letterSpacing: 2, color: accent }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
+        <span style={{ fontSize: 12, letterSpacing: 2, color: accent }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Link href="/lab/proxygenesis/galeria" className="press" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+          <Link href="/lab/proxygenesis/galeria" className="press" style={{ color: accent, textDecoration: 'none', fontSize: 11, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
             GALERÍA ▸
           </Link>
-          <Link href="/lab" className="press tap-ext" style={{ color: accent, textDecoration: 'none', fontSize: 10, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
+          <Link href="/lab" className="press tap-ext" style={{ color: accent, textDecoration: 'none', fontSize: 11, border: `1px solid ${accent}44`, padding: '2px 8px' }}>
             ← LABORATORIO
           </Link>
         </div>
@@ -559,7 +559,7 @@ export default function ProxygenesisPage() {
           }}>
             {(['coral', 'arbol', 'concha'] as Mode[]).map((m) => (
               <button key={m} onClick={() => setMode(m)} style={{
-                fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: 'pointer',
+                fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '8px 14px', cursor: 'pointer',
                 background: mode === m ? `${MODE_COLOR[m]}22` : 'rgba(5,10,20,0.85)',
                 border: `1px solid ${mode === m ? MODE_COLOR[m] : '#2a3a50'}`,
                 color: mode === m ? MODE_COLOR[m] : '#8fb8d6',
@@ -576,7 +576,7 @@ export default function ProxygenesisPage() {
             background: 'rgba(5,10,20,0.92)', border: `1px solid ${accent}33`, backdropFilter: 'blur(15px)',
           }}>
             <button onClick={() => setIsPanelOpen((v) => !v)} style={{
-              width: '100%', background: 'transparent', border: 'none', color: accent, padding: 10, fontSize: 10,
+              width: '100%', background: 'transparent', border: 'none', color: accent, padding: 10, fontSize: 11,
               cursor: 'pointer', display: isMobile ? 'flex' : 'none', justifyContent: 'space-between', fontFamily: mono,
             }}>
               <span>PARÁMETROS</span><span>{isPanelOpen ? '▼' : '▶'}</span>
@@ -587,7 +587,7 @@ export default function ProxygenesisPage() {
                 <Link
                   href={`/knowledge?entry=${mode === 'concha' ? 'raup' : 'runions-lane-prusinkiewicz'}`}
                   style={{
-                    display: 'block', fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 10,
+                    display: 'block', fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 10,
                     textDecoration: 'none',
                   }}
                 >
@@ -601,7 +601,7 @@ export default function ProxygenesisPage() {
                       if (mode === 'concha') setShellParams({ ...SHELL_DEFAULT, ...(p as ShellParamsUI) })
                       else setBranchParams((prev) => ({ ...prev, ...(p as Partial<BranchParams>) }))
                     }} style={{
-                      fontFamily: mono, fontSize: 8, padding: '4px 8px', cursor: 'pointer',
+                      fontFamily: mono, fontSize: 10, padding: '4px 8px', cursor: 'pointer',
                       background: 'transparent', border: `1px solid ${accent}44`, color: accent,
                     }}>
                       {name}
@@ -623,14 +623,14 @@ export default function ProxygenesisPage() {
                       onChange={(v) => setBranchParams((p) => ({ ...p, thickness: v }))} />
 
                     <div style={{ marginBottom: 14, borderTop: `1px solid ${accent}22`, paddingTop: 12 }}>
-                      <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 6 }}>
+                      <div style={{ fontSize: 10.5, color: '#6f86a3', marginBottom: 6 }}>
                         MODULACIÓN SONORA {audioEnvelope && <span style={{ color: accent }}>● ACTIVA</span>}
                       </div>
                       {!audioEnvelope ? (
                         <>
                           <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
                             <label style={{
-                              flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 4px', textAlign: 'center', cursor: 'pointer',
+                              flex: 1, fontFamily: mono, fontSize: 10, padding: '6px 4px', textAlign: 'center', cursor: 'pointer',
                               background: 'transparent', border: `1px solid ${accent}44`, color: accent,
                             }}>
                               ⬆ SUBIR AUDIO
@@ -638,17 +638,17 @@ export default function ProxygenesisPage() {
                                 onChange={e => { const f = e.target.files?.[0]; if (f) handleAudioFile(f) }} />
                             </label>
                             <button onClick={handleRecordMic} disabled={audioStatus === 'recording' || audioStatus === 'loading'} style={{
-                              flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 4px', cursor: 'pointer',
+                              flex: 1, fontFamily: mono, fontSize: 10, padding: '6px 4px', cursor: 'pointer',
                               background: 'transparent', border: `1px solid ${accent}44`, color: accent,
                               opacity: (audioStatus === 'recording' || audioStatus === 'loading') ? 0.5 : 1,
                             }}>
                               {audioStatus === 'recording' ? '● GRABANDO...' : '● MIC (4s)'}
                             </button>
                           </div>
-                          <div style={{ fontSize: 7, color: '#3a4a60', lineHeight: 1.6 }}>
+                          <div style={{ fontSize: 9.5, color: '#3a4a60', lineHeight: 1.6 }}>
                             Modula la curvatura orgánica a lo largo del crecimiento según el volumen del clip — un tramo fuerte sale más ondulado.
                           </div>
-                          {audioErrorMsg && <div style={{ fontSize: 8, color: '#ff4444', marginTop: 4 }}>{audioErrorMsg}</div>}
+                          {audioErrorMsg && <div style={{ fontSize: 10, color: '#ff4444', marginTop: 4 }}>{audioErrorMsg}</div>}
                         </>
                       ) : (
                         <>
@@ -660,15 +660,15 @@ export default function ProxygenesisPage() {
 
                           {audioData && (
                             <>
-                              <div style={{ fontSize: 7, color: '#3a4a60', marginBottom: 8 }}>
+                              <div style={{ fontSize: 9.5, color: '#3a4a60', marginBottom: 8 }}>
                                 {audioData.bpm ? `${audioData.bpm} BPM` : 'tempo no detectado'} · brillo medio {Math.round(audioData.centroidMeanHz)}Hz
                               </div>
 
-                              <div style={{ fontSize: 8, color: '#4a6080', marginBottom: 4, letterSpacing: 1 }}>FORMA SEGÚN</div>
+                              <div style={{ fontSize: 10, color: '#6f86a3', marginBottom: 4, letterSpacing: 1 }}>FORMA SEGÚN</div>
                               <div style={{ display: 'flex', gap: 3, marginBottom: 10 }}>
                                 {([['rms', 'VOLUMEN'], ['onsets', 'RITMO'], ['centroid', 'BRILLO']] as [FormSource, string][]).map(([v, label]) => (
                                   <button key={v} onClick={() => setFormSource(v)} style={{
-                                    flex: 1, fontFamily: mono, fontSize: 7, padding: '5px 2px', cursor: 'pointer',
+                                    flex: 1, fontFamily: mono, fontSize: 9.5, padding: '5px 2px', cursor: 'pointer',
                                     background: formSource === v ? `${accent}26` : 'transparent',
                                     border: `1px solid ${formSource === v ? accent : '#2a3a50'}`,
                                     color: formSource === v ? accent : '#4a6080',
@@ -678,11 +678,11 @@ export default function ProxygenesisPage() {
                                 ))}
                               </div>
 
-                              <div style={{ fontSize: 8, color: '#4a6080', marginBottom: 4, letterSpacing: 1 }}>COLOR SEGÚN</div>
+                              <div style={{ fontSize: 10, color: '#6f86a3', marginBottom: 4, letterSpacing: 1 }}>COLOR SEGÚN</div>
                               <div style={{ display: 'flex', gap: 3, marginBottom: 10, flexWrap: 'wrap' }}>
                                 {([['brand', 'MARCA'], ['fixed', 'BRILLO'], ['tempo', 'TEMPO'], ['gradient', 'GRADIENTE']] as [ColorMode, string][]).map(([v, label]) => (
                                   <button key={v} onClick={() => setColorMode(v)} style={{
-                                    flex: '1 1 45%', fontFamily: mono, fontSize: 7, padding: '5px 2px', cursor: 'pointer',
+                                    flex: '1 1 45%', fontFamily: mono, fontSize: 9.5, padding: '5px 2px', cursor: 'pointer',
                                     background: colorMode === v ? `${accent}26` : 'transparent',
                                     border: `1px solid ${colorMode === v ? accent : '#2a3a50'}`,
                                     color: colorMode === v ? accent : '#4a6080',
@@ -692,7 +692,7 @@ export default function ProxygenesisPage() {
                                 ))}
                               </div>
                               <button onClick={() => runGeneration(mode, branchParams)} disabled={isGenerating} style={{
-                                width: '100%', fontFamily: mono, fontSize: 8, padding: '7px 0', cursor: 'pointer', marginBottom: 6,
+                                width: '100%', fontFamily: mono, fontSize: 10, padding: '7px 0', cursor: 'pointer', marginBottom: 6,
                                 background: `${accent}1a`, border: `1px solid ${accent}`, color: accent, opacity: isGenerating ? 0.5 : 1,
                               }}>
                                 ↻ REGENERAR CON ESTA MEZCLA
@@ -701,7 +701,7 @@ export default function ProxygenesisPage() {
                           )}
 
                           <button onClick={clearAudio} style={{
-                            width: '100%', fontFamily: mono, fontSize: 8, padding: '6px 0', cursor: 'pointer',
+                            width: '100%', fontFamily: mono, fontSize: 10, padding: '6px 0', cursor: 'pointer',
                             background: 'transparent', border: '1px solid #ff444466', color: '#ff4444',
                           }}>
                             ✕ QUITAR AUDIO
@@ -711,11 +711,11 @@ export default function ProxygenesisPage() {
                     </div>
 
                     <div style={{ marginBottom: 14 }}>
-                      <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 4 }}>CALIDAD // DETALLE</div>
+                      <div style={{ fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>CALIDAD // DETALLE</div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                         {(['baja', 'media', 'alta', 'extrema'] as Quality[]).map((q) => (
                           <button key={q} onClick={() => setBranchParams((p) => ({ ...p, quality: q }))} style={{
-                            fontFamily: mono, fontSize: 8, padding: '5px 8px', textAlign: 'left', cursor: 'pointer',
+                            fontFamily: mono, fontSize: 10, padding: '5px 8px', textAlign: 'left', cursor: 'pointer',
                             background: branchParams.quality === q ? `${accent}22` : 'transparent',
                             border: `1px solid ${branchParams.quality === q ? accent : '#2a3a50'}`,
                             color: branchParams.quality === q ? accent : '#4a6080',
@@ -726,16 +726,16 @@ export default function ProxygenesisPage() {
                       </div>
                     </div>
 
-                    <div style={{ fontSize: 8, color: '#3a4a60', marginBottom: 10 }}>SEMILLA: 0x{branchParams.seed.toString(16)}</div>
+                    <div style={{ fontSize: 10, color: '#3a4a60', marginBottom: 10 }}>SEMILLA: 0x{branchParams.seed.toString(16)}</div>
 
                     <button onClick={randomizeSeed} disabled={isGenerating} style={{
-                      width: '100%', fontFamily: mono, fontSize: 9, padding: 8, marginBottom: 8, cursor: isGenerating ? 'default' : 'pointer',
+                      width: '100%', fontFamily: mono, fontSize: 10.5, padding: 8, marginBottom: 8, cursor: isGenerating ? 'default' : 'pointer',
                       background: 'transparent', border: `1px solid ${accent}66`, color: accent, opacity: isGenerating ? 0.4 : 1,
                     }}>
                       ⟲ NUEVA SEMILLA
                     </button>
                     <button onClick={() => runGeneration(mode, branchParams)} disabled={isGenerating} style={{
-                      width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginBottom: 8,
+                      width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 10, marginBottom: 8,
                       cursor: isGenerating ? 'default' : 'pointer', background: accent, color: '#020408', border: 'none',
                       opacity: isGenerating ? 0.5 : 1, letterSpacing: 1,
                     }}>
@@ -758,21 +758,21 @@ export default function ProxygenesisPage() {
                 )}
 
                 <button onClick={handleExportSTL} disabled={isGenerating || !specimenInfo} style={{
-                  width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginTop: 6,
+                  width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 10, marginTop: 6,
                   cursor: (isGenerating || !specimenInfo) ? 'default' : 'pointer', background: 'transparent',
                   border: `1px solid ${accent}`, color: accent, opacity: (isGenerating || !specimenInfo) ? 0.4 : 1, letterSpacing: 1,
                 }}>
                   ▽ EXPORTAR .STL
                 </button>
                 <button onClick={handleSaveToGallery} disabled={isGenerating || !specimenInfo || savingToGallery} style={{
-                  width: '100%', fontFamily: mono, fontSize: 9, padding: 9, marginTop: 6,
+                  width: '100%', fontFamily: mono, fontSize: 10.5, padding: 9, marginTop: 6,
                   cursor: (isGenerating || !specimenInfo || savingToGallery) ? 'default' : 'pointer', background: 'transparent',
                   border: `1px solid ${accent}66`, color: accent, opacity: (isGenerating || !specimenInfo || savingToGallery) ? 0.4 : 1, letterSpacing: 1,
                 }}>
                   {savingToGallery ? 'GUARDANDO...' : '✦ GUARDAR EN GALERÍA'}
                 </button>
                 <button onClick={handleSubmitToFabrication} disabled={isGenerating || !specimenInfo || submittingToFabrication} style={{
-                  width: '100%', fontFamily: mono, fontSize: 9, padding: 9, marginTop: 6,
+                  width: '100%', fontFamily: mono, fontSize: 10.5, padding: 9, marginTop: 6,
                   cursor: (isGenerating || !specimenInfo || submittingToFabrication) ? 'default' : 'pointer',
                   background: fabricationSubmitted ? `${accent}22` : 'transparent',
                   border: `1px solid ${accent}66`, color: accent,
@@ -791,7 +791,7 @@ export default function ProxygenesisPage() {
               right: isMobile ? 10 : 'auto', width: isMobile ? 'auto' : 240, zIndex: 100,
               background: 'rgba(5,10,20,0.92)', border: `1px solid ${accent}44`, padding: '10px 14px',
             }}>
-              <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 6 }}>
+              <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 6 }}>
                 CRECIENDO ORGANISMO...
               </div>
               <div style={{ height: 3, background: '#1a2436' }}>
@@ -808,12 +808,12 @@ export default function ProxygenesisPage() {
             pointerEvents: 'none', background: 'rgba(5,10,20,0.85)', padding: '8px 12px', border: `1px solid ${accent}44`,
             backdropFilter: 'blur(10px)',
           }}>
-            <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 4 }}>SPECIMEN_STATUS</div>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>SPECIMEN_STATUS</div>
             <div style={{ fontSize: isMobile ? 13 : 16, color: accent, marginBottom: 4, textShadow: `0 0 10px ${accent}44` }}>
               {isGenerating ? 'CRECIENDO' : specimenInfo ? 'RESONANT_ACTIVE' : 'INICIALIZANDO'}
             </div>
             {specimenInfo && (
-              <div style={{ fontSize: 8, color: '#4a6080' }}>
+              <div style={{ fontSize: 10, color: '#6f86a3' }}>
                 NODOS: {specimenInfo.nodes.toLocaleString()} // CARAS: {Math.round(specimenInfo.faces).toLocaleString()}
               </div>
             )}

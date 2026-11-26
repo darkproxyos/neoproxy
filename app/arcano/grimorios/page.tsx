@@ -60,7 +60,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -103,13 +103,13 @@ export default function GrimoriosPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link className="tap-ext" href="/knowledge/arcanum" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link className="tap-ext" href="/knowledge/arcanum" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER A CODEX ARCANUM
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARN-00 // HISTORIA VERIFICABLE
           </div>
           <h1
@@ -130,7 +130,7 @@ export default function GrimoriosPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -154,7 +154,7 @@ export default function GrimoriosPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -169,12 +169,12 @@ export default function GrimoriosPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -187,7 +187,7 @@ export default function GrimoriosPage() {
         <div id="sec-01" className={`arn-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="HEKA — EL NOMBRE COMO ACTO" sub="Egipto antiguo, atestiguado en textos funerarios reales" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Heka</strong> era, para los antiguos egipcios, tanto el
               nombre de una fuerza real del cosmos como el de una práctica concreta: la idea de que
               conocer y pronunciar el nombre verdadero de algo —un dios, un demonio, una enfermedad— daba
@@ -205,7 +205,7 @@ export default function GrimoriosPage() {
         <div id="sec-02" className={`arn-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="EL CORPUS HERMÉTICO Y EL MITO DE SU PROPIA ANTIGÜEDAD" sub="el mejor ejemplo de este documento de 'se creyó milenario, la filología demostró que no'" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El Corpus Hermeticum —textos atribuidos a Hermes Trismegisto, fusión legendaria del dios
               egipcio Thot y el griego Hermes— se presentó durante más de mil años como sabiduría del
               Egipto faraónico, anterior incluso a Moisés. En 1614 el filólogo Isaac Casaubon analizó el
@@ -222,14 +222,14 @@ export default function GrimoriosPage() {
         <div id="sec-03" className={`arn-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="LOS GRIMORIOS SALOMÓNICOS" sub="atribución legendaria, manuscritos reales mucho más tardíos" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La <strong style={{ color: '#fff' }}>Clavícula de Salomón</strong> (Key of Solomon) se
               presenta como escrita por el rey bíblico Salomón. Los manuscritos más antiguos que de
               verdad existen son del Renacimiento italiano —no hay ningún fragmento anterior—, lo que
               hace de la autoría de Salomón una atribución pseudoepigráfica: una forma habitual, en estos
               géneros, de darle autoridad a un texto nuevo poniéndole el nombre de alguien ya legendario.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El <strong style={{ color: '#fff' }}>Picatrix</strong> (originalmente Ghāyat al-Ḥakīm, "la
               meta del sabio") sí tiene un origen verificable: un tratado árabe de magia astrológica y
               talismánica escrito hacia los siglos X–XI, traducido al latín en el siglo XIII por encargo
@@ -244,7 +244,7 @@ export default function GrimoriosPage() {
         <div id="sec-04" className={`arn-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="AGRIPPA Y LA FILOSOFÍA OCULTA" sub="Renacimiento, autor real, fecha real, síntesis real" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Heinrich Cornelius Agrippa von Nettesheim publicó <em>De Occulta Philosophia</em> en 1533 —
               a diferencia de los documentos anteriores, acá no hay atribución legendaria: Agrippa existió,
               firmó el texto con su nombre, y lo escribió como una síntesis deliberada de neoplatonismo,
@@ -261,7 +261,7 @@ export default function GrimoriosPage() {
         <div id="sec-05" className={`arn-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="DEE, KELLEY Y EL SISTEMA ENOQUIANO" sub="documentado en diarios personales reales, conservados hasta hoy" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               John Dee —matemático y astrónomo de la corte de Isabel I de Inglaterra, una figura de la
               ciencia real de su época, no un ocultista marginal— pasó buena parte de la década de 1580
               realizando sesiones de videncia junto a Edward Kelley, que actuaba como médium. De esas
@@ -278,14 +278,14 @@ export default function GrimoriosPage() {
         <div id="sec-06" className={`arn-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="EL REVIVAL DEL SIGLO XIX" sub="Éliphas Lévi y la Golden Dawn — orden real, acta fundacional real" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Alphonse Louis Constant, bajo el seudónimo <strong style={{ color: '#fff' }}>Éliphas
               Lévi</strong>, publicó a mediados del siglo XIX una síntesis propia de cábala, tarot y
               magia ceremonial que terminó fijando buena parte de la imagen popular moderna de "lo
               mágico" — sin pretender, a diferencia de los grimorios anteriores, que su obra fuera
               antigua. Era, y se sabía, una construcción nueva.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La Hermetic Order of the Golden Dawn se fundó en Londres en 1888 por William Westcott, Samuel
               Liddell MacGregor Mathers y William Woodman — una orden real, con actas y rituales de grado
               documentados, construida sobre unos manuscritos cifrados de origen disputado (los "Cipher
@@ -300,7 +300,7 @@ export default function GrimoriosPage() {
         <div id="sec-07" className={`arn-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="CROWLEY Y THELEMA" sub="miembro real de la Golden Dawn, texto fundacional con fecha exacta" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Aleister Crowley fue miembro real de la Golden Dawn antes de romper con la orden y fundar su
               propio sistema, Thelema, a partir de <em>Liber AL vel Legis</em> (1904) — un texto que
               Crowley describió como dictado por una inteligencia no humana, Aiwass, durante tres días en
@@ -317,7 +317,7 @@ export default function GrimoriosPage() {
         <div id="sec-08" className={`arn-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="MAGIA DEL CAOS — SPARE Y CARROLL" sub="el único capítulo de este documento cuyo método corre, hoy, como código real en este sitio" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Austin Osman Spare, artista e ilustrador inglés de principios del siglo XX, propuso un
               método propio para condensar una intención en un único símbolo —un sigilo—: escribir la
               frase, quitar las vocales y las letras repetidas, y fundir las letras que quedan en una
@@ -326,7 +326,7 @@ export default function GrimoriosPage() {
               después olvidar conscientemente su significado literal — la creencia activa, en su
               planteo, interfiere con el efecto.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Peter J. Carroll formalizó esto, junto con otros practicantes, en 1976 bajo el nombre de
               <strong style={{ color: '#fff' }}> magia del caos</strong> y fundó el IOT (Illuminates of
               Thanateros) — un sistema deliberadamente sin dogma fijo, que trata cualquier creencia,
@@ -342,7 +342,7 @@ export default function GrimoriosPage() {
         <div id="sec-09" className={`arn-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 40 }}>
           <SectionHeader roman="IX" title="RESONANCIA CON NEOPROXY" sub="esto no es lectura propia a distancia — es lo que ya corre en el sitio" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               A diferencia del resto de los documentos del Codex, acá la resonancia no es una lectura
               simbólica forzada: el método del capítulo VIII —reducción de letras, fusión en un glifo
               sobre una rueda fija— es, literalmente, el algoritmo que corre en{' '}
@@ -362,7 +362,7 @@ export default function GrimoriosPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARN-00 // PRIMER DOCUMENTO DE CODEX ARCANUM
           </div>
         </div>

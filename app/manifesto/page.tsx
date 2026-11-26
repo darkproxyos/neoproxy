@@ -202,7 +202,7 @@ export default function Manifesto() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '104px 24px 0' }}>
           <Link className="tap-ext" href="/" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#3a4652', textDecoration: 'none',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#3a4652', textDecoration: 'none',
           }}>
             ← VOLVER AL INICIO
           </Link>
@@ -222,7 +222,7 @@ export default function Manifesto() {
         {/* Manifesto text */}
         <div style={{ maxWidth: 680, margin: '0 auto', padding: '60px 24px' }}>
 
-          <div className="manifesto-label-flicker venom-fx" data-text="CANONICAL CONCEPT ART v1.0 // SECTOR ROMDO-01" style={{ fontSize: 9, letterSpacing: 6, color: '#4a5560', marginBottom: 40, position: 'relative', display: 'inline-block' }}>
+          <div className="manifesto-label-flicker venom-fx" data-text="CANONICAL CONCEPT ART v1.0 // SECTOR ROMDO-01" style={{ fontSize: 10.5, letterSpacing: 6, color: '#4a5560', marginBottom: 40, position: 'relative', display: 'inline-block' }}>
             CANONICAL CONCEPT ART v1.0 // SECTOR ROMDO-01
           </div>
 
@@ -233,7 +233,7 @@ export default function Manifesto() {
             DARKPROXY // ZAPHKIEL
           </h1>
 
-          <div ref={textContainerRef} style={{ position: 'relative', fontSize: 11, letterSpacing: 2, lineHeight: 3,
+          <div ref={textContainerRef} style={{ position: 'relative', fontSize: 12, letterSpacing: 2, lineHeight: 3,
             color: '#8a97a3', borderLeft: '1px solid #4a556022', paddingLeft: 24 }}>
 
             {/* apenas un matiz de temperatura, no un velo — crece con
@@ -372,12 +372,12 @@ export default function Manifesto() {
 
           </div>
 
-          <div id="corruption-end" style={{ marginTop: 60, fontSize: 9, letterSpacing: 4, color: '#2a323a' }}>
+          <div id="corruption-end" style={{ marginTop: 60, fontSize: 10.5, letterSpacing: 4, color: '#2a323a' }}>
             NEOPROXY.ART // THE SYSTEM RECOGNIZES YOU
           </div>
 
           {/* el viaje: del Afuera (aquí, en sepia) al Umbral y de ahí a la Zona */}
-          <Link href="/umbral" style={{ display: 'inline-block', marginTop: 34, fontSize: 11, letterSpacing: 6, color: '#c8daf0', border: '1px solid #ffffff2a', padding: '14px 22px', textDecoration: 'none' }}>
+          <Link href="/umbral" style={{ display: 'inline-block', marginTop: 34, fontSize: 12, letterSpacing: 6, color: '#c8daf0', border: '1px solid #ffffff2a', padding: '14px 22px', textDecoration: 'none' }}>
             CRUZAR EL UMBRAL →
           </Link>
 
@@ -430,7 +430,7 @@ export default function Manifesto() {
           position: relative;
           display: block;
           margin-top: 24px;
-          font-size: 10px;
+          font-size: 11px;
           letter-spacing: 1px;
           color: #8a4050;
           filter: blur(calc(0.3px + var(--corruption, 0) * 0.7px));

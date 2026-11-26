@@ -138,7 +138,7 @@ export default function AgentEvolution() {
         <div style={{ fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>
           🧬 AGENT EVOLUTION
         </div>
-        <div style={{ fontSize: '9px', color: '#4a6080' }}>
+        <div style={{ fontSize: '9px', color: '#6f86a3' }}>
           Auto-evolution system active • Learning from interactions
         </div>
       </div>
@@ -173,7 +173,7 @@ export default function AgentEvolution() {
               </span>
             </div>
             
-            <div style={{ fontSize: '8px', color: '#4a6080', marginTop: '3px' }}>
+            <div style={{ fontSize: '8px', color: '#6f86a3', marginTop: '3px' }}>
               {agent.role} • {agent.specialization}
             </div>
             
@@ -197,8 +197,8 @@ export default function AgentEvolution() {
           </div>
           
           <div style={{ fontSize: '9px', marginBottom: '8px' }}>
-            <div style={{ color: '#4a6080', marginBottom: '3px' }}>Last Evolution: {selectedAgent.last_evolution}</div>
-            <div style={{ color: '#4a6080', marginBottom: '8px' }}>Learning History:</div>
+            <div style={{ color: '#6f86a3', marginBottom: '3px' }}>Last Evolution: {selectedAgent.last_evolution}</div>
+            <div style={{ color: '#6f86a3', marginBottom: '8px' }}>Learning History:</div>
             {selectedAgent.learning_history.slice(-2).map((learning, index) => (
               <div key={index} style={{ marginLeft: '10px', marginBottom: '3px', fontSize: '8px' }}>
                 • {learning.improvement} ({learning.source})
@@ -226,7 +226,7 @@ export default function AgentEvolution() {
         </div>
       )}
 
-      <div style={{ marginTop: '10px', fontSize: '8px', color: '#4a6080', textAlign: 'center' }}>
+      <div style={{ marginTop: '10px', fontSize: '8px', color: '#6f86a3', textAlign: 'center' }}>
         🔄 Agents learn from each interaction • Evolution probability: 20-50%
       </div>
     </div>

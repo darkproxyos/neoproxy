@@ -170,13 +170,13 @@ export default function AudioPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link className="tap-ext" href="/" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER AL INICIO
         </Link>
 
-        <div style={{ fontSize: 9, color: `${AMBER}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${AMBER}66`, letterSpacing: 6, marginBottom: 16 }}>
           // AUDIO — NPX-AUD-BEATFORGE
         </div>
         <h1 style={{
@@ -185,14 +185,14 @@ export default function AudioPage() {
         }}>
           AUDIO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 56 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 620, marginBottom: 56 }}>
           Kicks, snares, hats, bajos e impactos sintetizados en vivo con Web Audio API — nada de packs
           comerciales descargados, cada sonido se genera por código en tu navegador. Armá un groove en el
           secuenciador o escuchá y descargá cada sample suelto como .wav para usarlo donde quieras.
         </p>
 
         {/* ---- SECUENCIADOR ---- */}
-        <div style={{ fontSize: 10, color: AMBER, letterSpacing: 4, marginBottom: 18 }}>SECUENCIADOR</div>
+        <div style={{ fontSize: 11, color: AMBER, letterSpacing: 4, marginBottom: 18 }}>SECUENCIADOR</div>
 
         <div style={{
           display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginBottom: 20,
@@ -203,7 +203,7 @@ export default function AudioPage() {
             style={{
               background: seqPlaying ? 'rgba(255,45,85,0.15)' : 'rgba(255,149,0,0.15)',
               border: `1px solid ${seqPlaying ? '#ff2d55' : AMBER}`,
-              color: seqPlaying ? '#ff2d55' : AMBER, fontFamily: mono, fontSize: 10, fontWeight: 700,
+              color: seqPlaying ? '#ff2d55' : AMBER, fontFamily: mono, fontSize: 11, fontWeight: 700,
               letterSpacing: 2, padding: '9px 16px', borderRadius: 6, cursor: 'pointer', minHeight: 36,
             }}
           >
@@ -211,30 +211,30 @@ export default function AudioPage() {
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 9, letterSpacing: 1, color: '#8892a4' }}>BPM</span>
+            <span style={{ fontSize: 10.5, letterSpacing: 1, color: '#8892a4' }}>BPM</span>
             <input
               type="range" min={60} max={180} step={1} value={bpm}
               onChange={e => setBpm(Number(e.target.value))}
               style={{ width: 110, accentColor: AMBER }}
             />
-            <span style={{ fontSize: 10, color: AMBER, width: 28, textAlign: 'right' }}>{bpm}</span>
+            <span style={{ fontSize: 11, color: AMBER, width: 28, textAlign: 'right' }}>{bpm}</span>
           </div>
 
           <button onClick={loadPreset} style={{
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', color: '#8fb8d6',
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', minHeight: 32,
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', minHeight: 32,
           }}>
             PRESET
           </button>
           <button onClick={clearPattern} style={{
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', color: '#8fb8d6',
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', minHeight: 32,
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', minHeight: 32,
           }}>
             LIMPIAR
           </button>
           <button onClick={exportLoop} disabled={exporting} style={{
             background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.35)', color: '#00d4ff',
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 12px', borderRadius: 6,
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 12px', borderRadius: 6,
             cursor: exporting ? 'default' : 'pointer', minHeight: 32, opacity: exporting ? 0.5 : 1, marginLeft: 'auto',
           }}>
             {exporting ? 'EXPORTANDO…' : '⬇ EXPORT LOOP (4 COMPASES, .WAV)'}
@@ -250,7 +250,7 @@ export default function AudioPage() {
             <div />
             {Array.from({ length: STEPS }).map((_, i) => (
               <div key={i} style={{
-                textAlign: 'center', fontSize: 7, color: i === playheadStep ? AMBER : '#3a4a60',
+                textAlign: 'center', fontSize: 9.5, color: i === playheadStep ? AMBER : '#3a4a60',
                 fontWeight: i % 4 === 0 ? 700 : 400,
               }}>
                 {i + 1}
@@ -268,12 +268,12 @@ export default function AudioPage() {
                     width: 16, height: 16, flexShrink: 0, borderRadius: '50%', cursor: 'pointer', padding: 0,
                     background: previewing === track.id ? AMBER : 'rgba(255,255,255,0.08)',
                     border: `1px solid ${previewing === track.id ? AMBER : 'rgba(255,255,255,0.2)'}`,
-                    color: previewing === track.id ? '#000' : '#8892a4', fontSize: 7, lineHeight: '14px',
+                    color: previewing === track.id ? '#000' : '#8892a4', fontSize: 9.5, lineHeight: '14px',
                   }}
                 >
                   ▶
                 </button>
-                <span style={{ fontSize: 8, letterSpacing: 0.5, color: '#8fb8d6', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ fontSize: 10, letterSpacing: 0.5, color: '#8fb8d6', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {track.name}
                 </span>
               </div>
@@ -299,11 +299,11 @@ export default function AudioPage() {
         </div>
 
         {/* ---- LIBRERÍA DE SAMPLES ---- */}
-        <div style={{ fontSize: 10, color: AMBER, letterSpacing: 4, marginBottom: 22 }}>LIBRERÍA DE SAMPLES</div>
+        <div style={{ fontSize: 11, color: AMBER, letterSpacing: 4, marginBottom: 22 }}>LIBRERÍA DE SAMPLES</div>
 
         {CATEGORY_ORDER.map(cat => (
           <div key={cat} style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 12 }}>{CATEGORY_LABELS[cat]}</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', marginBottom: 12 }}>{CATEGORY_LABELS[cat]}</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
               {SAMPLES.filter(s => s.category === cat).map(sample => (
                 <div key={sample.id} className="artifact-card" style={{ padding: 16 }}>
@@ -314,7 +314,7 @@ export default function AudioPage() {
                       style={{
                         flex: 1, background: previewing === sample.id ? `${AMBER}22` : 'rgba(255,255,255,0.04)',
                         border: `1px solid ${previewing === sample.id ? AMBER : 'rgba(255,255,255,0.15)'}`,
-                        color: AMBER, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 0',
+                        color: AMBER, fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 0',
                         borderRadius: 6, cursor: 'pointer', minHeight: 34,
                       }}
                     >
@@ -324,7 +324,7 @@ export default function AudioPage() {
                       onClick={() => downloadSampleWav(sample)}
                       style={{
                         flex: 1, background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.3)',
-                        color: '#00d4ff', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 0',
+                        color: '#00d4ff', fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 0',
                         borderRadius: 6, cursor: 'pointer', minHeight: 34,
                       }}
                     >

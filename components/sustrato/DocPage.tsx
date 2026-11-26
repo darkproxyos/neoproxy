@@ -46,7 +46,7 @@ export function SectionHeader({ roman, title, sub }: { roman: string; title: str
           {title}
         </h2>
       </div>
-      {sub && <div style={{ fontSize: 10, letterSpacing: 1, color: '#5a7290', marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 11, letterSpacing: 1, color: '#6f86a3', marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
     </div>
   )
 }
@@ -54,14 +54,14 @@ export function SectionHeader({ roman, title, sub }: { roman: string; title: str
 export function Caption({ children }: { children: ReactNode }) {
   const accent = useContext(AccentContext)
   return (
-    <div style={{ fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: '#5a7290', marginTop: 14, borderLeft: `2px solid ${accent}33`, paddingLeft: 12 }}>
+    <div style={{ fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: '#6f86a3', marginTop: 14, borderLeft: `2px solid ${accent}33`, paddingLeft: 12 }}>
       {children}
     </div>
   )
 }
 
 export function P({ children }: { children: ReactNode }) {
-  return <p style={{ fontSize: 11.5, lineHeight: 2, color: '#9fb4cc', margin: 0, marginBottom: 16 }}>{children}</p>
+  return <p style={{ fontSize: 12.5, lineHeight: 2, color: '#9fb4cc', margin: 0, marginBottom: 16 }}>{children}</p>
 }
 
 export function B({ children }: { children: ReactNode }) {
@@ -74,7 +74,7 @@ export function B({ children }: { children: ReactNode }) {
 export function SpecLine({ label, value }: { label: string; value: ReactNode }) {
   const accent = useContext(AccentContext)
   return (
-    <div style={{ display: 'flex', gap: 10, fontSize: 10.5, lineHeight: 1.9, marginBottom: 4 }}>
+    <div style={{ display: 'flex', gap: 10, fontSize: 11.5, lineHeight: 1.9, marginBottom: 4 }}>
       <span style={{ color: `${accent}aa`, minWidth: 92, flexShrink: 0 }}>{label}</span>
       <span style={{ color: '#c8daf0' }}>{value}</span>
     </div>
@@ -125,12 +125,12 @@ export function SustratoDoc({
         <div className="crt-scanlines" />
         <div className="tech-grid" />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-          <Link href={backHref} className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${accent}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+          <Link href={backHref} className="press" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${accent}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
             {backLabel}
           </Link>
 
           <div style={{ marginBottom: 90 }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${accent}66`, marginBottom: 16 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${accent}66`, marginBottom: 16 }}>
               {code} // SUSTRATO
             </div>
             <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 40px)', fontWeight: 700, letterSpacing: 4, color: accent, textShadow: `0 0 40px ${accent}55`, marginBottom: 14, lineHeight: 1.15 }}>
@@ -139,21 +139,21 @@ export function SustratoDoc({
             <div style={{ fontSize: 12, letterSpacing: 3, color: '#9fb4cc', marginBottom: 32 }}>
               {subtitle}
             </div>
-            <div style={{ fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: '#9fb4cc', maxWidth: 660, borderLeft: `1px solid ${accent}33`, paddingLeft: 24, marginBottom: 32 }}>
+            <div style={{ fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: '#9fb4cc', maxWidth: 660, borderLeft: `1px solid ${accent}33`, paddingLeft: 24, marginBottom: 32 }}>
               {intro}
             </div>
 
-            <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9, letterSpacing: 1, color: `${accent}99`, border: `1px solid ${accent}33`, padding: '12px 18px', marginBottom: 32 }}>
+            <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5, letterSpacing: 1, color: `${accent}99`, border: `1px solid ${accent}33`, padding: '12px 18px', marginBottom: 32 }}>
               <span style={{ color: `${accent}55` }}>CLASIFICACIÓN</span><span style={{ color: '#c8daf0' }}>{classification}</span>
               <span style={{ color: `${accent}55` }}>REVISIÓN</span><span style={{ color: '#c8daf0' }}>{revision}</span>
               <span style={{ color: `${accent}55` }}>ALCANCE</span><span style={{ color: '#c8daf0' }}>{alcance}</span>
             </div>
 
             <nav style={{ border: `1px solid ${accent}22`, padding: '20px 24px', maxWidth: 680 }}>
-              <div style={{ fontSize: 9, letterSpacing: 3, color: `${accent}66`, marginBottom: 14 }}>ÍNDICE</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${accent}66`, marginBottom: 14 }}>ÍNDICE</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
                 {toc.map((t) => (
-                  <a key={t.id} href={`#${t.id}`} style={{ fontSize: 10.5, color: '#9fb4cc', textDecoration: 'none', display: 'flex', gap: 10 }}>
+                  <a key={t.id} href={`#${t.id}`} style={{ fontSize: 11.5, color: '#9fb4cc', textDecoration: 'none', display: 'flex', gap: 10 }}>
                     <span style={{ color: `${accent}88`, width: 28, flexShrink: 0 }}>{t.roman}</span>
                     <span>{t.label}</span>
                   </a>

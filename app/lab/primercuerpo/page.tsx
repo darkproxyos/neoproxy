@@ -624,13 +624,13 @@ export default function PrimerCuerpoPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '100px 24px 100px' }}>
         <Link href="/proxyverse/prototype" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a8058', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#4a8058', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PR0T0??
         </Link>
 
-        <div style={{ fontSize: 9, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${GREEN}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-LAB-PRIMERCUERPO // GENERADOR REAL — ESPÉCIMEN 001
         </div>
         <h1 style={{
@@ -639,7 +639,7 @@ export default function PrimerCuerpoPage() {
         }}>
           PRIMER CUERPO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fd6b0', lineHeight: 2, maxWidth: 620, marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: '#8fd6b0', lineHeight: 2, maxWidth: 620, marginBottom: 20 }}>
           Una retícula exacta —doce vértices, treinta aristas, el sólido que los griegos contaron
           entre los cinco posibles— contiene un crecimiento que no deja de empujar hacia afuera.
           Es el mismo patrón que organiza un coral, un rayo, una raíz buscando agua: competencia
@@ -657,14 +657,14 @@ export default function PrimerCuerpoPage() {
 
         <div style={{ height: 1, background: `${GREEN}22`, marginBottom: 32 }} />
 
-        <div style={{ fontSize: 9, letterSpacing: 3, color: `${GREEN}88`, marginBottom: 10 }}>
+        <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${GREEN}88`, marginBottom: 10 }}>
           JAULA
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
           <button
             onClick={() => setLatticeMode('metatron')}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
               background: latticeMode === 'metatron' ? `${GREEN}22` : 'transparent', border: `1px solid ${GREEN}66`, color: GREEN,
             }}
           >
@@ -673,7 +673,7 @@ export default function PrimerCuerpoPage() {
           <button
             onClick={() => setLatticeMode('hexacosichoron')}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '9px 16px', cursor: 'pointer',
               background: latticeMode === 'hexacosichoron' ? `${GREEN}22` : 'transparent', border: `1px solid ${GREEN}66`, color: GREEN,
             }}
           >
@@ -681,13 +681,13 @@ export default function PrimerCuerpoPage() {
           </button>
         </div>
         {latticeMode === 'metatron' && (
-          <p style={{ fontSize: 10, color: '#4a8058', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
+          <p style={{ fontSize: 11, color: '#4a8058', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
             Doce vértices, treinta aristas, grado cinco cada uno — la misma retícula que la
             geometría sagrada llama Cubo de Metatrón.
           </p>
         )}
         {latticeMode === 'hexacosichoron' && (
-          <p style={{ fontSize: 10, color: '#d9a441', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
+          <p style={{ fontSize: 11, color: '#d9a441', lineHeight: 1.8, maxWidth: 620, marginBottom: 16 }}>
             Un politopo regular de cuatro dimensiones no cabe en nuestro espacio — lo que ves es su
             sombra proyectada, y el rastro que esa sombra deja al girar. 120 vértices, construcción
             de Coxeter. Experimental: no verificado para impresión real, no forma parte del blueprint.
@@ -697,7 +697,7 @@ export default function PrimerCuerpoPage() {
         <div style={{ border: `1px solid ${GREEN}33`, position: 'relative', marginBottom: 20 }}>
           <canvas ref={canvasRef} style={{ width: '100%', height: 480, display: 'block' }} />
           <div style={{
-            position: 'absolute', top: 12, right: 12, fontSize: 10, letterSpacing: 1,
+            position: 'absolute', top: 12, right: 12, fontSize: 11, letterSpacing: 1,
             color: GREEN, border: `1px solid ${GREEN}55`, padding: '6px 12px', background: '#00120aaa',
           }}>
             {done ? 'CRECIMIENTO COMPLETO' : `CRECIENDO://${growPct}%`}
@@ -708,7 +708,7 @@ export default function PrimerCuerpoPage() {
           <button
             onClick={() => setAutoRotate(r => !r)}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 18px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 18px', cursor: 'pointer',
               background: autoRotate ? `${GREEN}22` : 'transparent', border: `1px solid ${GREEN}66`, color: GREEN,
             }}
           >
@@ -718,7 +718,7 @@ export default function PrimerCuerpoPage() {
             onClick={handleExport}
             disabled={!done}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 18px',
+              fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 18px',
               cursor: done ? 'pointer' : 'default', opacity: done ? 1 : 0.4,
               background: `${GREEN}22`, border: `1px solid ${GREEN}`, color: GREEN,
             }}
@@ -730,7 +730,7 @@ export default function PrimerCuerpoPage() {
         <button
           onClick={() => setShowDerivation(s => !s)}
           style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a8058', background: 'transparent',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#4a8058', background: 'transparent',
             border: 'none', cursor: 'pointer', padding: 0, marginBottom: showDerivation ? 14 : 40,
           }}
         >
@@ -745,13 +745,13 @@ export default function PrimerCuerpoPage() {
                   border: `1px solid ${d.color}33`, background: `${d.color}08`,
                 }}>
                   <span style={{ width: 7, height: 7, borderRadius: '50%', background: d.color, flexShrink: 0, opacity: 0.8 }} />
-                  <span style={{ fontSize: 9, letterSpacing: 0.5, color: '#9fc9ae' }}>
+                  <span style={{ fontSize: 10.5, letterSpacing: 0.5, color: '#9fc9ae' }}>
                     {d.name} <span style={{ color: '#3a6248' }}>— {d.color} · {d.percent}%</span>
                   </span>
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 9, color: '#3a6248', lineHeight: 1.9, maxWidth: 620 }}>
+            <p style={{ fontSize: 10.5, color: '#3a6248', lineHeight: 1.9, maxWidth: 620 }}>
               Cinco variables reales (color, porcentaje) entran a una función determinística y salen
               como semilla ({seed}) y curl ({curl.toFixed(3)}). Misma entrada, misma salida, siempre
               — eso es lo que hace que no sea azar, no que los números tengan un significado oculto.
@@ -761,7 +761,7 @@ export default function PrimerCuerpoPage() {
 
         <div style={{ height: 1, background: `${GREEN}22`, marginBottom: 28 }} />
 
-        <p style={{ fontSize: 10, color: '#4a8058', lineHeight: 1.9, maxWidth: 620 }}>
+        <p style={{ fontSize: 11, color: '#4a8058', lineHeight: 1.9, maxWidth: 620 }}>
           Esto no es el render de referencia — es la malla real, exportable, que se imprime en
           resina. El blueprint físico completo (materiales, litofanía, NFC, edición) vive aparte,
           documentado antes de fabricar nada.

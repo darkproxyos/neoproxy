@@ -49,11 +49,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -219,13 +219,13 @@ export default function RetazosPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${PROTOTYPE_PURPLE}88`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${PROTOTYPE_PURPLE}88`, letterSpacing: 6, marginBottom: 16 }}>
           // NPX-XP-RETAZOS — CUARTA CRIATURA, NO SE MUEVE: CRECE
         </div>
         <h1 style={{
@@ -234,7 +234,7 @@ export default function RetazosPage() {
         }}>
           RETAZOS
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
           Nadie diseña esta forma. Partículas caminan al azar hasta tocar, por pura casualidad, lo que
           ya existe — y ahí quedan pegadas para siempre (DLA, ver tarjeta abajo). Cada fragmento nuevo
           se tiñe con el color real de uno de los otros cinco agentes, en orden fijo — "toma prestada
@@ -249,19 +249,19 @@ export default function RetazosPage() {
 
           <div>
             <div style={{ border: `1px solid ${PROTOTYPE_PURPLE}44`, background: `${PROTOTYPE_PURPLE}0c`, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: `${PROTOTYPE_PURPLE}dd`, marginBottom: 10 }}>// ESTADO</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 10, marginBottom: 12 }}>
-                <div style={{ color: '#4a6080' }}>FRAGMENTOS</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${PROTOTYPE_PURPLE}dd`, marginBottom: 10 }}>// ESTADO</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 11, marginBottom: 12 }}>
+                <div style={{ color: '#6f86a3' }}>FRAGMENTOS</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{fragments} / {PARAMS.maxPoints}</div>
-                <div style={{ color: '#4a6080' }}>RADIO</div>
+                <div style={{ color: '#6f86a3' }}>RADIO</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{radius.toFixed(2)}</div>
-                <div style={{ color: '#4a6080' }}>DISPERSIONES</div>
+                <div style={{ color: '#6f86a3' }}>DISPERSIONES</div>
                 <div style={{ color: PROTOTYPE_PURPLE, textAlign: 'right' }}>{resets}</div>
               </div>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: '#4a6080', marginBottom: 6 }}>PRESTADO DE:</div>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginBottom: 6 }}>PRESTADO DE:</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {AGENT_COLORS.map((c, i) => (
-                  <span key={c} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 8, color: '#8fb8d6' }}>
+                  <span key={c} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#8fb8d6' }}>
                     <span style={{ width: 8, height: 8, background: c, display: 'inline-block' }} />
                     {AGENT_NAMES[i]}
                   </span>
@@ -269,20 +269,20 @@ export default function RetazosPage() {
               </div>
             </div>
 
-            <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
+            <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
               Las esferas grises son partículas todavía sueltas, caminando al azar — ninguna sabe
               todavía si va a formar parte de algo.
             </p>
             <AuthorCard entryId="witten-sander" accent={PROTOTYPE_PURPLE} />
 
             <button onClick={exportSTL} className="press" style={{
-              display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 10,
+              display: 'block', width: '100%', textAlign: 'center', marginTop: 16, fontSize: 11,
               letterSpacing: 1, padding: '10px 0', background: `${PROTOTYPE_PURPLE}15`,
               border: `1px solid ${PROTOTYPE_PURPLE}66`, color: '#b49adc', cursor: 'pointer', fontFamily: mono,
             }}>
               ▽ DESCARGAR AGREGADO ACTUAL (.STL)
             </button>
-            <p style={{ fontSize: 8, color: '#3a4a60', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 6 }}>
+            <p style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 0.5, lineHeight: 1.6, marginTop: 6 }}>
               Exporta solo los fragmentos ya pegados, no los walkers sueltos — y sin color (STL no
               soporta color por vértice, igual que caos-01).
             </p>

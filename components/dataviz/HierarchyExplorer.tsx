@@ -165,7 +165,7 @@ export function HierarchyExplorer({
             onClick={() => changeLayout(l.id)}
             className="press"
             style={{
-              fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '7px 12px', borderRadius: 6, cursor: 'pointer',
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, padding: '7px 12px', borderRadius: 6, cursor: 'pointer',
               background: layout === l.id ? `${accent}33` : 'transparent',
               // antes #2a3a50/#4a6080 en el estado inactivo -- leía como
               // deshabilitado, no como una opción disponible todavía sin
@@ -179,10 +179,10 @@ export function HierarchyExplorer({
           </button>
         ))}
         <span style={{ flex: 1 }} />
-        <button onClick={resetView} className="press" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '7px 12px', borderRadius: 6, cursor: 'pointer', background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4' }}>
+        <button onClick={resetView} className="press" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '7px 12px', borderRadius: 6, cursor: 'pointer', background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4' }}>
           RESET VISTA
         </button>
-        <span style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>{totalLeaves} HOJAS</span>
+        <span style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', letterSpacing: 1 }}>{totalLeaves} HOJAS</span>
       </div>
 
       <svg
@@ -284,7 +284,7 @@ export function HierarchyExplorer({
           })}
         </g>
       </svg>
-      <div style={{ fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', marginTop: 8 }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginTop: 8 }}>
         ARRASTRÁ PARA MOVER, RUEDA PARA ZOOM — EL COLOR HEREDA DE LA RAMA DE PRIMER NIVEL, NO ES DECORATIVO
       </div>
     </div>

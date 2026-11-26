@@ -524,11 +524,11 @@ export default function DrawSynthPage() {
           NEOPROXY // R&D // SIGNAL_SYNTH
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#8892a4' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: dotColor, boxShadow: dotGlow, display: 'inline-block' }} />
             {pbState === 'playing' ? 'PLAYING' : pbState === 'drawing' ? 'DRAWING' : 'READY'}
           </div>
-          <Link href="/" style={{ color: '#00d4ff', textDecoration: 'none', fontSize: 10, border: '1px solid rgba(0,212,255,0.4)', padding: '2px 8px', fontFamily: mono }}>
+          <Link href="/" style={{ color: '#00d4ff', textDecoration: 'none', fontSize: 11, border: '1px solid rgba(0,212,255,0.4)', padding: '2px 8px', fontFamily: mono }}>
             EXIT_PROTOCOL
           </Link>
         </div>
@@ -540,7 +540,7 @@ export default function DrawSynthPage() {
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '4px 0', pointerEvents: 'none',
       }}>
         {['HI', '—', 'MID', '—', 'LO'].map((l, i) => (
-          <div key={i} style={{ fontFamily: mono, fontSize: 7, color: '#8892a4', textAlign: 'right', paddingRight: 4, letterSpacing: 1 }}>{l}</div>
+          <div key={i} style={{ fontFamily: mono, fontSize: 9.5, color: '#8892a4', textAlign: 'right', paddingRight: 4, letterSpacing: 1 }}>{l}</div>
         ))}
       </div>
 
@@ -553,13 +553,13 @@ export default function DrawSynthPage() {
           backdropFilter: 'blur(12px)', width: 260,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>TONO</span>
+            <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>TONO</span>
             <select
               value={selectedNote}
               onChange={e => setSelectedNote(Number(e.target.value))}
               style={{
                 flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(0,212,255,0.3)',
-                color: '#00d4ff', fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '6px 8px',
+                color: '#00d4ff', fontFamily: mono, fontSize: 12, letterSpacing: 1, padding: '6px 8px',
                 borderRadius: 6, minHeight: 32,
               }}
             >
@@ -567,23 +567,23 @@ export default function DrawSynthPage() {
             </select>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>COLOR</span>
+            <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>COLOR</span>
             <input
               type="color"
               value={selectedColor}
               onChange={e => setSelectedColor(e.target.value)}
               style={{ width: 44, height: 32, border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
             />
-            <span style={{ fontFamily: mono, fontSize: 9, color: selectedColor, letterSpacing: 1 }}>{selectedColor.toUpperCase()}</span>
+            <span style={{ fontFamily: mono, fontSize: 10.5, color: selectedColor, letterSpacing: 1 }}>{selectedColor.toUpperCase()}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>PINCEL</span>
+            <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#8892a4', width: 54, flexShrink: 0 }}>PINCEL</span>
             <input
               type="range" min={0.5} max={2.5} step={0.1} value={brushSize}
               onChange={e => setBrushSize(Number(e.target.value))}
               style={{ flex: 1, accentColor: '#00d4ff' }}
             />
-            <span style={{ fontFamily: mono, fontSize: 9, color: '#00d4ff', width: 28, textAlign: 'right', flexShrink: 0 }}>
+            <span style={{ fontFamily: mono, fontSize: 10.5, color: '#00d4ff', width: 28, textAlign: 'right', flexShrink: 0 }}>
               {brushSize.toFixed(1)}x
             </span>
           </div>
@@ -636,18 +636,18 @@ export default function DrawSynthPage() {
       }}>
         <button onClick={clearAll} style={{
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,45,85,0.3)', borderRadius: 8,
-          color: '#ff2d55', fontFamily: mono, fontSize: 9, fontWeight: 600, letterSpacing: 2, padding: '8px 14px',
+          color: '#ff2d55', fontFamily: mono, fontSize: 10.5, fontWeight: 600, letterSpacing: 2, padding: '8px 14px',
           cursor: 'pointer', minHeight: 40,
         }}>
           CLR
         </button>
-        <div style={{ fontFamily: mono, fontSize: 9, color: '#8892a4', letterSpacing: 1, textAlign: 'center', lineHeight: 1.6 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, color: '#8892a4', letterSpacing: 1, textAlign: 'center', lineHeight: 1.6 }}>
           <span style={{ color: '#dde3f0', fontWeight: 600 }}>{strokeCount}</span> TRAZOS<br />
           <span style={{ color: '#dde3f0', fontWeight: 600 }}>{noteCount}</span> NOTAS
         </div>
         <button onClick={playAll} style={{
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,212,255,0.3)', borderRadius: 8,
-          color: '#00d4ff', fontFamily: mono, fontSize: 9, fontWeight: 600, letterSpacing: 2, padding: '8px 14px',
+          color: '#00d4ff', fontFamily: mono, fontSize: 10.5, fontWeight: 600, letterSpacing: 2, padding: '8px 14px',
           cursor: 'pointer', minHeight: 40,
         }}>
           ▶ PLAY

@@ -68,7 +68,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -80,7 +80,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -96,7 +96,7 @@ function Caption({ children }: { children: React.ReactNode }) {
 
 function Stat({ label, value, color = ACCENT }: { label: string; value: string; color?: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 9 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 10.5 }}>
       <span style={{ color: `${color}99`, letterSpacing: 1.5 }}>{label}</span>
       <span style={{ color: '#e8f2ff', letterSpacing: 0.3, textAlign: 'right' }}>{value}</span>
     </div>
@@ -105,7 +105,7 @@ function Stat({ label, value, color = ACCENT }: { label: string; value: string; 
 
 function P({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ fontSize: 11.5, lineHeight: 2, letterSpacing: 0.3, color: TEXT_DIM, marginTop: 0, marginBottom: 14 }}>
+    <p style={{ fontSize: 12.5, lineHeight: 2, letterSpacing: 0.3, color: TEXT_DIM, marginTop: 0, marginBottom: 14 }}>
       {children}
     </p>
   )
@@ -251,7 +251,7 @@ function MacroKcalChart() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {MACRO_KCAL.map(m => (
         <div key={m.label} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ width: 118, fontSize: 11, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{m.label}</div>
+          <div style={{ width: 118, fontSize: 12, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{m.label}</div>
           <div style={{ flexGrow: 1, height: 16, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
             <div
               style={{
@@ -262,7 +262,7 @@ function MacroKcalChart() {
               }}
             />
           </div>
-          <div style={{ width: 76, fontSize: 10.5, color: `${ACCENT}cc`, flexShrink: 0 }}>{m.kcal} kcal/g</div>
+          <div style={{ width: 76, fontSize: 11.5, color: `${ACCENT}cc`, flexShrink: 0 }}>{m.kcal} kcal/g</div>
         </div>
       ))}
     </div>
@@ -274,7 +274,7 @@ function AmdrChart() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {AMDR.map(a => (
         <div key={a.label} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ width: 118, fontSize: 11, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{a.label}</div>
+          <div style={{ width: 118, fontSize: 12, color: '#fff', letterSpacing: 1, flexShrink: 0 }}>{a.label}</div>
           <div style={{ flexGrow: 1, height: 14, background: 'rgba(255,255,255,0.04)', borderRadius: 2, position: 'relative', overflow: 'hidden' }}>
             <div
               style={{
@@ -287,10 +287,10 @@ function AmdrChart() {
               }}
             />
           </div>
-          <div style={{ width: 90, fontSize: 10, color: `${ACCENT}cc`, flexShrink: 0 }}>{a.min}–{a.max}%</div>
+          <div style={{ width: 90, fontSize: 11, color: `${ACCENT}cc`, flexShrink: 0 }}>{a.min}–{a.max}%</div>
         </div>
       ))}
-      <div style={{ fontSize: 9, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 2 }}>
+      <div style={{ fontSize: 10.5, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 2 }}>
         % de las calorías diarias totales — AMDR (Acceptable Macronutrient Distribution Range), rango comúnmente publicado
       </div>
     </div>
@@ -307,7 +307,7 @@ function AminoAcidGrid() {
             border: `1px solid ${ACCENT}55`,
             borderRadius: 20,
             padding: '7px 16px',
-            fontSize: 10,
+            fontSize: 11,
             letterSpacing: 1,
             color: ACCENT,
             background: `${ACCENT}0d`,
@@ -331,7 +331,7 @@ function NutrientTable({ rows }: { rows: NutrientRow[] }) {
                 key={i}
                 style={{
                   textAlign: 'left',
-                  fontSize: 9.5,
+                  fontSize: 11,
                   letterSpacing: 1.5,
                   color: ACCENT,
                   borderBottom: `1px solid ${ACCENT}55`,
@@ -347,18 +347,18 @@ function NutrientTable({ rows }: { rows: NutrientRow[] }) {
         <tbody>
           {rows.map((row, i) => (
             <tr key={row.nombre} style={{ background: i % 2 === 0 ? 'rgba(180,230,29,0.03)' : 'transparent' }}>
-              <td style={{ padding: '12px 14px', fontSize: 11, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 12, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.nombre}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, color: TEXT_DIM, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.rda}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10.5, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11.5, lineHeight: 1.6, color: TEXT, verticalAlign: 'top' }}>
                 {row.funcion}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10, lineHeight: 1.6, color: TEXT_DIM, verticalAlign: 'top' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.6, color: TEXT_DIM, verticalAlign: 'top' }}>
                 {row.fuente}
-                {row.nota && <div style={{ color: LABEL_DIM, marginTop: 4, fontSize: 9 }}>— {row.nota}</div>}
+                {row.nota && <div style={{ color: LABEL_DIM, marginTop: 4, fontSize: 10.5 }}>— {row.nota}</div>}
               </td>
             </tr>
           ))}
@@ -378,14 +378,14 @@ function FoodGroupCard({ g }: { g: FoodGroup }) {
         background: 'rgba(8, 14, 2, 0.4)',
       }}
     >
-      <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>
+      <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>
         {g.title}
       </div>
-      <div style={{ fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, marginBottom: 10 }}>{g.funcion}</div>
-      <div style={{ fontSize: 9.5, color: TEXT, marginBottom: 6 }}>
+      <div style={{ fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, marginBottom: 10 }}>{g.funcion}</div>
+      <div style={{ fontSize: 11, color: TEXT, marginBottom: 6 }}>
         <span style={{ color: LABEL_DIM }}>EJEMPLOS — </span>{g.ejemplos}
       </div>
-      <div style={{ fontSize: 9, color: LABEL_DIM }}>{g.porcion}</div>
+      <div style={{ fontSize: 10.5, color: LABEL_DIM }}>{g.porcion}</div>
     </div>
   )
 }
@@ -443,9 +443,9 @@ function TimelineRow({ entry, isLast }: { entry: TimelineEntry; isLast: boolean 
       <div style={{ paddingBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, fontWeight: 700, color: ACCENT, letterSpacing: 1, textShadow: `0 0 10px ${ACCENT}55` }}>{entry.year}</span>
-          <span style={{ fontSize: 11, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
+          <span style={{ fontSize: 12, letterSpacing: 1, color: '#fff' }}>{entry.title}</span>
         </div>
-        <div style={{ fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
+        <div style={{ fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, marginTop: 6, maxWidth: 580 }}>{entry.detail}</div>
       </div>
     </div>
   )
@@ -525,7 +525,7 @@ export default function AlimentacionPage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* encabezado */}
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '104px 24px 0' }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-NTR-00 // DOCUMENTO TÉCNICO ARCHIVADO
           </div>
           <h1
@@ -546,7 +546,7 @@ export default function AlimentacionPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -570,7 +570,7 @@ export default function AlimentacionPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -586,7 +586,7 @@ export default function AlimentacionPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640, marginBottom: 90 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -606,7 +606,7 @@ export default function AlimentacionPage() {
                 ['XIII', 'sec-13', 'Línea de tiempo'],
                 ['XIV', 'sec-14', 'Fronteras abiertas'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 26, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -659,7 +659,7 @@ export default function AlimentacionPage() {
             </Caption>
           </Panel>
           <div style={{ marginTop: 24 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
+            <div style={{ fontSize: 12, letterSpacing: 2, color: TEXT_DIM, marginBottom: 12 }}>
               AMDR — RANGO ACEPTABLE DE DISTRIBUCIÓN DE MACRONUTRIENTES
             </div>
             <Panel>
@@ -748,13 +748,13 @@ export default function AlimentacionPage() {
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-06">
           <SectionHeader roman="VI" title="VITAMINAS" sub="liposolubles (se almacenan en grasa corporal) e hidrosolubles (se eliminan por orina, exceso mayormente no se acumula)" />
           <Panel style={{ padding: '20px 20px 26px', marginBottom: 20 }}>
-            <div style={{ fontSize: 9.5, letterSpacing: 2, color: `${ACCENT}99`, marginBottom: 14 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: `${ACCENT}99`, marginBottom: 14 }}>
               LIPOSOLUBLES — A, D, E, K
             </div>
             <NutrientTable rows={VITAMINS_LIPOSOLUBLE} />
           </Panel>
           <Panel style={{ padding: '20px 20px 26px' }}>
-            <div style={{ fontSize: 9.5, letterSpacing: 2, color: `${ACCENT}99`, marginBottom: 14 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: `${ACCENT}99`, marginBottom: 14 }}>
               HIDROSOLUBLES — COMPLEJO B Y C
             </div>
             <NutrientTable rows={VITAMINS_HIDROSOLUBLE} />
@@ -791,8 +791,8 @@ export default function AlimentacionPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {MIND_NUTRIENTS.map(n => (
               <Panel key={n.title}>
-                <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{n.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
+                <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{n.title}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
               </Panel>
             ))}
           </div>
@@ -871,7 +871,7 @@ export default function AlimentacionPage() {
             {FASTING_PROTOCOLS.map(f => (
               <Panel key={f.title}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{f.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{f.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{f.detail}</div>
               </Panel>
             ))}
           </div>
@@ -889,7 +889,7 @@ export default function AlimentacionPage() {
             {SUPPLEMENTS.map(s => (
               <Panel key={s.title}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{s.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{s.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{s.detail}</div>
               </Panel>
             ))}
           </div>
@@ -909,7 +909,7 @@ export default function AlimentacionPage() {
 
         {/* XIV. FRONTERAS ABIERTAS */}
         <Section idx={nextIdx()} registerRef={registerRef} visible={visible} id="sec-14" last>
-          <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}55`, marginBottom: 10 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}55`, marginBottom: 10 }}>
             TERRENO ABIERTO // SIN CONSENSO, A DIFERENCIA DE TODO LO ANTERIOR
           </div>
           <h2
@@ -929,8 +929,8 @@ export default function AlimentacionPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {FRONTIER_TOPICS.map(f => (
               <Panel key={f.title}>
-                <div style={{ fontSize: 11.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{f.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{f.detail}</div>
+                <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{f.title}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{f.detail}</div>
               </Panel>
             ))}
           </div>
@@ -938,7 +938,7 @@ export default function AlimentacionPage() {
 
         {/* footer */}
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 24px 140px', textAlign: 'center' }}>
-          <div style={{ fontSize: 9, letterSpacing: 4, color: `${ACCENT}33` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 4, color: `${ACCENT}33` }}>
             NPX-NTR-00 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

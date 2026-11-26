@@ -58,7 +58,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -69,7 +69,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -110,13 +110,13 @@ export default function HermeneuticaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-10 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -137,7 +137,7 @@ export default function HermeneuticaPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
               borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -149,7 +149,7 @@ export default function HermeneuticaPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -160,12 +160,12 @@ export default function HermeneuticaPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -178,14 +178,14 @@ export default function HermeneuticaPage() {
         <div id="sec-01" className={`her-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="ORÍGENES — DE LA EXÉGESIS A LA DISCIPLINA GENERAL" sub="Friedrich Schleiermacher, inicios del siglo XIX" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La hermenéutica nace como oficio concreto, no como teoría abstracta: la exégesis bíblica y la
               filología clásica necesitaban reglas para interpretar textos antiguos, oscuros o traducidos,
               donde el sentido original no era evidente. Durante siglos fue un conjunto de técnicas
               dispersas, específicas de cada disciplina —una cosa para interpretar la Biblia, otra para
               interpretar leyes romanas, otra para textos clásicos.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Friedrich Schleiermacher, teólogo y filósofo alemán de inicios del siglo XIX, dio el paso que
               convierte esas técnicas sueltas en una disciplina: propuso una{' '}
               <strong style={{ color: '#fff' }}>hermenéutica general</strong>, un conjunto de principios
@@ -199,7 +199,7 @@ export default function HermeneuticaPage() {
         <div id="sec-02" className={`her-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="DILTHEY Y LAS CIENCIAS DEL ESPÍRITU" sub="Wilhelm Dilthey, fines del siglo XIX" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Wilhelm Dilthey trazó una distinción que todavía organiza buena parte de las humanidades: las{' '}
               <strong style={{ color: '#fff' }}>Naturwissenschaften</strong> (ciencias naturales) buscan{' '}
               <em>explicar</em> fenómenos por leyes causales generales —por qué cae una piedra, siempre
@@ -208,7 +208,7 @@ export default function HermeneuticaPage() {
               —por qué alguien escribió esta carta, en este momento, con esta intención— que no se repite
               igual en ningún otro caso.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esto no es Dilthey diciendo que las ciencias humanas son más débiles que las naturales —es
               un argumento de que usan un método distinto porque su objeto es distinto: una ley física no
               tiene intención, un texto o una acción humana sí.
@@ -220,7 +220,7 @@ export default function HermeneuticaPage() {
         <div id="sec-03" className={`her-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="HEIDEGGER — COMPRENDER COMO MODO DE SER" sub="Ser y tiempo, 1927" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=heidegger" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Martin Heidegger
               </Link>{' '}
@@ -231,7 +231,7 @@ export default function HermeneuticaPage() {
               entendemos las cosas desde un "para qué" —un martillo se entiende, de entrada, como lo que
               sirve para clavar, no como una forma geométrica que después se interpreta como herramienta.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La consecuencia es fuerte: no hay un punto cero, sin interpretación previa, desde el cual
               empezar a entender algo desde cero. Siempre llegamos ya entendiendo algo, de algún modo,
               antes de poder preguntarnos qué es.
@@ -243,7 +243,7 @@ export default function HermeneuticaPage() {
         <div id="sec-04" className={`her-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="GADAMER — EL CÍRCULO HERMENÉUTICO" sub="Verdad y método (Wahrheit und Methode), 1960" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Hans-Georg Gadamer, alumno de Heidegger, formalizó el{' '}
               <strong style={{ color: '#fff' }}>círculo hermenéutico</strong>: entender el todo de un texto
               requiere ya entender sus partes, y entender las partes requiere ya tener una idea previa del
@@ -252,7 +252,7 @@ export default function HermeneuticaPage() {
               sentido general, la revisa a medida que lee cada parte, y esa revisión cambia a su vez cómo
               se entiende el todo. No es un error a corregir, es el proceso mismo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Su segunda idea central, la <strong style={{ color: '#fff' }}>fusión de horizontes</strong>:
               interpretar un texto antiguo siempre mezcla el horizonte histórico en que ese texto fue
               escrito con el horizonte propio de quien lo lee hoy. No existe una lectura neutral, suspendida
@@ -266,7 +266,7 @@ export default function HermeneuticaPage() {
         <div id="sec-05" className={`her-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="LOS MAESTROS DE LA SOSPECHA" sub="Paul Ricoeur, Freud y la filosofía, 1970" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Paul Ricoeur llamó "maestros de la sospecha" a tres pensadores que leen un texto —o un
               síntoma, o una ideología— no para recuperar amablemente su sentido manifiesto, sino para
               desenmascarar lo que ese texto oculta de sí mismo sin saberlo: Marx (la ideología esconde
@@ -277,7 +277,7 @@ export default function HermeneuticaPage() {
               —ya otra entrada real de este Codex— (la moral esconde voluntad de poder) y Freud (el
               discurso consciente esconde deseo reprimido).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esto agrega una capa que Gadamer no tenía en el mismo lugar: interpretar no es solo revelar
               con buena fe lo que un texto dice de verdad, también puede ser cuestionar lo que dice sobre
               sí mismo —leer contra el grano, no solo con él.
@@ -289,7 +289,7 @@ export default function HermeneuticaPage() {
         <div id="sec-06" className={`her-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="APLICACIÓN MODERNA Y NOTA HONESTA" sub="dónde este marco sigue trabajando hoy, y qué tipo de conocimiento es" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La hermenéutica jurídica —cómo se interpreta un texto constitucional o una ley ambigua— y la
               crítica literaria académica son campos reales que siguen usando, con otro vocabulario, el
               círculo hermenéutico y la fusión de horizontes de Gadamer: ningún juez ni ningún crítico lee
@@ -311,7 +311,7 @@ export default function HermeneuticaPage() {
         <div id="sec-07" className={`her-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="VII" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <Link href="/archivo/metacognicion" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Metacognición
               </Link>
@@ -326,7 +326,7 @@ export default function HermeneuticaPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-10 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

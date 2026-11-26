@@ -38,7 +38,7 @@ function Slider({ label, value, min, max, step, onChange, accent }: {
 }) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4, letterSpacing: 0.5 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4, letterSpacing: 0.5 }}>
         <span>{label}</span>
         <span style={{ color: accent }}>{value.toFixed(step < 0.01 ? 3 : step < 1 ? 2 : 0)}</span>
       </div>
@@ -59,11 +59,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -324,11 +324,11 @@ export default function RedPage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
-        <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-RED</div>
-        <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>el objeto es la relación, no la forma</div>
+        <div style={{ fontSize: 12, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-RED</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 1, color: '#6f86a3' }}>el objeto es la relación, no la forma</div>
       </div>
 
       <div style={{
@@ -338,7 +338,7 @@ export default function RedPage() {
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
           {(['aleatoria', 'bayesiana'] as Mode[]).map((m) => (
             <button key={m} onClick={() => setMode(m)} className="press" style={{
-              flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
+              flex: 1, fontFamily: mono, fontSize: 10.5, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
               background: mode === m ? `${RED}22` : 'transparent',
               border: `1px solid ${mode === m ? RED : '#2a3a50'}`,
               color: mode === m ? RED : '#4a6080',
@@ -353,7 +353,7 @@ export default function RedPage() {
             <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
               {(['er', 'ba'] as GraphType[]).map((gt) => (
                 <button key={gt} onClick={() => setGraphType(gt)} className="press" style={{
-                  flex: 1, fontFamily: mono, fontSize: 8, padding: '7px 5px', cursor: 'pointer', letterSpacing: 0.5,
+                  flex: 1, fontFamily: mono, fontSize: 10, padding: '7px 5px', cursor: 'pointer', letterSpacing: 0.5,
                   background: graphType === gt ? `${gt === 'er' ? RED : CYAN}22` : 'transparent',
                   border: `1px solid ${graphType === gt ? (gt === 'er' ? RED : CYAN) : '#2a3a50'}`,
                   color: graphType === gt ? (gt === 'er' ? RED : CYAN) : '#4a6080',
@@ -369,7 +369,7 @@ export default function RedPage() {
               <Slider label="M (aristas por nodo nuevo)" value={baM} min={1} max={6} step={1} onChange={setBaM} accent={accent} />
             )}
             <button onClick={regenerateGraph} disabled={generating} className="press" style={{
-              width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginTop: 6, marginBottom: 14,
+              width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 11, marginTop: 6, marginBottom: 14,
               cursor: generating ? 'default' : 'pointer', background: accent, color: '#020408', border: 'none',
               opacity: generating ? 0.5 : 1, letterSpacing: 1,
             }}>
@@ -378,10 +378,10 @@ export default function RedPage() {
 
             {graphReady && (
               <>
-                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>
+                <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>
                   {nodeCount} NODOS · <span style={{ color: accent }}>{edgeCount} ARISTAS</span>
                 </div>
-                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
                   DISTRIBUCIÓN DE GRADO (ordenada, mayor a menor)
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 50, marginBottom: 14, border: `1px solid ${accent}22`, padding: '4px 4px 0' }}>
@@ -395,16 +395,16 @@ export default function RedPage() {
           </>
         ) : (
           <>
-            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Hacé clic en un nodo de la red (NUBLADO, ASPERSOR, LLUVIA, PASTO MOJADO) para fijarlo
               como evidencia — SÍ, NO, o sin evidencia otra vez. Las probabilidades de los demás
               se recalculan al instante, por inferencia exacta.
             </p>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 14 }}>
               EVIDENCIA ACTUAL: {Object.keys(evidence).length === 0 ? 'ninguna' : NODE_ORDER.filter(id => id in evidence).map(id => `${NODE_LABEL[id]}=${evidence[id] ? 'SÍ' : 'NO'}`).join(', ')}
             </div>
             <button onClick={() => { setEvidence({}); redrawAllBayesNodes({}) }} className="press" style={{
-              width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginBottom: 14,
+              width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 10, marginBottom: 14,
               cursor: 'pointer', background: 'transparent', border: `1px solid ${CYAN}`, color: CYAN, letterSpacing: 1,
             }}>
               ↺ LIMPIAR EVIDENCIA

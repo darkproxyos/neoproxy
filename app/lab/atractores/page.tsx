@@ -250,7 +250,7 @@ export default function GenerativeLab() {
                     padding: '8px',
                     background: '#00000044',
                     fontSize: '8px',
-                    color: '#00d4ff88',
+                    color: '#00d4ffaa',
                     whiteSpace: 'pre-wrap',
                     marginBottom: selectedAlgo === 'lorenz' ? '6px' : '10px',
                     maxHeight: '80px',
@@ -317,7 +317,7 @@ export default function GenerativeLab() {
               display: 'flex', 
               flexDirection: 'column' 
             }}>
-              <div style={{ fontSize: '10px', color: '#4a6080', marginBottom: '10px', flexShrink: 0 }}>SELECT_ALGORITHM</div>
+              <div style={{ fontSize: '10px', color: '#6f86a3', marginBottom: '10px', flexShrink: 0 }}>SELECT_ALGORITHM</div>
               
               <div style={{ flexGrow: 1, overflowY: 'auto', marginBottom: '15px', paddingRight: '5px' }} className="custom-scroll">
                 {Object.keys(attractors).map(key => (
@@ -339,7 +339,7 @@ export default function GenerativeLab() {
                 padding: '10px',
                 background: '#00000044',
                 fontSize: '9px',
-                color: '#00d4ff88',
+                color: '#00d4ffaa',
                 whiteSpace: 'pre-wrap',
                 marginBottom: selectedAlgo === 'lorenz' ? '6px' : '15px',
                 overflow: 'hidden'
@@ -437,11 +437,11 @@ export default function GenerativeLab() {
             border: 'var(--neo-border-width, 1px) solid var(--neo-glow, rgba(0, 212, 255, 0.4))',
             backdropFilter: 'blur(var(--neo-blur, 10px))'
           }}>
-            <div style={{ fontSize: isMobile ? '9px' : '10px', color: '#4a6080', marginBottom: '4px' }}>SPECIMEN_STATUS</div>
+            <div style={{ fontSize: isMobile ? '9px' : '10px', color: '#6f86a3', marginBottom: '4px' }}>SPECIMEN_STATUS</div>
             <div style={{ fontSize: isMobile ? '14px' : '18px', color: 'var(--neo-primary, #00d4ff)', marginBottom: '4px', textShadow: '0 0 10px var(--neo-glow, rgba(0, 212, 255, 0.4))' }}>RESONANT_ACTIVE</div>
             <div style={{ 
               fontSize: isMobile ? '8px' : '9px', 
-              color: '#4a6080',
+              color: '#6f86a3',
               maxWidth: isMobile ? '150px' : 'auto',
               wordBreak: 'break-word'
             }}>

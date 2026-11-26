@@ -41,17 +41,17 @@ export default function HomeGaleriaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${CYAN}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A HOME (ALEATORIO)
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-HOME-GALERÍA // TODAS LAS ENTRADAS REALES AL SITIO
         </div>
         <h1 style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700, letterSpacing: 6, color: CYAN, textShadow: `0 0 40px ${CYAN}44`, marginBottom: 16, lineHeight: 1 }}>
           GALERÍA DE HOME
         </h1>
-        <p style={{ fontSize: 11.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
+        <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
           Cada visita a <Link href="/" style={{ color: '#fff', textDecoration: 'underline' }}>/</Link> elige una de estas tres al azar —
           acá están las tres juntas, para entrar a cualquiera directo sin depender de la suerte.
         </p>
@@ -63,10 +63,10 @@ export default function HomeGaleriaPage() {
               background: 'rgba(2,4,8,0.8)', border: `1px solid ${h.color}33`,
               borderLeft: `3px solid ${h.color}`,
             }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: `${h.color}aa`, marginBottom: 12 }}>{h.code}</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${h.color}aa`, marginBottom: 12 }}>{h.code}</div>
               <div style={{ fontSize: 20, letterSpacing: 2, color: '#fff', marginBottom: 10 }}>{h.title}</div>
-              <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16 }}>{h.blurb}</p>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: `${h.color}cc` }}>{h.tag}</div>
+              <p style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 16 }}>{h.blurb}</p>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: `${h.color}cc` }}>{h.tag}</div>
             </Link>
           ))}
         </div>

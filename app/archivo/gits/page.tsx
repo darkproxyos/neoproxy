@@ -60,7 +60,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -72,7 +72,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -129,7 +129,7 @@ function VersionTable() {
                 key={i}
                 style={{
                   textAlign: 'left',
-                  fontSize: 9.5,
+                  fontSize: 11,
                   letterSpacing: 1.5,
                   color: ACCENT,
                   borderBottom: `1px solid ${ACCENT}55`,
@@ -145,13 +145,13 @@ function VersionTable() {
         <tbody>
           {VERSIONS.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(217,70,239,0.04)' : 'transparent' }}>
-              <td style={{ padding: '12px 14px', fontSize: 11, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 12, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.nombre}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10.5, color: TEXT, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11.5, color: TEXT, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.año}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, verticalAlign: 'top' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, verticalAlign: 'top' }}>
                 {row.nota}
               </td>
             </tr>
@@ -194,7 +194,7 @@ export default function GhostInTheShellAnalysisPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-REF-02 // REFERENCIA CULTURAL ARCHIVADA
           </div>
           <h1
@@ -215,7 +215,7 @@ export default function GhostInTheShellAnalysisPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -238,7 +238,7 @@ export default function GhostInTheShellAnalysisPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -253,7 +253,7 @@ export default function GhostInTheShellAnalysisPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -268,7 +268,7 @@ export default function GhostInTheShellAnalysisPage() {
                 ['VIII', 'sec-08', 'Recepción y legado'],
                 ['IX', 'sec-09', 'Resonancia con NeoProxy'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -281,7 +281,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-01" style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="PREMISA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La Mayor <strong style={{ color: '#fff' }}>Motoko Kusanagi</strong>, agente cyborg de la
               unidad policial <strong style={{ color: '#fff' }}>Section 9</strong>, persigue a un
               hacker conocido como el <strong style={{ color: '#fff' }}>Puppet Master</strong> —
@@ -301,7 +301,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-02" style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="GHOST Y SHELL — EL TÉRMINO" sub="qué nombra cada palabra del título, y de dónde viene la frase" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
               En el mundo de la serie, el <strong style={{ color: '#fff' }}>ghost</strong> es la
               personalidad, la conciencia, lo que hace que alguien sea quien es — nunca se explica del
               todo qué lo sostiene físicamente. El <strong style={{ color: '#fff' }}>shell</strong> es
@@ -323,7 +323,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-03" style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="DESCARTES DESARMADO" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Varias lecturas coinciden en que la película invoca primero el dualismo cartesiano clásico
               — mente y cuerpo como sustancias separadas, con la mente como asiento de la identidad — y
               después lo desarma activamente. Kusanagi pasa buena parte de la historia dudando de su
@@ -340,7 +340,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-04" style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="HARAWAY Y EL CYBORG" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El segundo marco teórico que aparece una y otra vez en los análisis es{' '}
               <em>A Cyborg Manifesto</em> de Donna Haraway: la idea de que un cyborg, al rechazar las
               fronteras limpias entre humano y máquina, puede construir una identidad propia que no
@@ -359,7 +359,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-05" style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="EL FINAL — NI KUSANAGI NI PUPPET MASTER" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Francotiradores intentan destruir ambos cerebros para borrar el proyecto; Batou protege
               físicamente la cabeza de Kusanagi mientras el Puppet Master la convence de fusionarse con
               él en la red, en vez de simplemente reproducirse como haría un virus. Kusanagi despierta
@@ -391,7 +391,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-07" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="LA SOMBRA SOBRE THE MATRIX" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Es, con diferencia, la influencia más citada y mejor documentada de esta película sobre el
               cine occidental: las hermanas Wachowski reconocieron abiertamente a Ghost in the Shell
               como referencia directa para The Matrix (1999). Dos elementos puntuales aparecen
@@ -411,7 +411,7 @@ export default function GhostInTheShellAnalysisPage() {
             {RECEPTION_NOTES.map((n, i) => (
               <Panel key={i}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{n.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
               </Panel>
             ))}
           </div>
@@ -421,7 +421,7 @@ export default function GhostInTheShellAnalysisPage() {
         <div id="sec-09" style={{ marginBottom: 40 }}>
           <SectionHeader roman="IX" title="RESONANCIA CON NEOPROXY" sub="lectura propia de este documento, no una fuente externa — marcada como tal" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La distinción ghost/shell es, casi literalmente, el mismo corte que separa a los agentes
               de NeoProxy de su kernel real. El "ghost" de cada agente — lore completo, arte canónico,
               perfil propio en <code style={{ color: ACCENT }}>/proxyverse/[id]</code> — ya existe y
@@ -441,7 +441,7 @@ export default function GhostInTheShellAnalysisPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-REF-02 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

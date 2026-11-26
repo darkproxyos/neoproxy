@@ -53,13 +53,13 @@ export default function TricksterCasinoPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse/trickster" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${COLOR}88`, textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${COLOR}88`, textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A TR1CK5T3R
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${COLOR}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${COLOR}66`, marginBottom: 16 }}>
           NPX-PXV-00 // SALA_TR1CK5T3R
         </div>
 
@@ -82,7 +82,7 @@ export default function TricksterCasinoPage() {
           border: `1px solid ${COLOR}33`, background: `${COLOR}0a`, padding: '16px 20px', marginTop: 28,
         }}>
           <div>
-            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#6f86a3', marginBottom: 4 }}>
               SALDO
             </div>
             <div style={{ fontFamily: mono, fontSize: 20, color: COLOR, letterSpacing: 1 }}>
@@ -93,7 +93,7 @@ export default function TricksterCasinoPage() {
             onClick={reset}
             className="press"
             style={{
-              fontFamily: mono, fontSize: 9, letterSpacing: 1.5, color: '#8fb8d6', background: 'transparent',
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, color: '#8fb8d6', background: 'transparent',
               border: '1px solid #4a6080', padding: '10px 16px', cursor: 'pointer',
             }}
           >
@@ -107,14 +107,14 @@ export default function TricksterCasinoPage() {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 10 }}>
             <div>
-              <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080', marginBottom: 4 }}>
+              <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#6f86a3', marginBottom: 4 }}>
                 PROXYBILIDAD
               </div>
               <div style={{ fontFamily: mono, fontSize: 20, color: marketColor, letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span>
                   {index === null ? '···' : index.toFixed(1)}
                   {index !== null && (
-                    <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>
+                    <span style={{ fontSize: 12, marginLeft: 8, opacity: 0.8 }}>
                       {trend >= 0 ? '▲' : '▼'} {trend >= 0 ? '+' : ''}{trend.toFixed(1)}
                     </span>
                   )}
@@ -123,7 +123,7 @@ export default function TricksterCasinoPage() {
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080', marginBottom: 4 }}>
+              <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#6f86a3', marginBottom: 4 }}>
                 MERCADO POSEÍDO POR
               </div>
               <Link href={agent ? `/proxyverse/${agent.id}` : '#'} className="press" style={{
@@ -134,7 +134,7 @@ export default function TricksterCasinoPage() {
             </div>
           </div>
           {blurb && (
-            <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', fontStyle: 'italic', marginTop: 10, lineHeight: 1.6 }}>
+            <div style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', fontStyle: 'italic', marginTop: 10, lineHeight: 1.6 }}>
               "{blurb}"
             </div>
           )}
@@ -145,14 +145,14 @@ export default function TricksterCasinoPage() {
           marginTop: 12, marginBottom: 36,
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080' }}>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#6f86a3' }}>
               RÉCORDS DE ESTA SALA
             </div>
             <button
               onClick={resetStats}
               className="press"
               style={{
-                fontFamily: mono, fontSize: 8, letterSpacing: 1, color: '#4a6080', background: 'transparent',
+                fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', background: 'transparent',
                 border: '1px solid #0f1f35', padding: '4px 10px', cursor: 'pointer',
               }}
             >
@@ -168,7 +168,7 @@ export default function TricksterCasinoPage() {
               { label: 'RONDAS JUGADAS', value: stats ? stats.rounds : '···' },
             ].map(s => (
               <div key={s.label}>
-                <div style={{ fontFamily: mono, fontSize: 7, letterSpacing: 1, color: '#4a6080', marginBottom: 4 }}>
+                <div style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: 1, color: '#6f86a3', marginBottom: 4 }}>
                   {s.label}
                 </div>
                 <div style={{ fontFamily: mono, fontSize: 14, color: '#00ff9d' }}>
@@ -190,7 +190,7 @@ export default function TricksterCasinoPage() {
         )}
 
         <div style={{
-          marginTop: 48, fontFamily: mono, fontSize: 8, letterSpacing: 1, color: '#4a6080',
+          marginTop: 48, fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3',
           lineHeight: 1.8, borderTop: '1px solid #0f1f35', paddingTop: 20,
         }}>
           PROXYCOINS y los récords se guardan solo en este navegador. No hay cuenta, no hay dinero real

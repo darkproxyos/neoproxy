@@ -119,13 +119,13 @@ export default function ScanPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 700, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
           // NFC — NPX-XP-SCAN
         </div>
         <h1 style={{
@@ -134,21 +134,21 @@ export default function ScanPage() {
         }}>
           SCAN
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 8 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 8 }}>
           Lector genérico de tags NFC vía Web NFC — muestra el payload crudo de cualquier tag que acerques.
           Si el texto coincide con un artefacto registrado (mismo esquema que usa el marcador por cámara de{' '}
           <Link href="/realidad-aumentada/marcador" style={{ color: CYAN }}>/realidad-aumentada/marcador</Link>),
           aparece su revelación acá también — un tag físico todavía no fue fabricado, pero el pipeline ya
           está listo para recibirlo.
         </p>
-        <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8, maxWidth: 560, marginBottom: 48 }}>
+        <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, lineHeight: 1.8, maxWidth: 560, marginBottom: 48 }}>
           Web NFC solo existe en Chrome para Android, sobre HTTPS. En cualquier otro navegador o dispositivo
           esta página no va a poder escanear nada — es una limitación de la plataforma, no de este código.
         </p>
 
         {status === 'unsupported' && (
           <div style={{ border: `1px solid ${RED}44`, background: `${RED}0a`, padding: 20, marginBottom: 24 }}>
-            <div style={{ fontSize: 11, color: RED, letterSpacing: 1, lineHeight: 1.8 }}>
+            <div style={{ fontSize: 12, color: RED, letterSpacing: 1, lineHeight: 1.8 }}>
               ESTE NAVEGADOR NO SOPORTA WEB NFC. Abrí esta página en Chrome para Android con NFC activado.
             </div>
           </div>
@@ -171,24 +171,24 @@ export default function ScanPage() {
 
         {status === 'scanning' && (
           <div style={{ border: `1px solid ${CYAN}33`, background: `${CYAN}0a`, padding: '14px 20px', marginBottom: 24 }}>
-            <div style={{ fontSize: 11, color: CYAN, letterSpacing: 1 }}>
+            <div style={{ fontSize: 12, color: CYAN, letterSpacing: 1 }}>
               ● ESCANEANDO — acercá un tag NFC al dorso del celular.
             </div>
           </div>
         )}
 
         {errorMsg && (
-          <div style={{ fontSize: 10, color: RED, letterSpacing: 0.5, marginBottom: 24, lineHeight: 1.6 }}>
+          <div style={{ fontSize: 11, color: RED, letterSpacing: 0.5, marginBottom: 24, lineHeight: 1.6 }}>
             {errorMsg}
           </div>
         )}
 
-        <div style={{ fontSize: 10, color: CYAN, letterSpacing: 4, marginBottom: 16 }}>
+        <div style={{ fontSize: 11, color: CYAN, letterSpacing: 4, marginBottom: 16 }}>
           LECTURAS ({entries.length})
         </div>
 
         {entries.length === 0 && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1 }}>
             SIN LECTURAS TODAVÍA.
           </div>
         )}
@@ -196,8 +196,8 @@ export default function ScanPage() {
         {entries.map(e => (
           <div key={e.id} className="artifact-card" style={{ padding: 18, marginBottom: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 10, color: '#8fb8d6', letterSpacing: 1 }}>SERIAL: {e.serialNumber}</span>
-              <span style={{ fontSize: 9, color: '#4a6080' }}>{e.time}</span>
+              <span style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 1 }}>SERIAL: {e.serialNumber}</span>
+              <span style={{ fontSize: 10.5, color: '#6f86a3' }}>{e.time}</span>
             </div>
             {e.artifact && (
               <div style={{ padding: '18px 0', marginBottom: 14, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -205,15 +205,15 @@ export default function ScanPage() {
               </div>
             )}
             {e.records.length === 0 && (
-              <div style={{ fontSize: 10, color: '#4a6080' }}>Tag sin registros NDEF (o vacío).</div>
+              <div style={{ fontSize: 11, color: '#6f86a3' }}>Tag sin registros NDEF (o vacío).</div>
             )}
             {e.records.map((r, i) => (
               <div key={i} style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.08)' : 'none', paddingTop: i > 0 ? 10 : 0, marginTop: i > 0 ? 10 : 0 }}>
-                <div style={{ fontSize: 9, color: CYAN, letterSpacing: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 10.5, color: CYAN, letterSpacing: 1, marginBottom: 4 }}>
                   TIPO: {r.recordType}{r.mediaType ? ` (${r.mediaType})` : ''}{r.lang ? ` — lang=${r.lang}` : ''}
                 </div>
                 <div style={{ fontSize: 12, color: '#fff', marginBottom: 6, wordBreak: 'break-word' }}>{r.text}</div>
-                <div style={{ fontSize: 8, color: '#3a4a60', wordBreak: 'break-all', lineHeight: 1.6 }}>hex: {r.hex || '(vacío)'}</div>
+                <div style={{ fontSize: 10, color: '#3a4a60', wordBreak: 'break-all', lineHeight: 1.6 }}>hex: {r.hex || '(vacío)'}</div>
               </div>
             ))}
           </div>

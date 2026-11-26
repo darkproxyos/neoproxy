@@ -4,11 +4,11 @@ import { ORBITS } from '@/lib/trenza/orbit'
 
 const mono = "'Space Mono', monospace"
 const GOLD = '#ffc75a', CYAN = '#9fe8ff'
-const H = ({ children, c = CYAN }: { children: React.ReactNode; c?: string }) => <div style={{ fontSize: 10.5, letterSpacing: 4, color: c, margin: '0 0 16px' }}>{children}</div>
-const P = ({ children }: { children: React.ReactNode }) => <p style={{ fontSize: 11.5, lineHeight: 2, color: '#a9bdd4', margin: '0 0 12px' }}>{children}</p>
+const H = ({ children, c = CYAN }: { children: React.ReactNode; c?: string }) => <div style={{ fontSize: 11.5, letterSpacing: 4, color: c, margin: '0 0 16px' }}>{children}</div>
+const P = ({ children }: { children: React.ReactNode }) => <p style={{ fontSize: 12.5, lineHeight: 2, color: '#a9bdd4', margin: '0 0 12px' }}>{children}</p>
 const Card = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
   <div style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '2px 1px 1px 1px', borderColor: `${GOLD} #ffffff12 #ffffff12 #ffffff12`, padding: '16px 18px 8px' }}>
-    <div style={{ fontSize: 9.5, letterSpacing: 3, color: `${GOLD}aa`, marginBottom: 6 }}>{n}</div>
+    <div style={{ fontSize: 11, letterSpacing: 3, color: `${GOLD}aa`, marginBottom: 6 }}>{n}</div>
     <div style={{ fontSize: 12.5, letterSpacing: 1.5, color: '#fff', marginBottom: 10 }}>{title}</div>
     {children}
   </div>
@@ -24,13 +24,13 @@ export default function TrenzaPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div className="tr-layer" style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontSize: 9.5, letterSpacing: 6, color: `${GOLD}aa`, marginBottom: 14 }}>NPX-TRENZA // GRAVEDAD · <Link href="/fenomenos" style={{ color: `${GOLD}aa` }}>SERIE FENÓMENOS</Link></div>
+        <div style={{ fontSize: 11, letterSpacing: 6, color: `${GOLD}aa`, marginBottom: 14 }}>NPX-TRENZA // GRAVEDAD · <Link href="/fenomenos" style={{ color: `${GOLD}aa` }}>SERIE FENÓMENOS</Link></div>
         <h1 style={{ fontSize: 'clamp(34px, 8vw, 64px)', letterSpacing: 12, margin: '0 0 18px', lineHeight: 1.05, background: 'linear-gradient(90deg,#5fe3ff,#ff4fa3 55%,#ffc75a)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>TRENZA</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 880, margin: '0 0 10px' }}>
           Tres soles que se atraen por gravedad casi siempre terminan en caos. Pero hay órbitas excepcionales donde bailan para siempre sin chocar.
           Si el tiempo se vuelve altura, ese baile es <b style={{ color: '#fff' }}>una trenza</b> — y una trenza se puede imprimir.
         </p>
-        <p style={{ fontSize: 10.5, lineHeight: 1.95, color: '#7f96b2', maxWidth: 880, margin: '0 0 26px' }}>
+        <p style={{ fontSize: 11.5, lineHeight: 1.95, color: '#7f96b2', maxWidth: 880, margin: '0 0 26px' }}>
           {ORBITS.length} órbitas periódicas publicadas, recalculadas aquí. ◎ DANZA las muestra desde arriba; ⟰ TRENZA levanta el tiempo; ◆ PIEZA la solidifica; ✶ CAOS corre la misma órbita dos veces con una diferencia minúscula y deja ver cuándo se separan.
         </p>
 
@@ -58,7 +58,7 @@ export default function TrenzaPage() {
           <div>
             <H c="#7cf0b0">LO QUE ESTÁ MEDIDO</H>
             <P>Lo comprueba <code style={{ color: '#fff' }}>scripts/trenza/check.ts</code> en el repositorio.</P>
-            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11, lineHeight: 2, color: '#a9bdd4' }}>
+            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 12, lineHeight: 2, color: '#a9bdd4' }}>
               <li><b style={{ color: '#fff' }}>Las órbitas cierran.</b> Con las cifras publicadas, tras un período los soles quedan a entre {sci(pubMin)} y {sci(pubMax)} de su punto de partida. Refinadas, a menos de {sci(worstClose)} (el navegador integra con una tolerancia un poco mayor y las cierra a menos de 3·10⁻⁸).</li>
               <li><b style={{ color: '#fff' }}>La energía se conserva.</b> En un período la energía total cambia como máximo en {sci(worstE)} de su valor.</li>
               <li><b style={{ color: '#fff' }}>La trenza del ocho.</b> El ocho (Moore 1993; Chenciner y Montgomery 2000) da la palabra (σ₁ σ₂⁻¹)³: seis cruces alternados.</li>
@@ -69,7 +69,7 @@ export default function TrenzaPage() {
           </div>
           <div>
             <H c="#ffb86b">LO QUE NO</H>
-            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11, lineHeight: 2, color: '#a9bdd4' }}>
+            <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 12, lineHeight: 2, color: '#a9bdd4' }}>
               <li><b style={{ color: '#fff' }}>Un universo de juguete.</b> Masas puntuales e iguales, en un plano, sin relatividad. Ningún sistema estelar conocido sigue estas órbitas; son soluciones matemáticas exactas, no astronomía.</li>
               <li><b style={{ color: '#fff' }}>&ldquo;Estable&rdquo; es lo medido, no lo demostrado.</b> Que una órbita aguante 40 vueltas con una diferencia de 10⁻⁶ no prueba que sea estable para siempre. Del ocho sí se sabe que es linealmente estable.</li>
               <li><b style={{ color: '#fff' }}>Tres órbitas quedaron fuera.</b> Mariposa IV y yin-yang IIa y IIb pasan casi por una colisión (los soles a menos de 0,0002) y el refinamiento no las cierra con la misma precisión.</li>
@@ -81,7 +81,7 @@ export default function TrenzaPage() {
 
         <section style={{ marginTop: 56 }}>
           <H>FUENTES</H>
-          <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 10.5, lineHeight: 2, color: '#8fa8c4' }}>
+          <ul style={{ margin: 0, padding: '0 0 0 18px', fontSize: 11.5, lineHeight: 2, color: '#8fa8c4' }}>
             <li>Poincaré, H. (1890). Sur le problème des trois corps et les équations de la dynamique. <i>Acta Mathematica</i> 13.</li>
             <li>Artin, E. (1925). Theorie der Zöpfe. <i>Abh. Math. Sem. Univ. Hamburg</i> 4.</li>
             <li>Moore, C. (1993). Braids in classical dynamics. <i>Physical Review Letters</i> 70.</li>
@@ -90,7 +90,7 @@ export default function TrenzaPage() {
             <li>Li, X. y Liao, S. (2017). More than six hundred new families of Newtonian periodic planar collisionless three-body orbits. <i>Science China Physics, Mechanics &amp; Astronomy</i> 60.</li>
             <li>Dormand, J. R. y Prince, P. J. (1980). A family of embedded Runge–Kutta formulae. <i>Journal of Computational and Applied Mathematics</i> 6.</li>
           </ul>
-          <p style={{ fontSize: 10, lineHeight: 1.9, color: '#5d7490', margin: '18px 0 0' }}>
+          <p style={{ fontSize: 11, lineHeight: 1.9, color: '#6f86a3', margin: '18px 0 0' }}>
             Tercera de una línea: en <Link href="/capas" style={{ color: CYAN }}>CAPAS</Link> el tiempo de un mundo plano se apila en altura; en <Link href="/humo" style={{ color: CYAN }}>HUMO SÓLIDO</Link> un instante de un fluido se congela; aquí el tiempo entero de una órbita se vuelve una trenza. Toda la serie, en <Link href="/fenomenos" style={{ color: CYAN }}>FENÓMENOS</Link>.
           </p>
         </section>

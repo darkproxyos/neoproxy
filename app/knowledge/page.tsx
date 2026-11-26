@@ -36,11 +36,11 @@ function ArchiveDocCard({ doc }: { doc: ArchiveDoc }) {
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 14 }}>
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${doc.color}88` }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: `${doc.color}88` }}>
           {doc.code}
         </div>
         <div style={{
-          fontFamily: mono, fontSize: 7.5, letterSpacing: 1.5, padding: '2px 7px', whiteSpace: 'nowrap',
+          fontFamily: mono, fontSize: 9.5, letterSpacing: 1.5, padding: '2px 7px', whiteSpace: 'nowrap',
           color: `${doc.color}cc`, border: `1px solid ${doc.color}33`,
         }}>
           {doc.format}
@@ -52,7 +52,7 @@ function ArchiveDocCard({ doc }: { doc: ArchiveDoc }) {
       }}>
         {doc.title}
       </div>
-      <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
+      <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
         {doc.blurb}
       </p>
     </Link>
@@ -64,7 +64,7 @@ function FormulaTag({ kind }: { kind: 'equation' | 'quote' | 'concept' }) {
   const dim = { equation: '#00ffcc', quote: '#b06bff', concept: '#4a6080' }
   return (
     <span style={{
-      fontFamily: mono, fontSize: 8, letterSpacing: 2, color: dim[kind],
+      fontFamily: mono, fontSize: 10, letterSpacing: 2, color: dim[kind],
       border: `1px solid ${dim[kind]}55`, padding: '2px 6px', display: 'inline-block',
     }}>
       {labels[kind]}
@@ -93,7 +93,7 @@ function KnowledgeRow({ entry, color, isOpen, onToggle }: {
           <span style={{ fontSize: 14, letterSpacing: 0.5, color: isOpen ? color : '#c8daf0' }}>
             {entry.name}
           </span>
-          <span style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1 }}>
+          <span style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1 }}>
             {entry.years} — {entry.role}
           </span>
         </span>
@@ -118,19 +118,19 @@ function KnowledgeRow({ entry, color, isOpen, onToggle }: {
           }}>
             {entry.formula}
           </div>
-          <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 16 }}>
             {entry.formulaLabel}
           </div>
 
-          <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.9, color: '#c8daf0', marginBottom: 20, maxWidth: 640 }}>
+          <p style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.9, color: '#c8daf0', marginBottom: 20, maxWidth: 640 }}>
             {entry.summary}
           </p>
 
           <div style={{ borderLeft: `2px solid ${color}33`, paddingLeft: 14 }}>
-            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color, marginBottom: 8 }}>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color, marginBottom: 8 }}>
               EJEMPLO
             </div>
-            <p style={{ fontFamily: mono, fontSize: 11, lineHeight: 1.8, color: '#9fc4e0', maxWidth: 640 }}>
+            <p style={{ fontFamily: mono, fontSize: 12, lineHeight: 1.8, color: '#9fc4e0', maxWidth: 640 }}>
               {entry.example}
             </p>
           </div>
@@ -140,10 +140,10 @@ function KnowledgeRow({ entry, color, isOpen, onToggle }: {
               display: 'block', marginTop: 20, paddingTop: 16, maxWidth: 640,
               borderTop: `1px solid ${agent.color}33`, textDecoration: 'none',
             }}>
-              <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>
+              <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: agent.color, marginBottom: 6 }}>
                 ESTO YA VIVE EN PROXYVERSE
               </div>
-              <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5 }}>
+              <div style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', letterSpacing: 0.5 }}>
                 {agent.name} — {agent.role} →
               </div>
             </Link>
@@ -176,7 +176,7 @@ export default function KnowledgePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: '#00d4ff44', marginBottom: 20 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: '#00d4ff44', marginBottom: 20 }}>
           NPX-KNW-00 // ARQUITECTURA INVISIBLE
         </div>
 
@@ -234,13 +234,13 @@ export default function KnowledgePage() {
           display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #00d4ff44', background: 'linear-gradient(135deg, #00d4ff0f, transparent)',
         }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', marginBottom: 8 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ffaa', marginBottom: 8 }}>
             NPX-LAB-CODEX // ENTRAR AL ESPACIO
           </div>
           <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: '#00d4ff', marginBottom: 8, textShadow: '0 0 16px #00d4ff55' }}>
             VER LOS NOMBRES FLOTAR, NO LISTADOS →
           </div>
-          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
+          <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
             Las 88 entradas y sus 109 conexiones reales, en un espacio 3D que nunca termina de
             asentarse — cada nombre es un punto de luz que se mueve solo, atraído por sus propias
             conexiones. Tocar un nombre abre su ficha real, la misma de acá abajo.
@@ -251,20 +251,20 @@ export default function KnowledgePage() {
           display: 'block', textDecoration: 'none', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #c9a24d44', background: 'linear-gradient(135deg, #c9a24d0f, transparent)',
         }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#c9a24d88', marginBottom: 8 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#c9a24d88', marginBottom: 8 }}>
             NPX-KNW-ARN // TERCERA PATA DEL CODEX
           </div>
           <div style={{ fontFamily: mono, fontSize: 16, letterSpacing: 1.5, color: '#c9a24d', marginBottom: 8, textShadow: '0 0 16px #c9a24d55' }}>
             CODEX ARCANUM: LA MAGIA LEÍDA COMO PROTOCOLO →
           </div>
-          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
+          <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.8, color: '#8fb8d6', margin: 0 }}>
             Heka egipcio, el Corpus Hermético, los grimorios salomónicos, Dee, la Golden Dawn, Crowley,
             magia del caos — historia verificable, no lista de hechizos. Termina en un instrumento real:
             el sigilo de Spare, cargado con un ritual cronometrado de verdad.
           </p>
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
           VEINTISIETE DOCUMENTOS
         </div>
         <div style={{
@@ -274,10 +274,10 @@ export default function KnowledgePage() {
           {ARCHIVE_DOCS.map(doc => <ArchiveDocCard key={doc.id} doc={doc} />)}
         </div>
 
-        <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#4a6080', marginBottom: 8 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: '#6f86a3', marginBottom: 8 }}>
           LOS NOMBRES
         </div>
-        <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.9, color: '#5a7290', maxWidth: 680, marginBottom: 36 }}>
+        <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.9, color: '#6f86a3', maxWidth: 680, marginBottom: 36 }}>
           Información, mente, auto-organización, sistemas que se producen a sí mismos sin pedir
           permiso, geometría — desde un punto sin tamaño hasta formas de 4 dimensiones que ni
           siquiera se pueden ver enteras, solo proyectar — y computación: la pila completa, capa por
@@ -288,7 +288,7 @@ export default function KnowledgePage() {
         {CLUSTER_ORDER.map(cluster => (
           <div key={cluster} style={{ marginBottom: 36 }}>
             <div style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 2, color: clusters[cluster].color,
+              fontFamily: mono, fontSize: 11, letterSpacing: 2, color: clusters[cluster].color,
               marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8,
             }}>
               <span style={{
@@ -299,7 +299,7 @@ export default function KnowledgePage() {
             </div>
             {cluster === 'estetica' && (
               <p style={{
-                fontFamily: mono, fontSize: 9.5, lineHeight: 1.8, color: '#a0854a', maxWidth: 640,
+                fontFamily: mono, fontSize: 11, lineHeight: 1.8, color: '#a0854a', maxWidth: 640,
                 margin: '10px 0 14px', fontStyle: 'italic',
               }}>
                 Estas cuatro no son ciencia ni son verificables de la misma manera que todo lo de

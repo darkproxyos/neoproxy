@@ -89,7 +89,7 @@ export default function SlotMachine({
 
   return (
     <div style={{ border: `1px solid ${COLOR}33`, background: `${COLOR}08`, padding: '24px 20px' }}>
-      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
+      <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
         GLITCH_SLOTS
       </div>
 
@@ -114,7 +114,7 @@ export default function SlotMachine({
             onClick={() => setBet(b)}
             disabled={spinning}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: spinning ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '8px 14px', cursor: spinning ? 'default' : 'pointer',
               background: bet === b ? `${COLOR}33` : 'transparent', color: bet === b ? COLOR : '#8fb8d6',
               border: `1px solid ${bet === b ? COLOR : COLOR + '33'}`,
             }}
@@ -128,7 +128,7 @@ export default function SlotMachine({
         onClick={spin}
         disabled={spinning || balance < bet}
         style={{
-          display: 'block', width: '100%', fontFamily: mono, fontSize: 11, letterSpacing: 3, padding: '14px',
+          display: 'block', width: '100%', fontFamily: mono, fontSize: 12, letterSpacing: 3, padding: '14px',
           background: spinning || balance < bet ? 'transparent' : `${COLOR}22`,
           color: spinning || balance < bet ? '#4a6080' : COLOR,
           border: `1px solid ${spinning || balance < bet ? '#4a6080' : COLOR}`,
@@ -140,7 +140,7 @@ export default function SlotMachine({
 
       {message && (
         <div style={{
-          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 10, letterSpacing: 2,
+          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 11, letterSpacing: 2,
           color: message.includes('SIN') ? '#4a6080' : '#00ff9d',
         }}>
           {message}

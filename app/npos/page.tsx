@@ -101,7 +101,7 @@ export default function NPosPortal() {
         }
 
         .tag-prefix {
-          color: #4a6080;
+          color: #6f86a3;
         }
 
         .portal-title {
@@ -132,7 +132,7 @@ export default function NPosPortal() {
         .title-subtitle {
           display: block;
           font-size: 0.32em;
-          color: #4a6080;
+          color: #6f86a3;
           letter-spacing: 0.3em;
           text-transform: uppercase;
           font-weight: 400;
@@ -171,7 +171,7 @@ export default function NPosPortal() {
         }
 
         .flow-arrow {
-          color: #4a6080;
+          color: #6f86a3;
         }
 
         .modules-grid {
@@ -222,7 +222,7 @@ export default function NPosPortal() {
 
         .module-desc {
           font-size: clamp(0.75rem, 2.5vw, 0.85rem);
-          color: #4a6080;
+          color: #6f86a3;
           line-height: 1.4;
           margin: 0;
         }
@@ -243,7 +243,7 @@ export default function NPosPortal() {
         .footer-status {
           font-family: 'Space Mono', monospace;
           font-size: clamp(0.625rem, 2vw, 0.65rem);
-          color: #4a6080;
+          color: #6f86a3;
           letter-spacing: 0.15em;
         }
 

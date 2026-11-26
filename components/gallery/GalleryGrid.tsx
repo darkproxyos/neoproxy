@@ -62,7 +62,7 @@ export default function GalleryGrid() {
         }
         .wired-zoom-tag {
           position: absolute; bottom: 8px; right: 10px; z-index: 3;
-          font-size: 8px; letter-spacing: 1px; color: #00ff9d;
+          font-size: 10px; letter-spacing: 1px; color: #00ff9d;
           opacity: 0; transition: opacity 0.25s ease; pointer-events: none;
           text-shadow: 0 0 4px rgba(0,0,0,0.9);
         }
@@ -78,9 +78,9 @@ export default function GalleryGrid() {
           <section key={cat.id} style={{ marginTop: '3.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, flexWrap: 'wrap' }}>
               <h3 style={{ fontSize: 12, letterSpacing: 2, color: cat.color, margin: 0 }}>{cat.label}</h3>
-              <span style={{ fontSize: 10, color: '#4a6080' }}>{catPieces.length} piezas</span>
+              <span style={{ fontSize: 11, color: '#6f86a3' }}>{catPieces.length} piezas</span>
             </div>
-            <p style={{ color: '#4a6080', fontSize: '10px', lineHeight: 1.7, maxWidth: 600, marginTop: '8px', fontStyle: 'italic' }}>
+            <p style={{ color: '#6f86a3', fontSize: '10px', lineHeight: 1.7, maxWidth: 600, marginTop: '8px', fontStyle: 'italic' }}>
               {cat.blurb}
             </p>
 
@@ -128,9 +128,9 @@ export default function GalleryGrid() {
                       {isImage && <span className="wired-zoom-tag">[+] AMPLIAR</span>}
                     </div>
                     <div style={{ padding: '14px 16px' }}>
-                      <h4 style={{ fontSize: 10, letterSpacing: 1, color: cat.color, margin: 0 }}>{piece.title}</h4>
-                      <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 0.5, marginTop: 6 }}>{piece.material}</p>
-                      <p style={{ fontSize: 10, color: '#c8daf0', lineHeight: 1.7, marginTop: 10 }}>{piece.note}</p>
+                      <h4 style={{ fontSize: 11, letterSpacing: 1, color: cat.color, margin: 0 }}>{piece.title}</h4>
+                      <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 0.5, marginTop: 6 }}>{piece.material}</p>
+                      <p style={{ fontSize: 11, color: '#c8daf0', lineHeight: 1.7, marginTop: 10 }}>{piece.note}</p>
                     </div>
                   </div>
                 )
@@ -154,7 +154,7 @@ export default function GalleryGrid() {
               onClick={() => setLightbox(null)}
               style={{
                 position: 'absolute', top: -34, right: 0, background: 'transparent', border: 'none',
-                color: '#c8daf0', fontSize: 11, letterSpacing: 1, cursor: 'pointer', fontFamily: 'Space Mono, monospace',
+                color: '#c8daf0', fontSize: 12, letterSpacing: 1, cursor: 'pointer', fontFamily: 'Space Mono, monospace',
               }}
             >
               ✕ CERRAR
@@ -169,8 +169,8 @@ export default function GalleryGrid() {
               }}
             />
             <div style={{ marginTop: 14, textAlign: 'center' }}>
-              <div style={{ fontSize: 11, color: lightboxColor, letterSpacing: 1 }}>{lightbox.title}</div>
-              <div style={{ fontSize: 9, color: '#4a6080', marginTop: 4, letterSpacing: 0.5 }}>{lightbox.material}</div>
+              <div style={{ fontSize: 12, color: lightboxColor, letterSpacing: 1 }}>{lightbox.title}</div>
+              <div style={{ fontSize: 10.5, color: '#6f86a3', marginTop: 4, letterSpacing: 0.5 }}>{lightbox.material}</div>
             </div>
           </div>
         </div>

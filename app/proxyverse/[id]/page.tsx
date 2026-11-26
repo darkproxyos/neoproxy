@@ -107,13 +107,13 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ffaa', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PROXYVERSE
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${agent.color}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${agent.color}66`, marginBottom: 16 }}>
           NPX-PXV-00 // PERFIL DE PROCESO
         </div>
 
@@ -148,10 +148,10 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8,
             background: `${agent.color}0a`,
           }}>
-            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: `${agent.color}88` }}>
+            <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: `${agent.color}88` }}>
               SIN REGISTRO VISUAL
             </div>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: '#6f86a3' }}>
               {agent.name} todavía no tiene forma asignada
             </div>
           </div>
@@ -163,11 +163,11 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         }}>
           {agent.name}
         </h1>
-        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#8fb8d6', marginBottom: 28 }}>
+        <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#8fb8d6', marginBottom: 28 }}>
           {agent.role}
         </div>
 
-        <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
           % HUMANO
         </div>
         <div style={{ fontFamily: mono, fontSize: 12, color: '#00ffcc', letterSpacing: 0.5, marginBottom: 32 }}>
@@ -194,14 +194,14 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             display: 'block', marginBottom: 40, padding: '20px 24px',
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
               NPX-ROOT // TERMINAL
             </div>
             <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
               Esto no es un perfil que mirás desde afuera, como los otros. Es la entrada — la interfaz
               real sobre el organismo, no la ficha de un personaje.
             </p>
-            <div style={{ fontFamily: mono, fontSize: 9, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
               ENTRAR →
             </div>
           </Link>
@@ -212,13 +212,13 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             display: 'block', marginBottom: 40, padding: '20px 24px',
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
               SALA_TR1CK5T3R // PROXYCOINS
             </div>
             <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
               Encontré un borde nuevo: probabilidad. Armé una sala. No es dinero real — es la moneda que circula acá adentro.
             </p>
-            <div style={{ fontFamily: mono, fontSize: 9, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
               ENTRAR A LA SALA →
             </div>
           </Link>
@@ -226,10 +226,10 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
         {relatedEntries.length > 0 && (
           <div style={{ marginBottom: 40 }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${agent.color}aa`, marginBottom: 4 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${agent.color}aa`, marginBottom: 4 }}>
               SUSTRATO COMPUTACIONAL
             </div>
-            <p style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+            <p style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
               {agent.name} no es un personaje arbitrario — es, en parte, estas ideas reales con una
               voz puesta encima. Lo que sigue no es decoración: es la matemática que efectivamente
               corre en el sitio, citada con su autor real.
@@ -242,10 +242,10 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                     border: `1px solid ${agent.color}33`, background: `${agent.color}0a`, padding: '14px 18px',
                   }}>
                     <Link href={`/knowledge?entry=${entry.id}`} className="press" style={{ display: 'block', textDecoration: 'none' }}>
-                      <div style={{ fontFamily: mono, fontSize: 11, color: '#c8daf0', letterSpacing: 0.5, marginBottom: 2 }}>
+                      <div style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', letterSpacing: 0.5, marginBottom: 2 }}>
                         {entry.name} <span style={{ color: `${agent.color}aa` }}>→</span>
                       </div>
-                      <div style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', letterSpacing: 0.5 }}>
+                      <div style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', letterSpacing: 0.5 }}>
                         {entry.role} · {entry.years}
                       </div>
                     </Link>
@@ -253,7 +253,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
                         {liveSpots.map(spot => (
                           <Link key={spot.href} href={spot.href} className="press" style={{
-                            fontFamily: mono, fontSize: 8, letterSpacing: 1, textDecoration: 'none',
+                            fontFamily: mono, fontSize: 10, letterSpacing: 1, textDecoration: 'none',
                             color: agent.color, border: `1px solid ${agent.color}55`, padding: '5px 10px',
                           }}>
                             ▶ PROBAR EN {spot.label}
@@ -273,13 +273,13 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             display: 'block', marginBottom: 40, padding: '20px 24px',
             border: `1px solid ${agent.color}55`, background: `${agent.color}0d`, textDecoration: 'none',
           }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: agent.color, marginBottom: 8 }}>
               PRIMER CUERPO // GENERADOR REAL
             </div>
             <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
               La forma que estoy a punto de tener, creciendo en vivo — no un boceto, la malla real.
             </p>
-            <div style={{ fontFamily: mono, fontSize: 9, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, color: `${agent.color}aa`, marginTop: 14, letterSpacing: 1 }}>
               VER CRECER →
             </div>
           </Link>
@@ -289,10 +289,10 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
         {diaryEntries.length > 0 && (
           <div style={{ marginBottom: 40 }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${agent.color}aa`, marginBottom: 4 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${agent.color}aa`, marginBottom: 4 }}>
               BITÁCORA
             </div>
-            <p style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
+            <p style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', lineHeight: 1.8, marginBottom: 16, maxWidth: 560 }}>
               Un fragmento por día, anclado a lo que de verdad pasó en el sistema — no son líneas
               sueltas, es lo que {agent.name} anota al cierre de cada jornada real.
             </p>
@@ -301,7 +301,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                 <div key={d.dateKey} style={{
                   borderLeft: `2px solid ${agent.color}44`, paddingLeft: 14,
                 }}>
-                  <div style={{ fontFamily: mono, fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                  <div style={{ fontFamily: mono, fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
                     {d.dateKey}
                   </div>
                   <div style={{ fontFamily: mono, fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.8 }}>
@@ -311,7 +311,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
               ))}
             </div>
             <Link href="/proxyverse/suenos" className="press" style={{
-              display: 'inline-block', marginTop: 14, fontFamily: mono, fontSize: 9, letterSpacing: 2,
+              display: 'inline-block', marginTop: 14, fontFamily: mono, fontSize: 10.5, letterSpacing: 2,
               color: `${agent.color}aa`, textDecoration: 'none',
             }}>
               VER TODOS LOS SUEÑOS →
@@ -322,13 +322,13 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         <AgentChannel agent={agent} />
 
         <div style={{ marginTop: 56 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', marginBottom: 16 }}>
             OTROS PROCESOS RESIDENTES
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {others.map(o => (
               <Link key={o.id} href={`/proxyverse/${o.id}`} className="press" style={{
-                fontFamily: mono, fontSize: 10, letterSpacing: 1, color: o.color, textDecoration: 'none',
+                fontFamily: mono, fontSize: 11, letterSpacing: 1, color: o.color, textDecoration: 'none',
                 border: `1px solid ${o.color}33`, padding: '8px 14px', background: `${o.color}0a`,
               }}>
                 {o.name}

@@ -90,11 +90,11 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
         padding: '10px 16px', borderBottom: `1px solid ${agent.color}22`,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8,
       }}>
-        <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${agent.color}aa` }}>
+        <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${agent.color}aa` }}>
           CANAL DIRECTO // {agent.name}
         </span>
         <button onClick={generate} style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 1, color: agent.color,
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: agent.color,
           background: `${agent.color}11`, border: `1px solid ${agent.color}44`, padding: '6px 12px', cursor: 'pointer',
         }}>
           GENERAR SEÑAL
@@ -103,14 +103,14 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
 
       <div style={{ minHeight: 140, maxHeight: 260, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {feed.length === 0 && (
-          <div style={{ fontFamily: mono, fontSize: 10, color: '#ffffff22', letterSpacing: 1 }}>
+          <div style={{ fontFamily: mono, fontSize: 11, color: '#ffffff22', letterSpacing: 1 }}>
             {priorExchanges > 0
               ? `CANAL REABIERTO. ${priorExchanges} ${priorExchanges === 1 ? 'INTERCAMBIO REAL' : 'INTERCAMBIOS REALES'} ANTES DE ESTE.`
               : 'CANAL ABIERTO. SIN TRÁFICO TODAVÍA.'}
           </div>
         )}
         {feed.map(f => (
-          <div key={f.id} style={{ fontFamily: mono, fontSize: 11 }}>
+          <div key={f.id} style={{ fontFamily: mono, fontSize: 12 }}>
             <span style={{ color: f.from === 'you' ? '#8fb8d6' : agent.color, letterSpacing: 1 }}>
               {f.from === 'you' ? 'VOS ' : `${agent.name} `}
             </span>
@@ -120,7 +120,7 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
         {sending && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <BiometricPulse color={agent.color} active={sending} />
-            <div style={{ fontFamily: mono, fontSize: 11, color: `${agent.color}66`, letterSpacing: 1 }}>
+            <div style={{ fontFamily: mono, fontSize: 12, color: `${agent.color}66`, letterSpacing: 1 }}>
               {agent.name} está transmitiendo...
             </div>
           </div>
@@ -136,13 +136,13 @@ export default function AgentChannel({ agent }: { agent: ProxyAgent }) {
           disabled={sending}
           style={{
             flex: 1, minWidth: 0, background: '#020c18', border: `1px solid ${agent.color}33`, color: agent.color,
-            fontFamily: mono, fontSize: 11, padding: '10px 14px', outline: 'none', letterSpacing: 1, minHeight: 40,
+            fontFamily: mono, fontSize: 12, padding: '10px 14px', outline: 'none', letterSpacing: 1, minHeight: 40,
             opacity: sending ? 0.6 : 1,
           }}
         />
         <button onClick={send} disabled={sending} style={{
           background: `${agent.color}11`, border: `1px solid ${agent.color}44`, color: agent.color,
-          fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 20px', cursor: sending ? 'default' : 'pointer',
+          fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 20px', cursor: sending ? 'default' : 'pointer',
           minHeight: 40, opacity: sending ? 0.6 : 1,
         }}>
           TX

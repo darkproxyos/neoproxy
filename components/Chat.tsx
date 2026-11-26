@@ -42,7 +42,7 @@ export default function Chat() {
         position:'fixed', bottom:24, right:24, zIndex:1000,
         background:'#020c18', border:'1px solid #00d4ff44',
         color:'#00d4ff', fontFamily:'monospace',
-        fontSize:10, letterSpacing:3, padding:'8px 16px',
+        fontSize:11, letterSpacing:3, padding:'8px 16px',
         cursor:'pointer', boxShadow:'0 0 20px #00d4ff22',
       }}>
         {open ? 'CLOSE' : `CHAT ${unread > 0 ? `[${unread}]` : '//'}`}
@@ -57,21 +57,21 @@ export default function Chat() {
           fontFamily:'monospace',
         }}>
           <div style={{ padding:'10px 16px', borderBottom:'1px solid #00d4ff11',
-            fontSize:9, letterSpacing:4, color:'#00d4ff66' }}>
+            fontSize:10.5, letterSpacing:4, color:'#00d4ffaa' }}>
             NEOPROXY // COMMS
           </div>
           <div style={{ flex:1, overflowY:'auto', padding:12,
             display:'flex', flexDirection:'column', gap:8 }}>
             {messages.length === 0 && (
-              <div style={{ color:'#ffffff22', fontSize:9, letterSpacing:2 }}>
+              <div style={{ color:'#ffffff22', fontSize:10.5, letterSpacing:2 }}>
                 NO SIGNALS DETECTED...
               </div>
             )}
             {messages.map((m, i) => (
-              <div key={i} style={{ fontSize:10 }}>
+              <div key={i} style={{ fontSize:11 }}>
                 <span style={{ color:'#00d4ff' }}>{m.operator} </span>
                 <span style={{ color:'#ffffff88' }}>{m.message}</span>
-                <div style={{ color:'#ffffff22', fontSize:8 }}>
+                <div style={{ color:'#ffffff22', fontSize:10 }}>
                   {new Date(m.timestamp).toLocaleTimeString()}
                 </div>
               </div>
@@ -84,13 +84,13 @@ export default function Chat() {
               onKeyDown={e => e.key === 'Enter' && send()}
               placeholder="transmit..."
               style={{ flex:1, background:'#020c18', border:'1px solid #00d4ff22',
-                color:'#00d4ff', fontFamily:'monospace', fontSize:10,
+                color:'#00d4ff', fontFamily:'monospace', fontSize:11,
                 padding:'6px 10px', outline:'none', letterSpacing:2 }}
             />
             <button onClick={send} className="press" style={{
               background:'#00d4ff11', border:'1px solid #00d4ff33',
               color:'#00d4ff', fontFamily:'monospace',
-              fontSize:9, letterSpacing:2, padding:'6px 12px', cursor:'pointer',
+              fontSize:10.5, letterSpacing:2, padding:'6px 12px', cursor:'pointer',
             }}>TX</button>
           </div>
         </div>

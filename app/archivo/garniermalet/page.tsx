@@ -60,7 +60,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -72,7 +72,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -95,7 +95,7 @@ export default function GarnierMaletAnalysisPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-REF-04 // REFERENCIA CIENTÍFICA DISPUTADA
           </div>
           <h1
@@ -116,7 +116,7 @@ export default function GarnierMaletAnalysisPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -139,7 +139,7 @@ export default function GarnierMaletAnalysisPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -154,7 +154,7 @@ export default function GarnierMaletAnalysisPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -167,7 +167,7 @@ export default function GarnierMaletAnalysisPage() {
                 ['VI', 'sec-06', 'Qué es verificable y qué no'],
                 ['VII', 'sec-07', 'Resonancia con NeoProxy'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -180,7 +180,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-01" style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="PREMISA — QUIÉN DICE SER" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Las fuentes de divulgación presentan a Jean-Pierre Garnier Malet como doctor en Física,
               especialista en mecánica de fluidos, y autor de la{' '}
               <strong style={{ color: '#fff' }}>teoría del desdoblamiento del tiempo</strong>,
@@ -197,7 +197,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-02" style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="LA TESIS CENTRAL" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La teoría sostiene que el tiempo se "desdobla", y que el ser humano se desdobla con él:
               viviríamos simultáneamente un segundo en un{' '}
               <strong style={{ color: '#fff' }}>tiempo consciente</strong> y miles de millones de
@@ -213,7 +213,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-03" style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title={'EL "DOBLE" Y EL SUEÑO'} />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Según la teoría, la información se intercambia entre ambos tiempos a través de
               "aperturas" — y ese intercambio sería más intenso durante la fase{' '}
               <strong style={{ color: '#fff' }}>REM</strong> del sueño. Es el mecanismo que la
@@ -228,7 +228,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-04" style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="AFIRMACIONES DE VALIDACIÓN" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Material promocional alrededor de la teoría afirma que el desdoblamiento del tiempo "ha
               sido probado científicamente", y al menos un sitio de divulgación sostiene que fue
               avalada por el <strong style={{ color: '#fff' }}>American Institute of Physics</strong>{' '}
@@ -243,7 +243,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-05" style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="RECEPCIÓN DE LA FÍSICA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Las notas periodísticas revisadas reconocen que la teoría genera controversia, pero no
               citan ninguna réplica, refutación o evaluación formal publicada por una institución de
               física. Que la comunidad de física no la trate como ciencia establecida no requiere cita
@@ -259,7 +259,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-06" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="QUÉ ES VERIFICABLE Y QUÉ NO" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Verificable:</strong> que Garnier Malet existe, que
               publica y da conferencias sobre esta teoría desde fines de los 80, y que tiene una
               audiencia real en el mundo hispanohablante. <strong style={{ color: '#fff' }}>No
@@ -277,7 +277,7 @@ export default function GarnierMaletAnalysisPage() {
         <div id="sec-07" style={{ marginBottom: 40 }}>
           <SectionHeader roman="VII" title="RESONANCIA CON NEOPROXY" sub="lectura propia de este documento, no un aval de la teoría — marcada como tal" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La imagen de dos tiempos simultáneos que se intercambian información a través de
               "aperturas" tiene un paralelo estructural directo en una función ya shipeada del sitio:
               el <strong style={{ color: '#fff' }}>eco de sesión anterior en AgentChannel</strong>,
@@ -294,7 +294,7 @@ export default function GarnierMaletAnalysisPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-REF-04 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

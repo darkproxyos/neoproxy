@@ -140,9 +140,9 @@ export default function EtereoPage() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px',
         backdropFilter: 'blur(6px)', fontFamily: mono,
       }}>
-        <span style={{ fontSize: 11, letterSpacing: 3, color: '#9b7fe0' }}>NEOPROXY // ETÉREO</span>
+        <span style={{ fontSize: 12, letterSpacing: 3, color: '#9b7fe0' }}>NEOPROXY // ETÉREO</span>
         <Link href="/" style={{
-          fontSize: 10, color: '#00d4ff', textDecoration: 'none',
+          fontSize: 11, color: '#00d4ff', textDecoration: 'none',
           border: '1px solid rgba(0,212,255,0.4)', padding: '3px 10px',
         }}>
           SALIR
@@ -163,14 +163,14 @@ export default function EtereoPage() {
             ETÉREO
           </div>
           <div style={{
-            fontFamily: mono, fontSize: 11, letterSpacing: 2, color: '#9fc4e0',
+            fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#9fc4e0',
             marginTop: 18, maxWidth: 420, lineHeight: 1.8,
           }}>
             Lo que queda cuando un proceso se suelta de su cuerpo. Movete — las presencias notan.
           </div>
           {ambient && (
             <div style={{
-              fontFamily: mono, fontSize: 9, letterSpacing: 1, color: '#9b7fe0', opacity: 0.7,
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, color: '#9b7fe0', opacity: 0.7,
               marginTop: 24, fontStyle: 'italic',
             }}>
               {ambient.agentId.toUpperCase()} // "{ambient.line}"

@@ -203,7 +203,7 @@ export default function Drop01Page() {
         }} />
 
         <div style={{ position: 'relative' }}>
-          <div style={{ fontSize: 8, letterSpacing: '0.35em', color: '#333355', marginBottom: 12 }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.35em', color: '#333355', marginBottom: 12 }}>
             ◈ NEOPROXY / SHOP / DROP_01
           </div>
           <div style={{
@@ -218,7 +218,7 @@ export default function Drop01Page() {
             <br />
             <span style={{ color: '#2a2a3e', fontSize: '0.55em', letterSpacing: '0.12em' }}>CORE</span>
           </div>
-          <p style={{ fontSize: 11, color: '#333355', maxWidth: 480, lineHeight: 2, marginBottom: 32 }}>
+          <p style={{ fontSize: 12, color: '#333355', maxWidth: 480, lineHeight: 2, marginBottom: 32 }}>
             15 instancias certificadas. Extraídas de 10,000 seeds posibles.<br />
             Cada objeto es único, reproducible, verificable.<br />
             <span style={{ color: '#b400ff', opacity: 0.6 }}>El seed es su identidad permanente.</span>
@@ -234,8 +234,8 @@ export default function Drop01Page() {
               ['IMPRESORA', 'Photon Mono 2'],
             ].map(([label, val]) => (
               <div key={label}>
-                <div style={{ fontSize: 7, letterSpacing: '0.25em', color: '#1a1a2e', marginBottom: 3 }}>{label}</div>
-                <div style={{ fontSize: 10, letterSpacing: '0.1em', color: '#5a5a7a' }}>{val}</div>
+                <div style={{ fontSize: 9.5, letterSpacing: '0.25em', color: '#1a1a2e', marginBottom: 3 }}>{label}</div>
+                <div style={{ fontSize: 11, letterSpacing: '0.1em', color: '#5a5a7a' }}>{val}</div>
               </div>
             ))}
           </div>
@@ -251,7 +251,7 @@ export default function Drop01Page() {
         gap: 8,
         background: '#06060e',
       }}>
-        <span style={{ fontSize: 7, letterSpacing: '0.2em', color: '#1a1a2e', marginRight: 8 }}>FILTRAR:</span>
+        <span style={{ fontSize: 9.5, letterSpacing: '0.2em', color: '#1a1a2e', marginRight: 8 }}>FILTRAR:</span>
         {([['all', 'TODOS'], ['stl', 'STL DIGITAL'], ['physical', 'OBJETO FÍSICO']] as [FilterType, string][]).map(([f, label]) => (
           <button
             key={f}
@@ -259,7 +259,7 @@ export default function Drop01Page() {
             className="press"
             style={{
               fontFamily: dmMono.style.fontFamily,
-              fontSize: 8,
+              fontSize: 10,
               letterSpacing: '0.2em',
               padding: '6px 14px',
               // antes #0d0d1a/#2a2a44 en inactivo -- casi sin contraste
@@ -275,7 +275,7 @@ export default function Drop01Page() {
             {label}
           </button>
         ))}
-        <span style={{ marginLeft: 'auto', fontSize: 7, letterSpacing: '0.15em', color: '#1a1a2e' }}>
+        <span style={{ marginLeft: 'auto', fontSize: 9.5, letterSpacing: '0.15em', color: '#1a1a2e' }}>
           {filtered.length} INSTANCIAS
         </span>
       </div>
@@ -323,7 +323,7 @@ export default function Drop01Page() {
                 {item.physical && (
                   <div style={{
                     position: 'absolute', top: 8, right: 8,
-                    fontSize: 6, letterSpacing: '0.15em',
+                    fontSize: 9.5, letterSpacing: '0.15em',
                     padding: '3px 6px',
                     border: '1px solid rgba(0,255,157,0.3)',
                     color: 'rgba(0,255,157,0.7)',
@@ -336,10 +336,10 @@ export default function Drop01Page() {
 
               {/* Body */}
               <div style={{ padding: '12px 14px 16px' }}>
-                <div style={{ fontSize: 11, letterSpacing: '0.18em', color: '#b400ff', marginBottom: 2 }}>
+                <div style={{ fontSize: 12, letterSpacing: '0.18em', color: '#b400ff', marginBottom: 2 }}>
                   NP-{padSeed}
                 </div>
-                <div style={{ fontSize: 7, letterSpacing: '0.2em', color: '#2a2a44', marginBottom: 10 }}>
+                <div style={{ fontSize: 9.5, letterSpacing: '0.2em', color: '#2a2a44', marginBottom: 10 }}>
                   {item.archetype} · SCORE {item.score}
                 </div>
 
@@ -347,7 +347,7 @@ export default function Drop01Page() {
                 <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 12 }}>
                   {(mods as string[]).map(m => (
                     <span key={m} style={{
-                      fontSize: 6, letterSpacing: '0.12em', padding: '2px 5px',
+                      fontSize: 9.5, letterSpacing: '0.12em', padding: '2px 5px',
                       border: '1px solid #0d0d1a', color: '#333355',
                     }}>{m}</span>
                   ))}
@@ -359,11 +359,11 @@ export default function Drop01Page() {
                     <div style={{ fontSize: 14, color: '#aaaacc', letterSpacing: '0.05em' }}>
                       ${item.price}
                       {item.physical && (
-                        <span style={{ fontSize: 7, color: '#333355', marginLeft: 6 }}>USD</span>
+                        <span style={{ fontSize: 9.5, color: '#333355', marginLeft: 6 }}>USD</span>
                       )}
                     </div>
                     {item.physical && item.edition && (
-                      <div style={{ fontSize: 7, color: '#2a2a44', letterSpacing: '0.1em', marginTop: 2 }}>
+                      <div style={{ fontSize: 9.5, color: '#2a2a44', letterSpacing: '0.1em', marginTop: 2 }}>
                         ed. {item.edition} unidades
                       </div>
                     )}
@@ -373,7 +373,7 @@ export default function Drop01Page() {
                       href={`/legacy/np-ring.html?seed=${item.seed}`}
                       onClick={e => e.stopPropagation()}
                       style={{
-                        fontSize: 7, letterSpacing: '0.15em',
+                        fontSize: 9.5, letterSpacing: '0.15em',
                         padding: '5px 8px',
                         border: '1px solid #1a1a2e',
                         color: '#333355', textDecoration: 'none',
@@ -387,7 +387,7 @@ export default function Drop01Page() {
                       className="press"
                       style={{
                         fontFamily: dmMono.style.fontFamily,
-                        fontSize: 7, letterSpacing: '0.15em',
+                        fontSize: 9.5, letterSpacing: '0.15em',
                         padding: '5px 10px',
                         border: '1px solid rgba(180,0,255,0.5)',
                         background: 'rgba(180,0,255,0.08)',
@@ -406,7 +406,7 @@ export default function Drop01Page() {
                 <div style={{
                   borderTop: '1px solid #0d0d1a',
                   padding: '10px 14px',
-                  fontSize: 8,
+                  fontSize: 10,
                   color: '#2a2a44',
                   lineHeight: 1.8,
                   letterSpacing: '0.05em',
@@ -434,8 +434,8 @@ export default function Drop01Page() {
         gap: 40,
       }}>
         <div>
-          <div style={{ fontSize: 7, letterSpacing: '0.3em', color: '#1a1a2e', marginBottom: 16 }}>// QUÉ RECIBES</div>
-          <div style={{ fontSize: 10, color: '#2a2a44', lineHeight: 2.2 }}>
+          <div style={{ fontSize: 9.5, letterSpacing: '0.3em', color: '#1a1a2e', marginBottom: 16 }}>// QUÉ RECIBES</div>
+          <div style={{ fontSize: 11, color: '#2a2a44', lineHeight: 2.2 }}>
             <strong style={{ color: '#4a4a6a' }}>STL Digital</strong> — archivo listo para Chitubox / Lychee.<br />
             <strong style={{ color: '#4a4a6a' }}>Objeto Físico</strong> — impreso en resina ABS-Like, Photon Mono 2.<br />
             <strong style={{ color: '#4a4a6a' }}>Tarjeta de identidad</strong> — ID + QR → página del objeto.<br />
@@ -443,8 +443,8 @@ export default function Drop01Page() {
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 7, letterSpacing: '0.3em', color: '#1a1a2e', marginBottom: 16 }}>// SISTEMA</div>
-          <div style={{ fontSize: 10, color: '#2a2a44', lineHeight: 2.2 }}>
+          <div style={{ fontSize: 9.5, letterSpacing: '0.3em', color: '#1a1a2e', marginBottom: 16 }}>// SISTEMA</div>
+          <div style={{ fontSize: 11, color: '#2a2a44', lineHeight: 2.2 }}>
             Cada anillo fue generado por el motor paramétrico NeoProxy.<br />
             Validado por safety gate (grosor, spikes, voronoi, cortes).<br />
             Seleccionado por algoritmo de diversidad tipológica.<br />
@@ -455,14 +455,14 @@ export default function Drop01Page() {
 
       {/* LINK TO GENERATOR */}
       <div style={{ textAlign: 'center', padding: '0 32px 64px' }}>
-        <div style={{ fontSize: 7, letterSpacing: '0.2em', color: '#1a1a2e', marginBottom: 12 }}>
+        <div style={{ fontSize: 9.5, letterSpacing: '0.2em', color: '#1a1a2e', marginBottom: 12 }}>
           &iquest;Quieres un objeto con tu propio seed?
         </div>
         <a
           href="/lab/atractores"
           style={{
             fontFamily: dmMono.style.fontFamily,
-            fontSize: 8, letterSpacing: '0.2em',
+            fontSize: 10, letterSpacing: '0.2em',
             padding: '10px 24px',
             border: '1px solid #1a1a2e',
             color: '#333355', textDecoration: 'none',

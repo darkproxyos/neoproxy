@@ -22,7 +22,7 @@ export default function ExportJsonButton({
 
   return (
     <button onClick={download} style={{
-      fontFamily: mono, fontSize: 9, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
+      fontFamily: mono, fontSize: 10.5, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
       background: `${color}11`, border: `1px solid ${color}44`, color,
     }}>
       ⬇ {label}

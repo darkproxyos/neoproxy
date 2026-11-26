@@ -122,7 +122,7 @@ export default function LoginPage() {
           position: 'fixed',
           bottom: 24,
           left: 24,
-          fontSize: 10,
+          fontSize: 11,
           color: '#71717a',
           lineHeight: 1.8,
           whiteSpace: 'pre',
@@ -149,7 +149,7 @@ export default function LoginPage() {
           {error && (
             <div style={{
               color: '#ef4444',
-              fontSize: 11,
+              fontSize: 12,
               marginBottom: 16,
               textAlign: 'center',
             }}>
@@ -162,7 +162,7 @@ export default function LoginPage() {
               <label style={{
                 display: 'block',
                 color: '#71717a',
-                fontSize: 10,
+                fontSize: 11,
                 marginBottom: 8,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
@@ -195,7 +195,7 @@ export default function LoginPage() {
               <label style={{
                 display: 'block',
                 color: '#71717a',
-                fontSize: 10,
+                fontSize: 11,
                 marginBottom: 8,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
@@ -234,7 +234,7 @@ export default function LoginPage() {
                 border: '1px solid #1f1f23',
                 borderRadius: 4,
                 fontFamily: '"JetBrains Mono", "Space Mono", monospace',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 500,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',

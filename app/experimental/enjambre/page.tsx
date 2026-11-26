@@ -29,7 +29,7 @@ function Slider({ label, value, min, max, step, onChange, accent }: {
 }) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4, letterSpacing: 0.5 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4, letterSpacing: 0.5 }}>
         <span>{label}</span>
         <span style={{ color: accent }}>{value.toFixed(step < 0.01 ? 3 : step < 1 ? 2 : 0)}</span>
       </div>
@@ -50,11 +50,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -374,13 +374,13 @@ export default function EnjambrePage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
-        <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-ENJAMBRE</div>
-        <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>sistemas que corren solos, no se generan una vez</div>
+        <div style={{ fontSize: 12, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-ENJAMBRE</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 1, color: '#6f86a3' }}>sistemas que corren solos, no se generan una vez</div>
         <button onClick={toggleAudio} title="Sonificar la simulación en vivo" className="press" style={{
-          marginLeft: 'auto', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
+          marginLeft: 'auto', fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
           background: audioOn ? `${accent}22` : 'transparent', border: `1px solid ${audioOn ? accent : '#2a3a50'}`,
           color: audioOn ? accent : '#4a6080',
         }}>
@@ -395,7 +395,7 @@ export default function EnjambrePage() {
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
           {(['boids', 'sandpile'] as Mode[]).map((m) => (
             <button key={m} onClick={() => setMode(m)} className="press" style={{
-              flex: 1, fontFamily: mono, fontSize: 9, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
+              flex: 1, fontFamily: mono, fontSize: 10.5, padding: '8px 6px', letterSpacing: 0.5, cursor: 'pointer',
               background: mode === m ? `${m === 'boids' ? TRICKSTER : AMBER}22` : 'transparent',
               border: `1px solid ${mode === m ? (m === 'boids' ? TRICKSTER : AMBER) : '#2a3a50'}`,
               color: mode === m ? (m === 'boids' ? TRICKSTER : AMBER) : '#4a6080',
@@ -407,7 +407,7 @@ export default function EnjambrePage() {
 
         {mode === 'boids' ? (
           <>
-            <div style={{ fontSize: 10, letterSpacing: 3, color: TRICKSTER, marginBottom: 10 }}>REGLAS LOCALES</div>
+            <div style={{ fontSize: 11, letterSpacing: 3, color: TRICKSTER, marginBottom: 10 }}>REGLAS LOCALES</div>
             <Slider label="PERCEPCIÓN" value={perception} min={0.3} max={3} step={0.05} onChange={setPerception} accent={accent} />
             <Slider label="SEPARACIÓN" value={separationWeight} min={0} max={3} step={0.05} onChange={setSeparationWeight} accent={accent} />
             <Slider label="ALINEACIÓN" value={alignmentWeight} min={0} max={3} step={0.05} onChange={setAlignmentWeight} accent={accent} />
@@ -417,13 +417,13 @@ export default function EnjambrePage() {
             <Slider label="CANTIDAD (reiniciar p/aplicar)" value={boidCount} min={10} max={200} step={5} onChange={setBoidCount} accent={accent} />
             <div style={{ display: 'flex', gap: 6, marginTop: 4, marginBottom: 6 }}>
               <button onClick={() => setBoidsRunning((r) => !r)} className="press" style={{
-                flex: 1, fontFamily: mono, fontSize: 9, padding: 9, cursor: 'pointer', letterSpacing: 1,
+                flex: 1, fontFamily: mono, fontSize: 10.5, padding: 9, cursor: 'pointer', letterSpacing: 1,
                 background: 'transparent', border: `1px solid ${accent}`, color: accent,
               }}>
                 {boidsRunning ? '❙❙ PAUSAR' : '▶ CONTINUAR'}
               </button>
               <button onClick={rebuildBoids} className="press" style={{
-                flex: 1, fontFamily: mono, fontSize: 9, padding: 9, cursor: 'pointer', letterSpacing: 1,
+                flex: 1, fontFamily: mono, fontSize: 10.5, padding: 9, cursor: 'pointer', letterSpacing: 1,
                 background: 'transparent', border: '1px solid #2a3a50', color: '#8fb8d6',
               }}>
                 ↺ REINICIAR
@@ -433,27 +433,27 @@ export default function EnjambrePage() {
           </>
         ) : (
           <>
-            <div style={{ fontSize: 10, letterSpacing: 3, color: AMBER, marginBottom: 10 }}>CRITICALIDAD</div>
+            <div style={{ fontSize: 11, letterSpacing: 3, color: AMBER, marginBottom: 10 }}>CRITICALIDAD</div>
             <Slider label="RITMO (frames/grano — menos = más rápido)" value={dropRate} min={1} max={30} step={1} onChange={setDropRate} accent={accent} />
             <div style={{ display: 'flex', gap: 6, marginTop: 4, marginBottom: 14 }}>
               <button onClick={() => setSandRunning((r) => !r)} className="press" style={{
-                flex: 1, fontFamily: mono, fontSize: 9, padding: 9, cursor: 'pointer', letterSpacing: 1,
+                flex: 1, fontFamily: mono, fontSize: 10.5, padding: 9, cursor: 'pointer', letterSpacing: 1,
                 background: 'transparent', border: `1px solid ${accent}`, color: accent,
               }}>
                 {sandRunning ? '❙❙ PAUSAR' : '▶ CONTINUAR'}
               </button>
               <button onClick={resetSandpile} className="press" style={{
-                flex: 1, fontFamily: mono, fontSize: 9, padding: 9, cursor: 'pointer', letterSpacing: 1,
+                flex: 1, fontFamily: mono, fontSize: 10.5, padding: 9, cursor: 'pointer', letterSpacing: 1,
                 background: 'transparent', border: '1px solid #2a3a50', color: '#8fb8d6',
               }}>
                 ↺ REINICIAR
               </button>
             </div>
 
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>
               GRANOS CAÍDOS: <span style={{ color: accent }}>{totalDrops}</span> · ÚLTIMA AVALANCHA: <span style={{ color: accent }}>{lastAvalanche}</span> · MÁXIMA: <span style={{ color: accent }}>{maxAvalanche}</span>
             </div>
-            <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>ÚLTIMAS 40 AVALANCHAS (ley de potencias, no campana)</div>
+            <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>ÚLTIMAS 40 AVALANCHAS (ley de potencias, no campana)</div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 50, marginBottom: 14, border: `1px solid ${accent}22`, padding: '4px 4px 0' }}>
               {avalancheLog.map((v, i) => (
                 <div key={i} style={{

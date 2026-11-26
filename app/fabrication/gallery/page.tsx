@@ -64,7 +64,7 @@ export default function FabricationGallery() {
       <div className="gallery-header">
         <div>
           <h1 style={{ fontSize: '18px', margin: 0 }}>FABRICATION // CURATED_GALLERY</h1>
-          <p style={{ fontSize: '10px', color: '#4a6080', margin: '4px 0 0 0' }}>
+          <p style={{ fontSize: '10px', color: '#6f86a3', margin: '4px 0 0 0' }}>
             PREMIUM_SPECIMENS: {specimens.length} OBJECTS DETECTED
           </p>
         </div>
@@ -152,7 +152,7 @@ export default function FabricationGallery() {
           border: 1px solid #00d4ff44;
           color: #00d4ff;
           padding: 8px 15px;
-          font-size: 11px;
+          font-size: 12px;
           width: 250px;
           outline: none;
         }
@@ -160,7 +160,7 @@ export default function FabricationGallery() {
         .back-link {
           color: #00d4ff;
           text-decoration: none;
-          font-size: 11px;
+          font-size: 12px;
           border: 1px solid #00d4ff44;
           padding: 8px 15px;
           white-space: nowrap;

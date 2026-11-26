@@ -90,13 +90,13 @@ export default function OraculoPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${VIOLET}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${VIOLET}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-XP-ORÁCULO // TRES POSICIONES REALES, AL AZAR
         </div>
         <h1 style={{
@@ -105,7 +105,7 @@ export default function OraculoPage() {
         }}>
           ORÁCULO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 36 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 36 }}>
           No elegís con quién hablás — te tocan tres posiciones reales y documentadas de{' '}
           <Link href="/knowledge" style={{ color: VIOLET }}>/knowledge</Link>, al azar. El sistema busca
           una conexión honesta entre esas tres y tu pregunta — citando lo que de verdad sostuvieron, no
@@ -127,7 +127,7 @@ export default function OraculoPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
           {SUGGESTED_QUESTIONS.map(q => (
             <button key={q} onClick={() => setQuestion(q)} disabled={busy} className="press" style={{
-              fontFamily: mono, fontSize: 8, letterSpacing: 0.5, padding: '6px 10px', cursor: busy ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 10, letterSpacing: 0.5, padding: '6px 10px', cursor: busy ? 'default' : 'pointer',
               background: 'rgba(255,255,255,0.04)', border: `1px solid ${VIOLET}33`, color: '#8fb8d6',
               opacity: busy ? 0.5 : 1,
             }}>
@@ -137,7 +137,7 @@ export default function OraculoPage() {
         </div>
 
         <button onClick={tirar} disabled={busy} className="press" style={{
-          fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
+          fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '12px 28px', cursor: busy ? 'default' : 'pointer',
           background: `${VIOLET}18`, border: `1px solid ${VIOLET}66`, color: VIOLET,
           opacity: busy ? 0.5 : 1, marginBottom: 40,
         }}>
@@ -145,7 +145,7 @@ export default function OraculoPage() {
         </button>
 
         {errorMsg && (
-          <div style={{ fontSize: 10, color: '#ff2d55', marginBottom: 24 }}>{errorMsg}</div>
+          <div style={{ fontSize: 11, color: '#ff2d55', marginBottom: 24 }}>{errorMsg}</div>
         )}
 
         {cards.length > 0 && (
@@ -161,9 +161,9 @@ export default function OraculoPage() {
                       </div>
                       <div className="oraculo-card-face oraculo-card-front" style={{ borderColor: `${color}66`, background: `${color}0d` }}>
                         <Link href={`/knowledge?entry=${c.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
-                          <div style={{ fontSize: 10, color, letterSpacing: 0.5, marginBottom: 4, fontWeight: 700 }}>{c.name}</div>
-                          <div style={{ fontSize: 8, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{c.years}</div>
-                          <div style={{ fontSize: 8, color: `${color}cc`, letterSpacing: 0.5 }}>{c.role}</div>
+                          <div style={{ fontSize: 11, color, letterSpacing: 0.5, marginBottom: 4, fontWeight: 700 }}>{c.name}</div>
+                          <div style={{ fontSize: 10, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{c.years}</div>
+                          <div style={{ fontSize: 10, color: `${color}cc`, letterSpacing: 0.5 }}>{c.role}</div>
                         </Link>
                       </div>
                     </div>

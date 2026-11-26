@@ -89,13 +89,13 @@ export default function PresenceCounter() {
       aria-hidden="true"
       style={{
         position: 'fixed', bottom: 10, left: 14, zIndex: 999,
-        fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: 1.5,
+        fontFamily: "'Space Mono', monospace", fontSize: 10.5, letterSpacing: 1.5,
         lineHeight: 1.75, pointerEvents: 'none', userSelect: 'none',
       }}
     >
-      <div style={{ color: '#00d4ff77' }}>RED // CONECTADO [{formatUptime(uptime)}]</div>
+      <div style={{ color: '#00d4ffaa' }}>RED // CONECTADO [{formatUptime(uptime)}]</div>
       {sys && <div style={{ color: `${sys.color}77` }}>SISTEMA // {sys.label}</div>}
-      <div style={{ color: '#00d4ff77' }}>OPERADORES // {count} EN LÍNEA</div>
+      <div style={{ color: '#00d4ffaa' }}>OPERADORES // {count} EN LÍNEA</div>
     </div>
   )
 }

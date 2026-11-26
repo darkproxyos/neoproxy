@@ -62,13 +62,13 @@ export default async function TopologiaPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ffaa', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PROXYVERSE
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-PXV-TOPOLOGIA // QUIÉN SE HABLA CON QUIÉN
         </div>
         <h1 style={{
@@ -77,14 +77,14 @@ export default async function TopologiaPage() {
         }}>
           TOPOLOGÍA
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 32 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 32 }}>
           Un grafo real, agregado y anónimo: cada vez que alguien le habla a un segundo proceso en
           la misma visita, ese par queda marcado — nunca quién, solo que pasó. El grosor de cada
           línea es cuántas veces ese par se repitió.
         </p>
 
         {!hasAnyEdge && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1, marginBottom: 24 }}>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1, marginBottom: 24 }}>
             SIN PARES REGISTRADOS TODAVÍA — hablá con dos procesos distintos en la misma visita.
           </div>
         )}
@@ -123,11 +123,11 @@ export default async function TopologiaPage() {
               const agentA = nodes.find(n => n.id === a)
               const agentB = nodes.find(n => n.id === b)
               return (
-                <div key={`${a}-${b}`} style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5 }}>
+                <div key={`${a}-${b}`} style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5 }}>
                   <span style={{ color: agentA?.color }}>{agentA?.name}</span>
-                  <span style={{ color: '#4a6080' }}> ↔ </span>
+                  <span style={{ color: '#6f86a3' }}> ↔ </span>
                   <span style={{ color: agentB?.color }}>{agentB?.name}</span>
-                  <span style={{ color: '#4a6080' }}> — {weight}</span>
+                  <span style={{ color: '#6f86a3' }}> — {weight}</span>
                 </div>
               )
             })}

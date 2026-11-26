@@ -16,18 +16,18 @@ const ETAS = [1.5, 2, 2.5, 3, 4]
 const fmt = (n: number, d = 1) => n.toFixed(d).replace('.', ',')
 
 function Chip({ on, onClick, children, title, color = '#9fe8ff', disabled }: { on: boolean; onClick: () => void; children: React.ReactNode; title?: string; color?: string; disabled?: boolean }) {
-  return <button type="button" className="press" title={title} disabled={disabled} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.6, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1, background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
+  return <button type="button" className="press" title={title} disabled={disabled} onClick={onClick} style={{ minHeight: 38, padding: '0 14px', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.6, cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1, background: on ? `${color}22` : 'rgba(2,4,8,0.7)', borderStyle: 'solid', borderWidth: 1, borderColor: on ? color : '#ffffff26', color: on ? color : '#9fb4cc' }}>{children}</button>
 }
 function Slider({ label, value, onChange, readout, min, max, step }: { label: string; value: number; onChange: (v: number) => void; readout: string; min: number; max: number; step: number }) {
   return (
     <label style={{ display: 'block' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}><span>{label}</span><span style={{ color: '#fff' }}>{readout}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}><span>{label}</span><span style={{ color: '#fff' }}>{readout}</span></div>
       <input type="range" className="ry-range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ width: '100%' }} />
     </label>
   )
 }
 function Stat({ k, v, warn, title }: { k: string; v: string; warn?: boolean; title?: string }) {
-  return <div title={title} style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 9.5, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
+  return <div title={title} style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }}><div style={{ fontSize: 11, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div><div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div></div>
 }
 
 // trueno y chisporroteo sintetizados (ruido filtrado): no son grabaciones
@@ -232,7 +232,7 @@ export default function RayoApp() {
           <div aria-hidden style={{ position: 'absolute', inset: 0, background: '#dfe6ff', opacity: flash ? 0.55 : 0, transition: flash ? 'none' : 'opacity .5s', pointerEvents: 'none' }} />
           {!reel && (
             <>
-              <div style={{ position: 'absolute', left: 14, top: 12, pointerEvents: 'none', textShadow: '0 1px 4px #000', fontSize: 10, letterSpacing: 1.8, color: '#ffffffcc' }}>
+              <div style={{ position: 'absolute', left: 14, top: 12, pointerEvents: 'none', textShadow: '0 1px 4px #000', fontSize: 11, letterSpacing: 1.8, color: '#ffffffcc' }}>
                 <div style={{ color: ACCENT }}>η = {fmt(eta, 1)} · RAYO {seed}</div>
                 <div>{mode === 'pieza' ? 'PIEZA · dado vuelta, sobre su base' : growing ? `DESCARGA · ${shown} pasos` : I?.hit ? `IMPACTO · ${I.total} pasos` : '…'}</div>
                 {I && <div style={{ color: '#7f96b2' }}>dimensión fractal (cajas) {fmt(I.dim, 2)}</div>}
@@ -265,8 +265,8 @@ export default function RayoApp() {
                   <div style={{ fontSize: 'clamp(12px, 2.2vh, 22px)', color: ACCENT, letterSpacing: 2 }}>neoproxy.art/rayo</div>
                 </div>
               </div>
-              {!sound && reel.phase === 'titulo' && <div style={{ position: 'absolute', top: '32%', left: 0, right: 0, textAlign: 'center', fontSize: 11, color: '#ffd27c', letterSpacing: 1.5 }}>sin sonido: actívalo antes de grabar (♪)</div>}
-              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
+              {!sound && reel.phase === 'titulo' && <div style={{ position: 'absolute', top: '32%', left: 0, right: 0, textAlign: 'center', fontSize: 12, color: '#ffd27c', letterSpacing: 1.5 }}>sin sonido: actívalo antes de grabar (♪)</div>}
+              <button type="button" onClick={exitReel} style={{ position: 'absolute', top: 10, right: 10, pointerEvents: 'auto', opacity: reel.phase === 'titulo' ? 1 : 0.3, fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '8px 12px', background: '#000a', color: '#9fb4cc', border: '1px solid #ffffff30', cursor: 'pointer' }}>SALIR ✕</button>
             </div>
           )}
         </div>
@@ -275,22 +275,22 @@ export default function RayoApp() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '12px 0 16px' }}>
         <button type="button" className="press" onClick={() => again(true)} style={{ minHeight: 48, padding: '0 24px', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 3, cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#a9b8ff,#e6ecff)', color: '#04060a' }}>⚡ OTRO RAYO</button>
         <button type="button" className="press" onClick={() => { if (mode === 'pieza') { setMode('descarga') } else goPieza() }} disabled={!struck}
-          style={{ minHeight: 48, padding: '0 22px', fontFamily: mono, fontWeight: 700, fontSize: 11.5, letterSpacing: 2.5, cursor: struck ? 'pointer' : 'default', opacity: struck ? 1 : 0.45, border: `1px solid ${ACCENT}`, background: mode === 'pieza' ? `${ACCENT}33` : '#0b111a', color: '#fff' }}>
+          style={{ minHeight: 48, padding: '0 22px', fontFamily: mono, fontWeight: 700, fontSize: 12.5, letterSpacing: 2.5, cursor: struck ? 'pointer' : 'default', opacity: struck ? 1 : 0.45, border: `1px solid ${ACCENT}`, background: mode === 'pieza' ? `${ACCENT}33` : '#0b111a', color: '#fff' }}>
           {mode === 'pieza' ? '↺ VOLVER A LA DESCARGA' : '◆ CONGELAR EN PIEZA'}
         </button>
         <Chip on={false} onClick={() => again(false)} title="La misma descarga otra vez">↻ REPETIR</Chip>
         <span style={{ flex: 1 }} />
         <Chip on={!!reel} onClick={enterReel} color="#ffd27c" title="Pantalla vertical que corre sola: para grabarla con el teléfono (activa el sonido antes)">▣ MODO REEL</Chip>
       </div>
-      {err && <p style={{ color: '#ffb86b', fontSize: 11 }}>{err}</p>}
+      {err && <p style={{ color: '#ffb86b', fontSize: 12 }}>{err}</p>}
 
       <div className="ry-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 22 }}>
         <section style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '1px 1px 1px 3px', borderColor: `${ACCENT}2a ${ACCENT}2a ${ACCENT}2a ${ACCENT}`, padding: '18px 20px' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: ACCENT, marginBottom: 10 }}>RAMIFICACIÓN (η)</div>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: ACCENT, marginBottom: 10 }}>RAMIFICACIÓN (η)</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
             {ETAS.map((v) => <Chip key={v} on={eta === v} color={ACCENT} onClick={() => pickEta(v)}>{fmt(v, 1)}</Chip>)}
           </div>
-          <p style={{ fontSize: 10.5, lineHeight: 1.9, color: '#8fa8c4', margin: '0 0 12px' }}>
+          <p style={{ fontSize: 11.5, lineHeight: 1.9, color: '#8fa8c4', margin: '0 0 12px' }}>
             En cada paso la descarga avanza a un punto vecino con probabilidad proporcional al campo eléctrico elevado a η. Con η bajo se abre como un coral; con η alto corre fina y directa, como un rayo.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 8 }}>
@@ -301,16 +301,16 @@ export default function RayoApp() {
           </div>
         </section>
         <section style={{ background: '#080c12', border: '1px solid #ffffff12', padding: '18px 20px', display: 'grid', gap: 14, alignContent: 'start' }}>
-          <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff' }}>LA PIEZA</div>
+          <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff' }}>LA PIEZA</div>
           <Slider label="GROSOR" value={thick} min={0.5} max={0.9} step={0.05} readout={fmt(thick, 2)} onChange={(v) => changePiece({ thick: v })} />
           <Slider label="PODA DE RAMITAS" value={prune} min={2} max={14} step={1} readout={`menores que ${prune} pasos`} onChange={(v) => changePiece({ prune: v })} />
           <div style={{ display: 'flex', gap: 6 }}><Chip on={base} onClick={() => changePiece({ base: !base })}>BASE</Chip></div>
-          <div style={{ fontSize: 10, color: '#6f86a3', lineHeight: 1.7 }}>Cada rama engorda con la cantidad de descarga que cuelga de ella, como un río con sus afluentes. Las ramitas más cortas se podan: impresas serían pelos sueltos.</div>
+          <div style={{ fontSize: 11, color: '#6f86a3', lineHeight: 1.7 }}>Cada rama engorda con la cantidad de descarga que cuelga de ella, como un río con sus afluentes. Las ramitas más cortas se podan: impresas serían pelos sueltos.</div>
         </section>
       </div>
 
       <section style={{ marginTop: 22 }}>
-        <div style={{ fontSize: 10.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>MEDIDAS{solid ? '' : busy ? ' · ' + busy : ' · CONGELA LA DESCARGA PARA MEDIRLA'}</div>
+        <div style={{ fontSize: 11.5, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>MEDIDAS{solid ? '' : busy ? ' · ' + busy : ' · CONGELA LA DESCARGA PARA MEDIRLA'}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))', gap: 8 }}>
           <Stat k="MEDIDAS" v={solid ? `${fmt(solid.widthMm, 0)} × ${fmt(solid.heightMm, 0)} mm` : '…'} />
           <Stat k="TRIÁNGULOS" v={m ? m.tris.toLocaleString('es-CL') : '…'} />
@@ -319,12 +319,12 @@ export default function RayoApp() {
           <Stat k="PARED MÍNIMA (P10)" v={m ? `${fmt(m.wallP10Mm, 2)} mm` : '…'} warn={!!m && m.wallP10Mm < 1} />
           <Stat k="PUNTAJE DE IMPRESIÓN" v={m ? fmt(m.printScore, 2) : '…'} warn={!!m && m.printScore < 0.5} />
         </div>
-        {m && m.components > 1 && <p style={{ fontSize: 10.5, color: '#ffb86b', margin: '10px 0 0' }}>El STL omite {m.components - 1} partes sueltas ({fmt(100 * m.droppedVolumeFrac, 1)} % del volumen): sube el grosor o la poda.</p>}
+        {m && m.components > 1 && <p style={{ fontSize: 11.5, color: '#ffb86b', margin: '10px 0 0' }}>El STL omite {m.components - 1} partes sueltas ({fmt(100 * m.droppedVolumeFrac, 1)} % del volumen): sube el grosor o la poda.</p>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8, marginTop: 14 }}>
-          <button className="press" onClick={() => requestSolid(true)} disabled={!solid || !!busy} style={{ minHeight: 46, background: ACCENT, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>{busy.startsWith('CALCULANDO') ? busy : `DESCARGAR STL (${SIZE_MM} MM)`}</button>
-          <button className="press" onClick={exportJson} disabled={!solid} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
-          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE RAYO'}</button>
-          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
+          <button className="press" onClick={() => requestSolid(true)} disabled={!solid || !!busy} style={{ minHeight: 46, background: ACCENT, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>{busy.startsWith('CALCULANDO') ? busy : `DESCARGAR STL (${SIZE_MM} MM)`}</button>
+          <button className="press" onClick={exportJson} disabled={!solid} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer', opacity: solid ? 1 : 0.45 }}>RECETA + FICHA (JSON)</button>
+          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE RAYO'}</button>
+          <a href={`https://wa.me/${WA}`} onClick={(e) => { e.currentTarget.href = waHref() }} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
         </div>
       </section>
       <style>{`

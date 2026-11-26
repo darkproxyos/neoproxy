@@ -101,11 +101,11 @@ export default function LiveAttractor() {
 
   return (
     <div style={{ border: `1px solid ${GREEN}33`, background: `${GREEN}06`, padding: 14 }}>
-      <div style={{ fontSize: 8, color: `${GREEN}88`, letterSpacing: 2, marginBottom: 8, fontFamily: "'Space Mono', monospace" }}>
+      <div style={{ fontSize: 10, color: `${GREEN}88`, letterSpacing: 2, marginBottom: 8, fontFamily: "'Space Mono', monospace" }}>
         ATRACTOR DE LORENZ — ρ = 20 + ENTROPÍA×0.16 · RASTRO ∝ {visitorsShown} CONECTADOS
       </div>
       <canvas ref={canvasRef} width={320} height={200} style={{ width: '100%', height: 'auto', display: 'block' }} />
-      <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginTop: 6, fontFamily: "'Space Mono', monospace" }}>
+      <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginTop: 6, fontFamily: "'Space Mono', monospace" }}>
         ENTROPÍA REAL: {entropyShown}%
       </div>
     </div>

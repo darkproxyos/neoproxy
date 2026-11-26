@@ -593,12 +593,12 @@ export default function NeoCamPage() {
   const isActive = status === 'running'
 
   const btnStyle = (active: boolean): React.CSSProperties => ({
-    fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '7px 10px', borderRadius: 6, cursor: 'pointer',
+    fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '7px 10px', borderRadius: 6, cursor: 'pointer',
     background: active ? `${CYAN}26` : 'rgba(255,255,255,0.04)', border: `1px solid ${active ? CYAN : 'rgba(255,255,255,0.15)'}`,
     color: active ? CYAN : '#8fb8d6', minHeight: 30,
   })
   const toggleStyle = (active: boolean): React.CSSProperties => ({
-    fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 10px', borderRadius: 6, cursor: 'pointer',
+    fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 10px', borderRadius: 6, cursor: 'pointer',
     background: active ? 'rgba(0,255,170,0.12)' : 'rgba(255,255,255,0.04)', border: `1px solid ${active ? '#00ffaa' : 'rgba(255,255,255,0.15)'}`,
     color: active ? '#00ffaa' : '#8fb8d6', minHeight: 32, width: '100%', textAlign: 'left' as const,
   })
@@ -614,10 +614,10 @@ export default function NeoCamPage() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px',
         background: 'rgba(5,10,20,0.85)', borderBottom: `1px solid ${CYAN}44`, backdropFilter: 'blur(5px)',
       }}>
-        <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: CYAN }}>NEOPROXY // NEOCAM</span>
+        <span style={{ fontFamily: mono, fontSize: 12, letterSpacing: 2, color: CYAN }}>NEOPROXY // NEOCAM</span>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {isActive && (
-            <div style={{ display: 'flex', gap: 10, fontFamily: mono, fontSize: 9, color: '#8fb8d6', letterSpacing: 1 }}>
+            <div style={{ display: 'flex', gap: 10, fontFamily: mono, fontSize: 10.5, color: '#8fb8d6', letterSpacing: 1 }}>
               <span style={{ color: faceSeen ? '#00ffaa' : '#ff2d55' }}>● {faceSeen ? '1 ROSTRO' : '0 ROSTROS'}</span>
               <span>FPS {fps}</span>
               {state.energy && <span style={{ color: energyPct > 85 ? RED : CYAN }}>EN {energyPct}%</span>}
@@ -628,7 +628,7 @@ export default function NeoCamPage() {
           {isActive && (
             <button onClick={() => patch({ faceMaskOn: !state.faceMaskOn })} title="Quitar o poner la máscara de privacidad facial" style={{
               background: state.faceMaskOn ? 'rgba(0,255,170,0.12)' : 'rgba(255,255,255,0.05)', border: `1px solid ${state.faceMaskOn ? '#00ffaa' : CYAN + '66'}`,
-              color: state.faceMaskOn ? '#00ffaa' : CYAN, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
+              color: state.faceMaskOn ? '#00ffaa' : CYAN, fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
             }}>
               {state.faceMaskOn ? '◉ MÁSCARA' : '○ MÁSCARA'}
             </button>
@@ -636,18 +636,18 @@ export default function NeoCamPage() {
           {isActive && multiCamera && (
             <button onClick={switchCamera} title="Cambiar entre cámara frontal y trasera" style={{
               background: 'rgba(255,255,255,0.05)', border: `1px solid ${CYAN}66`, color: CYAN,
-              fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
             }}>
               🔄 {facing === 'user' ? 'FRONTAL' : 'TRASERA'}
             </button>
           )}
           <button onClick={() => setPanelOpen(v => !v)} style={{
             background: panelOpen ? `${CYAN}22` : 'rgba(255,255,255,0.05)', border: `1px solid ${CYAN}66`, color: CYAN,
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer', minHeight: 30, borderRadius: 4,
           }}>
             ⚙ PANEL
           </button>
-          <Link href="/" style={{ color: CYAN, textDecoration: 'none', fontFamily: mono, fontSize: 9, border: `1px solid ${CYAN}66`, padding: '6px 10px', borderRadius: 4 }}>
+          <Link href="/" style={{ color: CYAN, textDecoration: 'none', fontFamily: mono, fontSize: 10.5, border: `1px solid ${CYAN}66`, padding: '6px 10px', borderRadius: 4 }}>
             EXIT
           </Link>
         </div>
@@ -676,7 +676,7 @@ export default function NeoCamPage() {
         }}>
           {status === 'idle' && (
             <>
-              <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, maxWidth: 320, textAlign: 'center', lineHeight: 1.8 }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', letterSpacing: 1, maxWidth: 320, textAlign: 'center', lineHeight: 1.8 }}>
                 NEOCAM // CÁMARA CON TODOS LOS EFECTOS — SÍNTESIS EN VIVO EN EL NAVEGADOR, SIN SERVIDOR EXTERNO.
               </div>
               <button onClick={start} className="cyber-btn" style={{
@@ -688,14 +688,14 @@ export default function NeoCamPage() {
             </>
           )}
           {(status === 'loading' || status === 'requesting-camera') && (
-            <div style={{ fontFamily: mono, fontSize: 11, color: CYAN, letterSpacing: 2 }}>
+            <div style={{ fontFamily: mono, fontSize: 12, color: CYAN, letterSpacing: 2 }}>
               {status === 'loading' ? 'CARGANDO MODELOS DE VISIÓN...' : 'SOLICITANDO ACCESO A LA CÁMARA...'}
             </div>
           )}
           {status === 'error' && (
             <>
-              <div style={{ fontFamily: mono, fontSize: 11, color: RED, letterSpacing: 1, maxWidth: 300, textAlign: 'center' }}>{errorMsg}</div>
-              <button onClick={start} style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: CYAN, background: 'none', border: `1px solid ${CYAN}66`, padding: '10px 24px', cursor: 'pointer', minHeight: 44 }}>
+              <div style={{ fontFamily: mono, fontSize: 12, color: RED, letterSpacing: 1, maxWidth: 300, textAlign: 'center' }}>{errorMsg}</div>
+              <button onClick={start} style={{ fontFamily: mono, fontSize: 11, letterSpacing: 2, color: CYAN, background: 'none', border: `1px solid ${CYAN}66`, padding: '10px 24px', cursor: 'pointer', minHeight: 44 }}>
                 REINTENTAR
               </button>
             </>
@@ -804,14 +804,14 @@ export default function NeoCamPage() {
               <button onClick={() => gameRef.current.startRound(60)} style={{ ...btnStyle(false), gridColumn: '1 / -1' }}>RONDA (60s)</button>
             </div>
             {lastRoundScore !== null && (
-              <div style={{ fontFamily: mono, fontSize: 10, color: '#ffd23c', marginTop: 8, textAlign: 'center' }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: '#ffd23c', marginTop: 8, textAlign: 'center' }}>
                 RONDA TERMINADA — {lastRoundScore} PTS
               </div>
             )}
           </Section>
 
           <Section title="RETRATO PROXYVERSE">
-            <p style={{ fontFamily: mono, fontSize: 8, color: '#8fb8d6', lineHeight: 1.7, marginBottom: 10 }}>
+            <p style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', lineHeight: 1.7, marginBottom: 10 }}>
               Captura (foto o video de {(RECORD_MS / 1000).toFixed(1)}s) y lo matchea con el agente de Proxyverse
               de paleta más parecida. Funciona mejor en AURA o INFRARED.
             </p>
@@ -853,7 +853,7 @@ export default function NeoCamPage() {
               }} />
             )}
             <div style={{ padding: 20 }}>
-              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080', marginBottom: 6 }}>
+              <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', marginBottom: 6 }}>
                 MATCH DE PALETA
               </div>
               <div style={{
@@ -862,29 +862,29 @@ export default function NeoCamPage() {
               }}>
                 {portrait.agent.name}
               </div>
-              <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, marginBottom: 14 }}>
+              <div style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', letterSpacing: 1, marginBottom: 14 }}>
                 {portrait.affinity}% DE AFINIDAD — {portrait.agent.role}
               </div>
               <div style={{
-                fontFamily: mono, fontSize: 11, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.7, marginBottom: 20,
+                fontFamily: mono, fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.7, marginBottom: 20,
               }}>
                 "{portrait.agent.quote}"
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={downloadPortrait} style={{
-                  flex: 1, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 0', cursor: 'pointer',
+                  flex: 1, fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '10px 0', cursor: 'pointer',
                   background: `${portrait.agent.color}15`, border: `1px solid ${portrait.agent.color}66`, color: portrait.agent.color,
                 }}>
                   ⬇ DESCARGAR
                 </button>
                 <Link href={`/proxyverse/${portrait.agent.id}`} style={{
-                  flex: 1, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 0', textAlign: 'center',
+                  flex: 1, fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '10px 0', textAlign: 'center',
                   background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', color: '#8fb8d6', textDecoration: 'none',
                 }}>
                   VER PERFIL →
                 </Link>
                 <button onClick={closePortrait} style={{
-                  fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '10px 14px', cursor: 'pointer',
+                  fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '10px 14px', cursor: 'pointer',
                   background: 'transparent', border: '1px solid rgba(255,45,85,0.4)', color: RED,
                 }}>
                   CERRAR
@@ -901,7 +901,7 @@ export default function NeoCamPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: CYAN, marginBottom: 8 }}>{title}</div>
+      <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: CYAN, marginBottom: 8 }}>{title}</div>
       {children}
     </div>
   )
@@ -910,7 +910,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Slider({ label, value, min, max, step, onChange }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void }) {
   return (
     <div style={{ marginBottom: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: mono, fontSize: 8, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 3 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 3 }}>
         <span>{label}</span><span style={{ color: CYAN }}>{value}</span>
       </div>
       <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))} style={{ width: '100%', accentColor: CYAN }} />

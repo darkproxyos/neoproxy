@@ -113,7 +113,7 @@ export default function ConceptDiscovery() {
         <div style={{ fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>
           🧠 CONCEPT DISCOVERY
         </div>
-        <div style={{ fontSize: '9px', color: '#4a6080' }}>
+        <div style={{ fontSize: '9px', color: '#6f86a3' }}>
           {concepts.length} concepts discovered • Auto-extraction from assembly
         </div>
       </div>
@@ -145,11 +145,11 @@ export default function ConceptDiscovery() {
                 </span>
               </div>
               
-              <div style={{ fontSize: '8px', color: '#4a6080', marginBottom: '4px' }}>
+              <div style={{ fontSize: '8px', color: '#6f86a3', marginBottom: '4px' }}>
                 {concept.domain} • {getNoveltyIndicator(concept.novelty_score)}
               </div>
               
-              <div style={{ fontSize: '8px', color: '#4a6080', marginBottom: '4px' }}>
+              <div style={{ fontSize: '8px', color: '#6f86a3', marginBottom: '4px' }}>
                 by: {concept.agents.join(', ')}
               </div>
 
@@ -174,22 +174,22 @@ export default function ConceptDiscovery() {
           
           <div style={{ fontSize: '9px', lineHeight: '1.4' }}>
             <div style={{ marginBottom: '5px' }}>
-              <span style={{ color: '#4a6080' }}>Domain:</span> {selectedConcept.domain}
+              <span style={{ color: '#6f86a3' }}>Domain:</span> {selectedConcept.domain}
             </div>
             <div style={{ marginBottom: '5px' }}>
-              <span style={{ color: '#4a6080' }}>Origin:</span> {selectedConcept.origin}
+              <span style={{ color: '#6f86a3' }}>Origin:</span> {selectedConcept.origin}
             </div>
             <div style={{ marginBottom: '5px' }}>
-              <span style={{ color: '#4a6080' }}>Confidence:</span> 
+              <span style={{ color: '#6f86a3' }}>Confidence:</span> 
               <span style={{ color: getConfidenceColor(selectedConcept.confidence) }}>
                 {(selectedConcept.confidence * 100).toFixed(0)}%
               </span>
             </div>
             <div style={{ marginBottom: '5px' }}>
-              <span style={{ color: '#4a6080' }}>Novelty:</span> {getNoveltyIndicator(selectedConcept.novelty_score)}
+              <span style={{ color: '#6f86a3' }}>Novelty:</span> {getNoveltyIndicator(selectedConcept.novelty_score)}
             </div>
             <div style={{ marginBottom: '8px' }}>
-              <span style={{ color: '#4a6080' }}>Applications:</span>
+              <span style={{ color: '#6f86a3' }}>Applications:</span>
               <div style={{ marginTop: '3px', marginLeft: '10px' }}>
                 {selectedConcept.applications.map((app, index) => (
                   <div key={index} style={{ fontSize: '8px', marginBottom: '2px' }}>
@@ -199,7 +199,7 @@ export default function ConceptDiscovery() {
               </div>
             </div>
             <div>
-              <span style={{ color: '#4a6080' }}>Tags:</span>
+              <span style={{ color: '#6f86a3' }}>Tags:</span>
               <div style={{ marginTop: '3px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                 {selectedConcept.tags.map(tag => (
                   <span key={tag} style={{
@@ -218,7 +218,7 @@ export default function ConceptDiscovery() {
         </div>
       )}
 
-      <div style={{ marginTop: '10px', fontSize: '8px', color: '#4a6080', textAlign: 'center' }}>
+      <div style={{ marginTop: '10px', fontSize: '8px', color: '#6f86a3', textAlign: 'center' }}>
         🧠 Concepts auto-extracted • Novelty threshold: 0.7 • Confidence threshold: 0.6
       </div>
     </div>

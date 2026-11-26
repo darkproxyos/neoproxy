@@ -39,13 +39,13 @@ export default function FabricationArchivePage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/fabrication/cola" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A LA COLA
         </Link>
 
-        <div style={{ fontSize: 9, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${CYAN}66`, letterSpacing: 6, marginBottom: 16 }}>
           NPX-FAB-ARCHIVO
         </div>
         <h1 style={{
@@ -54,28 +54,28 @@ export default function FabricationArchivePage() {
         }}>
           ARCHIVO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 48 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 600, marginBottom: 48 }}>
           Nada de lo que se envió alguna vez a la cola de fabricación desaparece. Lo que no ganó su
           semana no se borra — solo deja de competir. Acá queda, con los votos que tuvo.
         </p>
 
         {status === 'loading' && (
-          <div style={{ fontSize: 10, color: '#4a6080', letterSpacing: 1 }}>CARGANDO ARCHIVO...</div>
+          <div style={{ fontSize: 11, color: '#6f86a3', letterSpacing: 1 }}>CARGANDO ARCHIVO...</div>
         )}
         {status === 'error' && (
-          <div style={{ fontSize: 10, color: '#ff2d55', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#ff2d55', letterSpacing: 1 }}>
             No se pudo cargar el archivo. Probá de nuevo más tarde.
           </div>
         )}
         {status === 'ready' && weeks.length === 0 && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1 }}>
             TODAVÍA NO HAY SEMANAS CERRADAS — lo que se vota esta semana va a aparecer acá cuando empiece la próxima.
           </div>
         )}
 
         {weeks.map(week => (
           <div key={week.weekOf} style={{ marginBottom: 48 }}>
-            <div style={{ fontSize: 10, color: CYAN, letterSpacing: 4, marginBottom: 16 }}>
+            <div style={{ fontSize: 11, color: CYAN, letterSpacing: 4, marginBottom: 16 }}>
               {week.weekOf}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
@@ -86,10 +86,10 @@ export default function FabricationArchivePage() {
                 }}>
                   <Image src={s.thumbnail} alt={s.label || s.mode} width={220} height={160} unoptimized
                     style={{ width: '100%', height: 140, objectFit: 'cover', border: `1px solid ${CYAN}22`, marginBottom: 10 }} />
-                  <div style={{ fontSize: 10, color: '#c8daf0', marginBottom: 4 }}>
+                  <div style={{ fontSize: 11, color: '#c8daf0', marginBottom: 4 }}>
                     {s.label || `${s.mode.toUpperCase()} sin nombre`}
                   </div>
-                  <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 10 }}>
+                  <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 10 }}>
                     {s.mode.toUpperCase()} · {s.votes} {s.votes === 1 ? 'voto' : 'votos'}
                     {s.status === 'winner' && <span style={{ color: GREEN }}> · ◉ GANADOR</span>}
                   </div>

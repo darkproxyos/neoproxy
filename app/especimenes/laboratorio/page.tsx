@@ -55,15 +55,15 @@ function Stat({ n, t, sub }: { n: string | number; t: string; sub?: string }) {
   return (
     <div style={{ flex: '1 1 130px', minWidth: 120 }}>
       <div style={{ fontSize: 26, color: ACCENT, letterSpacing: 1 }}>{n}</div>
-      <div style={{ fontSize: 9, letterSpacing: 2, color: '#c8daf0', marginTop: 4 }}>{t}</div>
-      {sub && <div style={{ fontSize: 9, color: '#6f86a3', marginTop: 3, lineHeight: 1.5 }}>{sub}</div>}
+      <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#c8daf0', marginTop: 4 }}>{t}</div>
+      {sub && <div style={{ fontSize: 10.5, color: '#6f86a3', marginTop: 3, lineHeight: 1.5 }}>{sub}</div>}
     </div>
   )
 }
 
 function Row({ k, v }: { k: string; v: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 10.5, padding: '6px 0', borderBottom: '1px solid #ffffff10' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 11.5, padding: '6px 0', borderBottom: '1px solid #ffffff10' }}>
       <span style={{ color: '#8fa8c4' }}>{k}</span>
       <span style={{ color: '#fff', textAlign: 'right' }}>{v}</span>
     </div>
@@ -86,14 +86,14 @@ function lineage(r: Recipe): string {
 function Dna({ item, color }: { item: PoolItem; color: string }) {
   const rec = useMemo(() => resolveGenome(itemGenome(item)), [item])
   const author = authorOf(item.family)
-  const box = { margin: '0 0 16px', padding: '12px 14px', border: `1px solid ${color}33`, background: `${color}0b`, fontSize: 10, lineHeight: 1.8, color: '#b6c8de' } as const
+  const box = { margin: '0 0 16px', padding: '12px 14px', border: `1px solid ${color}33`, background: `${color}0b`, fontSize: 11, lineHeight: 1.8, color: '#b6c8de' } as const
   if (rec.family === 'symbiosis') {
     const op = rec.params.op as SymOp
     const [a, b] = rec.parents!
     const m = THINKERS[AUTHOR_ID.symbiosis!]
     return (
       <div style={box}>
-        <div style={{ fontSize: 9, letterSpacing: 2.5, color }}>ADN · {OP_LABEL[op]}</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 2.5, color }}>ADN · {OP_LABEL[op]}</div>
         <div style={{ margin: '4px 0 8px' }}>{OP_BLURB[op]}</div>
         <div><span style={{ color: '#6f86a3' }}>PADRE A · </span>{lineage(a)}</div>
         <div><span style={{ color: '#6f86a3' }}>PADRE B · </span>{lineage(b)}</div>
@@ -104,7 +104,7 @@ function Dna({ item, color }: { item: PoolItem; color: string }) {
   if (!author) return null
   return (
     <div style={box}>
-      <div style={{ fontSize: 9, letterSpacing: 2.5, color }}>AUTOR · {author.name.toUpperCase()}</div>
+      <div style={{ fontSize: 10.5, letterSpacing: 2.5, color }}>AUTOR · {author.name.toUpperCase()}</div>
       <div style={{ marginTop: 4, fontStyle: 'italic', color: '#8fa8c4' }}>«{author.line}»</div>
     </div>
   )
@@ -113,13 +113,13 @@ function Dna({ item, color }: { item: PoolItem; color: string }) {
 function VoteBar({ votes, my, onVote, color }: { votes?: Votes; my: number; onVote: (v: number) => void; color: string }) {
   const btn = (v: 1 | -1, text: string, n: number) => (
     <button onClick={() => onVote(my === v ? 0 : v)} className="press" aria-pressed={my === v}
-      style={{ flex: 1, minHeight: 42, background: my === v ? `${color}2a` : 'transparent', border: `1px solid ${my === v ? color : '#4a6080'}`, color: my === v ? color : '#8fa8c4', fontFamily: mono, fontSize: 10, letterSpacing: 1.5, cursor: 'pointer' }}>
+      style={{ flex: 1, minHeight: 42, background: my === v ? `${color}2a` : 'transparent', border: `1px solid ${my === v ? color : '#4a6080'}`, color: my === v ? color : '#8fa8c4', fontFamily: mono, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer' }}>
       {text} · {n}
     </button>
   )
   return (
     <div style={{ margin: '0 0 14px' }}>
-      <div style={{ fontSize: 9, letterSpacing: 2.5, color: '#6f86a3', marginBottom: 6 }}>TU GUSTO CUENTA: LA PRÓXIMA GENERACIÓN LO LEE</div>
+      <div style={{ fontSize: 10.5, letterSpacing: 2.5, color: '#6f86a3', marginBottom: 6 }}>TU GUSTO CUENTA: LA PRÓXIMA GENERACIÓN LO LEE</div>
       <div style={{ display: 'flex', gap: 8 }}>{btn(1, 'ME GUSTA', votes?.l ?? 0)}{btn(-1, 'NO ME GUSTA', votes?.d ?? 0)}</div>
     </div>
   )
@@ -142,10 +142,10 @@ function Lineage({ item, pool, color, onOpen }: { item: PoolItem; pool: Pool; co
     )
   }
   const ps = item.parents ?? []
-  const box = { margin: '0 0 12px', padding: '10px 14px', border: `1px solid ${color}33`, fontSize: 10, lineHeight: 1.8, color: '#b6c8de' } as const
+  const box = { margin: '0 0 12px', padding: '10px 14px', border: `1px solid ${color}33`, fontSize: 11, lineHeight: 1.8, color: '#b6c8de' } as const
   return (
     <div style={box}>
-      <div style={{ fontSize: 9, letterSpacing: 2.5, color }}>
+      <div style={{ fontSize: 10.5, letterSpacing: 2.5, color }}>
         GENERACIÓN {born}{now > born ? ` · VIVE DESDE HACE ${now - born} ${now - born === 1 ? 'GENERACIÓN' : 'GENERACIONES'}` : now > 0 ? ' · NACIÓ ESTA SEMANA' : ''}
       </div>
       {kind === 'nacida' && <div>Nacida de cero: sin ascendencia en este salón.</div>}
@@ -211,16 +211,16 @@ function SpecimenModal({ item, pool, onClose, onOpen, votes, my, onVote }: { ite
         <div style={{ position: 'relative', minHeight: 360, background: '#03050a' }}>
           {gen.status === 'ready' && gen.data && <PoolViewer positions={gen.data.positions} indices={gen.data.indices} color={color} />}
           {gen.status === 'loading' && (
-            <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 10, letterSpacing: 3, color: '#8fa8c4' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 11, letterSpacing: 3, color: '#8fa8c4' }}>
               GENERANDO DESDE LA RECETA…
             </div>
           )}
           {gen.status === 'error' && (
-            <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', padding: 24, textAlign: 'center', fontSize: 11, color: '#ff8a8a' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', padding: 24, textAlign: 'center', fontSize: 12, color: '#ff8a8a' }}>
               No se pudo generar la pieza en este navegador. {gen.error}
             </div>
           )}
-          <div style={{ position: 'absolute', left: 12, bottom: 10, fontSize: 9, letterSpacing: 1.5, color: '#6f86a3', pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', left: 12, bottom: 10, fontSize: 10.5, letterSpacing: 1.5, color: '#6f86a3', pointerEvents: 'none' }}>
             ARRASTRA PARA GIRAR · RUEDA, PELLIZCO O +/− PARA ACERCAR · EL DISCO ES LA CAMA
           </div>
         </div>
@@ -228,13 +228,13 @@ function SpecimenModal({ item, pool, onClose, onOpen, votes, my, onVote }: { ite
         <div style={{ padding: '22px 22px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
             <div>
-              <div style={{ fontSize: 9, letterSpacing: 3, color }}>{FAMILY_LABEL[item.family]}</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 3, color }}>{FAMILY_LABEL[item.family]}</div>
               <h2 style={{ fontSize: 20, color: '#fff', letterSpacing: 1.5, margin: '6px 0 0' }}>{item.id.toUpperCase()}</h2>
             </div>
             <button onClick={onClose} className="press" aria-label="Cerrar"
               style={{ width: 40, height: 40, background: 'transparent', border: '1px solid #4a6080', color: '#c8daf0', cursor: 'pointer', fontSize: 16 }}>✕</button>
           </div>
-          <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#9fb4cc', margin: '14px 0 14px' }}>{FAMILY_BLURB[item.family]}</p>
+          <p style={{ fontSize: 11.5, lineHeight: 1.8, color: '#9fb4cc', margin: '14px 0 14px' }}>{FAMILY_BLURB[item.family]}</p>
           {votes && <VoteBar votes={votes[item.id]} my={my} onVote={onVote} color={color} />}
           <Lineage item={item} pool={pool} color={color} onOpen={onOpen} />
           <Dna item={item} color={color} />
@@ -250,7 +250,7 @@ function SpecimenModal({ item, pool, onClose, onOpen, votes, my, onVote }: { ite
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
             <button onClick={download} disabled={dl === 'busy'} className="press"
-              style={{ minHeight: 46, background: `${color}22`, border: `1px solid ${color}`, color, fontFamily: mono, fontSize: 11, letterSpacing: 2, cursor: dl === 'busy' ? 'wait' : 'pointer' }}>
+              style={{ minHeight: 46, background: `${color}22`, border: `1px solid ${color}`, color, fontFamily: mono, fontSize: 12, letterSpacing: 2, cursor: dl === 'busy' ? 'wait' : 'pointer' }}>
               {dl === 'busy' ? 'GENERANDO STL EN ALTA RESOLUCIÓN…' : dl === 'error' ? 'REINTENTAR DESCARGA' : `DESCARGAR STL (${pool.sizeMm} MM)`}
             </button>
             <a href={`https://wa.me/${WA}?text=${encodeURIComponent(waText)}`} target="_blank" rel="noopener noreferrer" className="press"
@@ -258,11 +258,11 @@ function SpecimenModal({ item, pool, onClose, onOpen, votes, my, onVote }: { ite
               Pedir esta pieza impresa
             </a>
             <button onClick={share} className="press"
-              style={{ minHeight: 40, background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4', fontFamily: mono, fontSize: 10, letterSpacing: 2, cursor: 'pointer' }}>
+              style={{ minHeight: 40, background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4', fontFamily: mono, fontSize: 11, letterSpacing: 2, cursor: 'pointer' }}>
               {copied ? 'LINK COPIADO' : 'COPIAR LINK DE ESTA PIEZA'}
             </button>
           </div>
-          <p style={{ fontSize: 9.5, lineHeight: 1.7, color: '#6f86a3', margin: '14px 0 0' }}>
+          <p style={{ fontSize: 11, lineHeight: 1.7, color: '#6f86a3', margin: '14px 0 0' }}>
             El STL sale orientado para imprimir y apoyado en la cama. Las métricas son mediciones sobre la geometría
             con una pared mínima de 1 mm; antes de imprimir, abre la pieza en tu laminador.
           </p>
@@ -346,13 +346,13 @@ export default function LaboratorioPage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/especimenes" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
+        <Link href="/especimenes" className="press tap-ext" style={{ fontSize: 10.5, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
           ← VOLVER A ESPECÍMENES
         </Link>
-        <Link href="/especimenes/linaje" className="press" style={{ fontSize: 9, letterSpacing: 3, color: ACCENT, textDecoration: 'none', display: 'inline-block', margin: '0 0 28px 28px' }}>
+        <Link href="/especimenes/linaje" className="press" style={{ fontSize: 10.5, letterSpacing: 3, color: ACCENT, textDecoration: 'none', display: 'inline-block', margin: '0 0 28px 28px' }}>
           VER EL ÁRBOL GENEALÓGICO →
         </Link>
-        <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}99`, marginBottom: 14 }}>NPX-ESP-LAB // SELECCIÓN POR CALIDAD Y DIVERSIDAD</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}99`, marginBottom: 14 }}>NPX-ESP-LAB // SELECCIÓN POR CALIDAD Y DIVERSIDAD</div>
         <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 42px)', letterSpacing: 4, color: ACCENT, textShadow: `0 0 40px ${ACCENT}44`, margin: '0 0 14px', lineHeight: 1.1 }}>
           LABORATORIO DE ESPECÍMENES
         </h1>
@@ -378,11 +378,11 @@ export default function LaboratorioPage() {
             </div>
 
             <button onClick={() => setHow(!how)} className="press" aria-expanded={how}
-              style={{ background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4', fontFamily: mono, fontSize: 10, letterSpacing: 2, padding: '10px 14px', cursor: 'pointer', marginBottom: 14 }}>
+              style={{ background: 'transparent', border: '1px solid #4a6080', color: '#8fa8c4', fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '10px 14px', cursor: 'pointer', marginBottom: 14 }}>
               {how ? '− ' : '+ '}CÓMO SE ELIGE
             </button>
             {how && (
-              <div style={{ fontSize: 11, lineHeight: 1.9, color: '#9fb4cc', maxWidth: 820, padding: '4px 0 18px' }}>
+              <div style={{ fontSize: 12, lineHeight: 1.9, color: '#9fb4cc', maxWidth: 820, padding: '4px 0 18px' }}>
                 <p style={{ margin: '0 0 10px' }}>
                   <strong style={{ color: '#fff' }}>Imprimibilidad (medida):</strong> malla cerrada y sin aristas rotas, una sola pieza
                   (se descartan islas sueltas), pocas caras en voladizo en la mejor orientación, base de apoyo estable con el centro de
@@ -414,14 +414,14 @@ export default function LaboratorioPage() {
                 const n = f === 'all' ? visible.length : f === 'obras' ? visible.filter((it) => OBRAS.has(it.family)).length : f === 'queridas' ? visible.filter((it) => loved(votes[it.id])).length : counts[f] ?? 0
                 return (
                   <button key={f} onClick={() => setFilter(f)} className="press" aria-pressed={active}
-                    style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '9px 12px', minHeight: 40, cursor: 'pointer', background: active ? `${c}2a` : 'transparent', border: `1px solid ${active ? c : '#4a6080'}`, color: active ? c : '#8fa8c4' }}>
+                    style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, padding: '9px 12px', minHeight: 40, cursor: 'pointer', background: active ? `${c}2a` : 'transparent', border: `1px solid ${active ? c : '#4a6080'}`, color: active ? c : '#8fa8c4' }}>
                     {f === 'all' ? 'TODAS' : f === 'obras' ? 'OBRAS' : f === 'queridas' ? '♥ QUERIDAS' : FAMILY_LABEL[f]} · {n}
                   </button>
                 )
               })}
               <span style={{ flex: 1 }} />
               <button onClick={() => setShowAll(!showAll)} className="press"
-                style={{ fontFamily: mono, fontSize: 9, letterSpacing: 1.5, padding: '9px 12px', minHeight: 40, cursor: 'pointer', background: 'transparent', border: '1px solid #4a6080', color: '#c8daf0' }}>
+                style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, padding: '9px 12px', minHeight: 40, cursor: 'pointer', background: 'transparent', border: '1px solid #4a6080', color: '#c8daf0' }}>
                 {showAll ? `VER SOLO LAS ${SHOW_COUNT} DE ESTA SEMANA` : `VER EL SALÓN COMPLETO (${pool.hall.length})`}
               </button>
             </div>
@@ -435,8 +435,8 @@ export default function LaboratorioPage() {
                     <img src={`/proxygenesis/pool-thumbs/${it.id}.webp`} alt={`${FAMILY_LABEL[it.family]}, imprimibilidad ${pct(it.m.printScore)}`} loading="lazy" width={256} height={256}
                       style={{ display: 'block', width: '100%', height: 'auto', aspectRatio: '1 / 1', background: '#070a10' }} />
                     <div style={{ padding: '10px 12px 12px' }}>
-                      <div style={{ fontSize: 10, letterSpacing: 1.5, color: c }}>{it.kind === 'mutante' ? '◈ ' : it.kind === 'cruce' ? '✕ ' : ''}{FAMILY_LABEL[it.family]}{pool.generation && it.gen === pool.generation ? <span style={{ color: '#6fd89b' }}> · NUEVA</span> : null}{(votes[it.id]?.l ?? 0) > 0 ? <span style={{ color: '#ff9ecf' }}> · ♥ {votes[it.id].l}</span> : null}</div>
-                      <div style={{ fontSize: 9.5, color: '#8fa8c4', marginTop: 5, lineHeight: 1.6 }}>
+                      <div style={{ fontSize: 11, letterSpacing: 1.5, color: c }}>{it.kind === 'mutante' ? '◈ ' : it.kind === 'cruce' ? '✕ ' : ''}{FAMILY_LABEL[it.family]}{pool.generation && it.gen === pool.generation ? <span style={{ color: '#6fd89b' }}> · NUEVA</span> : null}{(votes[it.id]?.l ?? 0) > 0 ? <span style={{ color: '#ff9ecf' }}> · ♥ {votes[it.id].l}</span> : null}</div>
+                      <div style={{ fontSize: 11, color: '#8fa8c4', marginTop: 5, lineHeight: 1.6 }}>
                         imprimible {pct(it.m.printScore)} · {it.m.material}
                       </div>
                     </div>

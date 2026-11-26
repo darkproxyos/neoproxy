@@ -38,7 +38,7 @@ export default function HomeGraficoPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '140px 24px 100px' }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 6, color: `${CYAN}77`, marginBottom: 14 }}>
+          <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 6, color: `${CYAN}77`, marginBottom: 14 }}>
             NEO·PROXY — MAPA EN VIVO
           </div>
           <h1 style={{
@@ -47,7 +47,7 @@ export default function HomeGraficoPage() {
           }}>
             TODO EL SITIO, UN SOLO MAPA
           </h1>
-          <p style={{ fontSize: 11.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 640, margin: '0 auto' }}>
+          <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 640, margin: '0 auto' }}>
             Cada nodo de acá abajo es una ruta real del sitio — tocá cualquiera para entrar directo.
             Arrastrá para moverte, la rueda hace zoom, y arriba podés cambiar la forma: árbol radial,
             círculos anidados, o mosaico.

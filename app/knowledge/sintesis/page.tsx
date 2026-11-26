@@ -153,11 +153,11 @@ export default function SintesisPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '104px 24px 0' }}>
-          <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
+          <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none' }}>
             ← VOLVER AL CODEX
           </Link>
 
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: '#00d4ff44', marginTop: 56, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: '#00d4ff44', marginTop: 56, marginBottom: 16 }}>
             NPX-KNW-SIN // DOCE DOCUMENTOS, UNA SOLA PREGUNTA
           </div>
           <h1 style={{
@@ -168,7 +168,7 @@ export default function SintesisPage() {
           </h1>
 
           <p style={{
-            fontFamily: mono, fontSize: 11, lineHeight: 2.1, letterSpacing: 0.5, color: '#8fb8d6',
+            fontFamily: mono, fontSize: 12, lineHeight: 2.1, letterSpacing: 0.5, color: '#8fb8d6',
             maxWidth: 640, marginBottom: 100, borderLeft: '1px solid #00d4ff22', paddingLeft: 24,
           }}>
             No es un resumen de los otros doce documentos del Codex. Es una lectura de los doce juntos,
@@ -193,13 +193,13 @@ export default function SintesisPage() {
           >
             <div style={{ marginBottom: 28 }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 18 }}>
-                <span style={{ fontSize: 13, color: '#00d4ff66', letterSpacing: 2 }}>{chapter.roman}</span>
+                <span style={{ fontSize: 13, color: '#00d4ffaa', letterSpacing: 2 }}>{chapter.roman}</span>
                 <h2 style={{ fontSize: 22, letterSpacing: 6, color: '#00d4ff', textShadow: '0 0 24px rgba(0,212,255,0.3)', margin: 0 }}>
                   {chapter.title}
                 </h2>
               </div>
               {chapter.sub && (
-                <div style={{ fontSize: 10, letterSpacing: 0.5, color: '#4a6080', marginTop: 10, paddingLeft: 32, maxWidth: 560 }}>
+                <div style={{ fontSize: 11, letterSpacing: 0.5, color: '#6f86a3', marginTop: 10, paddingLeft: 32, maxWidth: 560 }}>
                   {chapter.sub}
                 </div>
               )}
@@ -211,7 +211,7 @@ export default function SintesisPage() {
                   <div key={a.code} style={{
                     border: `1px solid ${a.color}44`, padding: '10px 16px', minWidth: 180,
                   }}>
-                    <div style={{ fontSize: 8, letterSpacing: 1.5, color: `${a.color}99`, marginBottom: 6 }}>
+                    <div style={{ fontSize: 10, letterSpacing: 1.5, color: `${a.color}99`, marginBottom: 6 }}>
                       {a.code} // {a.label}
                     </div>
                     <div style={{ fontSize: 13, color: '#fff', letterSpacing: 0.3 }}>
@@ -232,7 +232,7 @@ export default function SintesisPage() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 24 }}>
                 {chapter.anchors.map((a) => (
                   <Link key={a.code} href={a.href} style={{
-                    fontSize: 9, letterSpacing: 1.5, color: `${a.color}aa`, textDecoration: 'none',
+                    fontSize: 10.5, letterSpacing: 1.5, color: `${a.color}aa`, textDecoration: 'none',
                   }}>
                     → LEER {a.label}
                   </Link>
@@ -244,13 +244,13 @@ export default function SintesisPage() {
 
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 140px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, borderTop: '1px solid #00d4ff14', paddingTop: 40 }}>
-            <Link href="/knowledge/filosofia" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#b06bffaa', textDecoration: 'none' }}>
+            <Link href="/knowledge/filosofia" className="press" style={{ fontSize: 10.5, letterSpacing: 2, color: '#b06bffaa', textDecoration: 'none' }}>
               → LA MISMA PREGUNTA EN PERSONAS: FILOSOFÍA
             </Link>
-            <Link href="/lab/codex" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none' }}>
+            <Link href="/lab/codex" className="press" style={{ fontSize: 10.5, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none' }}>
               → LA MISMA PREGUNTA EN PUNTOS DE LUZ: EL ESPACIO 3D
             </Link>
-            <Link href="/manifesto" className="press" style={{ fontSize: 9, letterSpacing: 2, color: '#ffb800aa', textDecoration: 'none' }}>
+            <Link href="/manifesto" className="press" style={{ fontSize: 10.5, letterSpacing: 2, color: '#ffb800aa', textDecoration: 'none' }}>
               → LEER EL MANIFIESTO COMPLETO
             </Link>
           </div>

@@ -67,7 +67,7 @@ export default function Dice({
 
   return (
     <div style={{ border: `1px solid ${COLOR}33`, background: `${COLOR}08`, padding: '24px 20px' }}>
-      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
+      <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
         DADOS_ENTROPÍA
       </div>
 
@@ -87,7 +87,7 @@ export default function Dice({
           onClick={() => setDirection('bajo')}
           disabled={rolling}
           style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 14px', cursor: rolling ? 'default' : 'pointer',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 14px', cursor: rolling ? 'default' : 'pointer',
             background: direction === 'bajo' ? `${COLOR}33` : 'transparent', color: direction === 'bajo' ? COLOR : '#8fb8d6',
             border: `1px solid ${direction === 'bajo' ? COLOR : COLOR + '33'}`,
           }}
@@ -98,7 +98,7 @@ export default function Dice({
           onClick={() => setDirection('alto')}
           disabled={rolling}
           style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 14px', cursor: rolling ? 'default' : 'pointer',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 14px', cursor: rolling ? 'default' : 'pointer',
             background: direction === 'alto' ? `${COLOR}33` : 'transparent', color: direction === 'alto' ? COLOR : '#8fb8d6',
             border: `1px solid ${direction === 'alto' ? COLOR : COLOR + '33'}`,
           }}
@@ -108,19 +108,19 @@ export default function Dice({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, justifyContent: 'center' }}>
-        <span style={{ fontFamily: mono, fontSize: 8, color: '#4a6080' }}>UMBRAL</span>
+        <span style={{ fontFamily: mono, fontSize: 10, color: '#6f86a3' }}>UMBRAL</span>
         <input
           type="range" min={MIN_THRESHOLD} max={MAX_THRESHOLD} value={threshold}
           disabled={rolling}
           onChange={e => setThreshold(Number(e.target.value))}
           style={{ width: 140 }}
         />
-        <span style={{ fontFamily: mono, fontSize: 11, color: COLOR, width: 24, display: 'inline-block' }}>
+        <span style={{ fontFamily: mono, fontSize: 12, color: COLOR, width: 24, display: 'inline-block' }}>
           {threshold}
         </span>
       </div>
 
-      <div style={{ textAlign: 'center', fontFamily: mono, fontSize: 9, color: '#8fb8d6', marginBottom: 16 }}>
+      <div style={{ textAlign: 'center', fontFamily: mono, fontSize: 10.5, color: '#8fb8d6', marginBottom: 16 }}>
         CHANCE {(chance * 100).toFixed(0)}% // PAGO {multiplier.toFixed(2)}x
       </div>
 
@@ -131,7 +131,7 @@ export default function Dice({
             onClick={() => setBet(b)}
             disabled={rolling}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: rolling ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '8px 14px', cursor: rolling ? 'default' : 'pointer',
               background: bet === b ? `${COLOR}33` : 'transparent', color: bet === b ? COLOR : '#8fb8d6',
               border: `1px solid ${bet === b ? COLOR : COLOR + '33'}`,
             }}
@@ -145,7 +145,7 @@ export default function Dice({
         onClick={rollDice}
         disabled={rolling || balance < bet}
         style={{
-          display: 'block', width: '100%', fontFamily: mono, fontSize: 11, letterSpacing: 3, padding: '14px',
+          display: 'block', width: '100%', fontFamily: mono, fontSize: 12, letterSpacing: 3, padding: '14px',
           background: rolling || balance < bet ? 'transparent' : `${COLOR}22`,
           color: rolling || balance < bet ? '#4a6080' : COLOR,
           border: `1px solid ${rolling || balance < bet ? '#4a6080' : COLOR}`,
@@ -157,7 +157,7 @@ export default function Dice({
 
       {message && (
         <div style={{
-          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 10, letterSpacing: 2,
+          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 11, letterSpacing: 2,
           color: message.includes('SIN') ? '#4a6080' : '#00ff9d',
         }}>
           {message}

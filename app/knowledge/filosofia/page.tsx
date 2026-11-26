@@ -125,11 +125,11 @@ export default function FilosofiaPage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '104px 24px 0' }}>
-          <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none' }}>
+          <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none' }}>
             ← VOLVER AL CODEX
           </Link>
 
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: '#b06bff44', marginTop: 56, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: '#b06bff44', marginTop: 56, marginBottom: 16 }}>
             NPX-KNW-FIL // SIETE PREGUNTAS, NADIE LAS CERRÓ
           </div>
           <h1 style={{
@@ -140,7 +140,7 @@ export default function FilosofiaPage() {
           </h1>
 
           <p style={{
-            fontFamily: mono, fontSize: 11, lineHeight: 2.1, letterSpacing: 0.5, color: '#8fb8d6',
+            fontFamily: mono, fontSize: 12, lineHeight: 2.1, letterSpacing: 0.5, color: '#8fb8d6',
             maxWidth: 620, marginBottom: 100, borderLeft: '1px solid #b06bff22', paddingLeft: 24,
           }}>
             No es un resumen de /conocimiento. Es un solo recorrido, en orden, por seis nodos que ya
@@ -182,7 +182,7 @@ export default function FilosofiaPage() {
                   }}>
                     {entry.formulaKind === 'quote' ? `"${entry.formula}"` : entry.formula}
                   </div>
-                  <div style={{ fontSize: 9, letterSpacing: 1.5, color: '#4a6080' }}>
+                  <div style={{ fontSize: 10.5, letterSpacing: 1.5, color: '#6f86a3' }}>
                     {entry.name} ({entry.years}) — {entry.formulaLabel}
                   </div>
                 </div>
@@ -197,7 +197,7 @@ export default function FilosofiaPage() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 24 }}>
                 {chapterEntries.map(entry => (
                   <Link key={entry.id} href={`/knowledge?entry=${entry.id}`} style={{
-                    fontSize: 9, letterSpacing: 1.5, color: `${chapter.color}aa`, textDecoration: 'none',
+                    fontSize: 10.5, letterSpacing: 1.5, color: `${chapter.color}aa`, textDecoration: 'none',
                   }}>
                     → VER NODO DE {entry.name.split(' ').pop()?.toUpperCase()} EN EL CODEX
                   </Link>
@@ -218,7 +218,7 @@ export default function FilosofiaPage() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 18, marginBottom: 28 }}>
-            <span style={{ fontSize: 13, color: '#00d4ff66', letterSpacing: 2 }}>VII</span>
+            <span style={{ fontSize: 13, color: '#00d4ffaa', letterSpacing: 2 }}>VII</span>
             <h2 style={{ fontSize: 22, letterSpacing: 6, color: '#00d4ff', textShadow: '0 0 24px rgba(0,212,255,0.3)' }}>
               SÍNTESIS
             </h2>
@@ -238,12 +238,12 @@ export default function FilosofiaPage() {
             ))}
           </div>
 
-          <div style={{ marginTop: 72, fontSize: 9, letterSpacing: 4, color: '#00d4ff33' }}>
+          <div style={{ marginTop: 72, fontSize: 10.5, letterSpacing: 4, color: '#00d4ff33' }}>
             NEOPROXY.ART // THE SYSTEM RECOGNIZES YOU
           </div>
 
           <Link href="/manifesto" className="press" style={{
-            display: 'inline-block', marginTop: 32, fontSize: 9, letterSpacing: 2, color: '#00d4ff88', textDecoration: 'none',
+            display: 'inline-block', marginTop: 32, fontSize: 10.5, letterSpacing: 2, color: '#00d4ffaa', textDecoration: 'none',
           }}>
             → LEER EL MANIFIESTO COMPLETO
           </Link>

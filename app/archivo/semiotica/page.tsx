@@ -55,7 +55,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -66,7 +66,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -106,13 +106,13 @@ export default function SemioticaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-09 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -133,7 +133,7 @@ export default function SemioticaPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
               borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -145,7 +145,7 @@ export default function SemioticaPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -156,12 +156,12 @@ export default function SemioticaPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -174,7 +174,7 @@ export default function SemioticaPage() {
         <div id="sec-01" className={`sem-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="QUÉ ES UN SIGNO" sub="Ferdinand de Saussure, Curso de lingüística general (1916, póstumo)" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Saussure murió en 1913 sin publicar su teoría general del signo — el <em>Curso de
               lingüística general</em> que la expone salió en 1916, armado por sus alumnos Charles Bally y
               Albert Sechehaye a partir de apuntes de clase. Ahí define el{' '}
@@ -186,7 +186,7 @@ export default function SemioticaPage() {
               el sonido "árbol" y un árbol real; si lo hubiera, no habría idiomas distintos para la misma
               cosa.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo segundo, menos intuitivo: un signo no tiene valor por sí solo, lo tiene por su{' '}
               <strong style={{ color: '#fff' }}>diferencia</strong> con los demás signos del sistema. "Gato"
               significa lo que significa en parte porque no es "pato", ni "plato" — el sentido es
@@ -199,7 +199,7 @@ export default function SemioticaPage() {
         <div id="sec-02" className={`sem-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="LA TRÍADA DE PEIRCE" sub="Charles Sanders Peirce, 1839-1914 — tradición paralela a Saussure, no una corrección" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Mientras Saussure armaba su modelo en Europa, el filósofo y lógico estadounidense Charles
               Sanders Peirce desarrollaba el suyo por su cuenta, desde una tradición distinta (el
               pragmatismo, no la lingüística estructural) y con tres categorías en vez de dos:{' '}
@@ -209,7 +209,7 @@ export default function SemioticaPage() {
               la dejó), y <strong style={{ color: '#fff' }}>símbolo</strong> (conexión puramente
               convencional, aprendida — la inmensa mayoría de las palabras de cualquier idioma).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               No es que uno de los dos modelos esté "más evolucionado" que el otro — son dos formas
               distintas y compatibles de cortar el mismo problema, y ambas siguen citándose hoy según la
               pregunta: Saussure cuando interesa el sistema de diferencias (lingüística), Peirce cuando
@@ -223,7 +223,7 @@ export default function SemioticaPage() {
         <div id="sec-03" className={`sem-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="CONNOTACIÓN Y MITO" sub="Roland Barthes, Mitologías (1957)" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Barthes agrega una capa: todo signo tiene un significado literal (<strong style={{ color: '#fff' }}>
               denotación</strong>) y, encima, una capa de sentido cultural añadido que se vuelve tan
               habitual que deja de notarse como construida (<strong style={{ color: '#fff' }}>connotación</strong>).
@@ -231,7 +231,7 @@ export default function SemioticaPage() {
               una convención cultural, Barthes la llama, en sentido técnico, <strong style={{ color: '#fff' }}>
               "mito"</strong>.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Su ejemplo real más citado: la tapa de una revista francesa con un soldado negro saludando a
               la bandera francesa. Denota, literalmente, a un hombre saludando. Connota —sin decirlo, sin
               necesitar texto— que el imperio francés trata bien a todos sus súbditos sin distinción de
@@ -246,7 +246,7 @@ export default function SemioticaPage() {
         <div id="sec-04" className={`sem-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="EL SIMULACRO" sub="Jean Baudrillard, Simulacros y simulación (1981)" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=baudrillard" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Jean Baudrillard
               </Link>
@@ -257,7 +257,7 @@ export default function SemioticaPage() {
               hiperrealidad</strong>— el signo ya no remite a ningún original: es autosuficiente, y buscar
               "lo real" detrás de él es buscar algo que ya no existe como referencia separada.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Es la misma lógica de Saussure (sección I) —el signo vale por su relación con otros signos,
               no por una conexión directa con la cosa— llevada hasta el punto en que la cosa deja de ser
               necesaria del todo.
@@ -269,7 +269,7 @@ export default function SemioticaPage() {
         <div id="sec-05" className={`sem-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="BIOSEMIÓTICA" sub="el signo más allá de lo humano — campo de nicho, no consenso cerrado" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Thomas Sebeok acuñó en 1963 el término <strong style={{ color: '#fff' }}>zoosemiótica</strong>{' '}
               para estudiar la comunicación animal (cantos, feromonas, posturas) con las herramientas de
               Peirce — señales que funcionan como índice o icono sin que haga falta lenguaje humano detrás.
@@ -292,7 +292,7 @@ export default function SemioticaPage() {
         <div id="sec-06" className={`sem-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="VI" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/archivo/lenguaje" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Lenguaje
               </Link>
@@ -300,7 +300,7 @@ export default function SemioticaPage() {
               documento extiende esa misma línea hacia el sentido: no cómo se arma una oración
               gramaticalmente válida, sino cómo cualquier signo, gramatical o no, produce significado.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El glifo hexagrama que lleva DarkProxy en el canon (<em>public/canon/darkproxy-v1.png</em>)
               es, en los términos exactos de la sección II, un <strong style={{ color: '#fff' }}>
               símbolo</strong> puro de Peirce: no se parece a lo que representa, no hay conexión causal
@@ -313,7 +313,7 @@ export default function SemioticaPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-09 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

@@ -23,13 +23,13 @@ export default function ProxyIdPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ffaa', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PROXYVERSE
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-PXV-ID // IDENTIDAD DE PROCESO
         </div>
         <h1 style={{
@@ -38,14 +38,14 @@ export default function ProxyIdPage() {
         }}>
           PROXY ID
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 580, marginBottom: 40 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 580, marginBottom: 40 }}>
           No es una cuenta — es lo que este navegador acumuló de vos: con quién hablaste, qué generaste,
           hasta dónde llegaste. Todo vive en localStorage, nadie más lo ve. Cuanto más interactúes con
           el sistema, más preciso se pone.
         </p>
 
         {identity === null && (
-          <div style={{ fontSize: 10, color: '#3a4a60' }}>LEYENDO...</div>
+          <div style={{ fontSize: 11, color: '#3a4a60' }}>LEYENDO...</div>
         )}
 
         {identity !== null && !identity.hasAnySignal && (
@@ -53,7 +53,7 @@ export default function ProxyIdPage() {
             <div style={{ fontSize: 12, color: '#8fb8d6', lineHeight: 1.9, marginBottom: 16 }}>
               Todavía no hay señal. Tu Proxy ID se arma solo con lo que hagas en el sitio:
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 11 }}>
               <Link href="/proxyverse" className="press" style={{ color: CYAN }}>→ Hablá con un proceso en Proxyverse</Link>
               <Link href="/realidad-aumentada/neocam" className="press" style={{ color: CYAN }}>→ Sacate un retrato en NeoCam</Link>
               <Link href="/lab/proxygenesis" className="press" style={{ color: CYAN }}>→ Generá una pieza en Proxygenesis</Link>
@@ -70,7 +70,7 @@ export default function ProxyIdPage() {
               background: identity.dominant ? `${identity.dominant.color}0a` : 'rgba(255,255,255,0.02)',
               padding: 28, marginBottom: 28,
             }}>
-              <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 2, marginBottom: 8 }}>
+              <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 2, marginBottom: 8 }}>
                 TU PROCESO DOMINANTE
               </div>
               {identity.dominant ? (
@@ -81,42 +81,42 @@ export default function ProxyIdPage() {
                   }}>
                     {identity.dominant.name}
                   </div>
-                  <div style={{ fontSize: 10, color: '#8fb8d6', letterSpacing: 1, marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 1, marginBottom: 16 }}>
                     {identity.dominant.role}
                   </div>
-                  <div style={{ fontSize: 11, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.7, marginBottom: 18 }}>
+                  <div style={{ fontSize: 12, fontStyle: 'italic', color: '#c8daf0', lineHeight: 1.7, marginBottom: 18 }}>
                     "{identity.dominant.quote}"
                   </div>
-                  <Link href={`/proxyverse/${identity.dominant.id}`} className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <Link href={`/proxyverse/${identity.dominant.id}`} className="press" style={{ fontSize: 10.5, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER SU PERFIL →
                   </Link>
-                  <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
-                  <Link href="/proxyverse/voluntad" className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <span style={{ fontSize: 10.5, color: '#6f86a3' }}> · </span>
+                  <Link href="/proxyverse/voluntad" className="press" style={{ fontSize: 10.5, color: identity.dominant.color, letterSpacing: 1 }}>
                     LEER LA CARTA →
                   </Link>
-                  <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
-                  <Link href="/proxyverse/constelacion" className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <span style={{ fontSize: 10.5, color: '#6f86a3' }}> · </span>
+                  <Link href="/proxyverse/constelacion" className="press" style={{ fontSize: 10.5, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER CONSTELACIÓN →
                   </Link>
-                  <span style={{ fontSize: 9, color: '#4a6080' }}> · </span>
-                  <Link href="/proxyverse/topologia" className="press" style={{ fontSize: 9, color: identity.dominant.color, letterSpacing: 1 }}>
+                  <span style={{ fontSize: 10.5, color: '#6f86a3' }}> · </span>
+                  <Link href="/proxyverse/topologia" className="press" style={{ fontSize: 10.5, color: identity.dominant.color, letterSpacing: 1 }}>
                     VER TOPOLOGÍA →
                   </Link>
                 </>
               ) : (
-                <div style={{ fontSize: 11, color: '#8fb8d6' }}>Todavía sin un proceso dominante claro.</div>
+                <div style={{ fontSize: 12, color: '#8fb8d6' }}>Todavía sin un proceso dominante claro.</div>
               )}
             </div>
 
             {Object.keys(identity.scorePerAgent).length > 0 && (
               <div style={{ marginBottom: 32 }}>
-                <div style={{ fontSize: 9, color: CYAN, letterSpacing: 2, marginBottom: 12 }}>AFINIDAD POR PROCESO</div>
+                <div style={{ fontSize: 10.5, color: CYAN, letterSpacing: 2, marginBottom: 12 }}>AFINIDAD POR PROCESO</div>
                 {agents.filter(a => a.id !== 'darkproxy' && (identity.scorePerAgent[a.id] || 0) > 0).map(a => {
                   const score = identity.scorePerAgent[a.id] || 0
                   const pct = Math.round((score / maxScore) * 100)
                   return (
                     <div key={a.id} style={{ marginBottom: 10 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#8fb8d6', marginBottom: 3 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#8fb8d6', marginBottom: 3 }}>
                         <span>{a.name}</span><span style={{ color: a.color }}>{score} pts</span>
                       </div>
                       <div style={{ height: 6, background: '#0c1420', borderRadius: 2 }}>
@@ -128,7 +128,7 @@ export default function ProxyIdPage() {
               </div>
             )}
 
-            <div style={{ fontSize: 9, color: CYAN, letterSpacing: 2, marginBottom: 12 }}>REGISTRO</div>
+            <div style={{ fontSize: 10.5, color: CYAN, letterSpacing: 2, marginBottom: 12 }}>REGISTRO</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14 }}>
               <StatCard label="PIEZAS GENERADAS" value={identity.proxygenesisCount} href="/lab/proxygenesis/galeria" />
               <StatCard label="MENSAJES ENVIADOS" value={Object.values(identity.chatCounts).reduce((a, b) => a + b, 0)} href="/proxyverse" />
@@ -154,9 +154,9 @@ export default function ProxyIdPage() {
 function StatCard({ label, value, sub, href }: { label: string; value: string | number; sub?: string; href: string }) {
   return (
     <Link href={href} className="artifact-card" style={{ display: 'block', padding: 16, textDecoration: 'none', color: 'inherit' }}>
-      <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>{label}</div>
+      <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>{label}</div>
       <div style={{ fontSize: 22, color: CYAN, letterSpacing: 1 }}>{value}</div>
-      {sub && <div style={{ fontSize: 9, color: '#8fb8d6', marginTop: 4 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 10.5, color: '#8fb8d6', marginTop: 4 }}>{sub}</div>}
     </Link>
   )
 }

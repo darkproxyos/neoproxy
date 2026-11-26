@@ -121,11 +121,11 @@ export default function AgentWatcher() {
     >
       <Link
         href={`/proxyverse/${toast.agentId}`}
-        style={{ fontSize: 9, color, letterSpacing: 2, textDecoration: 'none', pointerEvents: 'auto' }}
+        style={{ fontSize: 10.5, color, letterSpacing: 2, textDecoration: 'none', pointerEvents: 'auto' }}
       >
         {agent?.name ?? toast.agentId.toUpperCase()}
       </Link>
-      <div style={{ fontSize: 11, color: '#c8daf0', lineHeight: 1.6, marginTop: 6 }}>
+      <div style={{ fontSize: 12, color: '#c8daf0', lineHeight: 1.6, marginTop: 6 }}>
         "{toast.line}"
       </div>
       <style>{`

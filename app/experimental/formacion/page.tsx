@@ -50,11 +50,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -177,13 +177,13 @@ export default function FormacionPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${METATRON_AMBER}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${METATRON_AMBER}66`, letterSpacing: 6, marginBottom: 16 }}>
           // NPX-XP-FORMACIÓN — QUINTA CRIATURA, COORDINACIÓN CENTRAL
         </div>
         <h1 style={{
@@ -192,7 +192,7 @@ export default function FormacionPage() {
         }}>
           FORMACIÓN
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
           El octaedro de wireframe es Metatron — no actúa, decide. Los otros cinco (cada uno con su
           color real) lo siguen por atracción, sin amontonarse por repulsión mutua (líder virtual +
           potenciales artificiales, ver tarjeta abajo — no son los boids de Enjambre, acá hay una
@@ -207,7 +207,7 @@ export default function FormacionPage() {
 
           <div>
             <div style={{ border: `1px solid ${METATRON_AMBER}33`, background: `${METATRON_AMBER}08`, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: `${METATRON_AMBER}cc`, marginBottom: 10 }}>// ESTADO</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${METATRON_AMBER}cc`, marginBottom: 10 }}>// ESTADO</div>
               <div style={{ marginBottom: 12 }}>
                 <span style={{
                   fontSize: 13, letterSpacing: 2, color: broadcasting ? METATRON_AMBER : '#4a6080',
@@ -216,16 +216,16 @@ export default function FormacionPage() {
                   {broadcasting ? 'EMITIENDO' : 'SILENCIO'}
                 </span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 10, marginBottom: 12 }}>
-                <div style={{ color: '#4a6080' }}>CAMBIOS DE ESTADO</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 11, marginBottom: 12 }}>
+                <div style={{ color: '#6f86a3' }}>CAMBIOS DE ESTADO</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{switches}</div>
-                <div style={{ color: '#4a6080' }}>DISTANCIA MEDIA AL LÍDER</div>
+                <div style={{ color: '#6f86a3' }}>DISTANCIA MEDIA AL LÍDER</div>
                 <div style={{ color: METATRON_AMBER, textAlign: 'right' }}>{spread.toFixed(2)}</div>
               </div>
-              <div style={{ fontSize: 8, letterSpacing: 1, color: '#4a6080', marginBottom: 6 }}>SIGUEN A M∴TRON:</div>
+              <div style={{ fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginBottom: 6 }}>SIGUEN A M∴TRON:</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {FOLLOWER_COLORS.map((c, i) => (
-                  <span key={c} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 8, color: '#8fb8d6' }}>
+                  <span key={c} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#8fb8d6' }}>
                     <span style={{ width: 8, height: 8, borderRadius: '50%', background: c, display: 'inline-block' }} />
                     {FOLLOWER_NAMES[i]}
                   </span>
@@ -233,7 +233,7 @@ export default function FormacionPage() {
               </div>
             </div>
 
-            <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
+            <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
               La repulsión entre seguidores nunca se apaga, con o sin líder — nadie choca contra nadie,
               haya o no coordinación.
             </p>

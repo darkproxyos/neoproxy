@@ -51,7 +51,7 @@ function DomainZone({ domain }: { domain: Domain }) {
           {domain.title}
         </h2>
         <p style={{
-          fontFamily: mono, fontSize: 11.5, lineHeight: 1.9, color: '#c8daf0', maxWidth: 640,
+          fontFamily: mono, fontSize: 12.5, lineHeight: 1.9, color: '#c8daf0', maxWidth: 640,
           marginBottom: 32, borderLeft: `1px solid ${domain.color}44`, paddingLeft: 18,
         }}>
           {domain.intro}
@@ -69,7 +69,7 @@ function DomainZone({ domain }: { domain: Domain }) {
               }}
             >
               <div style={{
-                fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: domain.color,
+                fontFamily: mono, fontSize: 11.5, letterSpacing: 2, color: domain.color,
                 marginBottom: 12, textTransform: 'uppercase',
               }}>
                 {sf.title}
@@ -77,7 +77,7 @@ function DomainZone({ domain }: { domain: Domain }) {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {sf.nodes.map((node) => {
                   const chipStyle: React.CSSProperties = {
-                    fontFamily: mono, fontSize: 9.5, letterSpacing: 0.3, lineHeight: 1.5,
+                    fontFamily: mono, fontSize: 11, letterSpacing: 0.3, lineHeight: 1.5,
                     padding: '5px 9px', borderRadius: 3,
                     border: `1px solid ${domain.color}${node.href ? 'aa' : '33'}`,
                     background: node.href ? `${domain.color}22` : `${domain.color}0f`,
@@ -88,9 +88,9 @@ function DomainZone({ domain }: { domain: Domain }) {
                     <>
                       <span>{node.label}</span>
                       {node.detail && (
-                        <span style={{ color: `${domain.color}99`, fontSize: 8.5 }}>· {node.detail}</span>
+                        <span style={{ color: `${domain.color}99`, fontSize: 10 }}>· {node.detail}</span>
                       )}
-                      {node.href && <span style={{ color: domain.color, fontSize: 8 }}>→</span>}
+                      {node.href && <span style={{ color: domain.color, fontSize: 10 }}>→</span>}
                     </>
                   )
                   return node.href ? (
@@ -117,13 +117,13 @@ export default function MapaConocimientoPage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '104px 24px 40px' }}>
           <Link href="/knowledge" className="press tap-ext" style={{
-            fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none',
+            fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${CYAN}88`, textDecoration: 'none',
             display: 'inline-block', marginBottom: 40,
           }}>
             ← VOLVER AL CODEX
           </Link>
 
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
             NPX-KNW-MAPA // CINCO TERRITORIOS, UN SOLO SABER
           </div>
           <h1 style={{
@@ -144,13 +144,13 @@ export default function MapaConocimientoPage() {
           </p>
 
           <nav style={{ border: `1px solid ${CYAN}22`, padding: '18px 22px', maxWidth: 640, marginBottom: 8 }}>
-            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${CYAN}66`, marginBottom: 12 }}>
+            <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${CYAN}66`, marginBottom: 12 }}>
               TERRITORIOS
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
               {DOMAINS.map((d) => (
                 <a key={d.id} href={`#${d.id}`} style={{
-                  fontFamily: mono, fontSize: 10, letterSpacing: 1, color: d.color, textDecoration: 'none',
+                  fontFamily: mono, fontSize: 11, letterSpacing: 1, color: d.color, textDecoration: 'none',
                   border: `1px solid ${d.color}55`, padding: '6px 12px', background: `${d.color}0d`,
                 }}>
                   {d.title}
@@ -163,10 +163,10 @@ export default function MapaConocimientoPage() {
         {DOMAINS.map((domain) => <DomainZone key={domain.id} domain={domain} />)}
 
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '56px 24px 120px' }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', marginBottom: 14 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', marginBottom: 14 }}>
             NOTA DE HONESTIDAD
           </div>
-          <p style={{ fontFamily: mono, fontSize: 10.5, lineHeight: 1.9, color: '#8a9ab0' }}>
+          <p style={{ fontFamily: mono, fontSize: 11.5, lineHeight: 1.9, color: '#8a9ab0' }}>
             Esta página está inspirada en la idea de los posters "Map of Mathematics / Physics / Chemistry
             / Computer Science / Biology" de Dominic Walliman (canal Domain of Science) — él los vende
             como pósters reales, y su ilustración, su texto exacto y su selección de íconos son su obra,

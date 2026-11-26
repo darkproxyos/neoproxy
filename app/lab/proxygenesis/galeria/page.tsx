@@ -39,19 +39,19 @@ export default function ProxygenesisGaleriaPage() {
         borderBottom: '1px solid #00ff9d44', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 20px', zIndex: 100, backdropFilter: 'blur(5px)',
       }}>
-        <span style={{ fontSize: 11, letterSpacing: 2, color: '#00ff9d' }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
+        <span style={{ fontSize: 12, letterSpacing: 2, color: '#00ff9d' }}>NEOPROXY // R&D // PROXYGENESIS.v1</span>
         <div style={{ display: 'flex', gap: 16 }}>
-          <Link href="/especimenes" className="press" style={{ color: '#4a6080', textDecoration: 'none', fontSize: 10, border: '1px solid #4a608044', padding: '2px 8px' }}>
+          <Link href="/especimenes" className="press" style={{ color: '#6f86a3', textDecoration: 'none', fontSize: 11, border: '1px solid #4a608044', padding: '2px 8px' }}>
             ESPECÍMENES CURADOS
           </Link>
-          <Link href="/lab/proxygenesis" className="press tap-ext" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 10, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
+          <Link href="/lab/proxygenesis" className="press tap-ext" style={{ color: '#00ff9d', textDecoration: 'none', fontSize: 11, border: '1px solid #00ff9d44', padding: '2px 8px' }}>
             ← VOLVER AL GENERADOR
           </Link>
         </div>
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '72px 24px 80px' }}>
-        <div style={{ fontSize: 9, color: '#00ff9d66', letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: '#00ff9d66', letterSpacing: 6, marginBottom: 16 }}>
           // PROXYGENESIS — NPX-GEN-GALLERY
         </div>
         <h1 style={{
@@ -60,18 +60,18 @@ export default function ProxygenesisGaleriaPage() {
         }}>
           GALERÍA LOCAL
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 48 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 560, marginBottom: 48 }}>
           Los últimos {specimens?.length ?? '…'} especímenes que guardaste en este navegador — vive en
           localStorage, nadie más la ve, no hay backend ni cuenta detrás. Guarda semilla y parámetros,
           no la malla: "CARGAR" vuelve a generar la pieza al instante con esos mismos valores.
         </p>
 
         {specimens === null && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>CARGANDO...</div>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1 }}>CARGANDO...</div>
         )}
 
         {specimens !== null && specimens.length === 0 && (
-          <div style={{ fontSize: 10, color: '#3a4a60', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, color: '#3a4a60', letterSpacing: 1 }}>
             SIN ESPECÍMENES GUARDADOS TODAVÍA. Generá algo en Proxygenesis y tocá "GUARDAR EN GALERÍA".
           </div>
         )}
@@ -84,21 +84,21 @@ export default function ProxygenesisGaleriaPage() {
                 <img src={s.thumbnail} alt={`Espécimen ${s.mode}`} style={{ width: '100%', height: 150, objectFit: 'cover', display: 'block', borderBottom: `1px solid ${color}33` }} />
                 <div style={{ padding: 16 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                    <span style={{ fontSize: 11, letterSpacing: 2, color }}>{MODE_LABEL[s.mode]}</span>
-                    <span style={{ fontSize: 8, color: '#4a6080' }}>{new Date(s.createdAt).toLocaleDateString('es-AR')}</span>
+                    <span style={{ fontSize: 12, letterSpacing: 2, color }}>{MODE_LABEL[s.mode]}</span>
+                    <span style={{ fontSize: 10, color: '#6f86a3' }}>{new Date(s.createdAt).toLocaleDateString('es-AR')}</span>
                   </div>
-                  <div style={{ fontSize: 9, color: '#4a6080', marginBottom: 14 }}>
+                  <div style={{ fontSize: 10.5, color: '#6f86a3', marginBottom: 14 }}>
                     NODOS: {s.nodes.toLocaleString()} // CARAS: {Math.round(s.faces).toLocaleString()}
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button onClick={() => handleLoad(s)} style={{
-                      flex: 1, fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 0', cursor: 'pointer',
+                      flex: 1, fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 0', cursor: 'pointer',
                       background: `${color}15`, border: `1px solid ${color}66`, color,
                     }}>
                       CARGAR
                     </button>
                     <button onClick={() => handleDelete(s.id)} style={{
-                      fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 12px', cursor: 'pointer',
+                      fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 12px', cursor: 'pointer',
                       background: 'transparent', border: '1px solid #ff2d5555', color: '#ff2d55',
                     }}>
                       BORRAR

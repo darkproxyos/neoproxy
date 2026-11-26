@@ -44,8 +44,8 @@ export default function FabricationPage() {
           <Link className="tap-ext"
             href="/"
             style={{
-              fontSize: 9,
-              color: '#4a6080',
+              fontSize: 10.5,
+              color: '#6f86a3',
               letterSpacing: 3,
               textDecoration: 'none'
             }}
@@ -56,7 +56,7 @@ export default function FabricationPage() {
           <Link
             href="/fabrication/cola"
             style={{
-              fontSize: 9,
+              fontSize: 10.5,
               color: '#39ff6a',
               letterSpacing: 3,
               textDecoration: 'none',
@@ -70,7 +70,7 @@ export default function FabricationPage() {
             <Link
               href="/fabrication/gallery"
               style={{
-                fontSize: 9,
+                fontSize: 10.5,
                 color: '#00d4ff',
                 letterSpacing: 3,
                 textDecoration: 'none',
@@ -94,7 +94,7 @@ export default function FabricationPage() {
         {/* Header */}
         <div style={{ marginBottom: 80 }}>
           <div style={{ 
-            fontSize: 9, 
+            fontSize: 10.5, 
             color: '#00d4ff44',
             letterSpacing: 6,
             marginBottom: 16
@@ -113,8 +113,8 @@ export default function FabricationPage() {
             FABRICATION
           </h1>
           <p style={{
-            fontSize: 11,
-            color: '#4a6080',
+            fontSize: 12,
+            color: '#6f86a3',
             letterSpacing: 2,
             lineHeight: 2,
             maxWidth: 600
@@ -133,7 +133,7 @@ export default function FabricationPage() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00ff9d', boxShadow: '0 0 10px #00ff9d' }} />
-            <span style={{ fontSize: 9, color: '#00ff9d', letterSpacing: 4 }}>SERVICIO ACTIVO // ACEPTANDO PEDIDOS</span>
+            <span style={{ fontSize: 10.5, color: '#00ff9d', letterSpacing: 4 }}>SERVICIO ACTIVO // ACEPTANDO PEDIDOS</span>
           </div>
 
           <h2 style={{ fontSize: 24, color: '#fff', letterSpacing: 1, lineHeight: 1.5, marginBottom: 18, maxWidth: 620 }}>
@@ -159,7 +159,7 @@ export default function FabricationPage() {
               'Pieza única o serie corta',
             ].map(item => (
               <div key={item} style={{
-                fontSize: 10, color: '#c8daf0', letterSpacing: 0.3, lineHeight: 1.6,
+                fontSize: 11, color: '#c8daf0', letterSpacing: 0.3, lineHeight: 1.6,
                 borderLeft: '2px solid #00d4ff55', paddingLeft: 10,
               }}>
                 {item}
@@ -174,7 +174,7 @@ export default function FabricationPage() {
               rel="noopener noreferrer"
               className="cyber-btn"
               style={{
-                display: 'inline-block', fontSize: 11, color: '#00d4ff', letterSpacing: 3,
+                display: 'inline-block', fontSize: 12, color: '#00d4ff', letterSpacing: 3,
                 textDecoration: 'none', border: '1px solid #00d4ff', padding: '14px 32px',
                 background: '#00d4ff0f',
               }}
@@ -184,14 +184,14 @@ export default function FabricationPage() {
             <Link
               href="/imprimir"
               className="press"
-              style={{ fontSize: 10, color: '#8fa8c4', letterSpacing: 1.5, textDecoration: 'none' }}
+              style={{ fontSize: 11, color: '#8fa8c4', letterSpacing: 1.5, textDecoration: 'none' }}
             >
               CÓMO SE PIDE, PLA VS RESINA →
             </Link>
             <Link
               href="/artifacts"
               className="press"
-              style={{ fontSize: 10, color: '#8fa8c4', letterSpacing: 1.5, textDecoration: 'none' }}
+              style={{ fontSize: 11, color: '#8fa8c4', letterSpacing: 1.5, textDecoration: 'none' }}
             >
               VER TRABAJOS REALIZADOS →
             </Link>
@@ -201,8 +201,8 @@ export default function FabricationPage() {
         {/* MUESTRA DE TRABAJO — prueba visual inmediata, piezas reales ya hechas */}
         <div style={{ marginBottom: 80 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 12, marginBottom: 22 }}>
-            <div style={{ fontSize: 10, color: '#00ffcc', letterSpacing: 4 }}>TRABAJOS_DESTACADOS</div>
-            <Link href="/artifacts" className="press" style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1.5, textDecoration: 'none' }}>
+            <div style={{ fontSize: 11, color: '#00ffcc', letterSpacing: 4 }}>TRABAJOS_DESTACADOS</div>
+            <Link href="/artifacts" className="press" style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1.5, textDecoration: 'none' }}>
               VER GALERÍA COMPLETA →
             </Link>
           </div>
@@ -249,13 +249,13 @@ export default function FabricationPage() {
           display: 'block', marginBottom: 80, padding: '20px 24px',
           border: `1px solid ${genos.color}33`, background: `${genos.color}0a`, textDecoration: 'none',
         }}>
-          <div style={{ fontSize: 9, color: genos.color, letterSpacing: 2, marginBottom: 8 }}>
+          <div style={{ fontSize: 10.5, color: genos.color, letterSpacing: 2, marginBottom: 8 }}>
             {genos.name} // {genos.role}
           </div>
-          <p style={{ fontSize: 11, color: '#c8daf0', letterSpacing: 0.5, lineHeight: 1.8, fontStyle: 'italic' }}>
+          <p style={{ fontSize: 12, color: '#c8daf0', letterSpacing: 0.5, lineHeight: 1.8, fontStyle: 'italic' }}>
             "{genos.quote}"
           </p>
-          <div style={{ fontSize: 9, color: `${genos.color}aa`, letterSpacing: 1, marginTop: 10 }}>
+          <div style={{ fontSize: 10.5, color: `${genos.color}aa`, letterSpacing: 1, marginTop: 10 }}>
             VER SU PERFIL EN PROXYVERSE →
           </div>
         </Link>
@@ -267,8 +267,8 @@ export default function FabricationPage() {
           borderTop: '1px solid rgba(0, 212, 255, 0.1)'
         }}>
           <div style={{
-            fontSize: 10,
-            color: '#4a6080',
+            fontSize: 11,
+            color: '#6f86a3',
             letterSpacing: 3,
             marginBottom: 32
           }}>
@@ -282,7 +282,7 @@ export default function FabricationPage() {
               className="cyber-btn"
               style={{
                 display: 'inline-block',
-                fontSize: 10,
+                fontSize: 11,
                 color: '#00d4ff',
                 letterSpacing: 4,
                 textDecoration: 'none',
@@ -296,8 +296,8 @@ export default function FabricationPage() {
               href="/shop/drop01"
               style={{
                 display: 'inline-block',
-                fontSize: 10,
-                color: '#4a6080',
+                fontSize: 11,
+                color: '#6f86a3',
                 letterSpacing: 4,
                 textDecoration: 'none',
                 border: '1px solid #0f1f35',
@@ -312,7 +312,7 @@ export default function FabricationPage() {
         {/* Footer */}
         <div style={{ 
           textAlign: 'center',
-          fontSize: 8, 
+          fontSize: 10, 
           color: '#00d4ff22',
           letterSpacing: 3,
           marginTop: 80

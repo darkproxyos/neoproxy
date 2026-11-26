@@ -89,7 +89,7 @@ export default function Roulette({
 
   return (
     <div style={{ border: `1px solid ${COLOR}33`, background: `${COLOR}08`, padding: '24px 20px' }}>
-      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
+      <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
         RULETA_ONTOLÓGICA
       </div>
 
@@ -113,7 +113,7 @@ export default function Roulette({
             onClick={() => setBetType(opt.id)}
             disabled={spinning}
             style={{
-              fontFamily: mono, fontSize: 9, letterSpacing: 0.5, padding: '8px 10px', cursor: spinning ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 10.5, letterSpacing: 0.5, padding: '8px 10px', cursor: spinning ? 'default' : 'pointer',
               background: betType === opt.id ? `${COLOR}33` : 'transparent',
               color: betType === opt.id ? COLOR : '#8fb8d6',
               border: `1px solid ${betType === opt.id ? COLOR : COLOR + '33'}`,
@@ -126,7 +126,7 @@ export default function Roulette({
 
       {betType === 'numero' && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 14 }}>
-          <span style={{ fontFamily: mono, fontSize: 9, color: '#8fb8d6' }}>APOSTAR AL</span>
+          <span style={{ fontFamily: mono, fontSize: 10.5, color: '#8fb8d6' }}>APOSTAR AL</span>
           <input
             type="number" min={0} max={36} value={targetNumber}
             disabled={spinning}
@@ -146,7 +146,7 @@ export default function Roulette({
             onClick={() => setBet(b)}
             disabled={spinning}
             style={{
-              fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: spinning ? 'default' : 'pointer',
+              fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '8px 14px', cursor: spinning ? 'default' : 'pointer',
               background: bet === b ? `${COLOR}33` : 'transparent', color: bet === b ? COLOR : '#8fb8d6',
               border: `1px solid ${bet === b ? COLOR : COLOR + '33'}`,
             }}
@@ -160,7 +160,7 @@ export default function Roulette({
         onClick={spin}
         disabled={spinning || balance < bet}
         style={{
-          display: 'block', width: '100%', fontFamily: mono, fontSize: 11, letterSpacing: 3, padding: '14px',
+          display: 'block', width: '100%', fontFamily: mono, fontSize: 12, letterSpacing: 3, padding: '14px',
           background: spinning || balance < bet ? 'transparent' : `${COLOR}22`,
           color: spinning || balance < bet ? '#4a6080' : COLOR,
           border: `1px solid ${spinning || balance < bet ? '#4a6080' : COLOR}`,
@@ -172,7 +172,7 @@ export default function Roulette({
 
       {message && (
         <div style={{
-          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 10, letterSpacing: 2,
+          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 11, letterSpacing: 2,
           color: message.includes('SIN') ? '#4a6080' : '#00ff9d',
         }}>
           {message}

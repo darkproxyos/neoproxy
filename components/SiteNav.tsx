@@ -272,7 +272,7 @@ export default function SiteNav() {
                         isGroup(item) ? (
                           <div key={item.label} style={{ padding: '6px 0' }}>
                             <div style={{
-                              fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#4a6080',
+                              fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#6f86a3',
                               padding: '6px 18px', whiteSpace: 'nowrap',
                             }}>
                               {item.label}
@@ -319,7 +319,7 @@ export default function SiteNav() {
           if (!entry.live) {
             return (
               <span key={entry.label} title="Próximamente" style={{
-                fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#5a7290', cursor: 'default', whiteSpace: 'nowrap',
+                fontFamily: mono, fontSize: 12, letterSpacing: 2, color: '#6f86a3', cursor: 'default', whiteSpace: 'nowrap',
               }}>
                 {entry.label}
               </span>
@@ -362,7 +362,7 @@ export default function SiteNav() {
             <div style={{ position: 'relative', padding: '8px 0' }}>
               {rest.map((e) => isGroup(e) ? (
                 <div key={e.label} style={{ padding: '4px 0' }}>
-                  <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#7f96b2', padding: '8px 18px 4px', whiteSpace: 'nowrap' }}>{e.label}</div>
+                  <div style={{ fontFamily: mono, fontSize: 11.5, letterSpacing: 2, color: '#7f96b2', padding: '8px 18px 4px', whiteSpace: 'nowrap' }}>{e.label}</div>
                   {e.items.filter((it): it is NavLeaf => !isGroup(it)).map((it) => (
                     <div key={it.href} className="nav-dropdown-item"><NavLink item={it} pathname={pathname} activeColor={NAV_COLORS[e.label] ?? accent} style={{ ...itemStyle, paddingLeft: 30 }} /></div>
                   ))}
@@ -416,12 +416,12 @@ export default function SiteNav() {
 
       <div className="site-nav-side" style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
         <div className="site-nav-session" style={{
-          fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 1.5, whiteSpace: 'nowrap',
+          fontFamily: mono, fontSize: 11, color: '#00d4ff', letterSpacing: 1.5, whiteSpace: 'nowrap',
         }}>
           <SessionBlock compact />
         </div>
         <Link href="/shop" className="press" style={{
-          fontFamily: mono, fontSize: 10, color: '#00d4ff', letterSpacing: 3, textDecoration: 'none',
+          fontFamily: mono, fontSize: 11, color: '#00d4ff', letterSpacing: 3, textDecoration: 'none',
           border: '1px solid #00d4ff66', padding: '8px 16px', flexShrink: 0
         }}>
           TIENDA
@@ -458,7 +458,7 @@ export default function SiteNav() {
           <div className="nav-dropdown-texture" aria-hidden style={{ position: 'fixed', inset: 0 }} />
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-            <div style={{ fontFamily: mono, fontSize: 8, letterSpacing: 2, color: '#4a6080' }}>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: '#6f86a3' }}>
               {sessionAgent ? (
                 <>
                   <span style={{ color: accent }}>POSESIÓN DE SESIÓN</span>
@@ -502,7 +502,7 @@ export default function SiteNav() {
                     display: 'flex', alignItems: 'center', gap: 8,
                     margin: idx === 0 ? '0 0 2px 4px' : '16px 0 2px 4px',
                   }}>
-                    <span style={{ fontFamily: mono, fontSize: 8, letterSpacing: 3, color: '#3a4a60' }}>{groupLabel}</span>
+                    <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: '#3a4a60' }}>{groupLabel}</span>
                     <div style={{ flex: 1, height: 1, background: '#3a4a6055' }} />
                   </div>
                 ) : null
@@ -519,7 +519,7 @@ export default function SiteNav() {
                         fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '10px 4px',
                         display: 'flex', alignItems: 'center', gap: 10,
                       }}>
-                        <span style={{ fontSize: 10, color: '#4a6080', width: 16, flexShrink: 0 }}>{num}</span>
+                        <span style={{ fontSize: 11, color: '#6f86a3', width: 16, flexShrink: 0 }}>{num}</span>
                         <NavIcon label={entry.label} color={sectionColor} />
                         <span style={{ flex: 1, color: groupIsActive ? sectionColor : '#d7e4f0' }}>{entry.label}</span>
                         <LifeNode color={sectionColor} active={groupIsActive} />
@@ -528,7 +528,7 @@ export default function SiteNav() {
                         isGroup(item) ? (
                           <div key={item.label} className="nav-item-in" style={{ marginBottom: 8, animationDelay: delay() }}>
                             <div style={{
-                              fontFamily: mono, fontSize: 11, letterSpacing: 1.5, color: '#5a7290', padding: '8px 20px',
+                              fontFamily: mono, fontSize: 12, letterSpacing: 1.5, color: '#6f86a3', padding: '8px 20px',
                             }}>
                               {item.label}
                             </div>
@@ -575,13 +575,13 @@ export default function SiteNav() {
                       key={entry.label}
                       className="nav-item-in"
                       style={{
-                        fontFamily: mono, fontSize: 15, letterSpacing: 2, color: '#5a7290',
+                        fontFamily: mono, fontSize: 15, letterSpacing: 2, color: '#6f86a3',
                         padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
                         animationDelay: delay(),
                       }}
                     >
-                      <span style={{ fontSize: 10, color: '#4a6080', width: 16, flexShrink: 0 }}>{num}</span>
-                      {entry.label} <span style={{ fontSize: 10, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
+                      <span style={{ fontSize: 11, color: '#6f86a3', width: 16, flexShrink: 0 }}>{num}</span>
+                      {entry.label} <span style={{ fontSize: 11, marginLeft: 8 }}>· PRÓXIMAMENTE</span>
                     </div>
                   )
                   return divider ? [divider, content] : [content]
@@ -598,7 +598,7 @@ export default function SiteNav() {
                         padding: '12px 4px', minHeight: 44, display: 'flex', alignItems: 'center', gap: 10,
                       }}
                     >
-                      <span style={{ fontSize: 10, color: '#4a6080', width: 16, flexShrink: 0 }}>{num}</span>
+                      <span style={{ fontSize: 11, color: '#6f86a3', width: 16, flexShrink: 0 }}>{num}</span>
                       <NavIcon label={entry.label} color={sectionColor} />
                       <span style={{
                         flex: 1, color: active ? sectionColor : '#d7e4f0',
@@ -617,7 +617,7 @@ export default function SiteNav() {
 
           <div style={{
             position: 'relative', zIndex: 1, marginTop: 20, padding: '14px 14px 2px',
-            border: `1px solid ${accent}22`, fontFamily: mono, fontSize: 11, color: accent, letterSpacing: 1.5,
+            border: `1px solid ${accent}22`, fontFamily: mono, fontSize: 12, color: accent, letterSpacing: 1.5,
           }}>
             <span aria-hidden style={{ position: 'absolute', top: -1, left: -1, width: 7, height: 7, borderTop: `1px solid ${accent}aa`, borderLeft: `1px solid ${accent}aa` }} />
             <span aria-hidden style={{ position: 'absolute', top: -1, right: -1, width: 7, height: 7, borderTop: `1px solid ${accent}aa`, borderRight: `1px solid ${accent}aa` }} />

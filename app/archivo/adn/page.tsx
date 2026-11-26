@@ -55,7 +55,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -66,7 +66,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -110,13 +110,13 @@ export default function AdnPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-15 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -137,7 +137,7 @@ export default function AdnPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660,
               borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -149,7 +149,7 @@ export default function AdnPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -160,12 +160,12 @@ export default function AdnPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -178,14 +178,14 @@ export default function AdnPage() {
         <div id="sec-01" className={`adn-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="EL DESCUBRIMIENTO DE LA ESTRUCTURA" sub="Nature, 1953 — y el crédito que tardó décadas en repartirse bien" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               James Watson y Francis Crick publicaron el modelo de la doble hélice en <em>Nature</em> en
               1953, en un paper de apenas una página que terminaba con una de las frases más
               deliberadamente subestimadas de la historia de la ciencia: "no se nos ha escapado que el
               apareamiento específico que postulamos sugiere inmediatamente un posible mecanismo de copia
               para el material genético". No llegaron ahí solos ni desde cero.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Rosalind Franklin, trabajando en el King's College de Londres, produjo los datos de
               difracción de rayos X más decisivos para llegar a ese modelo — en particular la imagen
               conocida como "Foto 51", una difracción nítida de ADN en su forma B que mostraba con
@@ -211,7 +211,7 @@ export default function AdnPage() {
         <div id="sec-02" className={`adn-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="ESTRUCTURA QUÍMICA" sub="la doble hélice, en detalle real" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El ADN (ácido desoxirribonucleico) es un polímero de dos cadenas enrolladas entre sí en
               hélice, cada una formada por una secuencia de <strong style={{ color: '#fff' }}>nucleótidos</strong>.
               Cada nucleótido tiene tres partes: un azúcar (desoxirribosa), un grupo fosfato, y una de
@@ -219,14 +219,14 @@ export default function AdnPage() {
               (T), citosina (C) y guanina (G). El azúcar y el fosfato forman el esqueleto estructural de
               cada cadena; las bases sobresalen hacia el centro de la hélice.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Lo que mantiene unidas a las dos cadenas es la <strong style={{ color: '#fff' }}>complementariedad
               de bases</strong>: adenina solo empareja con timina (dos puentes de hidrógeno), citosina solo
               con guanina (tres puentes de hidrógeno) — nunca A con C, ni G con T. Esta regla, tan simple,
               es la que hace posible todo lo que sigue en este documento: si conocés la secuencia de una
               cadena, la otra queda determinada por completo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Las dos cadenas son <strong style={{ color: '#fff' }}>antiparalelas</strong>: corren en
               direcciones químicas opuestas (una va 5'→3', la otra 3'→5', en la nomenclatura real de los
               carbonos del azúcar) — no es un detalle decorativo, es justamente lo que permite que las
@@ -240,7 +240,7 @@ export default function AdnPage() {
         <div id="sec-03" className={`adn-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="EL CÓDIGO GENÉTICO" sub="descifrado durante los años 60" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La información se lee en tripletes de bases llamados <strong style={{ color: '#fff' }}>codones</strong>.
               Hay 64 codones posibles (4³) para codificar 20 aminoácidos estándar más las señales de inicio
               y de corte (stop) de una proteína — lo que significa que el código es{' '}
@@ -249,7 +249,7 @@ export default function AdnPage() {
               distintos). Esto no es ineficiencia, funciona como una capa real de tolerancia a errores
               puntuales de copia.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El descifrado real del código —qué triplete corresponde a qué aminoácido— se atribuye en
               buena parte a Marshall Nirenberg y Heinrich Matthaei, con experimentos clave publicados desde
               1961, y a Har Gobind Khorana, que completó buena parte del mapeo restante durante esa misma
@@ -257,7 +257,7 @@ export default function AdnPage() {
               este trabajo (junto con Robert Holley, por su trabajo sobre la estructura del ARN de
               transferencia).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El código es, con pocas excepciones conocidas (algunas variantes menores en mitocondrias y en
               ciertos microorganismos), prácticamente <strong style={{ color: '#fff' }}>universal</strong>:
               el mismo triplete codifica el mismo aminoácido en una bacteria, un hongo, una planta y un ser
@@ -271,7 +271,7 @@ export default function AdnPage() {
         <div id="sec-04" className={`adn-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="REPLICACIÓN" sub="semiconservativa, confirmada experimentalmente en 1958" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La enzima <strong style={{ color: '#fff' }}>ADN polimerasa</strong> recorre cada cadena
               separada de la hélice original y construye una cadena nueva complementaria, base por base,
               siguiendo la misma regla de emparejamiento de la sección II. El resultado son dos moléculas
@@ -279,7 +279,7 @@ export default function AdnPage() {
               sintetizada — eso es exactamente lo que se llama un mecanismo{' '}
               <strong style={{ color: '#fff' }}>semiconservativo</strong>.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Watson y Crick ya habían propuesto este mecanismo como la consecuencia lógica más directa de
               su propio modelo estructural en 1953, pero seguía siendo una hipótesis hasta que Matthew
               Meselson y Franklin Stahl la confirmaron experimentalmente en 1958: marcaron ADN de bacterias
@@ -296,7 +296,7 @@ export default function AdnPage() {
         <div id="sec-05" className={`adn-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="DEL ADN A LA PROTEÍNA" sub="el 'dogma central' de Francis Crick" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Transcripción</strong>: la ARN polimerasa copia un gen del
               ADN a una molécula de ARN mensajero (ARNm), usando uracilo en vez de timina pero con la misma
               lógica de complementariedad de bases.{' '}
@@ -305,7 +305,7 @@ export default function AdnPage() {
               cada codón — va entregando los aminoácidos en el orden correcto para que se encadenen en una
               proteína.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Francis Crick formuló esto como el <strong style={{ color: '#fff' }}>dogma central</strong>
               de la biología molecular: la información fluye de ADN a ARN y de ARN a proteína, pero no al
               revés — una proteína no puede "escribirse" de vuelta en una secuencia de ADN. Hay excepciones
@@ -320,7 +320,7 @@ export default function AdnPage() {
         <div id="sec-06" className={`adn-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="EL PROYECTO GENOMA HUMANO" sub="de un borrador en 2000 a una secuencia de verdad completa en 2022" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El Proyecto Genoma Humano (un consorcio internacional público, compitiendo en paralelo con el
               esfuerzo privado de Celera Genomics liderado por Craig Venter) anunció un borrador conjunto de
               la secuencia en el año 2000, y declaró la secuencia "completa" en 2003 — fecha elegida
@@ -336,7 +336,7 @@ export default function AdnPage() {
               (T2T)— publicó la primera secuencia verdaderamente completa, de extremo a extremo, de un
               genoma humano, usando tecnologías de secuenciación de lectura larga que no existían en 2003.
             </Caption>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '16px 0 0' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '16px 0 0' }}>
               La caída de costo es, en sí misma, uno de los datos más citados de toda la genómica aplicada:
               secuenciar un genoma humano completo hoy cuesta, según el proveedor y la profundidad de
               lectura, del orden de unos pocos cientos de dólares — una caída de varios órdenes de magnitud
@@ -350,7 +350,7 @@ export default function AdnPage() {
         <div id="sec-07" className={`adn-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="CRISPR" sub="de defensa bacteriana a terapia humana aprobada" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               CRISPR (Clustered Regularly Interspaced Short Palindromic Repeats) no se inventó de cero: es
               un sistema inmune real que las bacterias usan desde hace millones de años para defenderse de
               virus, guardando fragmentos del ADN viral como una memoria para reconocerlo y cortarlo si
@@ -358,7 +358,7 @@ export default function AdnPage() {
               estas secuencias repetidas en arqueas y bacterias durante los años 90, antes incluso de que el
               nombre "CRISPR" se formalizara como tal a comienzos de los 2000.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Jennifer Doudna y Emmanuelle Charpentier demostraron en 2012 que el sistema CRISPR-Cas9 podía
               programarse para cortar cualquier secuencia de ADN deseada, no solo la de un virus — convertir
               una defensa bacteriana específica en una herramienta de edición genética de propósito general,
@@ -380,7 +380,7 @@ export default function AdnPage() {
         <div id="sec-08" className={`adn-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="ADN NO CODIFICANTE Y EPIGENÉTICA" sub="el debate que la propia genética todavía no cerró" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Solo una fracción pequeña del genoma humano —del orden del 1-2%— codifica directamente
               proteínas. El resto incluye regiones regulatorias con función real y bien establecida
               (promotores, potenciadores, genes que producen ARN no codificante con roles conocidos en la
@@ -396,7 +396,7 @@ export default function AdnPage() {
               biológica real" — no es lo mismo, y tratarlos como sinónimos fue, en sí mismo, motivo de
               crítica científica pública.
             </Caption>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '16px 0 0' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '16px 0 0' }}>
               La <strong style={{ color: '#fff' }}>epigenética</strong> es una capa real y bien
               establecida de regulación que no cambia la secuencia de bases: la metilación del ADN (agregar
               un grupo metilo a ciertas bases, típicamente silenciando la expresión de un gen cercano) y la
@@ -412,7 +412,7 @@ export default function AdnPage() {
         <div id="sec-09" className={`adn-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="ADN COMO INFORMACIÓN" sub="la analogía real, y sus límites reales" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El ADN comparte con cualquier código digital la lógica de{' '}
               <strong style={{ color: '#fff' }}>información discreta codificada en una secuencia</strong>:
               un alfabeto finito (cuatro bases, en vez de dos dígitos binarios), leído en unidades fijas
@@ -439,7 +439,7 @@ export default function AdnPage() {
         <div id="sec-10" className={`adn-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="X" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge/sintesis" style={{ color: '#fff', textDecoration: 'underline' }}>Síntesis</Link>{' '}
               ya planteó que todo este Codex pregunta, en registros distintos, si la realidad es materia o
               información codificada en un límite. El ADN es, de los casos reales de este archivo, el más
@@ -447,7 +447,7 @@ export default function AdnPage() {
               código que se copia, se lee y se traduce — no una metáfora sobre información, el caso real
               más antiguo y más probado de información codificada en materia que se conoce.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Y la vida tal como la conocemos tampoco llegó a su forma actual en un solo paso: la
               simbiogénesis de{' '}
               <Link href="/knowledge?entry=margulis" style={{ color: '#fff', textDecoration: 'underline' }}>
@@ -463,7 +463,7 @@ export default function AdnPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-15 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

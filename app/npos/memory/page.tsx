@@ -4,11 +4,11 @@ export default function MemoryLab() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', zIndex: 1 }}>
       <div style={{ maxWidth: '760px', width: '100%' }}>
-        <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.65rem', color: '#4a6080', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.8rem' }}>// memory</div>
+        <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.65rem', color: '#6f86a3', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.8rem' }}>// memory</div>
         <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 800, color: 'white', marginBottom: '1.5rem', lineHeight: 1 }}>
           Memory <span style={{ color: '#ff3cac' }}>Lab</span>
         </h1>
-        <p style={{ color: '#4a6080', maxWidth: '480px', marginBottom: '3rem' }}>
+        <p style={{ color: '#6f86a3', maxWidth: '480px', marginBottom: '3rem' }}>
           El módulo más único del sistema. Un archivo vivo de conversaciones con IA, procesos creativos, errores y descubrimientos. El diario del OS.
         </p>
 
@@ -21,12 +21,12 @@ export default function MemoryLab() {
 
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           {['proceso', 'errores', 'descubrimientos', 'diario', 'IndexedDB', 'agentes'].map(t => (
-            <span key={t} style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.6rem', padding: '0.2rem 0.6rem', border: '1px solid #0f1f35', color: '#4a6080' }}>{t}</span>
+            <span key={t} style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.6rem', padding: '0.2rem 0.6rem', border: '1px solid #0f1f35', color: '#6f86a3' }}>{t}</span>
           ))}
         </div>
 
         <div style={{ marginTop: '3rem' }}>
-          <Link className="tap-ext" href="/npos" style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.75rem', color: '#4a6080', textDecoration: 'none' }}>← NPos OS</Link>
+          <Link className="tap-ext" href="/npos" style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.75rem', color: '#6f86a3', textDecoration: 'none' }}>← NPos OS</Link>
         </div>
       </div>
     </div>

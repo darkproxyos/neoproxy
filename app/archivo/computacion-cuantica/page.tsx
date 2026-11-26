@@ -58,7 +58,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -69,7 +69,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT_BRIGHT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -113,13 +113,13 @@ export default function ComputacionCuanticaPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT_BRIGHT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT_BRIGHT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT_BRIGHT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT_BRIGHT}66`, marginBottom: 16 }}>
             NPX-ARC-13 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -140,7 +140,7 @@ export default function ComputacionCuanticaPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 680,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 680,
               borderLeft: `1px solid ${ACCENT_BRIGHT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -154,7 +154,7 @@ export default function ComputacionCuanticaPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT_BRIGHT}99`, border: `1px solid ${ACCENT_BRIGHT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -165,12 +165,12 @@ export default function ComputacionCuanticaPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT_BRIGHT}22`, padding: '20px 24px', maxWidth: 700 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT_BRIGHT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT_BRIGHT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT_BRIGHT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -183,7 +183,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-01" className={`cuant-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="EL BIT CLÁSICO VS. EL QUBIT" sub="superposición — física establecida, sin controversia" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un bit clásico vale 0 o 1, siempre, en cualquier momento en que se lo consulte — es un
               interruptor con dos posiciones y nada intermedio. Un <strong style={{ color: '#fff' }}>qubit</strong>{' '}
               (quantum bit) puede existir en una <strong style={{ color: '#fff' }}>superposición</strong>:
@@ -195,7 +195,7 @@ export default function ComputacionCuanticaPage() {
               que su estado real, antes de medir, es ese vector en un espacio de dos dimensiones complejas,
               y la medición lo colapsa a uno de los dos resultados clásicos de forma irreversible.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La representación geométrica estándar de un único qubit es la{' '}
               <strong style={{ color: '#fff' }}>esfera de Bloch</strong>: cualquier estado puro de un qubit
               corresponde a un punto en la superficie de una esfera de radio 1, con los polos norte y sur
@@ -204,7 +204,7 @@ export default function ComputacionCuanticaPage() {
               análogo clásico en absoluto — esa fase es, en buena medida, el recurso extra que la
               computación cuántica explota y que un bit clásico simplemente no tiene dónde guardar).
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esto por sí solo no es lo que hace poderosa a la computación cuántica — un bit clásico con
               ruido también puede describirse con una distribución de probabilidad. Lo que de verdad
               distingue al cómputo cuántico aparece cuando se combinan muchos qubits (sección II en
@@ -220,7 +220,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-02" className={`cuant-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="ENTRELAZAMIENTO — DE EINSTEIN A ZEILINGER" sub="de objeción filosófica a Premio Nobel de Física 2022" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En 1935, Albert Einstein, Boris Podolsky y Nathan Rosen publicaron el paper hoy conocido
               como <strong style={{ color: '#fff' }}>EPR</strong>: un argumento pensado como objeción a la
               mecánica cuántica, no como celebración de ella. Mostraron que la teoría predice que dos
@@ -232,7 +232,7 @@ export default function ComputacionCuanticaPage() {
               "variables ocultas" locales que explicaran la correlación sin violar que nada viaja más rápido
               que la luz.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Durante casi tres décadas esto fue, en la práctica, una discusión filosófica sin forma de
               zanjarse experimentalmente — hasta que el físico John Stewart Bell, en 1964, derivó lo que
               hoy se llama las <strong style={{ color: '#fff' }}>desigualdades de Bell</strong>: una
@@ -240,7 +240,7 @@ export default function ComputacionCuanticaPage() {
               cumplir, y que la mecánica cuántica predice que se viola. De golpe, una pregunta de
               interpretación filosófica se volvió una pregunta de laboratorio con una respuesta medible.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Alain Aspect realizó, en 1982, uno de los primeros experimentos rigurosos que mostraron una
               violación real de las desigualdades de Bell, cerrando objeciones experimentales importantes
               de esa época. Experimentos posteriores — con participación central de John Clauser y Anton
@@ -257,7 +257,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-03" className={`cuant-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="PUERTAS CUÁNTICAS Y CIRCUITOS" sub="el análogo reversible de la lógica booleana clásica" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una computadora clásica se programa componiendo puertas lógicas (AND, OR, NOT) sobre bits. Una
               computadora cuántica se programa componiendo <strong style={{ color: '#fff' }}>puertas
               cuánticas</strong> sobre qubits — con una diferencia estructural importante: toda puerta
@@ -267,7 +267,7 @@ export default function ComputacionCuanticaPage() {
               entradas a partir de la salida), toda puerta cuántica tiene una inversa exacta.
             </p>
             <div style={{ overflowX: 'auto', marginBottom: 16 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10.5 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${ACCENT_BRIGHT}44` }}>
                     <th style={{ textAlign: 'left', padding: '6px 10px', color: ACCENT_BRIGHT }}>PUERTA</th>
@@ -299,7 +299,7 @@ export default function ComputacionCuanticaPage() {
                 </tbody>
               </table>
             </div>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Una secuencia de Hadamard seguida de CNOT sobre dos qubits inicializados en |00⟩ es, de hecho,
               la receta de circuito más citada para producir un par entrelazado (un "par de Bell") — la
               demostración de laboratorio más directa de lo descrito en la sección II.
@@ -311,7 +311,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-04" className={`cuant-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="ALGORITMOS CON VENTAJA DEMOSTRADA" sub="Shor (1994) y Grover (1996) — matemática probada, no proyección" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Peter Shor publicó en 1994 un algoritmo que factoriza números enteros grandes en tiempo
               polinomial en una computadora cuántica — un problema para el cual no se conoce ningún
               algoritmo clásico eficiente, y del cual depende directamente la seguridad de{' '}
@@ -323,7 +323,7 @@ export default function ComputacionCuanticaPage() {
               una máquina real capaz de ejecutarlo a la escala necesaria para romper RSA de uso actual es,
               precisamente, el tema de las secciones V y VII.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lov Grover publicó en 1996 un algoritmo distinto: una forma de buscar un elemento específico
               en una lista desordenada de N elementos en aproximadamente √N pasos, en vez de los N pasos
               que requiere, en el peor caso, cualquier algoritmo clásico — una mejora cuadrática, no
@@ -339,7 +339,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-05" className={`cuant-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="ARQUITECTURAS DE HARDWARE REAL" sub="y el debate real sobre los qubits topológicos" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               No hay una sola forma de construir un qubit físico, y compiten varias arquitecturas reales
               hoy: <strong style={{ color: '#fff' }}>circuitos superconductores</strong> (la línea que
               siguen IBM y Google, qubits hechos de uniones Josephson enfriadas a temperaturas cercanas al
@@ -350,7 +350,7 @@ export default function ComputacionCuanticaPage() {
               conectividad, tiempos de coherencia, facilidad de fabricación — y no hay consenso en la
               comunidad de que una vaya a "ganarle" definitivamente a las demás.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una cuarta línea, los <strong style={{ color: '#fff' }}>qubits topológicos</strong>, promete
               en teoría una protección natural contra el ruido mucho mayor que las anteriores, codificando
               información en propiedades topológicas globales de un sistema físico (en vez de en el estado
@@ -375,7 +375,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-06" className={`cuant-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="SUPREMACÍA CUÁNTICA — UN TÉRMINO CONTESTADO" sub="Google, 2019 — y lo que pasó después" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En 2019, Google anunció que su procesador de 53 qubits superconductores, llamado{' '}
               <strong style={{ color: '#fff' }}>Sycamore</strong>, había resuelto una tarea de muestreo
               estadístico específica (sin aplicación práctica directa, diseñada para ser difícil
@@ -405,7 +405,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-07" className={`cuant-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="EL PROBLEMA REAL — CORRECCIÓN DE ERRORES" sub="el cuello de botella central de todo el campo, no un detalle menor" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un qubit físico es extremadamente frágil: cualquier interacción no controlada con el entorno
               —calor residual, vibraciones, radiación electromagnética de fondo— destruye la superposición
               y el entrelazamiento en un proceso llamado <strong style={{ color: '#fff' }}>decoherencia</strong>,
@@ -413,7 +413,7 @@ export default function ComputacionCuanticaPage() {
               cuántico real tiene una ventana de tiempo extremadamente corta antes de que el ruido arruine
               el cálculo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La solución teórica, la <strong style={{ color: '#fff' }}>corrección de errores cuánticos</strong>,
               existe matemáticamente desde los años 90 (Shor y otros demostraron que es posible, lo cual en
               sí mismo no era obvio dado que medir un qubit para "chequear" su error lo colapsa) — pero
@@ -433,7 +433,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-08" className={`cuant-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="QUÉ NO ES LA COMPUTACIÓN CUÁNTICA" sub="dos mitos mediáticos comunes, desmentidos con la física de arriba" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Mito 1: "va a reemplazar a las computadoras clásicas".</strong>{' '}
               Falso para la inmensa mayoría de las tareas. Una computadora cuántica no es más rápida de
               forma general — tiene ventaja demostrada (sección IV) solo para una clase específica y
@@ -443,7 +443,7 @@ export default function ComputacionCuanticaPage() {
               ninguna ventaja — y probablemente nunca la ofrezca, porque el tipo de estructura matemática
               que esas tareas requieren no es la que la superposición y el entrelazamiento aceleran.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>Mito 2: "prueba todas las soluciones posibles en
               paralelo".</strong> Es la simplificación más repetida y más engañosa. La superposición (sección
               I) no es "N cómputos clásicos corriendo simultáneamente, de los cuales uno elegís al final" —
@@ -462,7 +462,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-09" className={`cuant-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="DÓNDE ESTAMOS — LA ERA NISQ" sub="John Preskill, 2018" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El físico John Preskill acuñó en 2018 el término <strong style={{ color: '#fff' }}>NISQ</strong>{' '}
               (Noisy Intermediate-Scale Quantum, "cuántico ruidoso de escala intermedia") para describir, con
               precisión y sin exagerar, el estado real del campo: dispositivos con decenas a unos pocos
@@ -470,7 +470,7 @@ export default function ComputacionCuanticaPage() {
               investigación y para explorar si existe ventaja cuántica en problemas específicos, pero no
               para garantizar ninguna aplicación de uso general confiable todavía.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Las aplicaciones consideradas más prometedoras a corto y mediano plazo no son criptografía
               rota ni inteligencia artificial acelerada de forma genérica — son más específicas y más
               modestas: simulación de moléculas y materiales (donde el comportamiento cuántico real de los
@@ -488,7 +488,7 @@ export default function ComputacionCuanticaPage() {
         <div id="sec-10" className={`cuant-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="X" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Este documento comparte sustrato directo con dos que ya existen en el Codex:{' '}
               <Link href="/archivo/particulas" style={{ color: '#fff', textDecoration: 'underline' }}>Partículas</Link>{' '}
               describe el mismo marco cuántico de campos que subyace a los qubits de la sección I, y{' '}
@@ -498,7 +498,7 @@ export default function ComputacionCuanticaPage() {
               la sección II no es una curiosidad de laboratorio aislada, sino un concepto que atraviesa
               dominios de la física que en apariencia no tienen nada que ver entre sí.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Una aclaración que vale la pena hacer explícita, para no mezclar dos cosas distintas: el azar
               genuino de las tres monedas del{' '}
               <Link href="/arcano/yijing" style={{ color: '#fff', textDecoration: 'underline' }}>oráculo del
@@ -518,7 +518,7 @@ export default function ComputacionCuanticaPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT_BRIGHT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT_BRIGHT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT_BRIGHT}44` }}>
             NPX-ARC-13 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

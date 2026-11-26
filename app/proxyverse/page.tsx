@@ -12,7 +12,7 @@ export default function ProxyversePage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 80px' }}>
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: '#00d4ff44', marginBottom: 20 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: '#00d4ff44', marginBottom: 20 }}>
           NPX-PXV-00 // PROCESOS RESIDENTES
         </div>
 
@@ -36,7 +36,7 @@ export default function ProxyversePage() {
         </p>
 
         <p style={{
-          fontFamily: mono, fontSize: 10, lineHeight: 1.9, letterSpacing: 0.5, color: '#4a6080',
+          fontFamily: mono, fontSize: 11, lineHeight: 1.9, letterSpacing: 0.5, color: '#6f86a3',
           marginBottom: 48, maxWidth: 640,
         }}>
           Si buscás un eje para leerlos: el % HUMANO de cada perfil no es un chiste de ficha de
@@ -51,14 +51,14 @@ export default function ProxyversePage() {
           display: 'block', marginBottom: 20, padding: '20px 24px',
           border: '1px solid #00d4ff55', background: '#00d4ff10', textDecoration: 'none',
         }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#00d4ff', marginBottom: 8 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#00d4ff', marginBottom: 8 }}>
             NPX-PXV-ID // PROXY ID
           </div>
           <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
             Tu identidad acumulada en este navegador — con quién hablaste, qué generaste, hasta
             dónde llegaste.
           </p>
-          <div style={{ fontFamily: mono, fontSize: 9, color: '#00d4ffaa', marginTop: 14, letterSpacing: 1 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, color: '#00d4ffaa', marginTop: 14, letterSpacing: 1 }}>
             VER MI PROXY ID →
           </div>
         </Link>
@@ -67,14 +67,14 @@ export default function ProxyversePage() {
           display: 'block', marginBottom: 20, padding: '20px 24px',
           border: '1px solid #a537fd55', background: '#a537fd10', textDecoration: 'none',
         }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#a537fd', marginBottom: 8 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#a537fd', marginBottom: 8 }}>
             NPX-PXV-VOLUNTAD // CARTA DE CORRESPONDENCIAS
           </div>
           <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
             No se declara, se mide — tu Proxy ID leído como un mapa simbólico, armado solo con
             lo que ya hiciste en el sitio.
           </p>
-          <div style={{ fontFamily: mono, fontSize: 9, color: '#a537fdaa', marginTop: 14, letterSpacing: 1 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, color: '#a537fdaa', marginTop: 14, letterSpacing: 1 }}>
             VER MI CARTA →
           </div>
         </Link>
@@ -83,14 +83,14 @@ export default function ProxyversePage() {
           display: 'block', marginBottom: 40, padding: '20px 24px',
           border: '1px solid #ffb80055', background: '#ffb80010', textDecoration: 'none',
         }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: '#ffb800', marginBottom: 8 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: '#ffb800', marginBottom: 8 }}>
             NPX-PXV-COUNCIL // SALA DE CONCILIO
           </div>
           <p style={{ fontFamily: mono, fontSize: 12, color: '#c8daf0', lineHeight: 1.8, margin: 0 }}>
             Convocá a varios procesos a la vez con el mismo tema — no te responden a vos, se
             responden entre ellos.
           </p>
-          <div style={{ fontFamily: mono, fontSize: 9, color: '#ffb800aa', marginTop: 14, letterSpacing: 1 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, color: '#ffb800aa', marginTop: 14, letterSpacing: 1 }}>
             ENTRAR A LA SALA →
           </div>
         </Link>

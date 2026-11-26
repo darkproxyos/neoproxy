@@ -44,7 +44,7 @@ const MODE_LABEL: Record<CuratedMode, string> = {
 function SectionLabel({ roman, title, kind }: { roman: string; title: string; kind: string }) {
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: `${CYAN}66` }}>{kind}</div>
+      <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: `${CYAN}66` }}>{kind}</div>
       <div style={{ fontFamily: mono, fontSize: 15, letterSpacing: 2, color: '#fff' }}>
         <span style={{ color: CYAN }}>{roman}.</span> {title}
       </div>
@@ -144,7 +144,7 @@ function ForceGraph() {
           </g>
         ))}
       </svg>
-      <div style={{ fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', marginTop: 8 }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginTop: 8 }}>
         ARRASTRÁ CUALQUIER NODO — ES UNA SIMULACIÓN DE FUERZAS REAL (d3-force), NO UNA POSICIÓN FIJA
       </div>
     </>
@@ -183,7 +183,7 @@ function AlgorithmScatter() {
           </a>
         ))}
       </svg>
-      <div style={{ fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', marginTop: 8 }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginTop: 8 }}>
         CADA PUNTO ES UN ALGORITMO REAL CORRIENDO HOY EN /experimental — TOCALO PARA IR A SU MODO
       </div>
     </>
@@ -215,7 +215,7 @@ function SpecimenDonut({ specimens }: { specimens: CuratedSpecimen[] }) {
       </svg>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {data.map((d) => (
-          <div key={d.mode} style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: mono, fontSize: 10 }}>
+          <div key={d.mode} style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: mono, fontSize: 11 }}>
             <span style={{ width: 9, height: 9, borderRadius: '50%', background: MODE_COLOR[d.mode], display: 'inline-block' }} />
             <span style={{ color: '#8fb8d6' }}>{MODE_LABEL[d.mode]}</span>
             <span style={{ color: MODE_COLOR[d.mode] }}>{d.count}</span>
@@ -264,7 +264,7 @@ function SpecimenBubbles({ specimens }: { specimens: CuratedSpecimen[] }) {
           </circle>
         ))}
       </svg>
-      <div style={{ fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', marginTop: 8 }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginTop: 8 }}>
         EL TAMAÑO DE CADA BURBUJA ES LA DURACIÓN REAL DE ESA CORRIDA, EN SEGUNDOS
       </div>
     </>
@@ -328,7 +328,7 @@ function ClusterRadialBar() {
           )
         })}
       </svg>
-      <div style={{ fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', marginTop: 8, textAlign: 'center' }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginTop: 8, textAlign: 'center' }}>
         LARGO DEL ARCO = CANTIDAD DE NOMBRES REALES EN ESE CLUSTER DE /knowledge
       </div>
     </>
@@ -351,7 +351,7 @@ function GamesStatusBar() {
     <>
       {rows.map((row) => (
         <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-          <div style={{ width: 70, fontFamily: mono, fontSize: 9.5, color: '#8fb8d6', textAlign: 'right' }}>{row.label}</div>
+          <div style={{ width: 70, fontFamily: mono, fontSize: 11, color: '#8fb8d6', textAlign: 'right' }}>{row.label}</div>
           <svg width={440} height={22}>
             <rect x={0} y={3} width={Math.max(w(row.items.length), 2)} height={16} fill={row.color} fillOpacity={0.85}>
               <title>{row.items.map((g) => g.title).join(', ')}</title>
@@ -360,7 +360,7 @@ function GamesStatusBar() {
           <div style={{ fontFamily: mono, fontSize: 12, color: row.color }}>{row.items.length}</div>
         </div>
       ))}
-      <div style={{ fontFamily: mono, fontSize: 8.5, letterSpacing: 1, color: '#4a6080', marginTop: 6 }}>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1, color: '#6f86a3', marginTop: 6 }}>
         PASÁ EL MOUSE SOBRE CADA BARRA PARA VER LOS TÍTULOS REALES
       </div>
     </>
@@ -377,17 +377,17 @@ export default function GraficosPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${RED}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-XP-GRAFICOS // GALERÍA DE D3
         </div>
         <h1 style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700, letterSpacing: 6, color: CYAN, textShadow: `0 0 40px ${CYAN}44`, marginBottom: 16, lineHeight: 1 }}>
           GRÁFICOS
         </h1>
-        <p style={{ fontSize: 11.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
+        <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
           Seis formas distintas de graficar con D3 — red de fuerzas, dispersión, donut, burbujas, barra radial,
           barra simple — cada una sobre un dato real de NeoProxy, no un ejemplo de relleno. La red de fuerzas es
           la única con física de verdad corriendo en vivo: arrastrá cualquier nodo.
@@ -420,5 +420,5 @@ export default function GraficosPage() {
 }
 
 function Loading() {
-  return <div style={{ fontFamily: mono, fontSize: 10, color: '#4a6080', letterSpacing: 1, padding: '20px 0' }}>CARGANDO ESPECÍMENES REALES...</div>
+  return <div style={{ fontFamily: mono, fontSize: 11, color: '#6f86a3', letterSpacing: 1, padding: '20px 0' }}>CARGANDO ESPECÍMENES REALES...</div>
 }

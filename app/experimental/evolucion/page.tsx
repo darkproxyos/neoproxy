@@ -40,7 +40,7 @@ function GeneBars({ genome, accent }: { genome: Genome; accent: string }) {
         const t = (genome[k] - lo) / (hi - lo)
         return (
           <div key={k} style={{ marginBottom: 6 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8, color: '#4a6080', marginBottom: 2 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#6f86a3', marginBottom: 2 }}>
               <span>{GENE_LABELS[k]}</span>
             </div>
             <div style={{ height: 4, background: '#111a28' }}>
@@ -61,11 +61,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -450,13 +450,13 @@ export default function EvolucionPage() {
         borderBottom: `1px solid ${RED}33`, display: 'flex', alignItems: 'center', gap: 16,
         padding: '0 18px', zIndex: 100, backdropFilter: 'blur(6px)',
       }}>
-        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 2, color: '#4a6080', textDecoration: 'none' }}>
+        <Link href="/experimental" className="press tap-ext" style={{ fontSize: 10.5, letterSpacing: 2, color: '#6f86a3', textDecoration: 'none' }}>
           ← EXPERIMENTAL
         </Link>
-        <div style={{ fontSize: 11, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-EVOLUCIÓN</div>
-        <div style={{ fontSize: 9, letterSpacing: 1, color: '#4a6080' }}>una población, no una forma</div>
+        <div style={{ fontSize: 12, letterSpacing: 3, color: RED, fontWeight: 700 }}>NPX-XP-EVOLUCIÓN</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 1, color: '#6f86a3' }}>una población, no una forma</div>
         <button onClick={toggleAudio} title="Sonificar el fitness de cada generación" className="press" style={{
-          marginLeft: 'auto', fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
+          marginLeft: 'auto', fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '6px 10px', cursor: 'pointer',
           background: audioOn ? `${CYAN}22` : 'transparent', border: `1px solid ${audioOn ? CYAN : '#2a3a50'}`,
           color: audioOn ? CYAN : '#4a6080',
         }}>
@@ -471,7 +471,7 @@ export default function EvolucionPage() {
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
           {(['seleccion', 'genetico', 'sintesis'] as Mode[]).map((m) => (
             <button key={m} onClick={() => switchMode(m)} className="press" style={{
-              flex: 1, fontFamily: mono, fontSize: 8, padding: '8px 4px', letterSpacing: 0.3, cursor: 'pointer',
+              flex: 1, fontFamily: mono, fontSize: 10, padding: '8px 4px', letterSpacing: 0.3, cursor: 'pointer',
               background: mode === m ? `${RED}22` : 'transparent',
               border: `1px solid ${mode === m ? RED : '#2a3a50'}`,
               color: mode === m ? RED : '#4a6080',
@@ -483,17 +483,17 @@ export default function EvolucionPage() {
 
         {mode === 'seleccion' ? (
           <>
-            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               El del centro (cian) es el padre actual, sin mutar. Los otros 8 son mutaciones suyas.
               Hacé clic en el que más te interese — no el más alto, el que te llame la atención — y
               se convierte en el padre de la próxima generación.
             </p>
-            <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 14 }}>
               GENERACIÓN: <span style={{ color: RED }}>{selGeneration}</span>
               {selBuilding ? ' · creciendo...' : ''}
             </div>
             <button onClick={restartLineage} disabled={selBuilding} className="press" style={{
-              width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 10, marginBottom: 16,
+              width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 10, marginBottom: 16,
               cursor: selBuilding ? 'default' : 'pointer', background: 'transparent', border: `1px solid ${RED}`, color: RED,
               opacity: selBuilding ? 0.5 : 1, letterSpacing: 1,
             }}>
@@ -501,7 +501,7 @@ export default function EvolucionPage() {
             </button>
             {selParent && (
               <>
-                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL PADRE ACTUAL</div>
+                <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL PADRE ACTUAL</div>
                 <GeneBars genome={selParent} accent={CYAN} />
               </>
             )}
@@ -509,29 +509,29 @@ export default function EvolucionPage() {
           </>
         ) : mode === 'genetico' ? (
           <>
-            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Acá no elegís nada — una población compite por una función de fitness real: qué tan
               cerca está cada espécimen de la altura y cantidad de ramas que fijes abajo.
             </p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>ALTURA OBJETIVO</span><span style={{ color: RED }}>{targetHeight.toFixed(1)}</span>
             </div>
             <input type="range" min={1.5} max={5} step={0.1} value={targetHeight} disabled={evolving}
               onChange={(e) => setTargetHeight(parseFloat(e.target.value))}
               style={{ width: '100%', accentColor: RED, marginBottom: 10 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>RAMAS OBJETIVO (nodos)</span><span style={{ color: RED }}>{targetNodes}</span>
             </div>
             <input type="range" min={150} max={1200} step={10} value={targetNodes} disabled={evolving}
               onChange={(e) => setTargetNodes(parseInt(e.target.value, 10))}
               style={{ width: '100%', accentColor: RED, marginBottom: 10 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>POBLACIÓN</span><span style={{ color: RED }}>{popSize}</span>
             </div>
             <input type="range" min={6} max={24} step={1} value={popSize} disabled={evolving}
               onChange={(e) => setPopSize(parseInt(e.target.value, 10))}
               style={{ width: '100%', accentColor: RED, marginBottom: 10 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>GENERACIONES</span><span style={{ color: RED }}>{genCount}</span>
             </div>
             <input type="range" min={5} max={40} step={1} value={genCount} disabled={evolving}
@@ -539,7 +539,7 @@ export default function EvolucionPage() {
               style={{ width: '100%', accentColor: RED, marginBottom: 14 }} />
 
             <button onClick={evolve} disabled={evolving} className="press" style={{
-              width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginBottom: 14,
+              width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 11, marginBottom: 14,
               cursor: evolving ? 'default' : 'pointer', background: RED, color: '#020408', border: 'none',
               opacity: evolving ? 0.6 : 1, letterSpacing: 1,
             }}>
@@ -548,7 +548,7 @@ export default function EvolucionPage() {
 
             {fitnessHistory.length > 0 && (
               <>
-                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
                   FITNESS DEL MEJOR POR GENERACIÓN (más alto = más cerca del objetivo)
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 44, marginBottom: 14, border: `1px solid ${RED}22`, padding: '3px 3px 0' }}>
@@ -560,14 +560,14 @@ export default function EvolucionPage() {
             )}
 
             {bestMeasured && (
-              <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14, lineHeight: 1.8 }}>
+              <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 14, lineHeight: 1.8 }}>
                 MEJOR ESPÉCIMEN: altura <span style={{ color: RED }}>{bestMeasured.height.toFixed(2)}</span> (obj. {targetHeight.toFixed(1)})
                 {' · '}nodos <span style={{ color: RED }}>{bestMeasured.nodeCount}</span> (obj. {targetNodes})
               </div>
             )}
             {bestGenome && (
               <>
-                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL MEJOR ENCONTRADO</div>
+                <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL MEJOR ENCONTRADO</div>
                 <GeneBars genome={bestGenome} accent={RED} />
               </>
             )}
@@ -575,17 +575,17 @@ export default function EvolucionPage() {
           </>
         ) : (
           <>
-            <p style={{ fontSize: 10, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
+            <p style={{ fontSize: 11, color: '#8fb8d6', lineHeight: 1.8, marginBottom: 14 }}>
               Cruza con Memoria: el fitness no mide altura ni ramas — mide qué tan parecida es la
               silueta del espécimen, vista desde arriba, a un patrón real guardado en /experimental/memoria.
               Mismo principio que evolucionar polígonos hasta que se parezcan a la Mona Lisa.
             </p>
 
-            <div style={{ fontSize: 9, color: RED, letterSpacing: 2, marginBottom: 8 }}>PATRÓN OBJETIVO</div>
+            <div style={{ fontSize: 10.5, color: RED, letterSpacing: 2, marginBottom: 8 }}>PATRÓN OBJETIVO</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
               {PATTERN_DEFS.map((d) => (
                 <button key={d.id} onClick={() => setTargetPatternId(d.id)} disabled={silEvolving} className="press" style={{
-                  flex: 1, fontFamily: mono, fontSize: 8, padding: '6px 2px', cursor: silEvolving ? 'default' : 'pointer', letterSpacing: 0.3,
+                  flex: 1, fontFamily: mono, fontSize: 10, padding: '6px 2px', cursor: silEvolving ? 'default' : 'pointer', letterSpacing: 0.3,
                   background: targetPatternId === d.id ? `${RED}22` : 'transparent',
                   border: `1px solid ${targetPatternId === d.id ? RED : '#2a3a50'}`,
                   color: targetPatternId === d.id ? RED : '#4a6080', opacity: silEvolving ? 0.6 : 1,
@@ -597,7 +597,7 @@ export default function EvolucionPage() {
 
             <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
               <div>
-                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>OBJETIVO</div>
+                <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>OBJETIVO</div>
                 <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIL_GRID_SIZE}, 1fr)`, gap: 1, width: 120, height: 120 }}>
                   {targetGrid.map((v, i) => (
                     <div key={i} style={{ background: v === 1 ? RED : '#0a1018' }} />
@@ -605,7 +605,7 @@ export default function EvolucionPage() {
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>PROYECCIÓN ACTUAL</div>
+                <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>PROYECCIÓN ACTUAL</div>
                 <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIL_GRID_SIZE}, 1fr)`, gap: 1, width: 120, height: 120 }}>
                   {(silBestGrid ?? new Array(SIL_GRID_SIZE * SIL_GRID_SIZE).fill(-1)).map((v, i) => (
                     <div key={i} style={{ background: v === 1 ? CYAN : '#0a1018' }} />
@@ -614,13 +614,13 @@ export default function EvolucionPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>POBLACIÓN</span><span style={{ color: RED }}>{popSize}</span>
             </div>
             <input type="range" min={6} max={24} step={1} value={popSize} disabled={silEvolving}
               onChange={(e) => setPopSize(parseInt(e.target.value, 10))}
               style={{ width: '100%', accentColor: RED, marginBottom: 10 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4a6080', marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10.5, color: '#6f86a3', marginBottom: 4 }}>
               <span>GENERACIONES</span><span style={{ color: RED }}>{genCount}</span>
             </div>
             <input type="range" min={5} max={40} step={1} value={genCount} disabled={silEvolving}
@@ -628,7 +628,7 @@ export default function EvolucionPage() {
               style={{ width: '100%', accentColor: RED, marginBottom: 14 }} />
 
             <button onClick={evolveSynthesis} disabled={silEvolving} className="press" style={{
-              width: '100%', fontFamily: mono, fontSize: 10, fontWeight: 700, padding: 11, marginBottom: 14,
+              width: '100%', fontFamily: mono, fontSize: 11, fontWeight: 700, padding: 11, marginBottom: 14,
               cursor: silEvolving ? 'default' : 'pointer', background: RED, color: '#020408', border: 'none',
               opacity: silEvolving ? 0.6 : 1, letterSpacing: 1,
             }}>
@@ -637,7 +637,7 @@ export default function EvolucionPage() {
 
             {silFitnessHistory.length > 0 && (
               <>
-                <div style={{ fontSize: 8, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 10, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
                   COINCIDENCIA (ÍNDICE DE JACCARD) DEL MEJOR POR GENERACIÓN
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 44, marginBottom: 10, border: `1px solid ${RED}22`, padding: '3px 3px 0' }}>
@@ -645,7 +645,7 @@ export default function EvolucionPage() {
                     <div key={i} style={{ flex: 1, background: RED, opacity: 0.4 + 0.6 * (i / Math.max(1, silFitnessHistory.length - 1)), height: `${Math.max(4, (f / silMaxFitness) * 100)}%` }} />
                   ))}
                 </div>
-                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 14 }}>
+                <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 14 }}>
                   MEJOR COINCIDENCIA: <span style={{ color: RED }}>{Math.round(silFitnessHistory[silFitnessHistory.length - 1] * 100)}%</span>
                 </div>
               </>
@@ -653,7 +653,7 @@ export default function EvolucionPage() {
 
             {silBestGenome && (
               <>
-                <div style={{ fontSize: 9, color: '#4a6080', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL MEJOR ENCONTRADO</div>
+                <div style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 1, marginBottom: 8 }}>GENOMA DEL MEJOR ENCONTRADO</div>
                 <GeneBars genome={silBestGenome} accent={RED} />
               </>
             )}

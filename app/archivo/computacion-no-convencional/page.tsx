@@ -41,14 +41,14 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
           {title}
         </h2>
       </div>
-      {sub && <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>{sub}</div>}
     </div>
   )
 }
 
 function Caption({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12 }}>
+    <div style={{ fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14, borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12 }}>
       {children}
     </div>
   )
@@ -89,12 +89,12 @@ export default function ComputacionNoConvencionalPage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-19 // REFERENCIA TÉCNICA
           </div>
           <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 40px)', fontWeight: 700, letterSpacing: 4, color: ACCENT, textShadow: `0 0 40px ${ACCENT}55`, marginBottom: 14, lineHeight: 1.15 }}>
@@ -103,24 +103,24 @@ export default function ComputacionNoConvencionalPage() {
           <div style={{ fontSize: 12, letterSpacing: 3, color: TEXT_DIM, marginBottom: 32 }}>
             TODO LO QUE NO ES UNA CPU BINARIA CORRIENDO A UN CLOCK FIJO
           </div>
-          <p style={{ fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660, borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32 }}>
+          <p style={{ fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 660, borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32 }}>
             Un recorrido real por las arquitecturas que existen porque el modelo de cómputo que ganó
             (von Neumann, binario, silicio digital) tiene límites físicos reales que ya empezó a chocar.
             Termina donde más interés hay de seguir: FPGA, silicio que se reprograma — la plataforma
             real donde experimentar con casi todo lo de acá sin fabricar un chip a medida.
           </p>
 
-          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9, letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px', marginBottom: 32 }}>
+          <div style={{ display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5, letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px', marginBottom: 32 }}>
             <span style={{ color: `${ACCENT}55` }}>CLASIFICACIÓN</span><span style={{ color: TEXT }}>ARQUITECTURAS DE CÓMPUTO ALTERNATIVAS A VON NEUMANN</span>
             <span style={{ color: `${ACCENT}55` }}>REVISIÓN</span><span style={{ color: TEXT }}>01 — XI SECCIONES</span>
             <span style={{ color: `${ACCENT}55` }}>ALCANCE</span><span style={{ color: TEXT }}>NEUROMÓRFICA → MEMRISTORES → FOTÓNICA → REVERSIBLE → ANALÓGICA → BIOLÓGICA → FPGA</span>
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 680 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>ÍNDICE</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -132,7 +132,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-01" className={`ncv-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title='QUÉ HACE "CONVENCIONAL" A LO CONVENCIONAL' sub="Von Neumann y su propio muro" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Casi todo lo que llamamos "una computadora" comparte el mismo esqueleto desde 1945: la{' '}
               <strong style={{ color: '#fff' }}>arquitectura de von Neumann</strong> — un procesador y una
               memoria separados físicamente, conectados por un bus por el que tienen que pasar, uno por
@@ -142,7 +142,7 @@ export default function ComputacionNoConvencionalPage() {
               que sea el procesador, no puede hacer nada mientras espera que los datos crucen ese mismo
               bus angosto desde la memoria.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Durante décadas, ese costo se disimuló con dos tendencias que avanzaban juntas: la ley de
               Moore (más transistores por chip cada ~2 años, observación real de Gordon Moore en 1965) y
               el escalado de Dennard (transistores más chicos que además consumían menos energía por
@@ -163,7 +163,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-02" className={`ncv-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="COMPUTACIÓN NEUROMÓRFICA" sub="chips que imitan la neurona, no el clock" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una red neuronal artificial corriendo en una GPU (ver /archivo/redes-neuronales) sigue
               siendo, por dentro, aritmética de matrices sobre hardware de von Neumann — rápida, pero
               nada parecida, físicamente, a cómo funciona una neurona real. Un chip{' '}
@@ -173,7 +173,7 @@ export default function ComputacionNoConvencionalPage() {
               <strong style={{ color: '#fff' }}>picos</strong> (spikes) discretos en el tiempo, no con un
               clock central sincronizando todo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               <strong style={{ color: '#fff' }}>TrueNorth</strong> (IBM, 2014, desarrollado bajo el
               programa SyNAPSE de DARPA) integró un millón de neuronas de silicio y 256 millones de
               sinapsis en un chip que consume, en operación real, alrededor de 70 milivatios — órdenes de
@@ -196,7 +196,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-03" className={`ncv-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="MEMRISTORES" sub="el cuarto elemento y la computación en memoria" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En 1971, <strong style={{ color: '#fff' }}>Leon Chua</strong> predijo, por pura simetría
               matemática entre las ecuaciones que relacionan carga, corriente, voltaje y flujo magnético,
               que debía existir un cuarto componente eléctrico fundamental además de la resistencia, el
@@ -207,7 +207,7 @@ export default function ComputacionNoConvencionalPage() {
               publicó en Nature la primera demostración física real, con el título, sin rodeos, "The
               missing memristor found".
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La razón por la que esto importa para computación (no solo para electrónica) es que un
               memristor "recuerda" su estado sin consumir energía para mantenerlo — y eso habilita{' '}
               <strong style={{ color: '#fff' }}>computación en memoria</strong> (in-memory computing): en
@@ -227,7 +227,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-04" className={`ncv-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="COMPUTACIÓN ÓPTICA / FOTÓNICA" sub="luz en vez de electrones" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Un fotón viaja más rápido que un electrón en un conductor real, y dos haces de luz pueden
               cruzarse en el mismo espacio sin interferirse (dos corrientes eléctricas, en cambio,
               necesitan caminos separados) — eso hace de la luz, en principio, un medio más rápido y
@@ -237,7 +237,7 @@ export default function ComputacionNoConvencionalPage() {
               <strong style={{ color: '#fff' }}>Lightelligence</strong> fabrican hoy chips fotónicos
               específicamente para acelerar esa parte puntual del cómputo de IA.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El problema real sin resolver, hoy: no existe un equivalente práctico y maduro de{' '}
               <strong style={{ color: '#fff' }}>memoria óptica</strong> ni de un "transistor óptico"
               simple y eficiente para hacer lógica digital completa solo con luz — por eso, en la
@@ -258,7 +258,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-05" className={`ncv-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="CUÁNTICA Y ADN" sub="ya tienen su propio documento — acá el puente real" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Dos de las formas más citadas de computación "no convencional" ya tienen tratamiento extenso
               propio en este Codex, y no se repiten acá para no duplicar:{' '}
               <Link href="/archivo/computacion-cuantica" style={{ color: '#fff', textDecoration: 'underline' }}>
@@ -273,7 +273,7 @@ export default function ComputacionNoConvencionalPage() {
               problema del camino hamiltoniano codificando el problema entero en moléculas de ADN y
               dejando que la química hiciera, en paralelo masivo real, buena parte de la búsqueda.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lo que vale la pena decir acá, puntualmente, es lo que las conecta con el resto de este
               documento: las tres (cuántica, ADN, y las de este documento) comparten la misma lógica de
               fondo — identificar un sistema físico cuyo comportamiento natural resuelve directamente un
@@ -291,7 +291,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-06" className={`ncv-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="COMPUTACIÓN REVERSIBLE" sub="el límite termodinámico de borrar un bit" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En 1961, <strong style={{ color: '#fff' }}>Rolf Landauer</strong> (investigador de IBM)
               demostró algo real y contraintuitivo: no es la computación en sí lo que necesariamente gasta
               energía como calor — es específicamente{' '}
@@ -302,7 +302,7 @@ export default function ComputacionNoConvencionalPage() {
               <em>kT ln(2)</em>, un número minúsculo pero no nulo, y no evitable por ninguna mejora de
               ingeniería mientras la operación siga siendo lógicamente irreversible.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               En 1973, <strong style={{ color: '#fff' }}>Charles Bennett</strong> mostró que esto no es un
               callejón sin salida: es posible diseñar compuertas lógicas{' '}
               <strong style={{ color: '#fff' }}>reversibles</strong> (como la puerta de Toffoli), donde
@@ -324,7 +324,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-07" className={`ncv-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="COMPUTACIÓN ANALÓGICA" sub="el resurgimiento real" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Antes de que "computadora" significara binaria por default, existieron computadoras{' '}
               <strong style={{ color: '#fff' }}>analógicas</strong> reales y usadas en producción — el
               analizador diferencial mecánico de Vannevar Bush (MIT, 1931) resolvía ecuaciones
@@ -333,7 +333,7 @@ export default function ComputacionNoConvencionalPage() {
               las desplazó casi por completo porque es exacta y reproducible de una forma que un sistema
               analógico, sujeto a ruido físico real, nunca puede igualar del todo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La razón real de su resurgimiento hoy: una red neuronal tolera ruido numérico mucho mejor
               que casi cualquier otro tipo de cálculo (ver /archivo/redes-neuronales) — no necesita
               precisión exacta, necesita una aproximación "suficientemente buena" millones de veces por
@@ -354,7 +354,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-08" className={`ncv-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="COMPUTACIÓN BIOLÓGICA REAL" sub="neuronas vivas jugando al Pong" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               En 2022, la empresa australiana <strong style={{ color: '#fff' }}>Cortical Labs</strong>{' '}
               publicó en la revista <em>Neuron</em> un experimento real, no especulativo: cultivaron
               aproximadamente 800.000 neuronas reales (humanas y de ratón) sobre un arreglo de electrodos,
@@ -365,7 +365,7 @@ export default function ComputacionNoConvencionalPage() {
               a jugar mejor con el tiempo, con mucha menos "experiencia" (menos partidas) de las que
               necesita un algoritmo de aprendizaje por refuerzo convencional para lograr lo mismo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esto no es ciencia ficción ni el cuerpo entero como metáfora (eso ya lo cubre{' '}
               <Link href="/archivo/wetware" style={{ color: '#fff', textDecoration: 'underline' }}>
                 /archivo/wetware
@@ -387,7 +387,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-09" className={`ncv-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="FPGA" sub="silicio que se reprograma — la plataforma real para experimentar con todo esto" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una <strong style={{ color: '#fff' }}>FPGA</strong> (field-programmable gate array) no es
               software ni hardware fijo — es algo real en el medio: un chip hecho de miles de bloques
               lógicos idénticos y reconfigurables (cada uno, por dentro, una{' '}
@@ -398,7 +398,7 @@ export default function ComputacionNoConvencionalPage() {
               diseño exacto, sin fabricar silicio nuevo — y que se puede volver a reconfigurar desde cero
               mañana para ser un circuito completamente distinto.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Programar una FPGA no se parece a escribir software convencional: se describe{' '}
               <strong style={{ color: '#fff' }}>hardware</strong>, en un HDL (hardware description
               language) real —<strong style={{ color: '#fff' }}> Verilog</strong> o{' '}
@@ -411,7 +411,7 @@ export default function ComputacionNoConvencionalPage() {
               <strong style={{ color: '#fff' }}>bitstream</strong> — el archivo real que, cargado en el
               chip, configura cada bloque lógico y cada conexión.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esto es exactamente lo que vuelve a FPGA la plataforma real de experimentación para casi
               todo este documento: podés implementar vos mismo, en lógica digital real sobre una FPGA
               barata, una versión simplificada de un acelerador neuromórfico (sección II) o de una red
@@ -440,7 +440,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-10" className={`ncv-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="X" title="LO QUE QUEDA POR EXPLORAR DE VERDAD" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>In-materio computing</strong> — la idea, todavía en
               investigación activa, de usar materiales físicos "desordenados" reales (redes de
               nanopartículas, cristales líquidos, incluso espuma de jabón, en experimentos reales
@@ -448,13 +448,13 @@ export default function ComputacionNoConvencionalPage() {
               cómputo útil, sin diseñar ningún circuito específico de antemano — "programar" el material
               ajustando qué estímulos le das, no su estructura interna.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <strong style={{ color: '#fff' }}>Organoides neuronales</strong> escalando más allá de
               DishBrain (sección VIII) — la pregunta real abierta no es si tejido neuronal cultivado puede
               aprender (ya se demostró), sino si se puede volver reproducible, estandarizado, y útil para
               algo más que una demostración puntual.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Y la dirección que más consenso real tiene en investigación seria hoy no es ninguna de
               estas arquitecturas "ganándole" a las demás, sino{' '}
               <strong style={{ color: '#fff' }}>híbridos post-Moore</strong>: un mismo sistema combinando
@@ -473,7 +473,7 @@ export default function ComputacionNoConvencionalPage() {
         <div id="sec-11" className={`ncv-section ${visible['sec-11'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="XI" title="HONESTIDAD FINAL" sub="qué es producto hoy y qué sigue siendo laboratorio" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Separado con cuidado, para no mezclar entusiasmo con estado real: <strong style={{ color: '#fff' }}>
               comprable hoy, como producto real</strong> — FPGAs (de sobra, baratas, para hobbista o
               industria), chips neuromórficos de investigación accesibles a universidades (Loihi 2),
@@ -483,7 +483,7 @@ export default function ComputacionNoConvencionalPage() {
               reemplazo general de memoria, computación reversible fuera de papers teóricos, in-materio
               computing, y escalar organoides neuronales más allá de demostraciones puntuales.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Ninguna de estas arquitecturas va a estar en tu próxima laptop reemplazando la CPU entera —
               esa no es, ni fue nunca, la promesa real. La promesa real, y la que de verdad se está
               cumpliendo ya, es más acotada y más interesante: cada vez más sistemas reales son híbridos,

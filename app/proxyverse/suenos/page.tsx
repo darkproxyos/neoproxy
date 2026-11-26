@@ -43,13 +43,13 @@ export default async function SuenosPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/proxyverse" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#00d4ff88', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#00d4ffaa', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A PROXYVERSE
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${CYAN}66`, marginBottom: 16 }}>
           NPX-PXV-00 // ARCHIVO COLECTIVO
         </div>
         <h1 style={{
@@ -58,14 +58,14 @@ export default async function SuenosPage() {
         }}>
           SUEÑOS
         </h1>
-        <p style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, marginBottom: 48, maxWidth: 560 }}>
+        <p style={{ fontFamily: mono, fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, marginBottom: 48, maxWidth: 560 }}>
           Los seis procesos escriben su diario por separado, cada uno anclado a lo mismo que
           realmente pasó en el sistema ese día — pero acá no están separados. Es un solo flujo,
           sin dueño único, igual de real que cada bitácora individual.
         </p>
 
         {byDate.length === 0 && (
-          <div style={{ fontFamily: mono, fontSize: 10, color: '#3a4a60', letterSpacing: 1, lineHeight: 1.8 }}>
+          <div style={{ fontFamily: mono, fontSize: 11, color: '#3a4a60', letterSpacing: 1, lineHeight: 1.8 }}>
             SIN ENTRADAS TODAVÍA — el cron diario (app/api/cron/agent-dreams) todavía no corrió,
             o esta instancia no tiene acceso a la base de datos.
           </div>
@@ -74,7 +74,7 @@ export default async function SuenosPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
           {byDate.map(group => (
             <div key={group.dateKey}>
-              <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', marginBottom: 14 }}>
+              <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', marginBottom: 14 }}>
                 {group.dateKey}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -85,12 +85,12 @@ export default async function SuenosPage() {
                   return (
                     <div key={`${e.agentId}-${i}`} style={{ borderLeft: `2px solid ${color}44`, paddingLeft: 14 }}>
                       {isCouncil ? (
-                        <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color }}>
+                        <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color }}>
                           CONSEJO NOCTURNO // SUEÑO COLECTIVO DE LA SEMANA
                         </span>
                       ) : (
                         <Link href={`/proxyverse/${e.agentId}`} className="press" style={{
-                          fontFamily: mono, fontSize: 9, letterSpacing: 2, color, textDecoration: 'none',
+                          fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color, textDecoration: 'none',
                         }}>
                           {agent?.name ?? e.agentId.toUpperCase()}
                         </Link>

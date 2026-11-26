@@ -57,7 +57,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -69,7 +69,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -131,7 +131,7 @@ function ProxyTable() {
                 key={i}
                 style={{
                   textAlign: 'left',
-                  fontSize: 9.5,
+                  fontSize: 11,
                   letterSpacing: 1.5,
                   color: ACCENT,
                   borderBottom: `1px solid ${ACCENT}55`,
@@ -147,13 +147,13 @@ function ProxyTable() {
         <tbody>
           {PROXY_LIST.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(201,112,58,0.04)' : 'transparent' }}>
-              <td style={{ padding: '12px 14px', fontSize: 11, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '12px 14px', fontSize: 12, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                 {row.nombre}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10.5, lineHeight: 1.6, color: TEXT, verticalAlign: 'top', maxWidth: 240 }}>
+              <td style={{ padding: '12px 14px', fontSize: 11.5, lineHeight: 1.6, color: TEXT, verticalAlign: 'top', maxWidth: 240 }}>
                 {row.rol}
               </td>
-              <td style={{ padding: '12px 14px', fontSize: 10, lineHeight: 1.7, color: TEXT_DIM, verticalAlign: 'top' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.7, color: TEXT_DIM, verticalAlign: 'top' }}>
                 {row.nota}
               </td>
             </tr>
@@ -206,7 +206,7 @@ export default function ErgoProxyAnalysisPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-REF-00 // REFERENCIA CULTURAL ARCHIVADA
           </div>
           <h1
@@ -227,7 +227,7 @@ export default function ErgoProxyAnalysisPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -249,7 +249,7 @@ export default function ErgoProxyAnalysisPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -264,7 +264,7 @@ export default function ErgoProxyAnalysisPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -278,7 +278,7 @@ export default function ErgoProxyAnalysisPage() {
                 ['VII', 'sec-07', 'Recepción y legado'],
                 ['VIII', 'sec-08', 'Resonancia con NeoProxy'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -291,7 +291,7 @@ export default function ErgoProxyAnalysisPage() {
         <div id="sec-01" style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="PREMISA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Romdeau es una ciudad-domo sellada, uno de los últimos refugios de la humanidad tras una
               catástrofe ecológica global ocurrida miles de años antes. Es una sociedad hiper-controlada
               y burocrática, habitada por humanos y por AutoReivs — androides sirvientes. El equilibrio
@@ -322,21 +322,21 @@ export default function ErgoProxyAnalysisPage() {
         <div id="sec-03" style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="COGITO, ERGO SUM" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 20px' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 20px' }}>
               El título juega con el <em>"Cogito, ergo sum"</em> de Descartes — "pienso, luego existo".
               En entrevista (Johns Hopkins University Press), los creadores Murase Shūkō y Satō Dai
               dijeron que esa frase disparó el concepto central de la serie. No se queda en citarla: el
               virus Cogito le da autoconciencia a máquinas, y eso vuelve literal la pregunta "¿qué te
               hace una persona?" en vez de dejarla como adorno filosófico.
             </p>
-            <div style={{ fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 12 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: ACCENT, marginBottom: 12 }}>
               EL CONSEJO DE ANCIANOS — ESTATUAS CON NOMBRE DE FILÓSOFO REAL
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
               {PHILOSOPHER_NAMES.map((p, i) => (
                 <div key={i} style={{ borderLeft: `2px solid ${ACCENT}55`, paddingLeft: 14 }}>
                   <div style={{ fontSize: 12, color: '#fff', letterSpacing: 1, marginBottom: 4 }}>{p.nombre}</div>
-                  <div style={{ fontSize: 10, lineHeight: 1.6, color: TEXT_DIM }}>{p.nota}</div>
+                  <div style={{ fontSize: 11, lineHeight: 1.6, color: TEXT_DIM }}>{p.nota}</div>
                 </div>
               ))}
             </div>
@@ -347,7 +347,7 @@ export default function ErgoProxyAnalysisPage() {
         <div id="sec-04" style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="DIOSES QUE NO SON DIOSES" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Reseñas serias (AV Club) conectan la serie con el existencialismo de Kierkegaard y
               Nietzsche: el giro temático de fondo es que los personajes descubren que sus "dioses" —
               los Proxy — no son dioses en absoluto. Están tan perdidos sobre su propio propósito como
@@ -362,7 +362,7 @@ export default function ErgoProxyAnalysisPage() {
         <div id="sec-05" style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="RESPONSABILIDAD DE CREAR" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               En la misma entrevista de Johns Hopkins, se señala que la serie parece enfocarse en
               "hacerse responsable de lo que creás en el mundo". Un creador — humano, Proxy, o quien
               construye una IA — no puede controlar en qué se convierte su creación una vez que esta
@@ -376,7 +376,7 @@ export default function ErgoProxyAnalysisPage() {
         <div id="sec-06" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="ESTÉTICA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Es el punto de consenso casi unánime entre reseñas: el elemento visual más fuerte de la
               serie. Ciudades quemadas, maquinaria elegante pero amenazante, paisajes grises y
               opresivos, montaje y composición de cámara con sesgo de avant-garde. El soundtrack
@@ -394,7 +394,7 @@ export default function ErgoProxyAnalysisPage() {
             {RECEPTION_NOTES.map((n, i) => (
               <Panel key={i}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{n.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
               </Panel>
             ))}
           </div>
@@ -404,7 +404,7 @@ export default function ErgoProxyAnalysisPage() {
         <div id="sec-08" style={{ marginBottom: 40 }}>
           <SectionHeader roman="VIII" title="RESONANCIA CON NEOPROXY" sub="lectura propia de este documento, no una fuente externa — marcada como tal" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El propio nombre de este proyecto comparte más que la palabra "Proxy" con la serie: los
               seis agentes de NeoProxy tienen lore propio y arte canónico, pero el kernel real
               (<code style={{ color: ACCENT }}>Memory/hub.json</code>) los mantiene como stubs en
@@ -419,7 +419,7 @@ export default function ErgoProxyAnalysisPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-REF-00 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

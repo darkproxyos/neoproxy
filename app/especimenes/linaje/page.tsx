@@ -165,10 +165,10 @@ export default function LinajePage() {
       <div className="crt-scanlines" />
       <div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <Link href="/especimenes/laboratorio" className="press tap-ext" style={{ fontSize: 9, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
+        <Link href="/especimenes/laboratorio" className="press tap-ext" style={{ fontSize: 10.5, letterSpacing: 3, color: '#8fa8c4', textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
           ← VOLVER AL LABORATORIO
         </Link>
-        <div style={{ fontSize: 9, letterSpacing: 6, color: `${ACCENT}99`, marginBottom: 14 }}>NPX-ESP-LINAJE // MEMORIA DE LO QUE EXISTIÓ</div>
+        <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}99`, marginBottom: 14 }}>NPX-ESP-LINAJE // MEMORIA DE LO QUE EXISTIÓ</div>
         <h1 style={{ fontSize: 'clamp(26px, 5.5vw, 42px)', letterSpacing: 4, color: ACCENT, textShadow: `0 0 40px ${ACCENT}44`, margin: '0 0 14px', lineHeight: 1.1 }}>
           ÁRBOL GENEALÓGICO
         </h1>
@@ -192,8 +192,8 @@ export default function LinajePage() {
             ].map(([n, t, sub]) => (
               <div key={String(t)} style={{ flex: '1 1 130px', minWidth: 120 }}>
                 <div style={{ fontSize: 24, color: ACCENT }}>{n}</div>
-                <div style={{ fontSize: 9, letterSpacing: 2, color: '#c8daf0', marginTop: 4 }}>{t}</div>
-                <div style={{ fontSize: 9, color: '#6f86a3', marginTop: 3 }}>{sub}</div>
+                <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#c8daf0', marginTop: 4 }}>{t}</div>
+                <div style={{ fontSize: 10.5, color: '#6f86a3', marginTop: 3 }}>{sub}</div>
               </div>
             ))}
           </div>
@@ -202,7 +202,7 @@ export default function LinajePage() {
         <div style={{ display: 'flex', border: `1px solid ${ACCENT}22`, background: 'rgba(4,8,14,0.7)' }}>
           <div style={{ flex: '0 0 112px', position: 'relative', borderRight: `1px solid ${ACCENT}22`, height }}>
             {lanes.map((f, i) => (
-              <div key={f} style={{ position: 'absolute', top: TOP + i * LANE_H, height: LANE_H, left: 8, right: 4, display: 'flex', alignItems: 'center', fontSize: 8, letterSpacing: 1, color: FAMILY_COLOR[f], overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              <div key={f} style={{ position: 'absolute', top: TOP + i * LANE_H, height: LANE_H, left: 8, right: 4, display: 'flex', alignItems: 'center', fontSize: 10, letterSpacing: 1, color: FAMILY_COLOR[f], overflow: 'hidden', whiteSpace: 'nowrap' }}>
                 {FAMILY_LABEL[f]}
               </div>
             ))}
@@ -221,7 +221,7 @@ export default function LinajePage() {
         </div>
 
         {tip && hover && (
-          <div style={{ position: 'fixed', left: Math.min(tip.x + 14, (typeof window !== 'undefined' ? window.innerWidth : 1200) - 250), top: tip.y + 14, zIndex: 50, width: 232, padding: '10px 12px', background: '#05080cf2', border: `1px solid ${FAMILY_COLOR[hover.f]}66`, fontSize: 10, lineHeight: 1.7, pointerEvents: 'none' }}>
+          <div style={{ position: 'fixed', left: Math.min(tip.x + 14, (typeof window !== 'undefined' ? window.innerWidth : 1200) - 250), top: tip.y + 14, zIndex: 50, width: 232, padding: '10px 12px', background: '#05080cf2', border: `1px solid ${FAMILY_COLOR[hover.f]}66`, fontSize: 11, lineHeight: 1.7, pointerEvents: 'none' }}>
             <div style={{ color: FAMILY_COLOR[hover.f], letterSpacing: 2 }}>{FAMILY_LABEL[hover.f]}</div>
             <div style={{ color: '#fff' }}>{hover.id.toUpperCase()}</div>
             <div style={{ color: '#9fb4cc' }}>{KIND[hover.k]} · nació en la generación {hover.b}</div>
@@ -232,13 +232,13 @@ export default function LinajePage() {
         )}
 
         {picked && !picked.alive && (
-          <p style={{ marginTop: 14, fontSize: 11, color: '#9a8a8a' }}>
+          <p style={{ marginTop: 14, fontSize: 12, color: '#9a8a8a' }}>
             {picked.id.toUpperCase()} ({FAMILY_LABEL[picked.f]}) nació en la generación {picked.b} y desapareció en la {picked.x}.
             Ya no se puede abrir ni descargar: eso es parte de la obra.
           </p>
         )}
 
-        <p style={{ marginTop: 26, fontSize: 10, lineHeight: 1.9, color: '#6f86a3', maxWidth: 780 }}>
+        <p style={{ marginTop: 26, fontSize: 11, lineHeight: 1.9, color: '#6f86a3', maxWidth: 780 }}>
           La «novedad histórica» es la distancia entre una pieza y lo más parecido que existió alguna vez. Las celdas de forma cuentan cuántas
           regiones del espacio de formas se han ocupado. Son medidas aproximadas y propias de este laboratorio, no una validación científica.
         </p>

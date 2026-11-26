@@ -58,11 +58,11 @@ function AuthorCard({ entryId, accent }: { entryId: string; accent: string }) {
       display: 'block', marginTop: 10, padding: '10px 12px', border: `1px solid ${accent}33`,
       background: `${accent}0a`, textDecoration: 'none',
     }}>
-      <div style={{ fontSize: 9, color: accent, letterSpacing: 1, marginBottom: 4 }}>
+      <div style={{ fontSize: 10.5, color: accent, letterSpacing: 1, marginBottom: 4 }}>
         {entry.name.toUpperCase()} · {entry.years}
       </div>
-      <div style={{ fontSize: 9, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
-      <div style={{ fontSize: 9, color: '#4a6080', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
+      <div style={{ fontSize: 10.5, color: '#8fb8d6', letterSpacing: 0.5, marginBottom: 6 }}>{entry.role}</div>
+      <div style={{ fontSize: 10.5, color: '#6f86a3', fontStyle: 'italic', lineHeight: 1.6 }}>{entry.formulaLabel}</div>
     </Link>
   )
 }
@@ -222,13 +222,13 @@ export default function AcechoPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/experimental" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 32,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontSize: 9, color: `${D_RED}66`, letterSpacing: 6, marginBottom: 16 }}>
+        <div style={{ fontSize: 10.5, color: `${D_RED}66`, letterSpacing: 6, marginBottom: 16 }}>
           // NPX-XP-ACECHO — SEGUNDA CRIATURA, SU PROPIO ESPACIO
         </div>
         <h1 style={{
@@ -237,7 +237,7 @@ export default function AcechoPage() {
         }}>
           ACECHO
         </h1>
-        <p style={{ fontSize: 11, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
+        <p style={{ fontSize: 12, color: '#8fb8d6', letterSpacing: 0.5, lineHeight: 2, maxWidth: 720, marginBottom: 32 }}>
           D no forrajea. El enjambre de Trickster (/experimental/enjambre) es la otra estrategia real —
           moverse todo el tiempo, buscar activamente. Acá, sit-and-wait predation: D se queda casi
           inmóvil, casi invisible, y ataca una sola vez cuando un proceso entra en rango — con una
@@ -251,7 +251,7 @@ export default function AcechoPage() {
 
           <div>
             <div style={{ border: `1px solid ${D_RED}33`, background: `${D_RED}08`, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontSize: 9, letterSpacing: 2, color: `${D_RED}cc`, marginBottom: 10 }}>// ESTADO</div>
+              <div style={{ fontSize: 10.5, letterSpacing: 2, color: `${D_RED}cc`, marginBottom: 10 }}>// ESTADO</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 12 }}>
                 <span style={{
                   fontSize: 13, letterSpacing: 2, color: state === 'strike' ? '#fff' : D_RED,
@@ -260,19 +260,19 @@ export default function AcechoPage() {
                   {state === 'strike' ? 'EMBESTIDA' : 'DORMIDO'}
                 </span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 10 }}>
-                <div style={{ color: '#4a6080' }}>EMBESTIDAS</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px', fontSize: 11 }}>
+                <div style={{ color: '#6f86a3' }}>EMBESTIDAS</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{stats.strikes}</div>
-                <div style={{ color: '#4a6080' }}>ACIERTOS</div>
+                <div style={{ color: '#6f86a3' }}>ACIERTOS</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{stats.hits}</div>
-                <div style={{ color: '#4a6080' }}>FALLOS</div>
+                <div style={{ color: '#6f86a3' }}>FALLOS</div>
                 <div style={{ color: '#c8daf0', textAlign: 'right' }}>{stats.misses}</div>
-                <div style={{ color: '#4a6080' }}>PROCESO MÁS CERCA</div>
+                <div style={{ color: '#6f86a3' }}>PROCESO MÁS CERCA</div>
                 <div style={{ color: PROCESS_BLUE, textAlign: 'right' }}>{nearestDist.toFixed(2)}</div>
               </div>
             </div>
 
-            <p style={{ fontSize: 9, color: '#4a6080', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
+            <p style={{ fontSize: 10.5, color: '#6f86a3', letterSpacing: 0.5, lineHeight: 1.9, marginBottom: 4 }}>
               La predicción se calcula una sola vez, al arrancar — no es un misil que corrige el rumbo.
             </p>
             <AuthorCard entryId="reynolds-pursuit" accent={D_RED} />

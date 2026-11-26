@@ -58,7 +58,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -70,7 +70,7 @@ function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: 9.5,
+        fontSize: 11,
         lineHeight: 1.8,
         letterSpacing: 0.5,
         color: LABEL_DIM,
@@ -118,10 +118,10 @@ function GlossaryTable() {
         <tbody>
           {GLOSSARY.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(79,107,255,0.04)' : 'transparent' }}>
-              <td style={{ padding: '14px 16px', fontSize: 11, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap', borderBottom: `1px solid ${ACCENT}1a` }}>
+              <td style={{ padding: '14px 16px', fontSize: 12, color: '#fff', letterSpacing: 0.5, verticalAlign: 'top', whiteSpace: 'nowrap', borderBottom: `1px solid ${ACCENT}1a` }}>
                 {row.termino}
               </td>
-              <td style={{ padding: '14px 16px', fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM, verticalAlign: 'top', borderBottom: `1px solid ${ACCENT}1a` }}>
+              <td style={{ padding: '14px 16px', fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM, verticalAlign: 'top', borderBottom: `1px solid ${ACCENT}1a` }}>
                 {row.definicion}
               </td>
             </tr>
@@ -164,7 +164,7 @@ export default function LainAnalysisPage() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-REF-01 // REFERENCIA CULTURAL ARCHIVADA
           </div>
           <h1
@@ -185,7 +185,7 @@ export default function LainAnalysisPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5,
+              fontSize: 12.5,
               lineHeight: 2.1,
               letterSpacing: 0.3,
               color: TEXT_DIM,
@@ -208,7 +208,7 @@ export default function LainAnalysisPage() {
               display: 'inline-grid',
               gridTemplateColumns: 'auto auto',
               gap: '4px 24px',
-              fontSize: 9,
+              fontSize: 10.5,
               letterSpacing: 1,
               color: `${ACCENT}99`,
               border: `1px solid ${ACCENT}33`,
@@ -223,7 +223,7 @@ export default function LainAnalysisPage() {
 
           {/* índice */}
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 640 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0 20px' }}>
@@ -238,7 +238,7 @@ export default function LainAnalysisPage() {
                 ['VIII', 'sec-08', 'Recepción y legado'],
                 ['IX', 'sec-09', 'Resonancia con NeoProxy'],
               ].map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 24, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -251,7 +251,7 @@ export default function LainAnalysisPage() {
         <div id="sec-01" style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="PREMISA" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Lain Iwakura es una estudiante de secundaria retraída que recibe un email de una
               compañera, Chisa Yomoda, que acaba de suicidarse. El mensaje dice, en esencia, que Chisa
               simplemente descartó su cuerpo — y que "Dios está acá, en el Wired". A partir de ahí,
@@ -266,7 +266,7 @@ export default function LainAnalysisPage() {
         <div id="sec-02" style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="EL WIRED Y EL PROTOCOLO SIETE" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Masami Eiri dirigía el desarrollo del Protocolo Siete — la próxima generación del Wired —
               en Tachibana General Laboratories. Según las fuentes consultadas, su proyecto real era
               eliminar la necesidad del cuerpo físico y vivir enteramente dentro de la red; Lain habría
@@ -290,7 +290,7 @@ export default function LainAnalysisPage() {
         <div id="sec-04" style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="LAS MÚLTIPLES LAIN" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La fragmentación de identidad no es subtexto — es la estructura literal de la serie: hay
               una Lain tímida y torpe en la escuela, una Lain segura y distinta dentro del Wired, y una
               tercera que empieza a comportarse como si tuviera memoria y voluntad propias,
@@ -308,7 +308,7 @@ export default function LainAnalysisPage() {
         <div id="sec-05" style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="EL FINAL" sub="deliberadamente abierto — ninguna fuente lo da por completamente resuelto" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Hacia el final, Lain confronta a sus propias versiones múltiples y a la presencia que
               funciona como "dios" del Wired, y elige borrar su forma digital omnipresente para
               devolverle la realidad a los demás — un acto de renuncia, no de triunfo. Varias fuentes
@@ -326,7 +326,7 @@ export default function LainAnalysisPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <Panel>
               <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>IDENTIDAD Y DISOCIACIÓN</div>
-              <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>
+              <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>
                 El eje central de toda la obra: qué queda de "vos" cuando otras personas te recuerdan de
                 formas incompatibles entre sí, y la red hace que esas versiones divergentes convivan al
                 mismo tiempo en vez de resolverse en una sola historia.
@@ -334,7 +334,7 @@ export default function LainAnalysisPage() {
             </Panel>
             <Panel>
               <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>ALIENACIÓN SOCIAL</div>
-              <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>
+              <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>
                 Lain empieza la serie prácticamente sin vínculos reales — la conexión que encuentra en
                 el Wired es, durante buena parte de la trama, más genuina para ella que cualquier
                 vínculo físico, lo cual invierte la jerarquía esperada entre "vida real" y pantalla.
@@ -342,7 +342,7 @@ export default function LainAnalysisPage() {
             </Panel>
             <Panel>
               <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10 }}>INCONSCIENTE COLECTIVO — LECTURA DE FANS, NO ACADÉMICA</div>
-              <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>
+              <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>
                 Algunos ensayos de aficionados conectan al Wired con el inconsciente colectivo de Jung —
                 una red que todos comparten sin que nadie la controle del todo. Es una lectura
                 razonable, pero es interpretación de blogs, no un consenso de crítica especializada;
@@ -356,7 +356,7 @@ export default function LainAnalysisPage() {
         <div id="sec-07" style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="ESTÉTICA Y SONIDO" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
               El diseño de personajes de Yoshitoshi ABe — líneas simples, paletas desaturadas, el
               pijama de oso de Lain como una de las imágenes más reconocibles del anime de los 90 — se
               sostiene sobre un sonido igual de deliberado: Reichi "Chabo" Nakaido compuso una banda
@@ -364,7 +364,7 @@ export default function LainAnalysisPage() {
               inquietantes con una base de tecno subyacente, muy distinta del sonido orquestal típico
               de la época.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Los NAVI — las terminales personales que usan los personajes — tienen, según una wiki de
               fans (no una fuente primaria confirmada), un diseño de hardware inspirado en Apple y un
               sistema operativo inspirado en BeOS. Se incluye con esa salvedad explícita: no hay una
@@ -381,7 +381,7 @@ export default function LainAnalysisPage() {
             {RECEPTION_NOTES.map((n, i) => (
               <Panel key={i}>
                 <div style={{ fontSize: 12, letterSpacing: 2, color: ACCENT, marginBottom: 10, textShadow: `0 0 10px ${ACCENT}44` }}>{n.title}</div>
-                <div style={{ fontSize: 10.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
+                <div style={{ fontSize: 11.5, lineHeight: 1.8, color: TEXT_DIM }}>{n.detail}</div>
               </Panel>
             ))}
           </div>
@@ -391,7 +391,7 @@ export default function LainAnalysisPage() {
         <div id="sec-09" style={{ marginBottom: 40 }}>
           <SectionHeader roman="IX" title="RESONANCIA CON NEOPROXY" sub="lectura propia de este documento, no una fuente externa — marcada como tal" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: '0 0 16px' }}>
               De las tres referencias estéticas que este proyecto cita explícitamente, Lain es la que
               más de cerca anticipa su propia premisa de fondo: una red que no es solo infraestructura,
               sino un espacio donde la identidad deja de ser una sola cosa estable. Los seis agentes de
@@ -402,7 +402,7 @@ export default function LainAnalysisPage() {
               narrada no coinciden, exactamente la misma grieta que sostiene toda la trama de Lain
               entre la chica de carne y hueso y la presencia que termina habitando el Wired.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Prototype — el séptimo agente, emergente, ensamblado de residuos de los otros cinco — es
               la pieza que más se acerca a lo que le pasa a Lain hacia el final: una entidad que no fue
               diseñada a propósito desde el principio, que se vuelve más real cuanto más el sistema que
@@ -413,7 +413,7 @@ export default function LainAnalysisPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-REF-01 // DOCUMENTO SIN ENLAZAR — ARCHIVO ACCEDIDO DIRECTO, NO INDEXADO
           </div>
         </div>

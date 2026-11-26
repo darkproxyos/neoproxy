@@ -58,7 +58,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
         </h2>
       </div>
       {sub && (
-        <div style={{ fontSize: 10, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, color: LABEL_DIM, marginTop: 8, paddingLeft: 32 }}>
           {sub}
         </div>
       )}
@@ -69,7 +69,7 @@ function SectionHeader({ roman, title, sub }: { roman: string; title: string; su
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 9.5, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
+      fontSize: 11, lineHeight: 1.8, letterSpacing: 0.5, color: LABEL_DIM, marginTop: 14,
       borderLeft: `2px solid ${ACCENT}33`, paddingLeft: 12,
     }}>
       {children}
@@ -119,13 +119,13 @@ export default function RedesNeuronalesPage() {
       <div className="tech-grid" />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 980, margin: '0 auto', padding: '100px 24px 140px' }}>
-        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
+        <Link href="/knowledge" className="press tap-ext" style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}aa`, textDecoration: 'none', display: 'inline-block', marginBottom: 40 }}>
           ← VOLVER AL CODEX
         </Link>
 
         {/* encabezado */}
         <div style={{ marginBottom: 90 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
+          <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}66`, marginBottom: 16 }}>
             NPX-ARC-14 // REFERENCIA TÉCNICA
           </div>
           <h1
@@ -146,7 +146,7 @@ export default function RedesNeuronalesPage() {
           </div>
           <p
             style={{
-              fontSize: 11.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 680,
+              fontSize: 12.5, lineHeight: 2.1, letterSpacing: 0.3, color: TEXT_DIM, maxWidth: 680,
               borderLeft: `1px solid ${ACCENT}33`, paddingLeft: 24, marginBottom: 32,
             }}
           >
@@ -159,7 +159,7 @@ export default function RedesNeuronalesPage() {
 
           <div
             style={{
-              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 9,
+              display: 'inline-grid', gridTemplateColumns: 'auto auto', gap: '4px 24px', fontSize: 10.5,
               letterSpacing: 1, color: `${ACCENT}99`, border: `1px solid ${ACCENT}33`, padding: '12px 18px',
               marginBottom: 32,
             }}
@@ -170,12 +170,12 @@ export default function RedesNeuronalesPage() {
           </div>
 
           <nav style={{ border: `1px solid ${ACCENT}22`, padding: '20px 24px', maxWidth: 700 }}>
-            <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}66`, marginBottom: 14 }}>
               ÍNDICE
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '6px 20px' }}>
               {TOC.map(([roman, id, label]) => (
-                <a key={id} href={`#${id}`} style={{ fontSize: 10.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
+                <a key={id} href={`#${id}`} style={{ fontSize: 11.5, color: TEXT_DIM, textDecoration: 'none', display: 'flex', gap: 10, padding: '7px 0' }}>
                   <span style={{ color: `${ACCENT}88`, width: 28, flexShrink: 0 }}>{roman}</span>
                   <span>{label}</span>
                 </a>
@@ -188,7 +188,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-01" className={`rna-section ${visible['sec-01'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="I" title="ORÍGENES — MCCULLOCH, PITTS Y EL PERCEPTRÓN" sub="1943 y 1958 — antes de que existiera el término 'inteligencia artificial'" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               <Link href="/knowledge?entry=mcculloch" style={{ color: '#fff', textDecoration: 'underline' }}>Warren McCulloch</Link> (neurofisiólogo,
               ya entrada real de este Codex) y Walter Pitts (lógico, entonces adolescente) publicaron
               en 1943 "A Logical Calculus of the Ideas Immanent in Nervous Activity": el primer modelo
@@ -199,7 +199,7 @@ export default function RedesNeuronalesPage() {
               nacimiento formal del campo que hoy llamamos inteligencia artificial, acuñado recién en la
               conferencia de Dartmouth de 1956.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Frank Rosenblatt, psicólogo de Cornell, dio el siguiente paso real en 1958 con el{' '}
               <Link href="/knowledge?entry=perceptron" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Perceptrón
@@ -212,7 +212,7 @@ export default function RedesNeuronalesPage() {
               que, en retrospectiva, se adelantó varias décadas a lo que la tecnología de ese momento
               realmente podía sostener.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Ese entusiasmo temprano, y el freno real que vino después, es el tema de la sección
               siguiente.
             </p>
@@ -223,7 +223,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-02" className={`rna-section ${visible['sec-02'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="II" title="EL INVIERNO DE LA IA" sub="Minsky y Papert, 1969 — un freno real, no una leyenda" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Marvin Minsky y Seymour Papert publicaron en 1969 el libro <em>Perceptrons</em>, con una
               demostración matemática rigurosa y difícil de discutir: el perceptrón simple, de una sola
               capa, es incapaz de resolver problemas que no son linealmente separables — es decir, que no
@@ -232,7 +232,7 @@ export default function RedesNeuronalesPage() {
               recta que separe correctamente sus cuatro combinaciones posibles de entrada en las dos
               salidas correctas.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La demostración en sí no era un callejón sin salida —apilar varias capas sí puede resolver
               XOR, algo que los propios autores sabían— pero no existía todavía, en 1969, un método
               práctico y eficiente para entrenar más de una capa. El resultado fue un freno real y
@@ -253,7 +253,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-03" className={`rna-section ${visible['sec-03'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="III" title="CÓMO FUNCIONA UNA NEURONA ARTIFICIAL" sub="la pieza mínima de todo lo que sigue" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Una neurona artificial hace, en esencia, dos operaciones en orden. Primero, una{' '}
               <strong style={{ color: '#fff' }}>suma ponderada</strong>: cada entrada se multiplica por un
               peso propio (un número que la red ajusta durante el entrenamiento) y se suman todos esos
@@ -261,7 +261,7 @@ export default function RedesNeuronalesPage() {
               (bias), que permite desplazar el punto en el que la neurona empieza a activarse. En notación
               simple: <Mono>z = (w₁x₁ + w₂x₂ + ... + wₙxₙ) + b</Mono>.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Segundo, ese resultado <Mono>z</Mono> pasa por una{' '}
               <strong style={{ color: '#fff' }}>función de activación no lineal</strong> — históricamente
               la sigmoide (aplasta cualquier valor entre 0 y 1) o la tangente hiperbólica, y en la
@@ -269,7 +269,7 @@ export default function RedesNeuronalesPage() {
               entrada negativa, la misma entrada sin cambios si es positiva), preferida hoy por ser más
               simple de calcular y por entrenar mejor en redes profundas.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La no linealidad no es un detalle técnico menor: es la pieza que hace que apilar capas
               tenga sentido. Sin ella, cualquier cantidad de capas de sumas ponderadas se podría colapsar,
               matemáticamente, en una sola transformación lineal equivalente — y una transformación lineal
@@ -284,7 +284,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-04" className={`rna-section ${visible['sec-04'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IV" title="RETROPROPAGACIÓN — LO QUE HIZO ENTRENABLE AL CAMPO" sub="Rumelhart, Hinton y Williams, 1986 (con antecedentes en Werbos, años 70)" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               La <strong style={{ color: '#fff' }}>retropropagación</strong> (backpropagation) resuelve el
               problema práctico que el invierno de la IA había dejado pendiente: cómo ajustar los pesos de
               una red con varias capas ocultas, no solo una. La idea, popularizada en un paper de 1986 de
@@ -294,7 +294,7 @@ export default function RedesNeuronalesPage() {
               de Paul Werbos en los años 70— consiste en calcular cuánto contribuyó cada peso individual
               al error final, y corregirlo en la dirección que reduce ese error, un poco en cada paso.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Esto no fue solamente una idea matemática elegante: fue lo que convirtió a las redes
               neuronales en algo entrenable en la práctica, a escala, por primera vez. Sin un método
               eficiente para calcular ese gradiente del error capa por capa, entrenar una red de más de
@@ -309,7 +309,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-05" className={`rna-section ${visible['sec-05'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="V" title="TIPOS DE RED — MLP, CNN, RNN, LSTM" sub="cuatro arquitecturas, cuatro problemas distintos que resolver" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El <strong style={{ color: '#fff' }}>perceptrón multicapa</strong> (MLP) es la arquitectura
               feedforward más básica: varias capas de neuronas como las de la sección III, cada una
               conectada por completo a la siguiente, la información fluyendo siempre hacia adelante sin
@@ -317,7 +317,7 @@ export default function RedesNeuronalesPage() {
               cuando la entrada es, por ejemplo, una imagen de miles de píxeles: cada conexión completa
               entre capas crecería a un número de parámetros poco práctico.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Las <strong style={{ color: '#fff' }}>redes convolucionales</strong> (CNN) resuelven
               exactamente ese problema, con contribuciones reales de Yann LeCun desde fines de los años 80
               (la arquitectura LeNet, aplicada originalmente a reconocer dígitos escritos a mano para
@@ -327,7 +327,7 @@ export default function RedesNeuronalesPage() {
               de la imagen aparezca. Esa idea de peso compartido es la que hizo viable, computacionalmente,
               trabajar con imágenes de alta resolución.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Las <strong style={{ color: '#fff' }}>redes recurrentes</strong> (RNN) están diseñadas para
               datos secuenciales —texto, audio, series de tiempo— manteniendo una especie de memoria
               interna que se actualiza paso a paso a medida que la secuencia avanza. El problema práctico
@@ -336,7 +336,7 @@ export default function RedesNeuronalesPage() {
               tiempo se vuelve, numéricamente, cada vez más chica hasta desaparecer, y la red pierde la
               capacidad de aprender dependencias lejanas en el tiempo.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La solución real a ese problema específico fue <strong style={{ color: '#fff' }}>LSTM</strong>{' '}
               (Long Short-Term Memory), propuesta por Sepp Hochreiter y Jürgen Schmidhuber en 1997: una
               variante de RNN con compuertas internas explícitas que decide, en cada paso, qué información
@@ -351,7 +351,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-06" className={`rna-section ${visible['sec-06'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VI" title="TRANSFORMERS — ATENCIÓN EN VEZ DE RECURRENCIA" sub="Vaswani et al., 'Attention Is All You Need', 2017" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El paper{' '}
               <Link href="/knowledge?entry=transformer" style={{ color: '#fff', textDecoration: 'underline' }}>
                 "Attention Is All You Need"
@@ -362,7 +362,7 @@ export default function RedesNeuronalesPage() {
               secuencia entera de una sola vez y aprende a pesar qué tan relevante es cada posición
               respecto de cada otra posición, en paralelo, sin importar qué tan lejos estén entre sí.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               La consecuencia práctica fue enorme: al no depender de un procesamiento secuencial paso a
               paso, el entrenamiento se puede paralelizar de forma masiva en hardware moderno (GPUs/TPUs),
               algo que las RNN, por su naturaleza secuencial, no permitían con la misma eficiencia. Esta
@@ -376,7 +376,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-07" className={`rna-section ${visible['sec-07'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VII" title="PARADIGMAS DE APRENDIZAJE" sub="tres formas distintas de que una red aprenda algo" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El <strong style={{ color: '#fff' }}>aprendizaje supervisado</strong> entrena con ejemplos
               que ya tienen la respuesta correcta conocida (una imagen etiquetada "gato", un email
               etiquetado "spam") — la red ajusta sus pesos para minimizar el error respecto de esas
@@ -385,7 +385,7 @@ export default function RedesNeuronalesPage() {
               entre sí (clustering) sin que nadie le haya dicho de antemano cuáles son los grupos
               correctos.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               El <strong style={{ color: '#fff' }}>aprendizaje por refuerzo</strong> no usa ejemplos
               etiquetados ni busca estructura oculta: un agente toma acciones en un entorno y recibe una
               señal de recompensa o castigo, ajustando su comportamiento para maximizar la recompensa
@@ -401,7 +401,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-08" className={`rna-section ${visible['sec-08'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="VIII" title="REDES GENERATIVAS — DE LAS GAN A LA DIFUSIÓN" sub="Goodfellow et al., 2014 — y el cambio real de paradigma desde 2020-2022" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Ian Goodfellow y colegas propusieron en 2014 las{' '}
               <strong style={{ color: '#fff' }}>GAN</strong> (Generative Adversarial Networks, redes
               generativas antagónicas): dos redes entrenadas juntas y enfrentadas, una{' '}
@@ -411,7 +411,7 @@ export default function RedesNeuronalesPage() {
               la otra, en una competencia de suma cero que, bien entrenada, termina produciendo
               generaciones difíciles de distinguir de datos reales.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Desde aproximadamente 2020-2022, la generación de imágenes migró en la práctica comercial
               hacia los <strong style={{ color: '#fff' }}>modelos de difusión</strong>: en vez de una
               competencia adversaria, aprenden a revertir, paso a paso, un proceso de agregado de ruido
@@ -428,7 +428,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-09" className={`rna-section ${visible['sec-09'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="IX" title="HOPFIELD Y LA MEMORIA ASOCIATIVA" sub="1982 — y el Nobel de Física 2024" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               John Hopfield propuso en 1982 un tipo de red muy distinto de todo lo anterior en este
               documento: una <strong style={{ color: '#fff' }}>red de memoria asociativa</strong>,
               inspirada directamente en la física estadística de sistemas de espines magnéticos (el modelo
@@ -437,7 +437,7 @@ export default function RedesNeuronalesPage() {
               converge hacia la versión completa y limpia almacenada más parecida — una memoria que se
               reconstruye a sí misma, no que se busca en una tabla.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               En 2024, John{' '}
               <Link href="/knowledge?entry=hopfield" style={{ color: '#fff', textDecoration: 'underline' }}>
                 Hopfield
@@ -456,7 +456,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-10" className={`rna-section ${visible['sec-10'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="X" title="LA METÁFORA BIOLÓGICA, CON HONESTIDAD" sub="el nombre es real, la fidelidad biológica no tanto" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               El nombre "red neuronal" no es puro marketing: McCulloch era neurofisiólogo y el modelo de
               1943 (sección I) sí partió de pensar cómo se activa o no una neurona biológica real. Pero la
               distancia entre una neurona artificial —una suma ponderada y una función no lineal, sección
@@ -482,7 +482,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-11" className={`rna-section ${visible['sec-11'] ? 'is-visible' : ''}`} style={{ marginBottom: 90 }}>
           <SectionHeader roman="XI" title="HASTA AHORA Y EL FUTURO REAL DEL CAMPO" sub="escala sin precedente histórico — y un debate real, sin resolver" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               Los modelos actuales operan a una escala sin precedente histórico: desde cientos de miles de
               millones hasta billones de parámetros, entrenados con volúmenes de datos y de cómputo que no
               tienen comparación con nada anterior a esta década. Líneas de investigación activas y reales
@@ -506,7 +506,7 @@ export default function RedesNeuronalesPage() {
         <div id="sec-12" className={`rna-section ${visible['sec-12'] ? 'is-visible' : ''}`} style={{ marginBottom: 0 }}>
           <SectionHeader roman="XII" title="RESONANCIA CON NEOPROXY" />
           <Panel>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0, marginBottom: 16 }}>
               McCulloch,{' '}
               <Link href="/knowledge?entry=perceptron" style={{ color: '#fff', textDecoration: 'underline' }}>Perceptrón</Link>,{' '}
               <Link href="/knowledge?entry=transformer" style={{ color: '#fff', textDecoration: 'underline' }}>Transformer</Link>{' '}
@@ -515,7 +515,7 @@ export default function RedesNeuronalesPage() {
               ya eran entradas reales de este Codex, sembradas sin que ningún documento las agrupara —el
               mismo patrón que ya tuvieron Autoorganización y Cibernética antes de este documento.
             </p>
-            <p style={{ fontSize: 11.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
+            <p style={{ fontSize: 12.5, lineHeight: 2, color: TEXT_DIM, margin: 0 }}>
               Y la sección VI no es solo historia: el chat de /proxyverse y la Segunda Mente del panel de
               DarkProxy corren, en este mismo instante en que alguien lee esto, sobre exactamente esa
               arquitectura — atención en vez de recurrencia, la misma que describió el paper de 2017.
@@ -525,7 +525,7 @@ export default function RedesNeuronalesPage() {
 
         {/* footer */}
         <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${ACCENT}22` }}>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: `${ACCENT}44` }}>
+          <div style={{ fontSize: 10.5, letterSpacing: 3, color: `${ACCENT}44` }}>
             NPX-ARC-14 // REFERENCIA TÉCNICA DEL CODEX
           </div>
         </div>

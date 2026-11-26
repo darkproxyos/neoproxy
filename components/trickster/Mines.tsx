@@ -90,7 +90,7 @@ export default function Mines({
 
   return (
     <div style={{ border: `1px solid ${COLOR}33`, background: `${COLOR}08`, padding: '24px 20px' }}>
-      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
+      <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: 3, color: COLOR, marginBottom: 18 }}>
         CAMPO_GLITCH
       </div>
 
@@ -128,7 +128,7 @@ export default function Mines({
               key={m}
               onClick={() => setMineCount(m)}
               style={{
-                fontFamily: mono, fontSize: 9, letterSpacing: 1, padding: '8px 12px', cursor: 'pointer',
+                fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '8px 12px', cursor: 'pointer',
                 background: mineCount === m ? `${COLOR}33` : 'transparent', color: mineCount === m ? COLOR : '#8fb8d6',
                 border: `1px solid ${mineCount === m ? COLOR : COLOR + '33'}`,
               }}
@@ -140,7 +140,7 @@ export default function Mines({
       )}
 
       {active && (
-        <div style={{ textAlign: 'center', fontFamily: mono, fontSize: 9, color: '#8fb8d6', marginBottom: 14 }}>
+        <div style={{ textAlign: 'center', fontFamily: mono, fontSize: 10.5, color: '#8fb8d6', marginBottom: 14 }}>
           {picks} SEGURAS // {multiplier.toFixed(2)}x // RETIRO {potential}¢
         </div>
       )}
@@ -152,7 +152,7 @@ export default function Mines({
               key={b}
               onClick={() => setBet(b)}
               style={{
-                fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '8px 14px', cursor: 'pointer',
+                fontFamily: mono, fontSize: 11, letterSpacing: 1, padding: '8px 14px', cursor: 'pointer',
                 background: bet === b ? `${COLOR}33` : 'transparent', color: bet === b ? COLOR : '#8fb8d6',
                 border: `1px solid ${bet === b ? COLOR : COLOR + '33'}`,
               }}
@@ -168,7 +168,7 @@ export default function Mines({
           onClick={start}
           disabled={balance < bet}
           style={{
-            display: 'block', width: '100%', fontFamily: mono, fontSize: 11, letterSpacing: 3, padding: '14px',
+            display: 'block', width: '100%', fontFamily: mono, fontSize: 12, letterSpacing: 3, padding: '14px',
             background: balance < bet ? 'transparent' : `${COLOR}22`,
             color: balance < bet ? '#4a6080' : COLOR,
             border: `1px solid ${balance < bet ? '#4a6080' : COLOR}`,
@@ -182,7 +182,7 @@ export default function Mines({
           onClick={cashOut}
           disabled={revealed.size === 0}
           style={{
-            display: 'block', width: '100%', fontFamily: mono, fontSize: 11, letterSpacing: 3, padding: '14px',
+            display: 'block', width: '100%', fontFamily: mono, fontSize: 12, letterSpacing: 3, padding: '14px',
             background: revealed.size === 0 ? 'transparent' : `${COLOR}22`,
             color: revealed.size === 0 ? '#4a6080' : '#00ff9d',
             border: `1px solid ${revealed.size === 0 ? '#4a6080' : '#00ff9d'}`,
@@ -195,7 +195,7 @@ export default function Mines({
 
       {message && (
         <div style={{
-          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 10, letterSpacing: 2,
+          marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 11, letterSpacing: 2,
           color: message.includes('BOOM') ? '#ff4d4d' : '#00ff9d',
         }}>
           {message}

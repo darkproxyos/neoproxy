@@ -340,7 +340,7 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
   })()
 
   const btnStyle = (active: boolean) => ({
-    fontFamily: mono, fontSize: 8, letterSpacing: 1, padding: '5px 9px', cursor: 'pointer',
+    fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '5px 9px', cursor: 'pointer',
     background: active ? `${color}26` : 'rgba(0,4,10,0.7)',
     border: `1px solid ${active ? color : '#2a3a50'}`,
     color: active ? color : '#8fb8d6',
@@ -383,7 +383,7 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
       {!loading && !error && (
         <div style={{
           position: 'absolute', bottom: 12, right: 12, zIndex: 3,
-          fontFamily: mono, fontSize: 8, letterSpacing: 1.5, padding: '5px 9px',
+          fontFamily: mono, fontSize: 10, letterSpacing: 1.5, padding: '5px 9px',
           color, background: 'rgba(0,4,10,0.7)', border: `1px solid ${color}44`,
         }}>
           {growthLabel}
@@ -393,7 +393,7 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
       {loading && !error && (
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color, fontSize: 11, letterSpacing: 2, fontFamily: mono,
+          color, fontSize: 12, letterSpacing: 2, fontFamily: mono,
         }}>
           CARGANDO MODELO://...
         </div>
@@ -401,7 +401,7 @@ const SpecimenViewer = forwardRef<SpecimenViewerHandle, { stlPath: string; color
       {error && (
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#ff2d55', fontSize: 11, letterSpacing: 1, fontFamily: mono, textAlign: 'center', padding: 24,
+          color: '#ff2d55', fontSize: 12, letterSpacing: 1, fontFamily: mono, textAlign: 'center', padding: 24,
         }}>
           NO SE PUDO CARGAR EL MODELO
         </div>

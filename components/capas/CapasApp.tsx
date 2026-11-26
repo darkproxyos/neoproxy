@@ -32,7 +32,7 @@ const paramsOf = (r: Recipe): Params => { const { strokes: _s, knobs: _k, ...p }
 function Slider({ label, value, min, max, step, onChange, readout, disabled }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void; readout: string; disabled?: boolean }) {
   return (
     <label style={{ display: 'block', opacity: disabled ? 0.45 : 1 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 9.5, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}>
         <span>{label}</span><span style={{ color: '#fff' }}>{readout}</span>
       </div>
       <input type="range" className="cap-range" min={min} max={max} step={step} value={value} disabled={disabled} onChange={(e) => onChange(Number(e.target.value))} style={{ width: '100%' }} />
@@ -43,7 +43,7 @@ function Slider({ label, value, min, max, step, onChange, readout, disabled }: {
 function Chip({ on, onClick, children, color, title }: { on: boolean; onClick: () => void; children: React.ReactNode; color?: string; title?: string }) {
   const c = color ?? '#9fe8ff'
   return (
-    <button type="button" className="press" title={title} onClick={onClick} style={{ minHeight: 34, padding: '0 12px', fontFamily: mono, fontSize: 10, letterSpacing: 1.5, cursor: 'pointer', background: on ? `${c}22` : 'transparent', border: `1px solid ${on ? c : '#ffffff22'}`, color: on ? c : '#8fa8c4' }}>
+    <button type="button" className="press" title={title} onClick={onClick} style={{ minHeight: 34, padding: '0 12px', fontFamily: mono, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer', background: on ? `${c}22` : 'transparent', border: `1px solid ${on ? c : '#ffffff22'}`, color: on ? c : '#8fa8c4' }}>
       {children}
     </button>
   )
@@ -52,7 +52,7 @@ function Chip({ on, onClick, children, color, title }: { on: boolean; onClick: (
 function Stat({ k, v, hint, warn }: { k: string; v: string; hint?: string; warn?: boolean }) {
   return (
     <div style={{ padding: '10px 12px', background: '#080c12', border: '1px solid #ffffff10' }} title={hint}>
-      <div style={{ fontSize: 9.5, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div>
+      <div style={{ fontSize: 11, letterSpacing: 1.6, color: '#7f96b2', marginBottom: 5 }}>{k}</div>
       <div style={{ fontSize: 14, color: warn ? '#ffb86b' : '#fff' }}>{v}</div>
     </div>
   )
@@ -348,7 +348,7 @@ export default function CapasApp() {
             {LAW_IDS.map((id) => {
               const c = LAW_STYLE[id].accent, on = id === params.law
               return (
-                <button key={id} role="tab" aria-selected={on} className="press" onClick={() => setLaw(id)} style={{ minHeight: 44, fontFamily: mono, fontSize: 10, letterSpacing: 1.6, cursor: 'pointer', background: on ? `${c}22` : '#080c12', borderStyle: 'solid', borderWidth: '2px 1px 1px 1px', borderColor: `${c} ${on ? c : '#ffffff1a'} ${on ? c : '#ffffff1a'} ${on ? c : '#ffffff1a'}`, color: on ? c : '#8fa8c4' }}>
+                <button key={id} role="tab" aria-selected={on} className="press" onClick={() => setLaw(id)} style={{ minHeight: 44, fontFamily: mono, fontSize: 11, letterSpacing: 1.6, cursor: 'pointer', background: on ? `${c}22` : '#080c12', borderStyle: 'solid', borderWidth: '2px 1px 1px 1px', borderColor: `${c} ${on ? c : '#ffffff1a'} ${on ? c : '#ffffff1a'} ${on ? c : '#ffffff1a'}`, color: on ? c : '#8fa8c4' }}>
                   {LAWS[id].label}
                 </button>
               )
@@ -356,7 +356,7 @@ export default function CapasApp() {
           </div>
           {PRESETS.some((x) => x.law === params.law) && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, margin: '0 0 10px', alignItems: 'center' }}>
-              <span style={{ fontSize: 10, letterSpacing: 1.5, color: '#8fa8c4' }}>SEMILLAS</span>
+              <span style={{ fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4' }}>SEMILLAS</span>
               <Chip on={presetId === null} onClick={() => setLaw(params.law)} color={accent} title="Una sola semilla, en el centro">DE FÁBRICA</Chip>
               {PRESETS.filter((x) => x.law === params.law).map((x) => (
                 <Chip key={x.id} on={presetId === x.id} color={accent} title={x.hint} onClick={() => { start(presetRecipe(x, st.current.sess?.recipe.seed ?? 7), 0); setPresetId(x.id) }}>{x.label}</Chip>
@@ -375,24 +375,24 @@ export default function CapasApp() {
               style={{ display: 'block', width: '100%', aspectRatio: '1 / 1', cursor: 'crosshair', touchAction: 'none' }}
               aria-label={`Mundo 2D de la ley ${L.label}: arrastra para ${L.seedLabel[0].toLowerCase()}`}
             />
-            <div style={{ position: 'absolute', left: 10, bottom: 8, fontSize: 10, letterSpacing: 1.6, color: '#ffffffcc', textShadow: '0 1px 3px #000' }}>
+            <div style={{ position: 'absolute', left: 10, bottom: 8, fontSize: 11, letterSpacing: 1.6, color: '#ffffffcc', textShadow: '0 1px 3px #000' }}>
               MUNDO {WORLD}×{WORLD} · EL TIEMPO PRESENTE
             </div>
-            {ffBusy && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: '#000000a0', fontSize: 11, letterSpacing: 2, color: accent }}>RECONSTRUYENDO UNIVERSO · {ffUi}/{params.slices}</div>}
+            {ffBusy && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: '#000000a0', fontSize: 12, letterSpacing: 2, color: accent }}>RECONSTRUYENDO UNIVERSO · {ffUi}/{params.slices}</div>}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, margin: '10px 0' }}>
             <Chip on={tool === 1} onClick={() => setTool(1)} color={accent}>{L.seedLabel[0]}</Chip>
             <Chip on={tool === -1} onClick={() => setTool(-1)} color="#ff6677">{L.seedLabel[1]}</Chip>
             <div style={{ flex: '1 1 150px', minWidth: 150 }}><Slider label="PINCEL" value={brush} min={2} max={16} step={1} onChange={setBrush} readout={`${brush} celdas`} /></div>
           </div>
-          <div style={{ fontSize: 10, lineHeight: 1.8, color: '#7f96b2', minHeight: 36 }}>
+          <div style={{ fontSize: 11, lineHeight: 1.8, color: '#7f96b2', minHeight: 36 }}>
             {!atPresent ? <span style={{ color: '#ffd27c' }}>Estás viendo el pasado. Pulsa AHORA para volver al presente y pintar.</span>
               : full ? <span style={{ color: '#ffd27c' }}>La pieza está completa: ya no entran más capas. Reinicia o crea un universo nuevo.</span>
               : strokesN >= MAX_STROKES ? <span style={{ color: '#ffd27c' }}>Límite de pinceladas de la receta alcanzado.</span>
-              : <>{L.note} <span style={{ color: '#5d7490' }}>Clic derecho o Alt = herramienta opuesta.</span></>}
+              : <>{L.note} <span style={{ color: '#6f86a3' }}>Clic derecho o Alt = herramienta opuesta.</span></>}
           </div>
           {charge && (
-            <div style={{ marginTop: 8, padding: '8px 12px', background: '#080c12', border: '1px solid #ffffff12', fontSize: 10, letterSpacing: 1.2, color: '#9fb4cc' }}>
+            <div style={{ marginTop: 8, padding: '8px 12px', background: '#080c12', border: '1px solid #ffffff12', fontSize: 11, letterSpacing: 1.2, color: '#9fb4cc' }}>
               CARGA TOPOLÓGICA · vórtices + <b style={{ color: '#ffd27c' }}>{charge.plus}</b> · vórtices − <b style={{ color: '#7fd7ff' }}>{charge.minus}</b> · total <b style={{ color: charge.total === 0 ? '#7cf0b0' : '#ff6677' }}>{charge.total}</b> {charge.total === 0 ? '(siempre 0 en un toroide)' : '(error del contador)'}
             </div>
           )}
@@ -402,7 +402,7 @@ export default function CapasApp() {
         <section style={{ minWidth: 0 }}>
           <div style={{ position: 'relative', height: 'min(640px, 78vh)', minHeight: 360, background: '#03060a', border: `1px solid ${accent}33` }}>
             <CapasViewer onReady={(api) => { viewerRef.current = api; if (api) { api.setMarkers(markers); api.setPalette(palette) } }} />
-            <div style={{ position: 'absolute', left: 12, top: 10, fontSize: 9.5, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
+            <div style={{ position: 'absolute', left: 12, top: 10, fontSize: 11, letterSpacing: 1.8, color: '#ffffffcc', textShadow: '0 1px 4px #000', pointerEvents: 'none' }}>
               <div style={{ color: accent }}>{L.label} · {rid || '…'}</div>
               <div>CAPA {Math.round(cutUi) + 1} / {params.slices}{info ? ` · ${fmt(cutUi * info.layerMm, 1)} mm` : ''}</div>
               {meshing && <div style={{ color: '#7f96b2' }}>calculando malla…</div>}
@@ -411,7 +411,7 @@ export default function CapasApp() {
               <Chip on={palette === 'resina'} onClick={() => setPalette((v) => (v === 'resina' ? 'tiempo' : 'resina'))} title="Muestra la pieza como saldrá: de un solo color, sin la escala de tiempo">RESINA</Chip>
               <Chip on={markers} onClick={() => setMarkers((v) => !v)} title="Marcadores de nacimientos, divisiones, fusiones y muertes">EVENTOS</Chip>
             </div>
-            <div style={{ position: 'absolute', left: 12, bottom: 10, display: 'flex', flexWrap: 'wrap', gap: '4px 12px', fontSize: 10, letterSpacing: 1.2, color: '#9fb4cc', pointerEvents: 'none', textShadow: '0 1px 3px #000' }}>
+            <div style={{ position: 'absolute', left: 12, bottom: 10, display: 'flex', flexWrap: 'wrap', gap: '4px 12px', fontSize: 11, letterSpacing: 1.2, color: '#9fb4cc', pointerEvents: 'none', textShadow: '0 1px 3px #000' }}>
               {(Object.keys(EVENT_COLOR) as (keyof typeof EVENT_COLOR)[]).map((k) => (
                 <span key={k}><i style={{ display: 'inline-block', width: 7, height: 7, borderRadius: 4, background: EVENT_COLOR[k], marginRight: 5 }} />{EVENT_LABEL[k]} {tl ? tl.counts[k] : 0}</span>
               ))}
@@ -436,19 +436,19 @@ export default function CapasApp() {
       {/* ---- ficha de la ley y perillas ---- */}
       <div className="cap-grid2" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 22, marginTop: 26 }}>
         <section style={{ background: '#080c12', borderStyle: 'solid', borderWidth: '1px 1px 1px 3px', borderColor: `${accent}2a ${accent}2a ${accent}2a ${accent}`, padding: '18px 20px' }}>
-          <div style={{ fontSize: 10, letterSpacing: 3, color: accent, marginBottom: 6 }}>{L.label} — {L.tagline.toUpperCase()}</div>
-          <div style={{ fontSize: 11, color: '#fff', margin: '0 0 12px', lineHeight: 1.8, fontFamily: mono }}>{L.equation}</div>
-          <p style={{ fontSize: 11, lineHeight: 1.95, color: '#a9bdd4', margin: '0 0 10px' }}>{L.concept}</p>
-          <p style={{ fontSize: 9.5, lineHeight: 1.8, color: '#6f86a3', margin: 0 }}>{L.credit}</p>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: accent, marginBottom: 6 }}>{L.label} — {L.tagline.toUpperCase()}</div>
+          <div style={{ fontSize: 12, color: '#fff', margin: '0 0 12px', lineHeight: 1.8, fontFamily: mono }}>{L.equation}</div>
+          <p style={{ fontSize: 12, lineHeight: 1.95, color: '#a9bdd4', margin: '0 0 10px' }}>{L.concept}</p>
+          <p style={{ fontSize: 11, lineHeight: 1.8, color: '#6f86a3', margin: 0 }}>{L.credit}</p>
         </section>
         <section style={{ background: '#080c12', border: '1px solid #ffffff12', padding: '18px 20px', display: 'grid', gap: 16 }}>
-          <div style={{ fontSize: 10, letterSpacing: 3, color: '#9fe8ff' }}>PERILLAS · LA FÍSICA TAMBIÉN SE ESCULPE</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: '#9fe8ff' }}>PERILLAS · LA FÍSICA TAMBIÉN SE ESCULPE</div>
           <Slider label={L.knobLabel.toUpperCase()} value={knob} min={0} max={1} step={0.01} readout={fmt(L.knobValue(knob), 4)} disabled={full || !atPresent}
             onChange={(v) => { st.current.sess?.setKnob(v); setKnob(v); scheduleHash() }} />
-          <div style={{ fontSize: 9.5, lineHeight: 1.8, color: '#6f86a3', marginTop: -8 }}>Cambiarla mientras corre deja una cicatriz en la pieza, a la altura exacta en que la giraste.</div>
+          <div style={{ fontSize: 11, lineHeight: 1.8, color: '#6f86a3', marginTop: -8 }}>Cambiarla mientras corre deja una cicatriz en la pieza, a la altura exacta en que la giraste.</div>
           <Slider label="UMBRAL θ · DÓNDE CORTA EL SÓLIDO" value={params.theta} min={0.12} max={0.8} step={0.01} readout={fmt(params.theta, 2)} onChange={(v) => setView({ theta: v })} />
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9.5, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginBottom: 6 }}>
               <span>ESTIRAMIENTO DEL TIEMPO (ALTO/ANCHO)</span><span style={{ color: '#fff' }}>{info ? fmt(info.aspect, 2) : '…'}{params.aspect === 0 ? ' · causal' : ''}</span>
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -457,14 +457,14 @@ export default function CapasApp() {
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-            <span style={{ fontSize: 9.5, letterSpacing: 1.5, color: '#8fa8c4', marginRight: 4 }}>FORMA</span>
+            <span style={{ fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginRight: 4 }}>FORMA</span>
             {SHAPES.map((s) => <Chip key={s.id} on={params.shape === s.id} onClick={() => setView({ shape: s.id as Shape })}>{s.label.toUpperCase()}</Chip>)}
             <Chip on={params.base} onClick={() => setView({ base: !params.base })} title="Un disco macizo apoyado en la cama: el pasado de la pieza">BASE</Chip>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-            <span style={{ fontSize: 9.5, letterSpacing: 1.5, color: '#8fa8c4', marginRight: 4 }}>CAPAS</span>
+            <span style={{ fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', marginRight: 4 }}>CAPAS</span>
             {[120, 180, 240].map((n) => <Chip key={n} on={params.slices === n} onClick={() => restart({ slices: n }, true)}>{n}</Chip>)}
-            {L.views.length > 1 && <><span style={{ fontSize: 9.5, letterSpacing: 1.5, color: '#8fa8c4', margin: '0 4px 0 10px' }}>VISTA</span>
+            {L.views.length > 1 && <><span style={{ fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4', margin: '0 4px 0 10px' }}>VISTA</span>
               {L.views.map((v) => <Chip key={v.id} on={params.view === v.id} onClick={() => restart({ view: v.id }, true)}>{v.label.toUpperCase()}</Chip>)}</>}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -477,7 +477,7 @@ export default function CapasApp() {
 
       {/* ---- medidas ---- */}
       <section style={{ marginTop: 26 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>LA PIEZA, MEDIDA {full ? '' : '· EN CONSTRUCCIÓN'}</div>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: '#9fe8ff', marginBottom: 10 }}>LA PIEZA, MEDIDA {full ? '' : '· EN CONSTRUCCIÓN'}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 8 }}>
           <Stat k="CAPAS" v={`${count} / ${params.slices}`} hint="Instantes del mundo apilados hasta ahora" />
           <Stat k="ASPECTO CAUSAL" v={info ? fmt(info.aspect, 2) : '…'} hint="Alto/ancho mínimo para que como mucho el 3 % de la superficie quede en voladizo. Equivale a cuántas veces la señal más rápida cruza el mundo durante la pieza." />
@@ -496,25 +496,25 @@ export default function CapasApp() {
 
       {/* ---- exportar ---- */}
       <section style={{ marginTop: 22, background: '#080c12', border: '1px solid #ffffff12', padding: '18px 20px' }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: '#9fe8ff', marginBottom: 12 }}>LLEVARLA A LA MESA</div>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: '#9fe8ff', marginBottom: 12 }}>LLEVARLA A LA MESA</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 12 }}>
-          <span style={{ fontSize: 9.5, letterSpacing: 1.5, color: '#8fa8c4' }}>RESOLUCIÓN DEL STL</span>
+          <span style={{ fontSize: 11, letterSpacing: 1.5, color: '#8fa8c4' }}>RESOLUCIÓN DEL STL</span>
           {(Object.keys(EXPORT_RES) as (keyof typeof EXPORT_RES)[]).map((k) => <Chip key={k} on={exp.res === k} onClick={() => setExp((e) => ({ ...e, res: k }))}>{k.toUpperCase()}</Chip>)}
         </div>
         <div className="cap-export" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8 }}>
-          <button className="press" onClick={exportStl} disabled={!info || exp.state === 'busy'} style={{ minHeight: 46, background: accent, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 11, letterSpacing: 1.5, cursor: 'pointer', opacity: !info ? 0.5 : 1 }}>
+          <button className="press" onClick={exportStl} disabled={!info || exp.state === 'busy'} style={{ minHeight: 46, background: accent, color: '#02060a', border: 'none', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 1.5, cursor: 'pointer', opacity: !info ? 0.5 : 1 }}>
             {exp.state === 'busy' ? 'CALCULANDO STL…' : exp.state === 'error' ? 'REINTENTAR STL' : `DESCARGAR STL (${SIZE_MM} MM)`}
           </button>
-          <button className="press" onClick={exportJson} disabled={!info} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>RECETA + FICHA DE FABRICACIÓN (JSON)</button>
-          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 10.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE UNIVERSO'}</button>
-          <a href={`https://wa.me/${WA}?text=${encodeURIComponent(waText)}`} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 11, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
+          <button className="press" onClick={exportJson} disabled={!info} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer' }}>RECETA + FICHA DE FABRICACIÓN (JSON)</button>
+          <button className="press" onClick={share} style={{ minHeight: 46, background: 'transparent', border: '1px solid #4a6080', color: '#9fb4cc', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.5, cursor: 'pointer' }}>{copied ? 'ENLACE COPIADO' : 'COPIAR ENLACE A ESTE UNIVERSO'}</button>
+          <a href={`https://wa.me/${WA}?text=${encodeURIComponent(waText)}`} target="_blank" rel="noopener noreferrer" className="press" style={{ minHeight: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#25d366', color: '#04210f', fontWeight: 700, fontSize: 12, letterSpacing: 1.5, textDecoration: 'none' }}>PEDIR ESTA PIEZA EN RESINA</a>
         </div>
         {m && m.components > 1 && (
-          <p style={{ fontSize: 10.5, lineHeight: 1.8, color: '#ffb86b', margin: '12px 0 0' }}>
+          <p style={{ fontSize: 11.5, lineHeight: 1.8, color: '#ffb86b', margin: '12px 0 0' }}>
             El STL omite {m.components - 1} partes sueltas ({pct(m.droppedVolumeFrac)} del volumen): no tocan la pieza principal y no se imprimirían.
           </p>
         )}
-        <p style={{ fontSize: 9.5, lineHeight: 1.9, color: '#6f86a3', margin: '12px 0 0' }}>
+        <p style={{ fontSize: 11, lineHeight: 1.9, color: '#6f86a3', margin: '12px 0 0' }}>
           El enlace contiene la receta completa (ley, semilla, constantes, cada pinceladas y cada giro de perilla con su capa): quien lo abra reconstruye la misma pila de capas, bit a bit. La pieza se imprime de pie, con la base en la cama y sin reorientar.
         </p>
       </section>

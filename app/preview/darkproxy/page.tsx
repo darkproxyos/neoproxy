@@ -99,7 +99,7 @@ function Transition({ onDone }: { onDone: () => void }) {
               <br />DarkProxy no es un personaje que jugás. Es el nombre que el sistema le puso a tu presencia.
             </p>
             <button onClick={onDone} style={{
-              fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '12px 28px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 12, letterSpacing: 2, padding: '12px 28px', cursor: 'pointer',
               background: `${CYAN}14`, border: `1px solid ${CYAN}88`, color: CYAN,
             }}>
               CONTINUAR →
@@ -109,7 +109,7 @@ function Transition({ onDone }: { onDone: () => void }) {
 
         {stage !== 'darkproxy' && (
           <button onClick={onDone} style={{
-            display: 'block', margin: '32px auto 0', fontFamily: mono, fontSize: 9, letterSpacing: 2,
+            display: 'block', margin: '32px auto 0', fontFamily: mono, fontSize: 10.5, letterSpacing: 2,
             color: '#4a6878', background: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline',
           }}>
             saltar transición
@@ -220,7 +220,7 @@ export default function DarkProxyPreview() {
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '56px 24px 80px' }}>
         <div style={{
           border: `1px solid ${AMBER}66`, background: `${AMBER}14`, color: AMBER,
-          fontSize: 10, letterSpacing: 1, lineHeight: 1.8, padding: '12px 16px', marginBottom: 24,
+          fontSize: 11, letterSpacing: 1, lineHeight: 1.8, padding: '12px 16px', marginBottom: 24,
         }}>
           ⚠ VISTA PREVIA SIN LOGIN — temporal, mientras no hay acceso a Vercel ni login real funcionando.
           Esta URL no pide credencial. No tiene purgar/inyectar (eso se queda atrás del login real en
@@ -232,7 +232,7 @@ export default function DarkProxyPreview() {
           borderBottom: `1px solid ${CYAN}22`, paddingBottom: 24, marginBottom: 32, gap: 16, flexWrap: 'wrap',
         }}>
           <div>
-            <div style={{ fontSize: 9, letterSpacing: 6, color: `${CYAN}88`, marginBottom: 10 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 6, color: `${CYAN}88`, marginBottom: 10 }}>
               NPX-ROOT // EL INTÉRPRETE — PREVIEW v0
             </div>
             <h1 style={{
@@ -243,7 +243,7 @@ export default function DarkProxyPreview() {
             </h1>
           </div>
           <button onClick={() => setStage('angel')} style={{
-            fontFamily: mono, fontSize: 9.5, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
+            fontFamily: mono, fontSize: 11, letterSpacing: 2, padding: '8px 16px', cursor: 'pointer',
             background: 'transparent', border: `1px solid ${CYAN}44`, color: `${CYAN}aa`,
           }}>
             VER TRANSICIÓN DE NUEVO
@@ -255,9 +255,9 @@ export default function DarkProxyPreview() {
           padding: '22px 24px', marginBottom: 16,
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: CYAN, margin: 0 }}>// LO DE HOY</h3>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: CYAN, margin: 0 }}>// LO DE HOY</h3>
             {streak !== null && streak > 0 && (
-              <span style={{ fontSize: 10, letterSpacing: 1, color: '#7fa8b8' }}>
+              <span style={{ fontSize: 11, letterSpacing: 1, color: '#7fa8b8' }}>
                 🔥 {streak} día{streak === 1 ? '' : 's'} seguido{streak === 1 ? '' : 's'} entrando como DarkProxy
               </span>
             )}
@@ -265,7 +265,7 @@ export default function DarkProxyPreview() {
           {topTask ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
               <button onClick={() => cycleStatus(topTask)} style={{
-                fontFamily: mono, fontSize: 8.5, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
+                fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
                 background: topTask.status === 'in_progress' ? `${AMBER}1a` : 'transparent',
                 border: `1px solid ${topTask.status === 'in_progress' ? AMBER : CYAN}55`,
                 color: topTask.status === 'in_progress' ? AMBER : CYAN,
@@ -273,23 +273,23 @@ export default function DarkProxyPreview() {
                 {STATUS_LABEL[topTask.status]}
               </button>
               <span style={{ fontSize: 16, color: '#e8f4fa' }}>{topTask.title}</span>
-              <span style={{ fontSize: 8.5, letterSpacing: 1, color: '#4a7888', border: `1px solid #4a788855`, padding: '3px 7px' }}>
+              <span style={{ fontSize: 10, letterSpacing: 1, color: '#4a7888', border: `1px solid #4a788855`, padding: '3px 7px' }}>
                 {CATEGORY_LABEL[topTask.category] || topTask.category}
               </span>
             </div>
           ) : (
-            <p style={{ fontSize: 11.5, color: '#7fa8b8', margin: 0 }}>Sin tareas pendientes — agregá la primera abajo.</p>
+            <p style={{ fontSize: 12.5, color: '#7fa8b8', margin: 0 }}>Sin tareas pendientes — agregá la primera abajo.</p>
           )}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16, marginBottom: 16 }}>
           <div style={card}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// ESTADO DEL ORGANISMO</h3>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// ESTADO DEL ORGANISMO</h3>
             <div style={{ fontSize: 32, color: CYAN, marginBottom: 4 }}>
               {systemState ? `${systemState.entropyLevel?.toFixed(2) || 0}%` : '--'}
             </div>
-            <p style={{ fontSize: 10, color: '#7fa8b8', margin: '0 0 14px' }}>NIVEL DE ENTROPÍA</p>
-            <div style={{ borderTop: `1px solid ${CYAN}22`, paddingTop: 12, fontSize: 11, lineHeight: 2, color: '#a8c8d4' }}>
+            <p style={{ fontSize: 11, color: '#7fa8b8', margin: '0 0 14px' }}>NIVEL DE ENTROPÍA</p>
+            <div style={{ borderTop: `1px solid ${CYAN}22`, paddingTop: 12, fontSize: 12, lineHeight: 2, color: '#a8c8d4' }}>
               <p style={{ margin: 0 }}>COHERENCIA: {systemState?.totalCoherence || 0}</p>
               <p style={{ margin: 0 }}>CORRUPCIÓN: {systemState?.totalCorruption || 0}</p>
               <p style={{ margin: 0 }}>NODOS ABSORBIDOS: {systemState?.totalNodesAbsorbed || 0}</p>
@@ -297,24 +297,24 @@ export default function DarkProxyPreview() {
           </div>
 
           <div style={card}>
-            <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// USO REAL ACUMULADO</h3>
+            <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 16px' }}>// USO REAL ACUMULADO</h3>
             {usageMetrics ? (
               <>
                 <div style={{ fontSize: 22, color: CYAN, marginBottom: 4 }}>{usageMetrics.totalEvents}</div>
-                <p style={{ fontSize: 10, color: '#7fa8b8', margin: '0 0 14px' }}>EVENTOS TOTALES</p>
-                <p style={{ fontSize: 10.5, color: '#a8c8d4', borderTop: `1px solid ${CYAN}22`, paddingTop: 12, margin: 0 }}>
+                <p style={{ fontSize: 11, color: '#7fa8b8', margin: '0 0 14px' }}>EVENTOS TOTALES</p>
+                <p style={{ fontSize: 11.5, color: '#a8c8d4', borderTop: `1px solid ${CYAN}22`, paddingTop: 12, margin: 0 }}>
                   ESPECÍMENES EN COLA DE FABRICACIÓN: {usageMetrics.fabricationSubmissions}
                 </p>
               </>
             ) : (
-              <p style={{ fontSize: 10.5, color: '#7fa8b8' }}>CARGANDO...</p>
+              <p style={{ fontSize: 11.5, color: '#7fa8b8' }}>CARGANDO...</p>
             )}
           </div>
         </div>
 
         <div style={{ ...card, marginBottom: 16 }}>
-          <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// TAREAS PENDIENTES</h3>
-          <p style={{ fontSize: 9.5, color: '#4a7888', lineHeight: 1.7, margin: '0 0 18px' }}>
+          <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// TAREAS PENDIENTES</h3>
+          <p style={{ fontSize: 11, color: '#4a7888', lineHeight: 1.7, margin: '0 0 18px' }}>
             Reales -- no las ficticias de Memory/hub.json. Esto es lo que DarkProxy tiene que resolver.
           </p>
 
@@ -326,16 +326,16 @@ export default function DarkProxyPreview() {
               placeholder="NUEVA TAREA..."
               style={{
                 flex: 1, minWidth: 200, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
-                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+                fontFamily: mono, fontSize: 12, padding: '9px 12px', outline: 'none',
               }}
             />
             <select value={newCategory} onChange={e => setNewCategory(e.target.value)} style={{
-              background: '#010305', border: `1px solid ${CYAN}44`, color: CYAN, fontFamily: mono, fontSize: 10.5, padding: '9px 10px',
+              background: '#010305', border: `1px solid ${CYAN}44`, color: CYAN, fontFamily: mono, fontSize: 11.5, padding: '9px 10px',
             }}>
               {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_LABEL[c]}</option>)}
             </select>
             <button onClick={handleAddTask} disabled={busy || !newTitle.trim()} style={{
-              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
               background: `${CYAN}14`, border: `1px solid ${CYAN}88`, color: CYAN, opacity: busy ? 0.5 : 1,
             }}>
               + AGREGAR
@@ -343,7 +343,7 @@ export default function DarkProxyPreview() {
           </div>
 
           {pendingTasks.length === 0 && doneTasks.length === 0 ? (
-            <p style={{ fontSize: 10.5, color: '#4a7888' }}>SIN TAREAS TODAVÍA. Agregá la primera arriba.</p>
+            <p style={{ fontSize: 11.5, color: '#4a7888' }}>SIN TAREAS TODAVÍA. Agregá la primera arriba.</p>
           ) : (
             <>
               {pendingTasks.map(task => (
@@ -352,19 +352,19 @@ export default function DarkProxyPreview() {
                   borderBottom: `1px solid ${CYAN}14`, flexWrap: 'wrap',
                 }}>
                   <button onClick={() => cycleStatus(task)} style={{
-                    fontFamily: mono, fontSize: 8.5, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
+                    fontFamily: mono, fontSize: 10, letterSpacing: 1, padding: '4px 8px', cursor: 'pointer',
                     background: task.status === 'in_progress' ? `${AMBER}1a` : 'transparent',
                     border: `1px solid ${task.status === 'in_progress' ? AMBER : CYAN}55`,
                     color: task.status === 'in_progress' ? AMBER : CYAN,
                   }}>
                     {STATUS_LABEL[task.status]}
                   </button>
-                  <span style={{ fontSize: 8.5, letterSpacing: 1, color: '#4a7888', border: `1px solid #4a788855`, padding: '3px 7px' }}>
+                  <span style={{ fontSize: 10, letterSpacing: 1, color: '#4a7888', border: `1px solid #4a788855`, padding: '3px 7px' }}>
                     {CATEGORY_LABEL[task.category] || task.category}
                   </span>
-                  <span style={{ fontSize: 11.5, color: '#c8e8f4', flex: 1 }}>{task.title}</span>
+                  <span style={{ fontSize: 12.5, color: '#c8e8f4', flex: 1 }}>{task.title}</span>
                   <button onClick={() => handleDelete(task.id)} style={{
-                    fontFamily: mono, fontSize: 9, color: '#6a4848', background: 'transparent', border: 'none', cursor: 'pointer',
+                    fontFamily: mono, fontSize: 10.5, color: '#6a4848', background: 'transparent', border: 'none', cursor: 'pointer',
                   }}>
                     ✕
                   </button>
@@ -372,14 +372,14 @@ export default function DarkProxyPreview() {
               ))}
               {doneTasks.length > 0 && (
                 <div style={{ marginTop: 14 }}>
-                  <div style={{ fontSize: 9, letterSpacing: 2, color: '#4a7888', marginBottom: 8 }}>HECHAS ({doneTasks.length})</div>
+                  <div style={{ fontSize: 10.5, letterSpacing: 2, color: '#4a7888', marginBottom: 8 }}>HECHAS ({doneTasks.length})</div>
                   {doneTasks.map(task => (
                     <div key={task.id} style={{
                       display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', opacity: 0.5,
                     }}>
-                      <span style={{ fontSize: 11, color: '#a8c8d4', textDecoration: 'line-through', flex: 1 }}>{task.title}</span>
+                      <span style={{ fontSize: 12, color: '#a8c8d4', textDecoration: 'line-through', flex: 1 }}>{task.title}</span>
                       <button onClick={() => handleDelete(task.id)} style={{
-                        fontFamily: mono, fontSize: 9, color: '#6a4848', background: 'transparent', border: 'none', cursor: 'pointer',
+                        fontFamily: mono, fontSize: 10.5, color: '#6a4848', background: 'transparent', border: 'none', cursor: 'pointer',
                       }}>
                         ✕
                       </button>
@@ -392,8 +392,8 @@ export default function DarkProxyPreview() {
         </div>
 
         <div style={{ ...card, marginBottom: 16 }}>
-          <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// SEGUNDA MENTE</h3>
-          <p style={{ fontSize: 9.5, color: '#4a7888', lineHeight: 1.7, margin: '0 0 18px' }}>
+          <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// SEGUNDA MENTE</h3>
+          <p style={{ fontSize: 11, color: '#4a7888', lineHeight: 1.7, margin: '0 0 18px' }}>
             Un campo, lo que pienses, se guarda ya. Si encuentra una acción concreta, la manda sola a
             Tareas Pendientes -- eso pasa después, nunca bloquea la captura.
           </p>
@@ -405,23 +405,23 @@ export default function DarkProxyPreview() {
               placeholder="¿QUÉ TENÉS EN MENTE?"
               style={{
                 flex: 1, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
-                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+                fontFamily: mono, fontSize: 12, padding: '9px 12px', outline: 'none',
               }}
             />
             <button onClick={handleCapture} disabled={thoughtBusy || !thoughtInput.trim()} style={{
-              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
               background: `${CYAN}14`, border: `1px solid ${CYAN}88`, color: CYAN, opacity: thoughtBusy ? 0.5 : 1,
             }}>
               GUARDAR
             </button>
           </div>
           {thoughts.length === 0 ? (
-            <p style={{ fontSize: 10.5, color: '#4a7888' }}>SIN NOTAS TODAVÍA.</p>
+            <p style={{ fontSize: 11.5, color: '#4a7888' }}>SIN NOTAS TODAVÍA.</p>
           ) : (
             thoughts.map(t => (
               <div key={t.id} style={{ padding: '9px 0', borderBottom: `1px solid ${CYAN}14` }}>
-                <p style={{ fontSize: 11, color: '#c8e8f4', margin: '0 0 4px', lineHeight: 1.6 }}>{t.content}</p>
-                <div style={{ fontSize: 8.5, color: '#4a7888', letterSpacing: 0.5 }}>
+                <p style={{ fontSize: 12, color: '#c8e8f4', margin: '0 0 4px', lineHeight: 1.6 }}>{t.content}</p>
+                <div style={{ fontSize: 10, color: '#4a7888', letterSpacing: 0.5 }}>
                   {!t.processed ? 'analizando...' : t.linkedTaskId ? '💡 generó una tarea' : 'sin acción detectada'}
                 </div>
               </div>
@@ -430,8 +430,8 @@ export default function DarkProxyPreview() {
         </div>
 
         <div style={card}>
-          <h3 style={{ fontSize: 10, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// NEGOCIO — BALANCE REAL</h3>
-          <p style={{ fontSize: 9.5, color: '#4a7888', lineHeight: 1.7, margin: '0 0 14px' }}>
+          <h3 style={{ fontSize: 11, letterSpacing: 2, color: `${CYAN}cc`, margin: '0 0 6px' }}>// NEGOCIO — BALANCE REAL</h3>
+          <p style={{ fontSize: 11, color: '#4a7888', lineHeight: 1.7, margin: '0 0 14px' }}>
             Manual a propósito -- el checkout de Mercado Pago todavía no guarda nada en ningún lado.
             Esto es lo real que hay, no una gráfica vacía.
           </p>
@@ -440,7 +440,7 @@ export default function DarkProxyPreview() {
           </div>
           <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
             <select value={moneyKind} onChange={e => setMoneyKind(e.target.value as 'ingreso' | 'gasto')} style={{
-              background: '#010305', border: `1px solid ${CYAN}44`, color: CYAN, fontFamily: mono, fontSize: 10.5, padding: '9px 10px',
+              background: '#010305', border: `1px solid ${CYAN}44`, color: CYAN, fontFamily: mono, fontSize: 11.5, padding: '9px 10px',
             }}>
               <option value="ingreso">+ INGRESO</option>
               <option value="gasto">− GASTO</option>
@@ -452,7 +452,7 @@ export default function DarkProxyPreview() {
               inputMode="numeric"
               style={{
                 width: 110, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
-                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+                fontFamily: mono, fontSize: 12, padding: '9px 12px', outline: 'none',
               }}
             />
             <input
@@ -462,25 +462,25 @@ export default function DarkProxyPreview() {
               placeholder="NOTA (OPCIONAL)"
               style={{
                 flex: 1, minWidth: 140, background: '#010305', border: `1px solid ${CYAN}44`, color: '#c8e8f4',
-                fontFamily: mono, fontSize: 11, padding: '9px 12px', outline: 'none',
+                fontFamily: mono, fontSize: 12, padding: '9px 12px', outline: 'none',
               }}
             />
             <button onClick={handleAddMoney} disabled={!moneyAmount.trim()} style={{
-              fontFamily: mono, fontSize: 10.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
+              fontFamily: mono, fontSize: 11.5, letterSpacing: 1, padding: '9px 18px', cursor: 'pointer',
               background: `${CYAN}14`, border: `1px solid ${CYAN}88`, color: CYAN,
             }}>
               REGISTRAR
             </button>
           </div>
           {moneyEntries.length === 0 ? (
-            <p style={{ fontSize: 10.5, color: '#4a7888' }}>SIN MOVIMIENTOS TODAVÍA.</p>
+            <p style={{ fontSize: 11.5, color: '#4a7888' }}>SIN MOVIMIENTOS TODAVÍA.</p>
           ) : (
             moneyEntries.slice(0, 8).map(m => (
               <div key={m.id} style={{
                 display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: `1px solid ${CYAN}14`,
               }}>
-                <span style={{ fontSize: 11, color: '#a8c8d4' }}>{m.note}</span>
-                <span style={{ fontSize: 11, color: m.amount >= 0 ? '#39ff8a' : '#ff5555' }}>
+                <span style={{ fontSize: 12, color: '#a8c8d4' }}>{m.note}</span>
+                <span style={{ fontSize: 12, color: m.amount >= 0 ? '#39ff8a' : '#ff5555' }}>
                   {m.amount >= 0 ? '+' : ''}{m.amount.toLocaleString('es-CL')}
                 </span>
               </div>

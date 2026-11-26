@@ -93,13 +93,13 @@ export default function HemibrainPage() {
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '104px 24px 80px' }}>
         <Link href="/lab" className="press tap-ext" style={{
-          fontFamily: mono, fontSize: 9, letterSpacing: 3, color: '#4a6080', textDecoration: 'none',
+          fontFamily: mono, fontSize: 10.5, letterSpacing: 3, color: '#6f86a3', textDecoration: 'none',
           display: 'inline-block', marginBottom: 20,
         }}>
           ← VOLVER A EXPERIMENTAL
         </Link>
 
-        <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 6, color: `${ACCENT}44`, marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 6, color: `${ACCENT}44`, marginBottom: 16 }}>
           // CONECTOMA REAL — HEMIBRAIN v1.2.1
         </div>
         <h1 style={{
@@ -120,13 +120,13 @@ export default function HemibrainPage() {
         </p>
 
         {loading && (
-          <div style={{ fontFamily: mono, fontSize: 11, color: '#4a6080', letterSpacing: 2, padding: '60px 0' }}>
+          <div style={{ fontFamily: mono, fontSize: 12, color: '#6f86a3', letterSpacing: 2, padding: '60px 0' }}>
             CARGANDO CONECTOMA... (~1.8 MB)
           </div>
         )}
 
         {error && (
-          <div style={{ fontFamily: mono, fontSize: 11, color: '#ff2d55', letterSpacing: 2, padding: '60px 0' }}>
+          <div style={{ fontFamily: mono, fontSize: 12, color: '#ff2d55', letterSpacing: 2, padding: '60px 0' }}>
             NO SE PUDO CARGAR EL CONECTOMA. Reintentá recargando la página.
           </div>
         )}
@@ -148,7 +148,7 @@ export default function HemibrainPage() {
                 onSelect={handleSelect}
               />
               <div style={{
-                position: 'absolute', bottom: 12, left: 12, fontFamily: mono, fontSize: 8,
+                position: 'absolute', bottom: 12, left: 12, fontFamily: mono, fontSize: 10,
                 letterSpacing: 2, color: `${ACCENT}55`, pointerEvents: 'none',
               }}>
                 ARRASTRAR: ORBITAR // SCROLL: ZOOM // CLICK: ENFOCAR NEURONA
@@ -164,7 +164,7 @@ export default function HemibrainPage() {
                 {selected ? (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                      <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: ntColor(selected.nt) }}>
+                      <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: ntColor(selected.nt) }}>
                         {NT_LABELS[selected.nt] ?? selected.nt.toUpperCase()}
                       </div>
                       <button
@@ -181,21 +181,21 @@ export default function HemibrainPage() {
                     <div style={{ fontFamily: mono, fontSize: 15, color: '#fff', letterSpacing: 1, marginBottom: 6, wordBreak: 'break-word' }}>
                       {selected.instance}
                     </div>
-                    <div style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', letterSpacing: 1, marginBottom: 4 }}>
+                    <div style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', letterSpacing: 1, marginBottom: 4 }}>
                       TIPO: {selected.cellType}
                     </div>
-                    <div style={{ fontFamily: mono, fontSize: 10, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                    <div style={{ fontFamily: mono, fontSize: 11, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
                       CLASE: {selected.cellClass.replace(/_/g, ' ')}
                     </div>
-                    <div style={{ fontFamily: mono, fontSize: 10, color: '#4a6080', letterSpacing: 1, marginBottom: 4 }}>
+                    <div style={{ fontFamily: mono, fontSize: 11, color: '#6f86a3', letterSpacing: 1, marginBottom: 4 }}>
                       FLUJO: {selected.flow}
                     </div>
-                    <div style={{ fontFamily: mono, fontSize: 9, color: '#2a3a52', letterSpacing: 1, marginTop: 12 }}>
+                    <div style={{ fontFamily: mono, fontSize: 10.5, color: '#2a3a52', letterSpacing: 1, marginTop: 12 }}>
                       body ID: {selected.id}
                     </div>
                   </>
                 ) : (
-                  <div style={{ fontFamily: mono, fontSize: 11, color: '#4a6080', letterSpacing: 1, lineHeight: 1.8 }}>
+                  <div style={{ fontFamily: mono, fontSize: 12, color: '#6f86a3', letterSpacing: 1, lineHeight: 1.8 }}>
                     TOCÁ UNA NEURONA EN LA ESCENA PARA VER SU IDENTIDAD REAL (TIPO CELULAR, NEUROTRANSMISOR, ID DE CUERPO CELULAR).
                   </div>
                 )}
@@ -203,13 +203,13 @@ export default function HemibrainPage() {
 
               {/* Controls */}
               <div style={{ border: `1px solid ${ACCENT}22`, background: 'rgba(0,4,10,0.6)', padding: 20, marginBottom: 20 }}>
-                <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
+                <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: ACCENT, marginBottom: 14 }}>
                   NEUROTRANSMISOR // FILTRO
                 </div>
                 {NT_ORDER.map(nt => (
                   <label key={nt} style={{
                     display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
-                    fontFamily: mono, fontSize: 10, letterSpacing: 1, cursor: 'pointer',
+                    fontFamily: mono, fontSize: 11, letterSpacing: 1, cursor: 'pointer',
                     color: visibleNt.has(nt) ? '#c8daf0' : '#4a6080',
                   }}>
                     <input
@@ -227,11 +227,11 @@ export default function HemibrainPage() {
                 ))}
 
                 <div style={{ borderTop: `1px solid ${ACCENT}22`, marginTop: 14, paddingTop: 14 }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, fontFamily: mono, fontSize: 10, letterSpacing: 1, cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, fontFamily: mono, fontSize: 11, letterSpacing: 1, cursor: 'pointer' }}>
                     <input type="checkbox" checked={showKenyon} onChange={() => setShowKenyon(v => !v)} />
                     MOSTRAR MUESTRA DE KENYON CELLS
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: mono, fontSize: 10, letterSpacing: 1, cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: mono, fontSize: 11, letterSpacing: 1, cursor: 'pointer' }}>
                     <input type="checkbox" checked={showEdges} onChange={() => setShowEdges(v => !v)} />
                     MOSTRAR SINAPSIS ({meta?.edgesShown.toLocaleString('es')} conexiones)
                   </label>
@@ -241,20 +241,20 @@ export default function HemibrainPage() {
               {/* Meta / honesty panel */}
               {meta && (
                 <div style={{ border: `1px solid ${ACCENT}22`, background: 'rgba(0,4,10,0.6)', padding: 20 }}>
-                  <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: ACCENT, marginBottom: 12 }}>
+                  <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: 2, color: ACCENT, marginBottom: 12 }}>
                     QUÉ ESTÁS VIENDO
                   </div>
-                  <p style={{ fontFamily: mono, fontSize: 10, color: '#8fb8d6', lineHeight: 1.9, marginBottom: 10 }}>
+                  <p style={{ fontFamily: mono, fontSize: 11, color: '#8fb8d6', lineHeight: 1.9, marginBottom: 10 }}>
                     {meta.includedNeurons} neuronas reales de las {meta.totalMushroomBodyNeurons.toLocaleString('es')} del
                     circuito completo de cuerpos fungiformes ({meta.includedNonKenyon} no-Kenyon al 100% +
                     muestra del {Math.round(meta.includedKenyonSample / meta.totalKenyonCellsInHemibrain * 100)}% de
                     las {meta.totalKenyonCellsInHemibrain.toLocaleString('es')} Kenyon cells) — del total de{' '}
                     {meta.totalHemibrainNeurons.toLocaleString('es')} neuronas del hemisferio reconstruido.
                   </p>
-                  <p style={{ fontFamily: mono, fontSize: 9, color: '#4a6080', lineHeight: 1.8 }}>
+                  <p style={{ fontFamily: mono, fontSize: 10.5, color: '#6f86a3', lineHeight: 1.8 }}>
                     {meta.note}
                   </p>
-                  <div style={{ fontFamily: mono, fontSize: 8, color: '#2a3a52', letterSpacing: 0.5, marginTop: 12, lineHeight: 1.7 }}>
+                  <div style={{ fontFamily: mono, fontSize: 10, color: '#2a3a52', letterSpacing: 0.5, marginTop: 12, lineHeight: 1.7 }}>
                     {meta.source}
                   </div>
                 </div>
