@@ -35,6 +35,19 @@ export default function GeometriasPage() {
             )
           })}
         </div>
+
+        <div style={{ fontSize: 11, letterSpacing: 4, color: '#d4b0ffaa', margin: '56px 0 14px' }}>TAMBIÉN EN EL TALLER: UN MECANISMO</div>
+        <Link href="/antesis" className="press" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', textDecoration: 'none', color: 'inherit', background: '#080c12', border: '1px solid #d4b0ff33', borderTop: '2px solid #d4b0ff' }}>
+          <img src="/antesis/flor.webp" alt="ANTESIS: flor de engranajes cónicos con pétalos y coronas" loading="lazy" width={320} height={320} style={{ display: 'block', width: '100%', height: 'auto', aspectRatio: '1 / 1', background: '#070a10' }} />
+          <div style={{ padding: '18px 20px', alignSelf: 'center' }}>
+            <div style={{ fontSize: 14, letterSpacing: 4, color: '#d4b0ff' }}>ANTESIS</div>
+            <div style={{ fontSize: 11.5, color: '#8fa8c4', margin: '6px 0 12px' }}>flores de engranajes que giran</div>
+            <div style={{ fontSize: 11.5, lineHeight: 1.9, color: '#9fb4cc', maxWidth: 560 }}>
+              Una esfera de engranajes cónicos que giran todos juntos, con pétalos y coronas que nacen de una semilla y nunca se tocan.
+              Cada flor se verifica en el navegador y se descarga en piezas para imprimir y armar.
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
   )

@@ -86,6 +86,7 @@ export const SITE_TREE: SiteNode = {
         { name: 'CRISTALES', href: '/geometrias/crystal' },
         { name: 'RADIOLARIOS', href: '/geometrias/radiolarian' },
         { name: 'INTERFERENCIA', href: '/geometrias/interference' },
+        { name: 'ANTESIS · FLORES DE ENGRANAJES', href: '/antesis' },
       ],
     },
     {
