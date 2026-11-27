@@ -1,13 +1,14 @@
 'use client'
 
-// RADAR // NEGOCIO — sección privada: qué imprimir y vender, cuándo, y por qué.
-// El tablero se guarda en este navegador (con exportar/importar); las fuentes externas
-// y el generador de ideas pasan por acciones de servidor que exigen la cuenta root.
+// RADAR // NEGOCIO — qué imprimir y vender, cuándo, y por qué. Sin login: el catálogo,
+// el calendario y el tablero (guardado en este navegador, con exportar/importar) son
+// libres; la IA y las fuentes externas gastan créditos y piden la clave personal, que
+// se escribe una vez y queda en este navegador.
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { IDEAS, CAT_LABEL, DERECHOS_LABEL, TEMPORADA_NOMBRE, calendario, puntaje, enlaces, type Idea, type Cat } from '@/lib/radar/ideas'
-import { radarEstado, radarThingiverse, radarMercado, radarGenerarIdeas } from '@/app/admin/radar/actions'
+import { radarEstado, radarThingiverse, radarMercado, radarGenerarIdeas } from '@/app/radar/actions'
 import type { IdeaIA } from '@/lib/radar/ia'
 import type { RadarItem, Mercado } from '@/lib/radar/fuentes'
 
@@ -36,6 +37,9 @@ const tablero = {
   server(): Item[] { return EMPTY },
   set(v: Item[]) { tablero.cache = v; save(v); tablero.subs.forEach((f) => f()) },
 }
+const CLAVE_KEY = 'npx-radar-clave'
+const getClave = () => { try { return localStorage.getItem(CLAVE_KEY) || '' } catch { return '' } }
+type EstadoR = { configurada: boolean; valida: boolean; thingiverse: boolean; mercadoLibre: boolean; ia: boolean }
 const Paso = ({ n, children }: { n: string; children: React.ReactNode }) => <li style={{ fontSize: 12, lineHeight: 1.9, color: DIM }}><b style={{ color: '#fff' }}>{n}</b> {children}</li>
 
 function Chip({ on, onClick, children, color = AMBER }: { on: boolean; onClick: () => void; children: React.ReactNode; color?: string }) {
@@ -51,7 +55,7 @@ function IdeaCard({ i, score, prox, onAdd, mlOn }: { i: CardIdea; score?: number
   const e = enlaces(i.buscar)
   const verMl = async () => {
     setBusy(true); setMlErr('')
-    const r = await radarMercado(i.buscar)
+    const r = await radarMercado(getClave(), i.buscar)
     setBusy(false)
     if (r.ok) setMl(r.data); else setMlErr(r.error)
   }
@@ -93,12 +97,18 @@ function IdeaCard({ i, score, prox, onAdd, mlOn }: { i: CardIdea; score?: number
 export default function RadarApp() {
   const [tab, setTab] = useState<Tab>('hoy')
   const items = useSyncExternalStore(tablero.subscribe, tablero.get, tablero.server)
-  const [estado, setEstado] = useState<{ thingiverse: boolean; mercadoLibre: boolean; ia: boolean } | null>(null)
+  const [estado, setEstado] = useState<EstadoR | null>(null)
   const [aviso, setAviso] = useState('')
   const cal = useMemo(() => calendario(), [])
   const ranked = useMemo(() => IDEAS.map((i) => ({ i, ...puntaje(i, cal) })).sort((a, b) => b.total - a.total), [cal])
 
-  useEffect(() => { radarEstado().then((r) => { if (r.ok) setEstado(r.data) }) }, [])
+  useEffect(() => { radarEstado(getClave()).then((r) => { if (r.ok) setEstado(r.data) }) }, [])
+  const guardarClave = async (c: string) => {
+    try { if (c) localStorage.setItem(CLAVE_KEY, c); else localStorage.removeItem(CLAVE_KEY) } catch { /* sin almacenamiento */ }
+    const r = await radarEstado(c)
+    if (r.ok) setEstado(r.data)
+    return r.ok && r.data.valida
+  }
   const upd = (f: (v: Item[]) => Item[]) => tablero.set(f(tablero.get()))
   const add = (nombre: string, buscar?: string, notas = '') => {
     upd((v) => (v.some((x) => x.nombre === nombre) ? v : [{ id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, nombre, estado: 'idea', notas, buscar, creado: Date.now() }, ...v]))
@@ -108,19 +118,20 @@ export default function RadarApp() {
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono }}>
       <div style={{ maxWidth: 1240, margin: '0 auto', padding: '96px 20px 80px' }}>
-        <div style={{ fontSize: 11, letterSpacing: 5, color: `${AMBER}bb`, marginBottom: 10 }}>PRIVADO · SOLO ROOT · <Link href="/admin/darkproxy" style={{ color: `${AMBER}bb` }}>TERMINAL</Link></div>
+        <div style={{ fontSize: 11, letterSpacing: 5, color: `${AMBER}bb`, marginBottom: 10 }}>NEGOCIO · PRIVADO · <Link href="/" style={{ color: `${AMBER}bb` }}>NEOPROXY.ART</Link></div>
         <h1 style={{ fontSize: 'clamp(30px, 7vw, 54px)', letterSpacing: 10, color: AMBER, margin: '0 0 8px' }}>RADAR</h1>
         <p style={{ fontSize: 12.5, lineHeight: 1.9, color: DIM, maxWidth: 820, margin: '0 0 22px' }}>
           Qué imprimir y vender, cuándo y por qué. Ideas con su lógica de negocio, las fechas que vienen, tu tablero de producción y, cuando conectes las fuentes, lo que está subiendo en el mundo maker y los precios reales de Mercado Libre.
         </p>
-        <nav style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 22, position: 'sticky', top: 64, zIndex: 5, background: '#000205', padding: '8px 0' }}>
+        <Clave estado={estado} guardar={guardarClave} />
+        <nav style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 22, position: 'sticky', top: 0, zIndex: 5, background: '#000205', padding: '8px 0' }}>
           {([['hoy', 'HOY'], ['ideas', `IDEAS (${IDEAS.length})`], ['generar', 'GENERAR CON IA'], ['tablero', `MI TABLERO (${items.filter((x) => x.estado !== 'descartada').length})`], ['fuentes', 'FUENTES']] as [Tab, string][]).map(([k, l]) => <Chip key={k} on={tab === k} onClick={() => setTab(k)}>{l}</Chip>)}
         </nav>
         {aviso && <div role="status" style={{ position: 'fixed', left: '50%', bottom: 24, transform: 'translateX(-50%)', zIndex: 50, background: '#0b1017', border: `1px solid ${GREEN}`, color: GREEN, padding: '10px 16px', fontSize: 12 }}>{aviso}</div>}
 
         {tab === 'hoy' && <Hoy cal={cal} ranked={ranked} estado={estado} items={items} onAdd={add} go={setTab} />}
         {tab === 'ideas' && <Ideas ranked={ranked} onAdd={add} mlOn={!!estado?.mercadoLibre} />}
-        {tab === 'generar' && <Generar onAdd={add} iaOn={estado?.ia ?? null} mlOn={!!estado?.mercadoLibre} evitar={items.map((x) => x.nombre)} />}
+        {tab === 'generar' && <Generar onAdd={add} estado={estado} mlOn={!!estado?.mercadoLibre} evitar={items.map((x) => x.nombre)} />}
         {tab === 'tablero' && <Tablero items={items} upd={upd} add={add} />}
         {tab === 'fuentes' && <Fuentes estado={estado} />}
       </div>
@@ -129,7 +140,7 @@ export default function RadarApp() {
   )
 }
 
-function Hoy({ cal, ranked, estado, items, onAdd, go }: { cal: ReturnType<typeof calendario>; ranked: { i: Idea; total: number; fecha?: ReturnType<typeof calendario>[number] }[]; estado: { thingiverse: boolean; mercadoLibre: boolean; ia: boolean } | null; items: Item[]; onAdd: (n: string, b?: string) => void; go: (t: Tab) => void }) {
+function Hoy({ cal, ranked, estado, items, onAdd, go }: { cal: ReturnType<typeof calendario>; ranked: { i: Idea; total: number; fecha?: ReturnType<typeof calendario>[number] }[]; estado: EstadoR | null; items: Item[]; onAdd: (n: string, b?: string) => void; go: (t: Tab) => void }) {
   const activos = items.filter((x) => x.estado !== 'descartada' && x.estado !== 'idea')
   return (
     <div style={{ display: 'grid', gap: 26 }}>
@@ -197,12 +208,13 @@ function Ideas({ ranked, onAdd, mlOn }: { ranked: { i: Idea; total: number; fech
   )
 }
 
-function Generar({ onAdd, iaOn, mlOn, evitar }: { onAdd: (n: string, b?: string, notas?: string) => void; iaOn: boolean | null; mlOn: boolean; evitar: string[] }) {
+function Generar({ onAdd, estado, mlOn, evitar }: { onAdd: (n: string, b?: string, notas?: string) => void; estado: EstadoR | null; mlOn: boolean; evitar: string[] }) {
+  const iaOn = estado ? estado.valida && estado.ia : null
   const [foco, setFoco] = useState(''), [mat, setMat] = useState<'ambos' | 'PLA' | 'Resina'>('ambos'), [n, setN] = useState(5)
   const [busy, setBusy] = useState(false), [err, setErr] = useState(''), [res, setRes] = useState<IdeaIA[]>([])
   const run = async () => {
     setBusy(true); setErr('')
-    const r = await radarGenerarIdeas({ foco, material: mat, cantidad: n, evitar: [...evitar, ...res.map((x) => x.nombre)] })
+    const r = await radarGenerarIdeas(getClave(), { foco, material: mat, cantidad: n, evitar: [...evitar, ...res.map((x) => x.nombre)] })
     setBusy(false)
     if (r.ok) setRes((v) => [...r.data, ...v]); else setErr(r.error)
   }
@@ -223,7 +235,7 @@ function Generar({ onAdd, iaOn, mlOn, evitar }: { onAdd: (n: string, b?: string,
           {[3, 5, 8].map((k) => <Chip key={k} on={n === k} onClick={() => setN(k)}>{k} IDEAS</Chip>)}
         </div>
         <button type="button" className="press" onClick={run} disabled={busy || iaOn === false} style={{ justifySelf: 'start', minHeight: 46, padding: '0 22px', border: 'none', background: `linear-gradient(90deg,${AMBER},#ffe3a8)`, color: '#140c02', fontFamily: mono, fontWeight: 700, fontSize: 12, letterSpacing: 2, cursor: 'pointer', opacity: busy || iaOn === false ? 0.5 : 1 }}>{busy ? 'PENSANDO… (HASTA 1 MIN)' : '✦ GENERAR IDEAS'}</button>
-        {iaOn === false && <p style={{ fontSize: 11.5, color: AMBER, margin: 0 }}>Falta ANTHROPIC_API_KEY en el servidor (la misma que usa el oráculo).</p>}
+        {iaOn === false && <p style={{ fontSize: 11.5, color: AMBER, margin: 0 }}>{estado && !estado.valida ? 'Escribe tu clave de RADAR arriba para usar la IA.' : 'Falta ANTHROPIC_API_KEY en el servidor (la misma que usa el oráculo).'}</p>}
         {err && <p style={{ fontSize: 11.5, color: AMBER, margin: 0 }}>{err}</p>}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
@@ -282,15 +294,15 @@ function Tablero({ items, upd, add }: { items: Item[]; upd: (f: (v: Item[]) => I
   )
 }
 
-function Fuentes({ estado }: { estado: { thingiverse: boolean; mercadoLibre: boolean; ia: boolean } | null }) {
+function Fuentes({ estado }: { estado: EstadoR | null }) {
   const [modo, setModo] = useState<'popular' | 'newest' | 'featured'>('popular'), [q, setQ] = useState(''), [solo, setSolo] = useState(false)
   const [tv, setTv] = useState<RadarItem[] | null>(null), [tvErr, setTvErr] = useState(''), [busy, setBusy] = useState(false)
-  const cargar = async (m = modo) => { setBusy(true); setTvErr(''); const r = await radarThingiverse(m, q); setBusy(false); if (r.ok) setTv(r.data); else setTvErr(r.error) }
+  const cargar = async (m = modo) => { setBusy(true); setTvErr(''); const r = await radarThingiverse(getClave(), m, q); setBusy(false); if (r.ok) setTv(r.data); else setTvErr(r.error) }
   const conectado = !!estado?.thingiverse
   useEffect(() => {
     if (!conectado) return
     let vivo = true
-    radarThingiverse('popular').then((r) => { if (!vivo) return; if (r.ok) setTv(r.data); else setTvErr(r.error) })
+    radarThingiverse(getClave(), 'popular').then((r) => { if (!vivo) return; if (r.ok) setTv(r.data); else setTvErr(r.error) })
     return () => { vivo = false }
   }, [conectado])
   const V = { si: [GREEN, 'SE PUEDE VENDER'], no: [RED, 'NO COMERCIAL'], revisar: [AMBER, 'REVISAR LICENCIA'] } as const
@@ -362,6 +374,35 @@ function Fuentes({ estado }: { estado: { thingiverse: boolean; mercadoLibre: boo
         <b style={{ color: '#fff' }}>Sobre licencias:</b> «no comercial» (NC) o «uso personal» significa que no puedes vender la impresión. CC BY, CC BY-SA, CC0 o una licencia comercial comprada sí lo permiten (con atribución si la piden). Lo más seguro para vender: tus diseños y tus generadores.
         {' '}Temporadas de referencia: {Object.values(TEMPORADA_NOMBRE).join(', ')}.
       </section>
+    </div>
+  )
+}
+
+function Clave({ estado, guardar }: { estado: EstadoR | null; guardar: (c: string) => Promise<boolean> }) {
+  const [v, setV] = useState(''), [msg, setMsg] = useState(''), [busy, setBusy] = useState(false)
+  if (!estado) return null
+  if (estado.valida) {
+    return (
+      <div style={{ fontSize: 11.5, color: GREEN, margin: '0 0 14px', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+        <span>● clave activa en este navegador: IA y fuentes habilitadas</span>
+        <button type="button" onClick={() => { void guardar('') }} style={{ minHeight: 30, background: 'transparent', border: '1px solid #ffffff22', color: FAINT, fontFamily: mono, fontSize: 10.5, padding: '0 10px', cursor: 'pointer' }}>OLVIDAR CLAVE</button>
+      </div>
+    )
+  }
+  return (
+    <div style={{ background: '#0b0a06', border: `1px solid ${AMBER}44`, padding: '12px 14px', margin: '0 0 16px', display: 'grid', gap: 8 }}>
+      <div style={{ fontSize: 12, color: '#fff' }}>🔒 Ideas, calendario y tablero funcionan sin clave. La IA y las fuentes externas gastan tus créditos: piden tu clave de RADAR.</div>
+      {estado.configurada ? (
+        <form onSubmit={async (e) => { e.preventDefault(); setBusy(true); const ok = await guardar(v.trim()); setBusy(false); setMsg(ok ? '' : 'Clave incorrecta.'); if (ok) setV('') }} style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <input type="password" value={v} onChange={(e) => setV(e.target.value)} placeholder="tu clave de RADAR" aria-label="Clave de RADAR" autoComplete="current-password" style={{ minHeight: 38, flex: '0 1 280px', background: '#02040a', border: '1px solid #ffffff2a', color: '#fff', fontFamily: mono, fontSize: 12, padding: '0 10px' }} />
+          <button type="submit" disabled={busy || !v.trim()} style={{ minHeight: 38, padding: '0 14px', background: `${AMBER}22`, border: `1px solid ${AMBER}`, color: AMBER, fontFamily: mono, fontSize: 11.5, letterSpacing: 1, cursor: 'pointer' }}>{busy ? 'PROBANDO…' : 'GUARDAR EN ESTE NAVEGADOR'}</button>
+          {msg && <span style={{ fontSize: 11.5, color: RED, alignSelf: 'center' }}>{msg}</span>}
+        </form>
+      ) : (
+        <div style={{ fontSize: 11.5, color: DIM, lineHeight: 1.8 }}>
+          Todavía no hay clave en el servidor. Inventa una larga (16+ caracteres) y cárgala con <code style={{ color: '#fff' }}>vercel env add RADAR_CLAVE</code> (producción); vuelve a desplegar y escríbela aquí.
+        </div>
+      )}
     </div>
   )
 }

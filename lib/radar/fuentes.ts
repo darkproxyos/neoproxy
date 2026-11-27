@@ -1,7 +1,7 @@
 // RADAR — conectores a fuentes externas (solo servidor). Cada uno usa la API oficial y
 // se activa con su variable de entorno; sin ella, el radar lo muestra como «por conectar».
 // Las respuestas se guardan en caché (una hora) para no gastar la cuota de cada API.
-// solo se importa desde app/admin/radar/actions.ts ('use server')
+// solo se importa desde app/radar/actions.ts ('use server')
 import { vendible } from './ideas'
 
 export type RadarItem = {
