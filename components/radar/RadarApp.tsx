@@ -11,13 +11,12 @@ import { IDEAS, CAT_LABEL, DERECHOS_LABEL, TEMPORADA_NOMBRE, calendario, puntaje
 import { radarEstado, radarThingiverse, radarMercado, radarGenerarIdeas } from '@/app/radar/actions'
 import type { IdeaIA } from '@/lib/radar/ia'
 import type { RadarItem, Mercado } from '@/lib/radar/fuentes'
+import { mono, AMBER, GREEN, RED, CYAN, DIM, FAINT, clp, CLAVE_KEY, getClave, Paso, Chip, Tag, A, type EstadoR } from './ui'
+import Cazador from './Cazador'
 
-const mono = "'Space Mono', monospace"
-const AMBER = '#ffc86b', GREEN = '#7cf0b0', RED = '#ff7a7a', CYAN = '#9fe8ff', DIM = '#8fa8c4', FAINT = '#6f86a3'
-const clp = (n?: number) => (n === undefined ? '—' : '$' + Math.round(n).toLocaleString('es-CL'))
 const fecha = (d: Date) => d.toLocaleDateString('es-CL', { day: 'numeric', month: 'short', timeZone: 'UTC' })
 
-type Tab = 'hoy' | 'ideas' | 'generar' | 'tablero' | 'fuentes'
+type Tab = 'hoy' | 'cazador' | 'ideas' | 'generar' | 'tablero' | 'fuentes'
 type Estado = 'idea' | 'prototipo' | 'reel' | 'venta' | 'descartada'
 const ESTADOS: { k: Estado; label: string; c: string }[] = [
   { k: 'idea', label: 'IDEA', c: DIM }, { k: 'prototipo', label: 'PROTOTIPO', c: CYAN }, { k: 'reel', label: 'REEL', c: '#d4b0ff' },
@@ -37,16 +36,6 @@ const tablero = {
   server(): Item[] { return EMPTY },
   set(v: Item[]) { tablero.cache = v; save(v); tablero.subs.forEach((f) => f()) },
 }
-const CLAVE_KEY = 'npx-radar-clave'
-const getClave = () => { try { return localStorage.getItem(CLAVE_KEY) || '' } catch { return '' } }
-type EstadoR = { configurada: boolean; valida: boolean; thingiverse: boolean; mercadoLibre: boolean; ia: boolean }
-const Paso = ({ n, children }: { n: string; children: React.ReactNode }) => <li style={{ fontSize: 12, lineHeight: 1.9, color: DIM }}><b style={{ color: '#fff' }}>{n}</b> {children}</li>
-
-function Chip({ on, onClick, children, color = AMBER }: { on: boolean; onClick: () => void; children: React.ReactNode; color?: string }) {
-  return <button type="button" className="press" aria-pressed={on} onClick={onClick} style={{ minHeight: 36, padding: '0 12px', fontFamily: mono, fontSize: 11.5, letterSpacing: 1.2, cursor: 'pointer', background: on ? `${color}22` : 'transparent', border: `1px solid ${on ? color : '#ffffff26'}`, color: on ? color : '#9fb4cc' }}>{children}</button>
-}
-const Tag = ({ children, c = DIM }: { children: React.ReactNode; c?: string }) => <span style={{ fontSize: 10.5, letterSpacing: 1, padding: '2px 7px', border: `1px solid ${c}55`, color: c, whiteSpace: 'nowrap' }}>{children}</span>
-const A = ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: CYAN, fontSize: 11.5, textDecoration: 'none', borderBottom: `1px solid ${CYAN}44`, padding: '6px 0', display: 'inline-block' }}>{children}</a>
 
 type CardIdea = Pick<Idea, 'nombre' | 'material' | 'derechos' | 'esfuerzo' | 'valor' | 'volumen' | 'aprox' | 'porque' | 'reel' | 'buscar'> & { ojo?: string; ruta?: string; temporada?: string; primerPaso?: string; cat?: Cat }
 
@@ -87,7 +76,7 @@ function IdeaCard({ i, score, prox, onAdd, mlOn }: { i: CardIdea; score?: number
         {i.ruta && <Link href={i.ruta} style={{ color: GREEN, fontSize: 11.5 }}>Tu generador →</Link>}
       </div>
       {mlOn && !ml && <button type="button" className="press" onClick={verMl} disabled={busy} style={{ justifySelf: 'start', minHeight: 34, padding: '0 12px', background: 'transparent', border: `1px solid ${CYAN}55`, color: CYAN, fontFamily: mono, fontSize: 11, cursor: 'pointer' }}>{busy ? 'CONSULTANDO…' : 'DATOS DE MERCADO LIBRE'}</button>}
-      {ml && <div style={{ fontSize: 11.5, color: '#c8daf0', background: '#0b1017', padding: '8px 10px' }}>{ml.total.toLocaleString('es-CL')} publicaciones · precio típico {clp(ml.mediana)} (la mitad entre {clp(ml.p25)} y {clp(ml.p75)}, de {ml.n} vistas)</div>}
+      {ml && <div style={{ fontSize: 11.5, color: '#c8daf0', background: '#0b1017', padding: '8px 10px' }}>{ml.total.toLocaleString('es-CL')} {ml.via === 'catalogo' ? 'productos en catálogo' : 'publicaciones'} · precio típico {clp(ml.mediana)} (la mitad entre {clp(ml.p25)} y {clp(ml.p75)}, de {ml.n} vistas)</div>}
       {mlErr && <div style={{ fontSize: 11, color: AMBER }}>{mlErr}</div>}
       <button type="button" className="press" onClick={onAdd} style={{ justifySelf: 'start', minHeight: 36, padding: '0 14px', background: `${AMBER}18`, border: `1px solid ${AMBER}88`, color: AMBER, fontFamily: mono, fontSize: 11.5, letterSpacing: 1, cursor: 'pointer' }}>+ A MI TABLERO</button>
     </article>
@@ -99,6 +88,8 @@ export default function RadarApp() {
   const items = useSyncExternalStore(tablero.subscribe, tablero.get, tablero.server)
   const [estado, setEstado] = useState<EstadoR | null>(null)
   const [aviso, setAviso] = useState('')
+  const [focoIA, setFocoIA] = useState('')
+  const ideasCon = (f: string) => { setFocoIA(f); setTab('generar'); window.scrollTo({ top: 0 }) }
   const cal = useMemo(() => calendario(), [])
   const ranked = useMemo(() => IDEAS.map((i) => ({ i, ...puntaje(i, cal) })).sort((a, b) => b.total - a.total), [cal])
 
@@ -117,21 +108,22 @@ export default function RadarApp() {
 
   return (
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono }}>
-      <div style={{ maxWidth: 1240, margin: '0 auto', padding: '96px 20px 80px' }}>
-        <div style={{ fontSize: 11, letterSpacing: 5, color: `${AMBER}bb`, marginBottom: 10 }}>NEGOCIO · PRIVADO · <Link href="/" style={{ color: `${AMBER}bb` }}>NEOPROXY.ART</Link></div>
+      <div style={{ maxWidth: 1240, margin: '0 auto', padding: '32px 16px 80px' }}>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: `${AMBER}bb`, marginBottom: 10 }}>NEGOCIO · PRIVADO · <Link href="/" style={{ color: `${AMBER}bb` }}>NEOPROXY.ART</Link></div>
         <h1 style={{ fontSize: 'clamp(30px, 7vw, 54px)', letterSpacing: 10, color: AMBER, margin: '0 0 8px' }}>RADAR</h1>
         <p style={{ fontSize: 12.5, lineHeight: 1.9, color: DIM, maxWidth: 820, margin: '0 0 22px' }}>
           Qué imprimir y vender, cuándo y por qué. Ideas con su lógica de negocio, las fechas que vienen, tu tablero de producción y, cuando conectes las fuentes, lo que está subiendo en el mundo maker y los precios reales de Mercado Libre.
         </p>
         <Clave estado={estado} guardar={guardarClave} />
-        <nav style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 22, position: 'sticky', top: 0, zIndex: 5, background: '#000205', padding: '8px 0' }}>
-          {([['hoy', 'HOY'], ['ideas', `IDEAS (${IDEAS.length})`], ['generar', 'GENERAR CON IA'], ['tablero', `MI TABLERO (${items.filter((x) => x.estado !== 'descartada').length})`], ['fuentes', 'FUENTES']] as [Tab, string][]).map(([k, l]) => <Chip key={k} on={tab === k} onClick={() => setTab(k)}>{l}</Chip>)}
+        <nav style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', marginBottom: 22, position: 'sticky', top: 0, zIndex: 5, background: '#000205', padding: '8px 0' }}>
+          {([['hoy', 'HOY'], ['cazador', 'CAZADOR'], ['ideas', `IDEAS (${IDEAS.length})`], ['generar', 'GENERAR CON IA'], ['tablero', `MI TABLERO (${items.filter((x) => x.estado !== 'descartada').length})`], ['fuentes', 'FUENTES']] as [Tab, string][]).map(([k, l]) => <Chip key={k} on={tab === k} onClick={() => setTab(k)}>{l}</Chip>)}
         </nav>
         {aviso && <div role="status" style={{ position: 'fixed', left: '50%', bottom: 24, transform: 'translateX(-50%)', zIndex: 50, background: '#0b1017', border: `1px solid ${GREEN}`, color: GREEN, padding: '10px 16px', fontSize: 12 }}>{aviso}</div>}
 
-        {tab === 'hoy' && <Hoy cal={cal} ranked={ranked} estado={estado} items={items} onAdd={add} go={setTab} />}
+        {tab === 'hoy' && <Hoy cal={cal} ranked={ranked} estado={estado} items={items} onAdd={add} go={(t) => { setTab(t); window.scrollTo({ top: 0 }) }} />}
+        {tab === 'cazador' && <Cazador estado={estado} ideasCon={ideasCon} />}
         {tab === 'ideas' && <Ideas ranked={ranked} onAdd={add} mlOn={!!estado?.mercadoLibre} />}
-        {tab === 'generar' && <Generar onAdd={add} estado={estado} mlOn={!!estado?.mercadoLibre} evitar={items.map((x) => x.nombre)} />}
+        {tab === 'generar' && <Generar key={focoIA} focoInicial={focoIA} onAdd={add} estado={estado} mlOn={!!estado?.mercadoLibre} evitar={items.map((x) => x.nombre)} />}
         {tab === 'tablero' && <Tablero items={items} upd={upd} add={add} />}
         {tab === 'fuentes' && <Fuentes estado={estado} />}
       </div>
@@ -142,8 +134,28 @@ export default function RadarApp() {
 
 function Hoy({ cal, ranked, estado, items, onAdd, go }: { cal: ReturnType<typeof calendario>; ranked: { i: Idea; total: number; fecha?: ReturnType<typeof calendario>[number] }[]; estado: EstadoR | null; items: Item[]; onAdd: (n: string, b?: string) => void; go: (t: Tab) => void }) {
   const activos = items.filter((x) => x.estado !== 'descartada' && x.estado !== 'idea')
+  // null = paso sin estado medible (se muestra como flecha, no como pendiente)
+  const pasos: [boolean | null, string, [string, Tab] | null][] = [
+    [!!estado?.valida, 'Activa tu clave de RADAR en este navegador (recuadro de arriba).', null],
+    [!!estado?.mercadoLibre, 'Conecta Mercado Libre: el CAZADOR revisa por ti resina, PLA, impresoras y alcohol, y marca las oportunidades.', ['VER PASOS', 'cazador']],
+    [null, 'Compra material solo cuando el CAZADOR marque OPORTUNIDAD, o con sus enlaces «más barato primero», que funcionan ya.', ['ABRIR CAZADOR', 'cazador']],
+    [items.length > 0, 'Elige 2 o 3 ideas de «Lo que conviene ahora» (abajo) y pásalas a tu tablero.', null],
+    [activos.length > 0, 'Prototipo → reel → publicación. Repite con lo que se venda.', ['ABRIR TABLERO', 'tablero']],
+  ]
   return (
     <div style={{ display: 'grid', gap: 26 }}>
+      <section style={{ background: '#0b0a06', border: `1px solid ${AMBER}44`, padding: '14px 16px' }}>
+        <h2 style={{ fontSize: 12, letterSpacing: 3, color: AMBER, margin: '0 0 10px' }}>POR DÓNDE EMPEZAR</h2>
+        <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8 }}>
+          {pasos.map(([hecho, texto, accion], k) => (
+            <li key={k} style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', fontSize: 12, lineHeight: 1.7, color: hecho ? FAINT : '#c8daf0' }}>
+              <span style={{ color: hecho ? GREEN : hecho === null ? CYAN : AMBER, width: 14 }}>{hecho ? '●' : hecho === null ? '→' : '○'}</span>
+              <span style={{ flex: '1 1 260px', textDecoration: hecho ? 'line-through' : 'none' }}>{k + 1}. {texto}</span>
+              {accion && !hecho && <button type="button" className="press" onClick={() => go(accion[1])} style={{ minHeight: 32, background: 'transparent', border: `1px solid ${AMBER}66`, color: AMBER, fontFamily: mono, fontSize: 10.5, padding: '0 10px', cursor: 'pointer' }}>{accion[0]}</button>}
+            </li>
+          ))}
+        </ol>
+      </section>
       <section>
         <h2 style={{ fontSize: 12, letterSpacing: 3, color: AMBER, margin: '0 0 12px' }}>LAS FECHAS QUE VIENEN</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 8 }}>
@@ -208,9 +220,9 @@ function Ideas({ ranked, onAdd, mlOn }: { ranked: { i: Idea; total: number; fech
   )
 }
 
-function Generar({ onAdd, estado, mlOn, evitar }: { onAdd: (n: string, b?: string, notas?: string) => void; estado: EstadoR | null; mlOn: boolean; evitar: string[] }) {
+function Generar({ focoInicial, onAdd, estado, mlOn, evitar }: { focoInicial: string; onAdd: (n: string, b?: string, notas?: string) => void; estado: EstadoR | null; mlOn: boolean; evitar: string[] }) {
   const iaOn = estado ? estado.valida && estado.ia : null
-  const [foco, setFoco] = useState(''), [mat, setMat] = useState<'ambos' | 'PLA' | 'Resina'>('ambos'), [n, setN] = useState(5)
+  const [foco, setFoco] = useState(focoInicial), [mat, setMat] = useState<'ambos' | 'PLA' | 'Resina'>('ambos'), [n, setN] = useState(5)
   const [busy, setBusy] = useState(false), [err, setErr] = useState(''), [res, setRes] = useState<IdeaIA[]>([])
   const run = async () => {
     setBusy(true); setErr('')
@@ -342,7 +354,7 @@ function Fuentes({ estado }: { estado: EstadoR | null }) {
       </section>
       <section>
         <h2 style={{ fontSize: 12, letterSpacing: 3, color: AMBER, margin: '0 0 12px' }}>MERCADO LIBRE CHILE · LO QUE SE VENDE AQUÍ</h2>
-        {estado?.mercadoLibre ? <p style={{ fontSize: 12, color: DIM }}>Conectado: en cada idea aparece el botón «DATOS DE MERCADO LIBRE» con la cantidad de publicaciones y el rango de precios.</p> : (
+        {estado?.mercadoLibre ? <p style={{ fontSize: 12, color: DIM }}>Conectado: en cada idea aparece el botón «DATOS DE MERCADO LIBRE» con la cantidad de publicaciones y el rango de precios, y la pestaña CAZADOR revisa ofertas y tendencias.</p> : (
           <ol style={{ margin: 0, padding: '0 0 0 18px' }}>
             <Paso n="1.">En developers.mercadolibre.cl crea una aplicación y copia el <b>Client ID</b> y el <b>Client Secret</b>.</Paso>
             <Paso n="2.">Cárgalos con <code style={{ color: '#fff' }}>vercel env add MERCADOLIBRE_CLIENT_ID</code> y <code style={{ color: '#fff' }}>vercel env add MERCADOLIBRE_CLIENT_SECRET</code>.</Paso>
