@@ -1,5 +1,5 @@
 // RADAR — ideas nuevas con IA (Claude). Una sola llamada con salida estructurada:
-// el JSON vuelve validado contra el esquema. Solo se usa desde app/admin/radar/actions.ts.
+// el JSON vuelve validado contra el esquema. Solo se usa desde app/radar/actions.ts.
 import Anthropic from '@anthropic-ai/sdk'
 import { betaJSONSchemaOutputFormat } from '@anthropic-ai/sdk/helpers/beta/json-schema'
 import { IDEAS, calendario } from './ideas'
