@@ -4,6 +4,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { createHash, timingSafeEqual } from 'crypto'
 import { thingiverse, mercadoLibre, ESTADO } from '@/lib/radar/fuentes'
 import { generarIdeas, type PedidoIdeas } from '@/lib/radar/ia'
+import { cazar, tendencias, diagnostico, MLError, type Caza } from '@/lib/radar/ml'
+import { limpiarVigilancia, type Vigilancia } from '@/lib/radar/ofertas'
 
 // /radar no pide login. Lo que gasta (la IA con tu clave de Anthropic, las cuotas de
 // Thingiverse y Mercado Libre) pide la clave personal RADAR_CLAVE, que se carga en
@@ -33,6 +35,40 @@ export async function radarMercado(clave: string, q: string) {
   if (!(await claveOk(clave))) return SIN_CLAVE
   if (!q.trim()) return { ok: false as const, error: 'Escribe qué buscar' }
   return mercadoLibre(q.trim())
+}
+
+// ---------------------------------------------------------------------------------
+// CAZADOR (lib/radar/ml.ts + lib/radar/ofertas.ts): ofertas en lo que vigilas,
+// tendencias de búsqueda en Chile y un diagnóstico de qué responde con tu app.
+
+const mlFallo = (e: unknown) => {
+  if (e instanceof MLError) return { ok: false as const, error: e.message, falta: e.falta }
+  console.error('radar: fallo en Mercado Libre', e)
+  return { ok: false as const, error: 'No se pudo conectar con Mercado Libre.' }
+}
+
+export async function radarCazar(clave: string, vigilancias: unknown[]) {
+  if (!(await claveOk(clave))) return SIN_CLAVE
+  const vs = (Array.isArray(vigilancias) ? vigilancias : []).slice(0, 12).map(limpiarVigilancia).filter((v): v is Vigilancia => !!v)
+  if (!vs.length) return { ok: false as const, error: 'No hay nada que vigilar' }
+  const res = await Promise.all(vs.map(async (v): Promise<Caza | { id: string; error: string; falta?: string }> => {
+    try { return await cazar(v) } catch (e) { const f = mlFallo(e); return { id: v.id, error: f.error, falta: 'falta' in f ? f.falta : undefined } }
+  }))
+  // si todas fallan por lo mismo (sin conectar, token malo), se informa una vez
+  const errs = res.filter((r): r is { id: string; error: string; falta?: string } => 'error' in r && !('items' in r))
+  if (errs.length === res.length) return { ok: false as const, error: errs[0].error, falta: errs[0].falta }
+  return { ok: true as const, data: res }
+}
+
+export async function radarTendencias(clave: string, cat?: string) {
+  if (!(await claveOk(clave))) return SIN_CLAVE
+  if (cat && !/^MLC\d{1,12}$/.test(cat)) return { ok: false as const, error: 'Categoría inválida' }
+  try { return { ok: true as const, data: await tendencias(cat) } } catch (e) { return mlFallo(e) }
+}
+
+export async function radarDiagnosticoML(clave: string) {
+  if (!(await claveOk(clave))) return SIN_CLAVE
+  return { ok: true as const, data: await diagnostico() }
 }
 
 // ---------------------------------------------------------------------------------
