@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import { build, verify, paramsJson, orient, size, fitsBed, type Verification } from './build'
+import { build, verify, paramsJson, orient, size, fitsBed, printFiles, type Verification } from './build'
 import { meshToBinarySTL } from '../specimens/stl'
 import type { KatanaOpts } from './model'
 
@@ -53,7 +53,7 @@ self.onmessage = (e: MessageEvent<KatanaCmd>) => {
       post({ type: 'verified', req: c.req, v: verify(b), ms: Date.now() - t1 })
     } else {
       const b = build({ ...c.opts, quality: 'exportar' }), v = verify(b)
-      const files: { name: string; data: ArrayBuffer }[] = b.parts.map((p) => ({ name: `katana-${p.key}${p.count > 1 ? `-x${p.count}` : ''}.stl`, data: meshToBinarySTL(orient(p.mesh, p.rot)) }))
+      const files: { name: string; data: ArrayBuffer }[] = printFiles(b).map((f) => ({ name: f.name, data: meshToBinarySTL(f.mesh) }))
       files.push({ name: 'katana-parametros.json', data: new TextEncoder().encode(JSON.stringify(paramsJson(b, v), null, 2)).buffer as ArrayBuffer })
       post({ type: 'exported', req: c.req, files, v, ms: Date.now() - t0 }, files.map((f) => f.data))
     }

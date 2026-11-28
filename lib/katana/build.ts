@@ -123,6 +123,27 @@ function glowTris(C: BladeCtx, m: Mesh): Uint32Array {
 // ---------------------------------------------------------------------------------
 // Impresión: rotación, piso en z = 0, centrado en x/y.
 
+// Archivos a imprimir. Una pieza partida en dos (mirror) no se puede imprimir dos veces igual: la
+// segunda mitad es su espejo. Sale como mitad A y mitad B; la B se da vuelta para que su cara de
+// corte también quede sobre la cama.
+export function printFiles(b: Built): { name: string; mesh: Mesh; part: Part }[] {
+  const out: { name: string; mesh: Mesh; part: Part }[] = []
+  for (const p of b.parts) {
+    if (!p.mirror) { out.push({ name: `katana-${p.key}${p.count > 1 ? `-x${p.count}` : ''}.stl`, mesh: orient(p.mesh, p.rot), part: p }); continue }
+    const R = p.rot ?? [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    const flipped = [R[0], R[1].map((v) => -v), R[2].map((v) => -v)] // primero la rotación, después 180° en x
+    out.push({ name: `katana-${p.key}-A.stl`, mesh: orient(p.mesh, p.rot), part: p })
+    out.push({ name: `katana-${p.key}-B.stl`, mesh: orient(mirrorZ(p.mesh), flipped), part: p })
+  }
+  return out
+}
+function mirrorZ(m: Mesh): Mesh {
+  const P = Float32Array.from(m.positions), I = Uint32Array.from(m.indices)
+  for (let i = 2; i < P.length; i += 3) P[i] = -P[i]
+  for (let t = 0; t < I.length; t += 3) { const a = I[t + 1]; I[t + 1] = I[t + 2]; I[t + 2] = a }
+  return { positions: P, indices: I }
+}
+
 export function orient(m: Mesh, R: number[][] | null): Mesh {
   const P = new Float32Array(m.positions.length)
   for (let i = 0; i < P.length; i += 3) {
@@ -234,7 +255,7 @@ export function paramsJson(b: Built, v: Verification | null) {
     segmentos: { cantidad: D.nseg, largosMm: D.bounds.slice(1).map((e, i) => +(e - D.bounds[i]).toFixed(1)), espigaMm: +D.Lt.toFixed(1), holguraMm: D.c, pernoUnionDiamMm: +(2 * D.rp).toFixed(2) },
     mango: { largoMm: D.Lh, espigaMm: D.Ltang, seccionFrenteMm: [+(2 * D.ayF).toFixed(1), +(2 * D.azF).toFixed(1)], pernoMekugiDiamMm: +(2 * D.rm).toFixed(2), alojamientoElectronica: D.pocket ? { largoMm: +Math.abs(D.pocket.x1 - D.pocket.x0).toFixed(0), anchoMm: 2 * D.pocket.hy, altoMm: 2 * D.pocket.hz, sugerencia: 'ESP32-C3 supermini + batería LiPo plana + tira LED' } : null },
     tsubaDiametroMm: +(2 * D.Rt).toFixed(1),
-    piezas: b.parts.map((p) => ({ archivo: `katana-${p.key}${p.count > 1 ? `-x${p.count}` : ''}.stl`, nombre: p.name, copias: p.count, nota: p.note })),
+    piezas: b.parts.map((p) => ({ archivos: p.mirror ? [`katana-${p.key}-A.stl`, `katana-${p.key}-B.stl`] : [`katana-${p.key}${p.count > 1 ? `-x${p.count}` : ''}.stl`], nombre: p.name, copias: p.count, nota: p.mirror ? `${p.note} (mitad A y su espejo, la B)` : p.note })),
     materiales: { hoja: opts.proc === 'fdm' ? 'PETG o PLA+, capas de 0,16–0,2 mm, 4 perímetros, 25 % de relleno' : 'resina rígida (tipo ABS-like), capas de 0,05 mm', clavijas: 'filamento de 1,75 mm (uniones) y varilla de 3 mm (mango, mekugi)', pegamento: 'cianoacrilato en gel o epoxi de 5 min' },
     armado: ['Pegar las dos mitades de cada hoja con clavijas y perno de unión; encajar espiga y mortaja segmento por segmento.', 'Cerrar cada abrazadera sobre su unión con epoxi.', 'Pasar tsuba y fuchi por la espiga larga; cerrar el mango sobre la espiga con clavijas; clavar el mekugi.', 'Pegar el remate y los dos sensores.'],
     verificacion: v ? { ok: v.ok, comprobaciones: v.checks, holguras: v.clearances, piezas: v.parts } : null,

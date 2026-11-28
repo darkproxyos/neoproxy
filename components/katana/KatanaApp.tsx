@@ -195,7 +195,7 @@ export default function KatanaApp() {
             {exporting ? busy : 'DESCARGAR TODO (STL + JSON)'}
           </button>
           <p style={{ fontSize: 11, lineHeight: 1.8, color: FAINT, margin: 0 }}>
-            El ZIP trae un STL por tipo de pieza (el nombre dice cuántas imprimir), ya orientado para imprimir sin soportes, y un JSON con medidas, holguras, materiales, orden de armado y esta verificación.
+            El ZIP trae un STL por pieza, ya orientado para imprimir sin soportes (las piezas partidas en dos vienen como mitad A y mitad B, que es su espejo), y un JSON con medidas, holguras, materiales, orden de armado y esta verificación.
           </p>
           {err && <div style={{ fontSize: 11.5, color: RED }}>{err}</div>}
         </section>

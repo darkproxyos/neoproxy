@@ -37,7 +37,7 @@ export default function KatanaPage() {
               <P>La hoja es un arco de círculo. Cada punto del espacio tiene un largo de arco, una altura sobre la línea central y un espesor; en ellas la sección es la de un katana real: lomo plano, una arista (shinogi) a 62 % de la altura y un bisel hasta un borde romo. Aletas, ventilas, canal de luz, espigas y mortajas se suman o se restan de esa sección.</P>
             </Card>
             <Card n="02" title="Mitades planas, sin soportes">
-              <P>La hoja es simétrica por su plano medio, así que cada segmento se imprime en dos mitades iguales con la cara de corte sobre la cama: el bisel queda mirando hacia arriba y no hay voladizos. Las dos mitades se pegan con clavijas y se cierran con abrazaderas de tornillos. El mango se hace igual.</P>
+              <P>La hoja es simétrica por su plano medio, así que cada segmento se imprime en dos mitades con la cara de corte sobre la cama: el bisel queda mirando hacia arriba y no hay voladizos. La mitad B es el espejo de la A (vienen las dos en la descarga). Se pegan con clavijas y se cierran con abrazaderas de tornillos. El mango se hace igual.</P>
             </Card>
             <Card n="03" title="Segmentos que caben en tu cama">
               <P>Según el lado de tu cama, la hoja se corta en segmentos unidos por una espiga con perno pasante. El primero es más corto, porque lleva la espiga larga que cruza tsuba, fuchi y mango. Cada pieza se mide ya orientada para imprimir.</P>
