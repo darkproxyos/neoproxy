@@ -80,7 +80,7 @@ body {
    modal fixed se iba fuera de pantalla al abrirlo después de scrollear. */
 .neo-organism-filter {
   transition: filter 3s ease;
-  filter: contrast(calc(1 + var(--repeat-compress, 0) * 0.35)) saturate(calc((1 - var(--repeat-compress, 0) * 0.45) * var(--tramo-sat, 1))) sepia(var(--tramo-sepia, 0));
+  filter: contrast(calc(1 + var(--lain-contrast, 0.04) + var(--repeat-compress, 0) * 0.35)) saturate(calc((1 - var(--repeat-compress, 0) * 0.45) * var(--tramo-sat, 1) * var(--lain-sat, 0.8))) sepia(var(--tramo-sepia, 0));
 }
 
 /* El viaje (lib/zona/rutas.ts, components/zona/Clima.tsx): el Afuera en sepia, como el
@@ -107,25 +107,25 @@ html.tramo-boot .neo-organism-filter { transition: none; }
 ::-webkit-scrollbar-thumb {
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 212, 255, 0.35),
-    rgba(0, 212, 255, 0.35) 2px,
+    rgba(170, 190, 205, 0.35),
+    rgba(170, 190, 205, 0.35) 2px,
     transparent 2px,
     transparent 4px
   );
-  border: 1px solid rgba(0, 212, 255, 0.25);
+  border: 1px solid rgba(170, 190, 205, 0.25);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 212, 255, 0.55),
-    rgba(0, 212, 255, 0.55) 2px,
+    rgba(170, 190, 205, 0.55),
+    rgba(170, 190, 205, 0.55) 2px,
     transparent 2px,
     transparent 4px
   );
 }
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 212, 255, 0.35) #000205;
+  scrollbar-color: rgba(170, 190, 205, 0.35) #000205;
 }
 
 /* CRT Scanline Effect */
@@ -801,3 +801,62 @@ html.tramo-boot .neo-organism-filter { transition: none; }
 @media (prefers-reduced-motion: reduce) {
   .sigil-charging-pulse, .sigil-fracture { animation: none !important; }
 }
+
+
+/* ---------------------------------------------------------------------------------
+   LAIN — capa atmosférica de todo el sitio (components/lain/LainLayer.tsx).
+   Cables sobre el borde de arriba, grano de señal, viñeta y un desgarro ocasional.
+   Todo pointer-events:none. Los cables y el grano se animan con transform (compositor),
+   sin bucles en JavaScript. El color de las páginas lo baja .neo-organism-filter
+   (--lain-sat); el menú y el chat quedan fuera de ese filtro a propósito (un filter ahí
+   anclaría sus modales al documento, ver el comentario de .neo-organism-filter). */
+.lain-cables {
+  position: fixed; top: 0; left: 0; right: 0; height: min(30vh, 220px);
+  pointer-events: none; z-index: 60; overflow: hidden; /* por encima del menú (z 50): los cables cruzan, no se esconden */
+}
+.lain-cables svg { width: 100%; height: 100%; display: block; }
+.lain-cables path {
+  fill: none; stroke: rgba(205, 220, 235, 0.36); stroke-width: 1;
+  vector-effect: non-scaling-stroke; will-change: transform;
+}
+.lain-cables .c1 { animation: lain-balanceo 11s ease-in-out infinite alternate; }
+.lain-cables .c2 { animation: lain-balanceo 14s ease-in-out -4s infinite alternate; stroke: rgba(205, 220, 235, 0.28); }
+.lain-cables .c3 { animation: lain-balanceo 9s ease-in-out -2s infinite alternate; stroke: rgba(205, 220, 235, 0.22); }
+.lain-cables .c4 { animation: lain-balanceo 17s ease-in-out -7s infinite alternate; stroke: rgba(205, 220, 235, 0.18); }
+@keyframes lain-balanceo { from { transform: translateY(-2px); } to { transform: translateY(3px); } }
+
+.lain-vineta {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9995;
+  background: radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(0, 0, 0, 0.38) 100%);
+}
+.lain-grano {
+  position: fixed; inset: -80px; pointer-events: none; z-index: 9996; opacity: 0.055;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: lain-grano 0.9s steps(5) infinite;
+}
+@keyframes lain-grano {
+  0% { transform: translate(0, 0); } 20% { transform: translate(-31px, 17px); } 40% { transform: translate(23px, -29px); }
+  60% { transform: translate(-17px, -13px); } 80% { transform: translate(29px, 21px); } 100% { transform: translate(0, 0); }
+}
+.lain-desgarro {
+  position: fixed; left: 0; right: 0; top: 50%; height: 3px; pointer-events: none; z-index: 9997; opacity: 0;
+  background: rgba(205, 225, 245, 0.1); box-shadow: 0 0 14px rgba(205, 225, 245, 0.12);
+}
+.lain-desgarro-on { animation: lain-desgarro 0.28s steps(3) 1; }
+@keyframes lain-desgarro {
+  0% { opacity: 0; transform: translateX(-6px); } 35% { opacity: 1; transform: translateX(8px); }
+  70% { opacity: 0.6; transform: translateX(-3px); } 100% { opacity: 0; transform: translateX(0); }
+}
+.lain-control {
+  position: fixed; left: 14px; bottom: 40px; z-index: 998; min-height: 32px; padding: 7px 11px;
+  font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.6px; cursor: pointer;
+  background: rgba(0, 2, 5, 0.9); color: rgba(205, 218, 232, 0.82); border: 1px solid rgba(190, 205, 220, 0.26);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.lain-control:hover, .lain-control[aria-pressed='true'] { color: #e6eef6; border-color: rgba(205, 225, 245, 0.55); }
+.lain-control:focus-visible { outline: 1px solid rgba(205, 225, 245, 0.8); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .lain-cables path, .lain-grano { animation: none; }
+  .lain-desgarro { display: none; }
+}
+@media print { .lain-cables, .lain-vineta, .lain-grano, .lain-desgarro, .lain-control { display: none; } }

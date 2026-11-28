@@ -23,6 +23,7 @@ import SteganoNoise from '@/components/SteganoNoise'
 import RepetitionCompression from '@/components/RepetitionCompression'
 import SandpileField from '@/components/SandpileField'
 import Clima from '@/components/zona/Clima'
+import LainLayer from '@/components/lain/LainLayer'
 import { BOOT_SCRIPT } from '@/lib/zona/rutas'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -73,6 +74,7 @@ export default function RootLayout({
           <RepetitionCompression />
           <SandpileField />
           <Clima />
+          <LainLayer />
         </Providers>
       </body>
     </html>
