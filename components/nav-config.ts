@@ -37,9 +37,11 @@ export const navConfig: NavEntry[] = [
     items: [
       { label: 'Impresión 3D', href: '/fabrication', live: true },
       { label: 'Artefactos', href: '/artifacts', live: true },
-      { label: 'Katana cyborg', href: '/katana', live: true },
-      // Arsenal: oculto del menú a pedido explícito — la página sigue viva
-      // en /arsenal, se vuelve a listar acá cuando esté lista para mostrarse.
+      // ARSENAL · ESPADAS: sección de espadas imprimibles (catálogo con
+      // versiones y bitácora en lib/arsenal/catalogo.ts); la katana cyborg
+      // vive ahí adentro como NPX-01. La vieja galería /arsenal sigue oculta
+      // del menú a pedido explícito (la página sigue viva).
+      { label: 'Arsenal · espadas', href: '/arsenal/espadas', live: true },
     ],
   },
   // SUSTRATO: sección completa de electrónica/robótica pedida explícita

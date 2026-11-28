@@ -28,7 +28,7 @@ export function region(b: Box, lo: [number, number, number], hi: [number, number
   }
 }
 
-function resolveSaddles(b: Box) {
+export function resolveSaddles(b: Box) {
   const { nx, ny, nz, f } = b, sx = nx + 1, sxy = sx * (ny + 1)
   const at = (i: number, j: number, k: number) => i + sx * j + sxy * k
   for (let pass = 0; pass < 8; pass++) {

@@ -18,7 +18,7 @@ export default function KatanaPage() {
     <div style={{ background: '#000205', minHeight: '100vh', color: '#c8daf0', fontFamily: mono, position: 'relative', overflowX: 'hidden' }}>
       <div className="crt-scanlines" /><div className="tech-grid" />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1320, margin: '0 auto', padding: '104px 24px 100px' }}>
-        <div style={{ fontSize: 11, letterSpacing: 6, color: `${CYAN}aa`, marginBottom: 14 }}>NPX-KATANA // OBJETO · <Link href="/fabrication" style={{ color: `${CYAN}aa` }}>FABRICACIÓN</Link></div>
+        <div style={{ fontSize: 11, letterSpacing: 6, color: `${CYAN}aa`, marginBottom: 14 }}><Link href="/arsenal/espadas" style={{ color: `${CYAN}aa` }}>ARSENAL · ESPADAS</Link>{' // NPX-01 · v1.1'}</div>
         <h1 style={{ fontSize: 'clamp(34px, 8.5vw, 70px)', letterSpacing: 14, margin: '0 0 18px', lineHeight: 1.05, background: `linear-gradient(90deg,${CYAN},#ffffff 55%,${AMBER})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>KATANA</h1>
         <p style={{ fontSize: 13, lineHeight: 2, color: '#c8daf0', maxWidth: 900, margin: '0 0 10px' }}>
           Un katana de exhibición con cuerpo de máquina: hoja curva con aletas disipadoras en el lomo, ventilas y un canal de luz con trazado de circuito; abrazaderas con tornillos sobre cada unión; tsuba de engranaje; mango con diamantes de cable y un hueco para electrónica; remate con lente de sensor.
