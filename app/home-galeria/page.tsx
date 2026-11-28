@@ -1,6 +1,6 @@
 // /home-galeria — pedido explícito: "que en menú Home haya página Home
 // con todos los Home como galería". Server Component simple (sin
-// interactividad propia, solo Links) listando las tres variantes reales
+// interactividad propia, solo Links) listando las variantes reales
 // de home index que elige app/page.tsx al azar -- acá se entra a
 // cualquiera a propósito, sin depender del azar. Linkeada desde HOME en
 // el menú (components/nav-config.ts), que pasó de link directo a grupo
@@ -22,8 +22,13 @@ const HOMES = [
   },
   {
     id: 'grafico', code: 'HOME · MAPA', title: 'EL MAPA', href: '/home-grafico', color: '#00d4ff',
-    blurb: 'El sitio entero como un solo árbol navegable, mismo estilo que /experimental/cartografia. Cada nodo es una ruta real — tocá cualquiera para entrar directo. Árbol radial, círculos anidados, o mosaico: la forma se elige arriba.',
-    tag: 'TOCÁ UN NODO PARA ENTRAR — ZOOM Y ARRASTRE REALES',
+    blurb: 'El sitio entero como un árbol radial, a pantalla completa y sin nada más: solo el mapa. Cada nodo es una ruta real. Tocá una rama y la vista se acerca a ella; tocá una hoja y entrás.',
+    tag: 'TOCÁ UNA RAMA PARA ACERCAR — TOCÁ EL FONDO PARA VOLVER',
+  },
+  {
+    id: 'circulos', code: 'HOME · CÍRCULOS', title: 'LOS CÍRCULOS', href: '/home-circulos', color: '#7cf0d0',
+    blurb: 'El mismo mapa en círculos anidados, también solo y a pantalla completa. Cada círculo grande es una sección; al acercarte aparecen los de sus páginas, cada vez más grandes y con su nombre.',
+    tag: 'TOCÁ UN CÍRCULO PARA ENTRAR EN ÉL — TOCÁ EL FONDO PARA VOLVER',
   },
   {
     id: 'senal', code: 'HOME · SEÑAL', title: 'RUIDO → SEÑAL', href: '/home-senal', color: '#9d4edd',
@@ -52,8 +57,8 @@ export default function HomeGaleriaPage() {
           GALERÍA DE HOME
         </h1>
         <p style={{ fontSize: 12.5, lineHeight: 2, color: '#8fb8d6', maxWidth: 680, marginBottom: 56 }}>
-          Cada visita a <Link href="/" style={{ color: '#fff', textDecoration: 'underline' }}>/</Link> elige una de estas tres al azar —
-          acá están las tres juntas, para entrar a cualquiera directo sin depender de la suerte.
+          Cada visita a <Link href="/" style={{ color: '#fff', textDecoration: 'underline' }}>/</Link> elige una de estas cuatro al azar —
+          acá están las cuatro juntas, para entrar a cualquiera directo sin depender de la suerte.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
