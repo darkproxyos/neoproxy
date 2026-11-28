@@ -848,7 +848,7 @@ html.tramo-boot .neo-organism-filter { transition: none; }
   70% { opacity: 0.6; transform: translateX(-3px); } 100% { opacity: 0; transform: translateX(0); }
 }
 .lain-control {
-  position: fixed; left: 14px; bottom: 40px; z-index: 998; min-height: 32px; padding: 7px 11px;
+  position: fixed; right: 24px; bottom: 74px; z-index: 998; min-height: 32px; padding: 7px 11px; /* sobre el botón del chat, lejos del contador de presencia (abajo a la izquierda) */
   font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.6px; cursor: pointer;
   background: rgba(0, 2, 5, 0.9); color: rgba(205, 218, 232, 0.82); border: 1px solid rgba(190, 205, 220, 0.26);
   transition: color 0.2s ease, border-color 0.2s ease;
