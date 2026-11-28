@@ -13,10 +13,11 @@ import type { IdeaIA } from '@/lib/radar/ia'
 import type { RadarItem, Mercado } from '@/lib/radar/fuentes'
 import { mono, AMBER, GREEN, RED, CYAN, DIM, FAINT, clp, CLAVE_KEY, getClave, Paso, Chip, Tag, A, type EstadoR } from './ui'
 import Cazador from './Cazador'
+import Prototipos from './Prototipos'
 
 const fecha = (d: Date) => d.toLocaleDateString('es-CL', { day: 'numeric', month: 'short', timeZone: 'UTC' })
 
-type Tab = 'hoy' | 'cazador' | 'ideas' | 'generar' | 'tablero' | 'fuentes'
+type Tab = 'hoy' | 'cazador' | 'proto' | 'ideas' | 'generar' | 'tablero' | 'fuentes'
 type Estado = 'idea' | 'prototipo' | 'reel' | 'venta' | 'descartada'
 const ESTADOS: { k: Estado; label: string; c: string }[] = [
   { k: 'idea', label: 'IDEA', c: DIM }, { k: 'prototipo', label: 'PROTOTIPO', c: CYAN }, { k: 'reel', label: 'REEL', c: '#d4b0ff' },
@@ -116,12 +117,13 @@ export default function RadarApp() {
         </p>
         <Clave estado={estado} guardar={guardarClave} />
         <nav style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', marginBottom: 22, position: 'sticky', top: 0, zIndex: 5, background: '#000205', padding: '8px 0' }}>
-          {([['hoy', 'HOY'], ['cazador', 'CAZADOR'], ['ideas', `IDEAS (${IDEAS.length})`], ['generar', 'GENERAR CON IA'], ['tablero', `MI TABLERO (${items.filter((x) => x.estado !== 'descartada').length})`], ['fuentes', 'FUENTES']] as [Tab, string][]).map(([k, l]) => <Chip key={k} on={tab === k} onClick={() => setTab(k)}>{l}</Chip>)}
+          {([['hoy', 'HOY'], ['cazador', 'CAZADOR'], ['proto', 'PROTOTIPOS'], ['ideas', `IDEAS (${IDEAS.length})`], ['generar', 'GENERAR CON IA'], ['tablero', `MI TABLERO (${items.filter((x) => x.estado !== 'descartada').length})`], ['fuentes', 'FUENTES']] as [Tab, string][]).map(([k, l]) => <Chip key={k} on={tab === k} onClick={() => setTab(k)}>{l}</Chip>)}
         </nav>
         {aviso && <div role="status" style={{ position: 'fixed', left: '50%', bottom: 24, transform: 'translateX(-50%)', zIndex: 50, background: '#0b1017', border: `1px solid ${GREEN}`, color: GREEN, padding: '10px 16px', fontSize: 12 }}>{aviso}</div>}
 
         {tab === 'hoy' && <Hoy cal={cal} ranked={ranked} estado={estado} items={items} onAdd={add} go={(t) => { setTab(t); window.scrollTo({ top: 0 }) }} />}
         {tab === 'cazador' && <Cazador estado={estado} ideasCon={ideasCon} />}
+        {tab === 'proto' && <Prototipos estado={estado} />}
         {tab === 'ideas' && <Ideas ranked={ranked} onAdd={add} mlOn={!!estado?.mercadoLibre} />}
         {tab === 'generar' && <Generar key={focoIA} focoInicial={focoIA} onAdd={add} estado={estado} mlOn={!!estado?.mercadoLibre} evitar={items.map((x) => x.nombre)} />}
         {tab === 'tablero' && <Tablero items={items} upd={upd} add={add} />}
