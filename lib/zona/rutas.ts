@@ -4,7 +4,7 @@
 // La tienda queda fuera a propósito: los productos se ven con sus colores reales.
 export type Tramo = 'afuera' | 'umbral' | 'zona'
 
-export const AFUERA = ['/', '/home-3d', '/home-grafico', '/home-senal', '/home-galeria', '/home-classic', '/manifesto', '/fabrication', '/artifacts']
+export const AFUERA = ['/', '/home-3d', '/home-grafico', '/home-circulos', '/home-senal', '/home-galeria', '/home-classic', '/manifesto', '/fabrication', '/artifacts']
 export const UMBRAL = ['/umbral']
 export const ZONA = ['/fenomenos', '/capas', '/humo', '/trenza', '/resonancia', '/rayo', '/especimenes', '/geometrias', '/antesis', '/lab/primercuerpo']
 

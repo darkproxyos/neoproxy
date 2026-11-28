@@ -5,7 +5,7 @@
 // elige — pensado para crecer con el tiempo (más variantes artísticas,
 // más técnicas), no para quedarse en tres para siempre.
 //
-// Hoy hay tres variantes reales:
+// Hoy hay cuatro variantes reales (la cuarta, /home-circulos, es la vista de círculos del mismo mapa):
 //   - /home-3d      — la nube cinemática 3D (la home de siempre hasta acá,
 //                     ver ese archivo para todo su historial v1-v5).
 //   - /home-grafico — el mapa del sitio entero estilo /experimental/
@@ -44,9 +44,10 @@ import dynamic from 'next/dynamic'
 const HomeNube = dynamic(() => import('./home-3d/page'), { ssr: false })
 const HomeGrafico = dynamic(() => import('./home-grafico/page'), { ssr: false })
 const HomeSenal = dynamic(() => import('./home-senal/page'), { ssr: false })
+const HomeCirculos = dynamic(() => import('./home-circulos/page'), { ssr: false })
 
-export type HomeVariant = 'nube' | 'grafico' | 'senal'
-export const HOME_VARIANTS: HomeVariant[] = ['nube', 'grafico', 'senal']
+export type HomeVariant = 'nube' | 'grafico' | 'senal' | 'circulos'
+export const HOME_VARIANTS: HomeVariant[] = ['nube', 'grafico', 'senal', 'circulos']
 
 function pickVariant(): HomeVariant {
   return HOME_VARIANTS[Math.floor(Math.random() * HOME_VARIANTS.length)]
@@ -57,8 +58,9 @@ export default function HomeDispatcher() {
 
   useEffect(() => {
     const override = new URLSearchParams(window.location.search).get('home')
-    if (override === 'nube' || override === 'grafico' || override === 'senal') {
-      setVariant(override)
+    const pedido = HOME_VARIANTS.find((v) => v === override)
+    if (pedido) {
+      setVariant(pedido)
       return
     }
     setVariant(pickVariant())
@@ -67,5 +69,6 @@ export default function HomeDispatcher() {
   if (!variant) return <div style={{ background: '#01040a', minHeight: '100vh' }} />
   if (variant === 'nube') return <HomeNube />
   if (variant === 'grafico') return <HomeGrafico />
+  if (variant === 'circulos') return <HomeCirculos />
   return <HomeSenal />
 }

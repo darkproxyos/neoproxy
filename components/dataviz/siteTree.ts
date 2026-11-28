@@ -41,6 +41,7 @@ export const SITE_TREE: SiteNode = {
       children: [
         { name: 'NUBE', href: '/home-3d' },
         { name: 'MAPA', href: '/home-grafico' },
+        { name: 'CÍRCULOS', href: '/home-circulos' },
         { name: 'SEÑAL', href: '/home-senal' },
         { name: 'GALERÍA', href: '/home-galeria' },
       ],
