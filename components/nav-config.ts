@@ -37,6 +37,7 @@ export const navConfig: NavEntry[] = [
     items: [
       { label: 'Impresión 3D', href: '/fabrication', live: true },
       { label: 'Artefactos', href: '/artifacts', live: true },
+      { label: 'Katana cyborg', href: '/katana', live: true },
       // Arsenal: oculto del menú a pedido explícito — la página sigue viva
       // en /arsenal, se vuelve a listar acá cuando esté lista para mostrarse.
     ],

@@ -33,6 +33,9 @@ export default function EspadaPage() {
         <p className={styles.subtitle}>
           Interface física para acceso a la red NeoProxy
         </p>
+        <p className={styles.subtitle}>
+          <a href="/katana" style={{ color: '#00d4ff' }}>→ Katana cyborg: generador paramétrico imprimible (STL)</a>
+        </p>
       </div>
 
       {/* Visualización 3D */}

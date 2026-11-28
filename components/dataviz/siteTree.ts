@@ -53,6 +53,7 @@ export const SITE_TREE: SiteNode = {
         { name: 'IMPRESIÓN 3D', href: '/fabrication' },
         { name: 'PEDIR IMPRESIÓN', href: '/imprimir' },
         { name: 'ARTEFACTOS', href: '/artifacts' },
+        { name: 'KATANA CYBORG', href: '/katana' },
       ],
     },
     {
